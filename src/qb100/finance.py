@@ -24,3 +24,9 @@ def simple_returns(prices):
     """Return sederhana: ``r_t = P_t / P_{t-1} - 1`` (baris pertama dibuang)."""
     p = _to_pandas(prices)
     return p.pct_change().iloc[1:]
+
+
+def log_returns(prices):
+    """Log return: ``r_t = ln(P_t / P_{t-1})`` (baris pertama dibuang)."""
+    p = _to_pandas(prices)
+    return np.log(p / p.shift(1)).iloc[1:]
