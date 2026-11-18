@@ -1,0 +1,9 @@
+{
+  "day": 1,
+  "session": "d",
+  "topic_no": null,
+  "type": "quant",
+  "topic": "Opsi Asia (Rust): Monte Carlo, variance reduction & Greeks",
+  "date": "2026-11-19",
+  "link": "rust/day001d_asian_options"
+}

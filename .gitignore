@@ -27,3 +27,6 @@ data/cache/
 # IDE
 .idea/
 .vscode/
+
+# Rust
+target/
