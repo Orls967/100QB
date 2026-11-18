@@ -147,12 +147,13 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [ROADMAP.md](ROADMAP.md) · Riwayat: [CHANGELOG.md](CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 2/100 topik (2%)** · quant: 1 · sim: 1
+**Progres: 3/100 topik (3%)** · quant: 2 · sim: 1
 
 | Hari | Topik No | Jenis | Topik | Tanggal | Notebook |
 |:----:|:--------:|:-----:|-------|---------|----------|
 | 1 | 001 | `quant` | Return harian & kumulatif | 2026-11-19 | [day001_quant_return-harian-kumulatif.ipynb](days/day001_quant_return-harian-kumulatif.ipynb) |
 | 1b | 002 | `sim` | Estimasi π dengan Monte Carlo | 2026-11-19 | [day001b_sim_estimasi-dengan-monte-carlo.ipynb](days/day001b_sim_estimasi-dengan-monte-carlo.ipynb) |
+| 1c | bonus | `quant` | Opsi Asia: Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001c_quant_opsi-asia-monte-carlo-variance.ipynb](days/day001c_quant_opsi-asia-monte-carlo-variance.ipynb) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi
