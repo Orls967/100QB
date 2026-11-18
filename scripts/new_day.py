@@ -114,6 +114,19 @@ def existing_days(days_dir: Path = DAYS_DIR) -> list[int]:
     return sorted({int(m.group(1)) for p in days_dir.iterdir() if (m := DAY_FILE_RE.match(p.name))})
 
 
+def resolve_day_and_session(
+    days_dir: Path = DAYS_DIR, today: str | None = None
+) -> tuple[int, str]:
+    """Tentukan (nomor_hari, huruf_sesi) dari notebook terakhir & tanggal WITA."""
+    today = today or wita_today()
+    last = latest_notebook_meta(days_dir)
+    if last is None:
+        return 1, ""
+    if last["date"] == today:
+        return last["day"], next_session_letter(last["session"])
+    return last["day"] + 1, ""
+
+
 def next_day_number(days_dir: Path = DAYS_DIR) -> int:
     days = existing_days(days_dir)
     return (max(days) + 1) if days else 1
