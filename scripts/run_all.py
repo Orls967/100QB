@@ -28,8 +28,15 @@ TEMPLATE = ROOT / "templates" / "day_template.ipynb"
 
 def find_notebooks(day: int | None = None, include_template: bool = False) -> list[Path]:
     """Daftar notebook yang akan dijalankan (urut nama file)."""
-    pattern = f"day{day:03d}_*.ipynb" if day else "day*.ipynb"
-    paths = sorted(DAYS_DIR.glob(pattern)) if DAYS_DIR.exists() else []
+    if not DAYS_DIR.exists():
+        paths = []
+    elif day:
+        paths = sorted(
+            list(DAYS_DIR.glob(f"day{day:03d}_*.ipynb"))
+            + list(DAYS_DIR.glob(f"day{day:03d}[a-z]_*.ipynb"))
+        )
+    else:
+        paths = sorted(DAYS_DIR.glob("day*.ipynb"))
     if include_template:
         paths.insert(0, TEMPLATE)
     return paths
