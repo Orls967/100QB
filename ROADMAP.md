@@ -7,7 +7,7 @@ Format: `- [ ] **NNN** · `jenis` · **Topik** — tujuan.` (dibaca otomatis ole
 
 ## Fase 1 — Fondasi (Hari 001–025)
 
-- [ ] **001** · `quant` · **Return harian & kumulatif** — Menghitung simple return dan return kumulatif dari deret harga.
+- [x] **001** · `quant` · **Return harian & kumulatif** — Menghitung simple return dan return kumulatif dari deret harga.
 - [ ] **002** · `sim` · **Estimasi π dengan Monte Carlo** — Memperkirakan π dari titik acak di dalam persegi dan lingkaran.
 - [ ] **003** · `quant` · **Log return vs simple return** — Memahami kapan memakai log return dan sifat aditifnya.
 - [ ] **004** · `sim` · **Random walk 1D** — Mensimulasikan jalan acak dan melihat sebaran posisi akhirnya.
