@@ -56,3 +56,25 @@ def test_random_walk_invalid_args():
         sim.random_walk(-1)
     with pytest.raises(ValueError):
         sim.random_walk(10, n_paths=0)
+
+
+def _pi_trial(rng):
+    x, y = rng.random(2)
+    return 4.0 * (x * x + y * y <= 1.0)
+
+
+def test_monte_carlo_estimates_pi():
+    samples = sim.monte_carlo(_pi_trial, 20_000, seed=0)
+    assert samples.shape == (20_000,)
+    assert samples.mean() == pytest.approx(np.pi, abs=0.05)
+
+
+def test_monte_carlo_reproducible():
+    a = sim.monte_carlo(lambda r: r.normal(), 100, seed=5)
+    b = sim.monte_carlo(lambda r: r.normal(), 100, seed=5)
+    np.testing.assert_array_equal(a, b)
+
+
+def test_monte_carlo_invalid_n():
+    with pytest.raises(ValueError):
+        sim.monte_carlo(lambda r: 0.0, 0)
