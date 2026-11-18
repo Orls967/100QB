@@ -147,6 +147,11 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [ROADMAP.md](ROADMAP.md) · Riwayat: [CHANGELOG.md](CHANGELOG.md).
 
 <!-- PROGRESS:START -->
+**Progres: 1/100 topik (1%)** · quant: 1 · sim: 0
+
+| Hari | Topik No | Jenis | Topik | Tanggal | Notebook |
+|:----:|:--------:|:-----:|-------|---------|----------|
+| 1 | 001 | `quant` | Return harian & kumulatif | 2026-11-19 | [day001_quant_return-harian-kumulatif.ipynb](days/day001_quant_return-harian-kumulatif.ipynb) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi
