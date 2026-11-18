@@ -32,6 +32,12 @@ def log_returns(prices):
     return np.log(p / p.shift(1)).iloc[1:]
 
 
+def cumulative_returns(returns):
+    """Return kumulatif: ``(1 + r_1) * ... * (1 + r_t) - 1``."""
+    r = _to_pandas(returns)
+    return (1.0 + r).cumprod() - 1.0
+
+
 def volatility(returns, periods_per_year: int = TRADING_DAYS, annualize: bool = True):
     """Volatilitas = standar deviasi sampel return (ddof=1).
 
