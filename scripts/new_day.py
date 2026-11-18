@@ -193,9 +193,11 @@ def parse_args(argv=None):
     p = argparse.ArgumentParser(description="Buat notebook hari berikutnya dari template.")
     p.add_argument("--type", choices=TYPES, help="jenis notebook: quant atau sim")
     p.add_argument("--topic", help="topik hari ini (default: ambil dari ROADMAP.md)")
+    p.add_argument("--topic-no", type=int, help="nomor topik ROADMAP (default: belum dicentang berikutnya)")
     p.add_argument("--slug", help="nama singkat untuk file (default: dari topik)")
     p.add_argument("--day", type=int, help="paksa nomor hari (default: otomatis)")
-    p.add_argument("--date", default=dt.date.today().isoformat(), help="tanggal YYYY-MM-DD")
+    p.add_argument("--session", help="paksa huruf sesi, mis. b, c (default: otomatis)")
+    p.add_argument("--date", default=wita_today(), help="tanggal YYYY-MM-DD (default: hari ini WITA)")
     p.add_argument("--dry-run", action="store_true", help="tampilkan rencana tanpa membuat file")
     p.add_argument("--force", action="store_true", help="timpa file bila sudah ada")
     return p.parse_args(argv)
@@ -203,17 +205,30 @@ def parse_args(argv=None):
 
 def main(argv=None) -> int:
     args = parse_args(argv)
-    day = args.day or next_day_number()
+    auto_day, auto_session = resolve_day_and_session(today=args.date)
+    day = args.day if args.day is not None else auto_day
+    if args.session is not None:
+        session = "" if args.session.lower() in ("", "a") else args.session.lower()
+    else:
+        session = "" if args.day is not None else auto_session
+
     if not 1 <= day <= 999:
         print(f"Nomor hari tidak valid: {day}", file=sys.stderr)
         return 2
-    if day in existing_days() and not args.force:
-        print(f"Hari {day:03d} sudah ada di days/ (pakai --force untuk menimpa).", file=sys.stderr)
+    if session and (len(session) != 1 or not ("b" <= session <= "z")):
+        print(f"Huruf sesi tidak valid: {session}", file=sys.stderr)
+        return 2
+    if (day, session) in existing_sessions() and not args.force:
+        print(
+            f"Hari {day:03d}{session} sudah ada di days/ (pakai --force untuk menimpa).",
+            file=sys.stderr,
+        )
         return 1
 
+    topic_no = args.topic_no or next_unchecked_topic_no() or day
     nb_type, topic = args.type, args.topic
     if nb_type is None or topic is None:
-        entry = roadmap_entry(day)
+        entry = roadmap_entry(topic_no)
         if entry is None:
             print("Butuh --type dan --topic (topik tidak ditemukan di ROADMAP.md).", file=sys.stderr)
             return 2
@@ -221,17 +236,18 @@ def main(argv=None) -> int:
         topic = topic or entry[1]
 
     slug = slugify(args.slug or topic)
-    path = DAYS_DIR / f"day{day:03d}_{nb_type}_{slug}.ipynb"
-    nb = build_notebook(day, nb_type, topic, args.date, slug)
+    path = DAYS_DIR / f"day{day:03d}{session}_{nb_type}_{slug}.ipynb"
+    nb = build_notebook(day, nb_type, topic, args.date, slug, session=session, topic_no=topic_no)
 
     if args.dry_run:
         print("[dry-run] Tidak ada file yang dibuat.")
-        print(f"  hari   : {day:03d}")
-        print(f"  jenis  : {nb_type}")
-        print(f"  topik  : {topic}")
-        print(f"  tanggal: {args.date}")
-        print(f"  file   : {path.relative_to(ROOT)}")
-        print(f"  sel    : {len(nb.cells)}")
+        print(f"  hari    : {day:03d}{session}")
+        print(f"  topik_no: {topic_no:03d}")
+        print(f"  jenis   : {nb_type}")
+        print(f"  topik   : {topic}")
+        print(f"  tanggal : {args.date}")
+        print(f"  file    : {path.relative_to(ROOT)}")
+        print(f"  sel     : {len(nb.cells)}")
         return 0
 
     DAYS_DIR.mkdir(parents=True, exist_ok=True)
