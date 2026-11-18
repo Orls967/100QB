@@ -60,3 +60,31 @@ Format: `- [ ] **NNN** · `jenis` · **Topik** — tujuan.` (dibaca otomatis ole
 - [ ] **048** · `sim` · **Perkolasi** — Mencari ambang peluang saat jalur terbuka menembus grid.
 - [ ] **049** · `quant` · **Mean reversion & z-score** — Membuat sinyal beli/jual dari penyimpangan terhadap rata-rata.
 - [ ] **050** · `sim` · **Gambler's ruin** — Mensimulasikan peluang bangkrut penjudi dengan modal terbatas.
+
+## Fase 3 — Lanjut (Hari 051–075)
+
+- [ ] **051** · `quant` · **Model Black-Scholes** — Menghitung harga opsi call/put Eropa dengan rumus tertutup.
+- [ ] **052** · `sim` · **Simulasi lalu lintas Nagel-Schreckenberg** — Melihat kemacetan muncul dari aturan mobil sederhana.
+- [ ] **053** · `quant` · **Greeks opsi** — Menghitung delta, gamma, vega, theta, rho dan memvisualisasikannya.
+- [ ] **054** · `sim` · **Model Ising 2D** — Mensimulasikan magnetisasi dengan algoritma Metropolis.
+- [ ] **055** · `quant` · **Harga opsi dengan Monte Carlo** — Membandingkan harga Monte Carlo dengan Black-Scholes.
+- [ ] **056** · `sim` · **Simulated annealing (TSP)** — Mencari rute pendek untuk travelling salesman dengan annealing.
+- [ ] **057** · `quant` · **Implied volatility** — Mencari volatilitas tersirat dari harga opsi dengan root finding.
+- [ ] **058** · `sim` · **Boids (perilaku kawanan)** — Mensimulasikan kawanan burung dengan tiga aturan lokal.
+- [ ] **059** · `quant` · **Model binomial pohon opsi** — Menilai opsi Eropa dan Amerika dengan pohon binomial.
+- [ ] **060** · `sim` · **Lorenz attractor** — Menyelesaikan sistem Lorenz dan melihat sensitivitas kondisi awal.
+- [ ] **061** · `quant` · **Volatility smile** — Memvisualisasikan implied volatility terhadap strike.
+- [ ] **062** · `sim` · **Peta logistik & bifurkasi** — Menggambar diagram bifurkasi menuju chaos.
+- [ ] **063** · `quant` · **Model GARCH(1,1) sederhana** — Mengestimasi volatilitas yang bergerombol (volatility clustering).
+- [ ] **064** · `sim` · **Pola Turing reaksi-difusi** — Membentuk pola mirip kulit hewan dari model Gray-Scott.
+- [ ] **065** · `quant` · **Proses Ornstein-Uhlenbeck** — Mensimulasikan proses mean-reverting untuk suku bunga/spread.
+- [ ] **066** · `sim` · **Algoritma genetika sederhana** — Mengevolusikan solusi untuk masalah optimisasi sederhana.
+- [ ] **067** · `quant` · **Model suku bunga Vasicek** — Mensimulasikan jalur suku bunga dan harga obligasi zero-coupon.
+- [ ] **068** · `sim` · **Diffusion-limited aggregation** — Menumbuhkan struktur fraktal dari partikel yang berdifusi.
+- [ ] **069** · `quant` · **Harga & durasi obligasi** — Menghitung harga, yield, durasi, dan konveksitas obligasi.
+- [ ] **070** · `sim` · **Rantai Markov cuaca** — Mensimulasikan cuaca dengan matriks transisi dan distribusi stasioner.
+- [ ] **071** · `quant` · **Pairs trading & kointegrasi** — Menguji kointegrasi dua saham dan membuat strategi spread.
+- [ ] **072** · `sim` · **N-body gravitasi sederhana** — Mensimulasikan orbit beberapa benda dengan hukum Newton.
+- [ ] **073** · `quant` · **Kriteria Kelly** — Menentukan ukuran taruhan/posisi optimal dan risikonya.
+- [ ] **074** · `sim` · **Model segregasi Schelling** — Melihat segregasi muncul dari preferensi tetangga yang ringan.
+- [ ] **075** · `quant` · **Jump diffusion Merton** — Menambahkan lompatan harga ke GBM dan melihat ekor tebal.
