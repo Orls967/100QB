@@ -102,3 +102,14 @@ def test_resolve_day_and_session_midnight_wita(tmp_path):
     nbformat.write(nb, tmp_path / "day001_quant_return.ipynb")
     assert new_day.resolve_day_and_session(tmp_path, today=date_before) == (1, "b")
     assert new_day.resolve_day_and_session(tmp_path, today=date_after) == (2, "")
+
+
+def test_next_unchecked_topic_no(tmp_path):
+    roadmap = tmp_path / "ROADMAP.md"
+    roadmap.write_text(
+        "- [x] **001** · `quant` · **Satu** — a.\n"
+        "- [ ] **002** · `sim` · **Dua** — b.\n",
+        encoding="utf-8",
+    )
+    assert new_day.next_unchecked_topic_no(roadmap) == 2
+    assert new_day.roadmap_entry(2, roadmap) == ("sim", "Dua")
