@@ -154,11 +154,20 @@ def roadmap_entry(topic_no: int, roadmap: Path = ROADMAP) -> tuple[str, str] | N
     return None
 
 
-def build_notebook(day: int, nb_type: str, topic: str, date: str, slug: str):
+def build_notebook(
+    day: int,
+    nb_type: str,
+    topic: str,
+    date: str,
+    slug: str,
+    session: str = "",
+    topic_no: int | None = None,
+):
     """Isi template dengan metadata hari dan kembalikan objek notebook."""
     nb = nbformat.read(TEMPLATE, as_version=4)
+    day_label = f"{day:03d}{session}"
     repl = {
-        "{{DAY}}": f"{day:03d}",
+        "{{DAY}}": day_label,
         "{{DATE}}": date,
         "{{TYPE}}": nb_type,
         "{{TOPIC}}": topic,
@@ -170,6 +179,8 @@ def build_notebook(day: int, nb_type: str, topic: str, date: str, slug: str):
     nb.metadata["qb100"] = {
         "template": False,
         "day": day,
+        "session": session,
+        "topic_no": topic_no if topic_no is not None else day,
         "date": date,
         "type": nb_type,
         "topic": topic,
