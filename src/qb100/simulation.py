@@ -76,3 +76,11 @@ def mc_summary(samples: np.ndarray, ci: float = 0.95) -> dict[str, float]:
     alpha = (1 - ci) / 2
     lo, hi = np.quantile(x, [alpha, 1 - alpha])
     return {"mean": mean, "std": std, "se": float(se), "ci_low": float(lo), "ci_high": float(hi)}
+
+
+def running_mean(samples: np.ndarray) -> np.ndarray:
+    """Rata-rata kumulatif dari indeks 1..N untuk melihat konvergensi Monte Carlo."""
+    x = np.asarray(samples, dtype=float).ravel()
+    if x.size == 0:
+        raise ValueError("samples tidak boleh kosong")
+    return np.cumsum(x) / np.arange(1, x.size + 1, dtype=float)
