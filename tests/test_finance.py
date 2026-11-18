@@ -58,3 +58,22 @@ def test_volatility_not_annualized_and_custom_periods():
 
 def test_volatility_constant_returns_is_zero():
     assert fin.volatility([0.01, 0.01, 0.01]) == pytest.approx(0.0)
+
+
+def test_sharpe_ratio_matches_formula():
+    r = pd.Series([0.01, -0.005, 0.02, 0.003, -0.01, 0.007])
+    rf = 0.05
+    ex = r - rf / 252
+    expected = ex.mean() / ex.std(ddof=1) * np.sqrt(252)
+    assert fin.sharpe_ratio(r, risk_free=rf) == pytest.approx(expected)
+
+
+def test_sharpe_ratio_zero_std_is_nan():
+    assert np.isnan(fin.sharpe_ratio([0.01, 0.01, 0.01]))
+
+
+def test_sharpe_ratio_dataframe_per_column():
+    df = pd.DataFrame({"a": [0.01, 0.02, -0.01, 0.0], "b": [0.01, 0.01, 0.01, 0.01]})
+    sr = fin.sharpe_ratio(df)
+    assert sr["a"] == pytest.approx(df["a"].mean() / df["a"].std() * np.sqrt(252))
+    assert np.isnan(sr["b"])
