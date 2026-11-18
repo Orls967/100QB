@@ -1,7 +1,9 @@
 """Tes ringan untuk scripts/ (tanpa membuat file di days/)."""
 
+import datetime as dt
 import sys
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import nbformat
 import pytest
@@ -66,3 +68,7 @@ def test_update_readme_replace_block():
 
 def test_readme_progress_is_up_to_date():
     assert update_readme.main(["--check"]) == 0
+
+
+def test_resolve_day_and_session_empty_dir(tmp_path):
+    assert new_day.resolve_day_and_session(tmp_path, today="2026-11-19") == (1, "")
