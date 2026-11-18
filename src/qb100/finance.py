@@ -58,3 +58,15 @@ def sharpe_ratio(returns, risk_free: float = 0.0, periods_per_year: int = TRADIN
     if np.isscalar(sr):
         return float("nan") if (flat or not np.isfinite(sr)) else float(sr)
     return sr.where(~flat)
+
+
+def drawdown(prices):
+    """Seri drawdown: ``P_t / max(P_0..P_t) - 1`` (nilai <= 0)."""
+    p = _to_pandas(prices)
+    return p / p.cummax() - 1.0
+
+
+def max_drawdown(prices):
+    """Max drawdown: penurunan terdalam dari puncak sebelumnya (nilai negatif atau 0)."""
+    dd = drawdown(prices).min()
+    return float(dd) if np.isscalar(dd) else dd
