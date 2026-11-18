@@ -3,6 +3,15 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 001b] — 2026-11-19 · Estimasi π dengan Monte Carlo
+
+### Ditambahkan
+- Helper `running_mean` dan `running_se` di `src/qb100/simulation.py` beserta unit test di `tests/test_simulation.py`.
+- Notebook `days/day001b_sim_estimasi-dengan-monte-carlo.ipynb` (topik 002) beserta 4 grafik (`day001b_pi-scatter.png`, `day001b_pi-convergence.png`, `day001b_pi-error-scaling.png`, `day001b_pi-histogram.png`) di `outputs/figures/`.
+
+### Diperbarui
+- `README.md` (tabel progres baris `1b`) dan `ROADMAP.md` (centang topik 002).
+
 ## [Hari 001] — 2026-11-19 · Return harian & kumulatif
 
 ### Ditambahkan
