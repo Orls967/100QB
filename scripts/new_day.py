@@ -18,6 +18,7 @@ import re
 import sys
 import unicodedata
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import nbformat
 
@@ -25,6 +26,13 @@ ROOT = Path(__file__).resolve().parents[1]
 DAYS_DIR = ROOT / "days"
 TEMPLATE = ROOT / "templates" / "day_template.ipynb"
 ROADMAP = ROOT / "ROADMAP.md"
+WITA_TZ = ZoneInfo("Asia/Makassar")
+
+
+def wita_today(now: dt.datetime | None = None) -> str:
+    """Tanggal hari ini dalam zona waktu WITA (Asia/Makassar) format YYYY-MM-DD."""
+    current = now.astimezone(WITA_TZ) if now is not None else dt.datetime.now(WITA_TZ)
+    return current.date().isoformat()
 
 DAY_FILE_RE = re.compile(r"^day(\d{3})_(quant|sim)_.+\.ipynb$")
 ROADMAP_RE = re.compile(
