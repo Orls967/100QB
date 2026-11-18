@@ -64,3 +64,15 @@ def monte_carlo(
     rng = get_rng(seed)
     return np.array([func(rng) for _ in range(n_sims)])
 
+
+def mc_summary(samples: np.ndarray, ci: float = 0.95) -> dict[str, float]:
+    """Ringkasan hasil Monte Carlo: mean, std, standard error, dan interval kepercayaan."""
+    x = np.asarray(samples, dtype=float).ravel()
+    if x.size < 2:
+        raise ValueError("butuh minimal 2 sampel")
+    mean = float(x.mean())
+    std = float(x.std(ddof=1))
+    se = std / np.sqrt(x.size)
+    alpha = (1 - ci) / 2
+    lo, hi = np.quantile(x, [alpha, 1 - alpha])
+    return {"mean": mean, "std": std, "se": float(se), "ci_low": float(lo), "ci_high": float(hi)}
