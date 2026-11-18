@@ -99,3 +99,8 @@ def test_mc_summary_needs_two_samples():
 def test_running_mean_values():
     rm = sim.running_mean([2.0, 4.0, 6.0, 8.0])
     np.testing.assert_allclose(rm, [2.0, 3.0, 4.0, 5.0])
+
+
+def test_running_mean_empty_raises():
+    with pytest.raises(ValueError):
+        sim.running_mean([])
