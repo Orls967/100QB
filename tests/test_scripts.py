@@ -113,3 +113,16 @@ def test_next_unchecked_topic_no(tmp_path):
     )
     assert new_day.next_unchecked_topic_no(roadmap) == 2
     assert new_day.roadmap_entry(2, roadmap) == ("sim", "Dua")
+
+
+def test_update_readme_collect_and_render_sessions(tmp_path, monkeypatch):
+    nb1b = new_day.build_notebook(1, "sim", "Pi", "2026-11-19", "pi", session="b", topic_no=2)
+    nb1 = new_day.build_notebook(1, "quant", "Return", "2026-11-19", "ret", session="", topic_no=1)
+    nbformat.write(nb1b, tmp_path / "day001b_sim_pi.ipynb")
+    nbformat.write(nb1, tmp_path / "day001_quant_ret.ipynb")
+    monkeypatch.setattr(update_readme, "ROOT", tmp_path.parent)
+    rows = update_readme.collect_days(tmp_path)
+    assert [(r["day"], r["session"], r["topic_no"]) for r in rows] == [(1, "", 1), (1, "b", 2)]
+    table = update_readme.render_table(rows)
+    assert "| 1 | 001 | `quant` |" in table
+    assert "| 1b | 002 | `sim` |" in table
