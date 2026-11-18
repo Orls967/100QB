@@ -34,9 +34,9 @@ def wita_today(now: dt.datetime | None = None) -> str:
     current = now.astimezone(WITA_TZ) if now is not None else dt.datetime.now(WITA_TZ)
     return current.date().isoformat()
 
-DAY_FILE_RE = re.compile(r"^day(\d{3})_(quant|sim)_.+\.ipynb$")
+DAY_FILE_RE = re.compile(r"^day(\d{3})([a-z])?_(quant|sim)_.+\.ipynb$")
 ROADMAP_RE = re.compile(
-    r"^- \[[ xX]\] \*\*(\d{3})\*\* · `(quant|sim)` · \*\*(.+?)\*\*(?: — (.*))?$"
+    r"^- \[([ xX])\] \*\*(\d{3})\*\* · `(quant|sim)` · \*\*(.+?)\*\*(?: — (.*))?$"
 )
 TYPES = ("quant", "sim")
 
