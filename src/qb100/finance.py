@@ -30,3 +30,13 @@ def log_returns(prices):
     """Log return: ``r_t = ln(P_t / P_{t-1})`` (baris pertama dibuang)."""
     p = _to_pandas(prices)
     return np.log(p / p.shift(1)).iloc[1:]
+
+
+def volatility(returns, periods_per_year: int = TRADING_DAYS, annualize: bool = True):
+    """Volatilitas = standar deviasi sampel return (ddof=1).
+
+    Bila ``annualize=True`` hasil dikali ``sqrt(periods_per_year)``.
+    """
+    r = _to_pandas(returns)
+    vol = r.std(ddof=1)
+    return vol * np.sqrt(periods_per_year) if annualize else vol
