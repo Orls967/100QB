@@ -132,14 +132,25 @@ def next_day_number(days_dir: Path = DAYS_DIR) -> int:
     return (max(days) + 1) if days else 1
 
 
-def roadmap_entry(day: int, roadmap: Path = ROADMAP) -> tuple[str, str] | None:
-    """Cari (jenis, topik) untuk nomor hari tertentu di ROADMAP.md."""
+def next_unchecked_topic_no(roadmap: Path = ROADMAP) -> int | None:
+    """Cari nomor topik pertama di ROADMAP.md yang belum dicentang."""
     if not roadmap.exists():
         return None
     for line in roadmap.read_text(encoding="utf-8").splitlines():
         m = ROADMAP_RE.match(line.strip())
-        if m and int(m.group(1)) == day:
-            return m.group(2), m.group(3)
+        if m and m.group(1) == " ":
+            return int(m.group(2))
+    return None
+
+
+def roadmap_entry(topic_no: int, roadmap: Path = ROADMAP) -> tuple[str, str] | None:
+    """Cari (jenis, topik) untuk nomor topik tertentu di ROADMAP.md."""
+    if not roadmap.exists():
+        return None
+    for line in roadmap.read_text(encoding="utf-8").splitlines():
+        m = ROADMAP_RE.match(line.strip())
+        if m and int(m.group(2)) == topic_no:
+            return m.group(3), m.group(4)
     return None
 
 
