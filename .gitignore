@@ -30,3 +30,7 @@ data/cache/
 
 # Rust
 target/
+
+# Go
+go/**/bin/
+*.test
