@@ -3,6 +3,16 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 001d] — 2026-11-19 · Opsi Asia (Rust): Monte Carlo, variance reduction & Greeks (Bonus)
+
+### Ditambahkan
+- Crate Rust `rust/day001d_asian_options/` (Black-Scholes, Kemna–Vorst diskret, simulasi GBM paralel `rayon` + `ChaCha8Rng`, estimator Naive/Antithetic/Control Variate, Delta *pathwise* & *bump-and-revalue* CRN, slope konvergensi log-log) beserta 5 unit test.
+- Output hasil `outputs/day001d/results.json` dan grafik `day001d_asian-convergence-loglog.png`, `day001d_asian-estimators-ci.png` di `outputs/figures/`.
+- Dukungan metadata `rust/*/meta.json` pada `scripts/update_readme.py` beserta unit test.
+
+### Diperbarui
+- `README.md` (tabel progres baris `1d` dengan `Topik No = bonus`) dan `.gitignore` (`target/`).
+
 ## [Hari 001c] — 2026-11-19 · Opsi Asia: Monte Carlo, variance reduction & Greeks (Bonus)
 
 ### Ditambahkan

@@ -14,6 +14,7 @@ Contoh:
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 from pathlib import Path
@@ -22,6 +23,7 @@ import nbformat
 
 ROOT = Path(__file__).resolve().parents[1]
 DAYS_DIR = ROOT / "days"
+RUST_DIR = ROOT / "rust"
 README = ROOT / "README.md"
 TOTAL_DAYS = 100
 
@@ -36,39 +38,65 @@ def _session_rank(session: str | None) -> int:
     return ord(session.lower()) - ord("a")
 
 
-def collect_days(days_dir: Path = DAYS_DIR) -> list[dict]:
-    """Kumpulkan metadata semua notebook harian, urut berdasarkan (day, session)."""
+def collect_days(days_dir: Path = DAYS_DIR, rust_dir: Path | None = None) -> list[dict]:
+    """Kumpulkan metadata semua notebook harian dan crate Rust, urut (day, session)."""
     rows = []
-    if not days_dir.exists():
-        return rows
-    for path in sorted(days_dir.glob("day*.ipynb")):
-        m = DAY_FILE_RE.match(path.name)
-        if not m:
-            continue
-        meta = {}
-        try:
-            meta = nbformat.read(path, as_version=4).metadata.get("qb100", {}) or {}
-        except Exception as exc:  # notebook rusak tidak boleh menggagalkan tabel
-            print(f"Peringatan: gagal membaca {path.name}: {exc}", file=sys.stderr)
-        day = int(meta.get("day") or m.group(1))
-        raw_sess = meta.get("session") if meta.get("session") is not None else (m.group(2) or "")
-        session = "" if raw_sess in ("", "a") else str(raw_sess)
-        if "topic_no" in meta:
-            raw_tno = meta["topic_no"]
+    if days_dir.exists():
+        for path in sorted(days_dir.glob("day*.ipynb")):
+            m = DAY_FILE_RE.match(path.name)
+            if not m:
+                continue
+            meta = {}
+            try:
+                meta = nbformat.read(path, as_version=4).metadata.get("qb100", {}) or {}
+            except Exception as exc:  # notebook rusak tidak boleh menggagalkan tabel
+                print(f"Peringatan: gagal membaca {path.name}: {exc}", file=sys.stderr)
+            day = int(meta.get("day") or m.group(1))
+            raw_sess = meta.get("session") if meta.get("session") is not None else (m.group(2) or "")
+            session = "" if raw_sess in ("", "a") else str(raw_sess)
+            if "topic_no" in meta:
+                raw_tno = meta["topic_no"]
+                topic_no = None if raw_tno in (None, "bonus") else int(raw_tno)
+            else:
+                topic_no = day
+            rows.append(
+                {
+                    "day": day,
+                    "session": session,
+                    "topic_no": topic_no,
+                    "type": meta.get("type") or m.group(3),
+                    "topic": meta.get("topic") or m.group(4).replace("-", " ").title(),
+                    "date": meta.get("date") or "-",
+                    "file": path.relative_to(ROOT).as_posix(),
+                }
+            )
+
+    target_rust = rust_dir if rust_dir is not None else (RUST_DIR if days_dir == DAYS_DIR else None)
+    if target_rust is not None and target_rust.exists():
+        for meta_path in sorted(target_rust.glob("*/meta.json")):
+            try:
+                meta = json.loads(meta_path.read_text(encoding="utf-8"))
+            except Exception as exc:
+                print(f"Peringatan: gagal membaca {meta_path}: {exc}", file=sys.stderr)
+                continue
+            day = int(meta["day"])
+            raw_sess = meta.get("session") or ""
+            session = "" if raw_sess in ("", "a") else str(raw_sess)
+            raw_tno = meta.get("topic_no")
             topic_no = None if raw_tno in (None, "bonus") else int(raw_tno)
-        else:
-            topic_no = day
-        rows.append(
-            {
-                "day": day,
-                "session": session,
-                "topic_no": topic_no,
-                "type": meta.get("type") or m.group(3),
-                "topic": meta.get("topic") or m.group(4).replace("-", " ").title(),
-                "date": meta.get("date") or "-",
-                "file": path.relative_to(ROOT).as_posix(),
-            }
-        )
+            link = meta.get("link") or meta_path.parent.relative_to(ROOT).as_posix()
+            rows.append(
+                {
+                    "day": day,
+                    "session": session,
+                    "topic_no": topic_no,
+                    "type": meta.get("type", "quant"),
+                    "topic": meta.get("topic", meta_path.parent.name),
+                    "date": meta.get("date", "-"),
+                    "file": link,
+                }
+            )
+
     return sorted(rows, key=lambda r: (r["day"], _session_rank(r["session"])))
 
 

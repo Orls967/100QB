@@ -139,3 +139,21 @@ def test_update_readme_bonus_topic_no(tmp_path, monkeypatch):
     assert rows[0]["topic_no"] is None
     table = update_readme.render_table(rows)
     assert "| 1c | bonus | `quant` |" in table
+
+
+def test_update_readme_collects_rust_meta(tmp_path, monkeypatch):
+    days = tmp_path / "days"
+    rust = tmp_path / "rust" / "day001d_asian"
+    days.mkdir()
+    rust.mkdir(parents=True)
+    (rust / "meta.json").write_text(
+        '{"day": 1, "session": "d", "topic_no": null, "type": "quant", '
+        '"topic": "Opsi Asia (Rust)", "date": "2026-11-19", "link": "rust/day001d_asian"}',
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(update_readme, "ROOT", tmp_path)
+    rows = update_readme.collect_days(days, rust_dir=tmp_path / "rust")
+    assert len(rows) == 1
+    assert rows[0]["session"] == "d" and rows[0]["topic_no"] is None
+    table = update_readme.render_table(rows)
+    assert "| 1d | bonus | `quant` | Opsi Asia (Rust) | 2026-11-19 | [day001d_asian](rust/day001d_asian) |" in table
