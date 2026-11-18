@@ -138,3 +138,14 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 5. **Visualisasi** — minimal satu grafik.
 6. **Kesimpulan (3 poin)** — tiga hal yang dipelajari.
 7. **Referensi** — sumber bacaan.
+
+## 📈 Progres
+
+Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [ROADMAP.md](ROADMAP.md) · Riwayat: [CHANGELOG.md](CHANGELOG.md).
+
+<!-- PROGRESS:START -->
+<!-- PROGRESS:END -->
+
+## 📄 Lisensi
+
+Dirilis di bawah [lisensi MIT](LICENSE).
