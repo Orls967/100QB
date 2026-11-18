@@ -76,15 +76,17 @@ def render_table(rows: list[dict], total: int = TOTAL_DAYS) -> str:
     done = len(rows)
     pct = round(100 * done / total) if total else 0
     lines = [
-        f"**Progres: {done}/{total} hari ({pct}%)** · quant: {n_quant} · sim: {n_sim}",
+        f"**Progres: {done}/{total} topik ({pct}%)** · quant: {n_quant} · sim: {n_sim}",
         "",
-        "| Hari | Tanggal | Jenis | Topik | Notebook |",
-        "|:----:|:-------:|:-----:|-------|----------|",
+        "| Hari | Topik No | Jenis | Topik | Tanggal | Notebook |",
+        "|:----:|:--------:|:-----:|-------|---------|----------|",
     ]
     for r in rows:
         topic = str(r["topic"]).replace("|", "\\|")
+        day_label = f"{r['day']}{r.get('session', '')}"
+        topic_no = f"{int(r.get('topic_no') or r['day']):03d}"
         lines.append(
-            f"| {r['day']:03d} | {r['date']} | `{r['type']}` | {topic} | "
+            f"| {day_label} | {topic_no} | `{r['type']}` | {topic} | {r['date']} | "
             f"[{Path(r['file']).name}]({r['file']}) |"
         )
     return "\n".join(lines)
