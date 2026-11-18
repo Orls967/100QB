@@ -34,3 +34,7 @@ target/
 # Go
 go/**/bin/
 *.test
+
+# TypeScript / Node
+node_modules/
+typescript/**/dist/
