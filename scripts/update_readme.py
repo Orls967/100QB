@@ -27,11 +27,17 @@ TOTAL_DAYS = 100
 
 START = "<!-- PROGRESS:START -->"
 END = "<!-- PROGRESS:END -->"
-DAY_FILE_RE = re.compile(r"^day(\d{3})_(quant|sim)_(.+)\.ipynb$")
+DAY_FILE_RE = re.compile(r"^day(\d{3})([a-z])?_(quant|sim)_(.+)\.ipynb$")
+
+
+def _session_rank(session: str | None) -> int:
+    if not session:
+        return 0
+    return ord(session.lower()) - ord("a")
 
 
 def collect_days(days_dir: Path = DAYS_DIR) -> list[dict]:
-    """Kumpulkan metadata semua notebook harian, urut berdasarkan nomor hari."""
+    """Kumpulkan metadata semua notebook harian, urut berdasarkan (day, session)."""
     rows = []
     if not days_dir.exists():
         return rows
@@ -44,16 +50,21 @@ def collect_days(days_dir: Path = DAYS_DIR) -> list[dict]:
             meta = nbformat.read(path, as_version=4).metadata.get("qb100", {}) or {}
         except Exception as exc:  # notebook rusak tidak boleh menggagalkan tabel
             print(f"Peringatan: gagal membaca {path.name}: {exc}", file=sys.stderr)
+        day = int(meta.get("day") or m.group(1))
+        raw_sess = meta.get("session") if meta.get("session") is not None else (m.group(2) or "")
+        session = "" if raw_sess in ("", "a") else str(raw_sess)
         rows.append(
             {
-                "day": int(meta.get("day") or m.group(1)),
-                "type": meta.get("type") or m.group(2),
-                "topic": meta.get("topic") or m.group(3).replace("-", " ").title(),
+                "day": day,
+                "session": session,
+                "topic_no": int(meta.get("topic_no") or day),
+                "type": meta.get("type") or m.group(3),
+                "topic": meta.get("topic") or m.group(4).replace("-", " ").title(),
                 "date": meta.get("date") or "-",
                 "file": path.relative_to(ROOT).as_posix(),
             }
         )
-    return sorted(rows, key=lambda r: r["day"])
+    return sorted(rows, key=lambda r: (r["day"], _session_rank(r["session"])))
 
 
 def render_table(rows: list[dict], total: int = TOTAL_DAYS) -> str:
