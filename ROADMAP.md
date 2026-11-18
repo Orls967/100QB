@@ -88,3 +88,31 @@ Format: `- [ ] **NNN** · `jenis` · **Topik** — tujuan.` (dibaca otomatis ole
 - [ ] **073** · `quant` · **Kriteria Kelly** — Menentukan ukuran taruhan/posisi optimal dan risikonya.
 - [ ] **074** · `sim` · **Model segregasi Schelling** — Melihat segregasi muncul dari preferensi tetangga yang ringan.
 - [ ] **075** · `quant` · **Jump diffusion Merton** — Menambahkan lompatan harga ke GBM dan melihat ekor tebal.
+
+## Fase 4 — Mahir & Penutup (Hari 076–100)
+
+- [ ] **076** · `sim` · **Gerak Brown partikel** — Mensimulasikan partikel yang ditumbuk molekul dan mean squared displacement.
+- [ ] **077** · `quant` · **Model Heston (stochastic volatility)** — Mensimulasikan harga dengan volatilitas yang ikut acak.
+- [ ] **078** · `sim` · **Gelombang 1D** — Menyelesaikan persamaan gelombang tali bergetar secara numerik.
+- [ ] **079** · `quant` · **Opsi Asia & barrier** — Menilai opsi eksotis yang bergantung pada jalur dengan Monte Carlo.
+- [ ] **080** · `sim` · **Pohon fraktal L-system** — Menggambar tanaman fraktal dari aturan tata bahasa sederhana.
+- [ ] **081** · `quant` · **Variance reduction** — Mempercepat Monte Carlo dengan antithetic dan control variates.
+- [ ] **082** · `sim` · **Ekosistem kebun (agent-based)** — Mensimulasikan tanaman, hama, dan pemangsa di satu kebun.
+- [ ] **083** · `quant` · **Risk parity** — Menyusun portofolio dengan kontribusi risiko yang seimbang.
+- [ ] **084** · `sim` · **Simulasi inventori toko** — Mencari kebijakan stok optimal dengan permintaan acak.
+- [ ] **085** · `quant` · **Black-Litterman** — Menggabungkan ekuilibrium pasar dengan pandangan investor.
+- [ ] **086** · `sim` · **Pasir Abelian (sandpile)** — Mengamati self-organized criticality dari tumpukan pasir.
+- [ ] **087** · `quant` · **PCA pada return saham** — Menemukan faktor utama penggerak sekumpulan saham.
+- [ ] **088** · `sim` · **Langton's ant** — Mensimulasikan semut sederhana yang akhirnya membangun "jalan raya".
+- [ ] **089** · `quant` · **Model faktor Fama-French** — Menjelaskan return dengan faktor pasar, size, dan value.
+- [ ] **090** · `sim` · **MCMC Metropolis-Hastings** — Mengambil sampel dari distribusi sulit dengan rantai Markov.
+- [ ] **091** · `quant` · **Walk-forward backtest** — Menghindari overfitting dengan validasi bergulir.
+- [ ] **092** · `sim` · **Bootstrap statistik** — Mengestimasi interval kepercayaan dengan resampling.
+- [ ] **093** · `quant` · **Monte Carlo pensiun** — Mensimulasikan peluang dana pensiun cukup sampai akhir.
+- [ ] **094** · `sim` · **Optimasi kawanan partikel (PSO)** — Mencari minimum fungsi dengan kawanan partikel.
+- [ ] **095** · `quant` · **Stress test portofolio** — Menguji portofolio terhadap skenario krisis historis dan hipotetis.
+- [ ] **096** · `sim` · **Hujan & genangan (cellular water flow)** — Mensimulasikan aliran air di permukaan tanah grid.
+- [ ] **097** · `quant` · **Regime switching (Markov)** — Mendeteksi rezim pasar bull/bear dengan model dua keadaan.
+- [ ] **098** · `sim` · **Kebun Simulasi: musim tanam** — Menggabungkan cuaca acak, pertumbuhan, dan panen dalam satu simulasi.
+- [ ] **099** · `quant` · **Dashboard risiko portofolio** — Merangkum return, volatilitas, Sharpe, VaR, dan drawdown dalam satu laporan.
+- [ ] **100** · `sim` · **Retrospektif 100 hari** — Memvisualisasikan perjalanan 100 notebook dan pelajaran utamanya.
