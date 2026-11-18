@@ -72,3 +72,13 @@ def test_readme_progress_is_up_to_date():
 
 def test_resolve_day_and_session_empty_dir(tmp_path):
     assert new_day.resolve_day_and_session(tmp_path, today="2026-11-19") == (1, "")
+
+
+def test_resolve_day_and_session_same_date(tmp_path):
+    nb1 = new_day.build_notebook(1, "quant", "Return", "2026-11-19", "return", session="", topic_no=1)
+    nbformat.write(nb1, tmp_path / "day001_quant_return.ipynb")
+    assert new_day.resolve_day_and_session(tmp_path, today="2026-11-19") == (1, "b")
+
+    nb2 = new_day.build_notebook(1, "sim", "Pi", "2026-11-19", "pi", session="b", topic_no=2)
+    nbformat.write(nb2, tmp_path / "day001b_sim_pi.ipynb")
+    assert new_day.resolve_day_and_session(tmp_path, today="2026-11-19") == (1, "c")
