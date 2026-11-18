@@ -104,3 +104,10 @@ def test_running_mean_values():
 def test_running_mean_empty_raises():
     with pytest.raises(ValueError):
         sim.running_mean([])
+
+
+def test_running_se_matches_mc_summary():
+    x = np.array([1.0, 3.0, 2.0, 6.0, 4.0])
+    se = sim.running_se(x)
+    assert np.isnan(se[0])
+    assert se[-1] == pytest.approx(sim.mc_summary(x)["se"])
