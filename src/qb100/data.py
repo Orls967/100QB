@@ -75,3 +75,16 @@ def get_prices(
     path.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(path)
     return df
+
+
+def get_close(
+    tickers: str | list[str],
+    start: str | None = None,
+    end: str | None = None,
+    refresh: bool = False,
+) -> pd.DataFrame:
+    """Ambil harga penutupan (Close) satu atau beberapa ticker dalam satu DataFrame."""
+    if isinstance(tickers, str):
+        tickers = [tickers]
+    closes = {t: get_prices(t, start, end, refresh=refresh)["Close"] for t in tickers}
+    return pd.DataFrame(closes).dropna(how="all")
