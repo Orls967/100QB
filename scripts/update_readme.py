@@ -57,7 +57,9 @@ def collect_days(days_dir: Path = DAYS_DIR) -> list[dict]:
 
 
 def render_table(rows: list[dict], total: int = TOTAL_DAYS) -> str:
-    """Render ringkasan + tabel markdown progres."""
+    """Render ringkasan + tabel markdown progres (string kosong bila belum ada notebook)."""
+    if not rows:
+        return ""
     n_quant = sum(r["type"] == "quant" for r in rows)
     n_sim = sum(r["type"] == "sim" for r in rows)
     done = len(rows)
@@ -65,11 +67,6 @@ def render_table(rows: list[dict], total: int = TOTAL_DAYS) -> str:
     lines = [
         f"**Progres: {done}/{total} hari ({pct}%)** · quant: {n_quant} · sim: {n_sim}",
         "",
-    ]
-    if not rows:
-        lines.append("_Belum ada notebook. Hari ke-1 segera dimulai!_")
-        return "\n".join(lines)
-    lines += [
         "| Hari | Tanggal | Jenis | Topik | Notebook |",
         "|:----:|:-------:|:-----:|-------|----------|",
     ]
@@ -87,7 +84,8 @@ def replace_block(text: str, block: str) -> str:
     pattern = re.compile(re.escape(START) + r".*?" + re.escape(END), re.DOTALL)
     if not pattern.search(text):
         raise ValueError(f"Marker {START} / {END} tidak ditemukan di README.md")
-    return pattern.sub(lambda _: f"{START}\n{block}\n{END}", text, count=1)
+    body = f"\n{block}\n" if block else "\n"
+    return pattern.sub(lambda _: f"{START}{body}{END}", text, count=1)
 
 
 def main(argv=None) -> int:
