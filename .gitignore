@@ -1,0 +1,29 @@
+# Aturan kerja lokal (tidak boleh ter-push)
+RULES.md
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+**/.DS_Store
+Thumbs.db
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Data
+data/raw/
+data/cache/
+
+# IDE
+.idea/
+.vscode/
