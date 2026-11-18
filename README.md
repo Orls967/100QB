@@ -51,8 +51,10 @@ Lalu buka notebook dengan `jupyter lab` atau `jupyter notebook`.
 
 ### `scripts/new_day.py` — buat notebook hari berikutnya
 
-Nomor hari otomatis (nomor terbesar di `days/` + 1). Bila `--type`/`--topic` tidak diisi,
-jenis dan topik diambil dari ROADMAP.md.
+Nomor hari dan huruf sesi (`b`, `c`, dst.) ditentukan otomatis dari metadata notebook terakhir
+dan tanggal hari ini (zona waktu WITA). Bila masih di tanggal yang sama, nomor hari tetap sama
+dan sesi naik ke huruf berikutnya. Bila `--type`/`--topic` tidak diisi, topik berikutnya yang
+belum dicentang di ROADMAP.md diambil otomatis.
 
 ```bash
 python scripts/new_day.py --type quant --topic "Return harian & kumulatif"
@@ -60,7 +62,7 @@ python scripts/new_day.py --type sim --topic "Estimasi pi Monte Carlo" --dry-run
 python scripts/new_day.py                                                           # ikuti ROADMAP.md
 ```
 
-Opsi lain: `--slug` (nama file singkat), `--day` (paksa nomor), `--date YYYY-MM-DD`, `--force`.
+Opsi lain: `--slug` (nama file singkat), `--day` (paksa nomor), `--session` (paksa huruf sesi), `--topic-no` (paksa nomor topik), `--date YYYY-MM-DD`, `--force`.
 
 ### `scripts/update_readme.py` — perbarui tabel progres
 
