@@ -98,3 +98,10 @@ def test_max_drawdown_dataframe():
     mdd = fin.max_drawdown(df)
     assert mdd["a"] == pytest.approx(-0.5)
     assert mdd["b"] == pytest.approx(-0.25)
+
+
+def test_cumulative_returns_matches_total_return(prices):
+    r = fin.simple_returns(prices)
+    cum = fin.cumulative_returns(r)
+    expected = prices.iloc[1:] / prices.iloc[0] - 1.0
+    np.testing.assert_allclose(cum.values, expected.values)
