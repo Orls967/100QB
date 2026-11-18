@@ -126,3 +126,16 @@ def test_update_readme_collect_and_render_sessions(tmp_path, monkeypatch):
     table = update_readme.render_table(rows)
     assert "| 1 | 001 | `quant` |" in table
     assert "| 1b | 002 | `sim` |" in table
+
+
+def test_update_readme_bonus_topic_no(tmp_path, monkeypatch):
+    nb = new_day.build_notebook(
+        1, "quant", "Opsi Asia", "2026-11-19", "opsi-asia", session="c", bonus=True
+    )
+    assert nb.metadata["qb100"]["topic_no"] is None
+    nbformat.write(nb, tmp_path / "day001c_quant_opsi-asia.ipynb")
+    monkeypatch.setattr(update_readme, "ROOT", tmp_path.parent)
+    rows = update_readme.collect_days(tmp_path)
+    assert rows[0]["topic_no"] is None
+    table = update_readme.render_table(rows)
+    assert "| 1c | bonus | `quant` |" in table

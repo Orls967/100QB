@@ -53,11 +53,16 @@ def collect_days(days_dir: Path = DAYS_DIR) -> list[dict]:
         day = int(meta.get("day") or m.group(1))
         raw_sess = meta.get("session") if meta.get("session") is not None else (m.group(2) or "")
         session = "" if raw_sess in ("", "a") else str(raw_sess)
+        if "topic_no" in meta:
+            raw_tno = meta["topic_no"]
+            topic_no = None if raw_tno in (None, "bonus") else int(raw_tno)
+        else:
+            topic_no = day
         rows.append(
             {
                 "day": day,
                 "session": session,
-                "topic_no": int(meta.get("topic_no") or day),
+                "topic_no": topic_no,
                 "type": meta.get("type") or m.group(3),
                 "topic": meta.get("topic") or m.group(4).replace("-", " ").title(),
                 "date": meta.get("date") or "-",
@@ -84,7 +89,8 @@ def render_table(rows: list[dict], total: int = TOTAL_DAYS) -> str:
     for r in rows:
         topic = str(r["topic"]).replace("|", "\\|")
         day_label = f"{r['day']}{r.get('session', '')}"
-        topic_no = f"{int(r.get('topic_no') or r['day']):03d}"
+        raw_tno = r.get("topic_no") if "topic_no" in r else r["day"]
+        topic_no = "bonus" if raw_tno is None else f"{int(raw_tno):03d}"
         lines.append(
             f"| {day_label} | {topic_no} | `{r['type']}` | {topic} | {r['date']} | "
             f"[{Path(r['file']).name}]({r['file']}) |"

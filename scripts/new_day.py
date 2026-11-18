@@ -162,6 +162,7 @@ def build_notebook(
     slug: str,
     session: str = "",
     topic_no: int | None = None,
+    bonus: bool = False,
 ):
     """Isi template dengan metadata hari dan kembalikan objek notebook."""
     nb = nbformat.read(TEMPLATE, as_version=4)
@@ -176,11 +177,12 @@ def build_notebook(
     for cell in nb.cells:
         for key, val in repl.items():
             cell.source = cell.source.replace(key, val)
+    resolved_topic_no = None if bonus else (topic_no if topic_no is not None else day)
     nb.metadata["qb100"] = {
         "template": False,
         "day": day,
         "session": session,
-        "topic_no": topic_no if topic_no is not None else day,
+        "topic_no": resolved_topic_no,
         "date": date,
         "type": nb_type,
         "topic": topic,
@@ -194,6 +196,7 @@ def parse_args(argv=None):
     p.add_argument("--type", choices=TYPES, help="jenis notebook: quant atau sim")
     p.add_argument("--topic", help="topik hari ini (default: ambil dari ROADMAP.md)")
     p.add_argument("--topic-no", type=int, help="nomor topik ROADMAP (default: belum dicentang berikutnya)")
+    p.add_argument("--bonus", action="store_true", help="topik off-roadmap/bonus (topic_no = null)")
     p.add_argument("--slug", help="nama singkat untuk file (default: dari topik)")
     p.add_argument("--day", type=int, help="paksa nomor hari (default: otomatis)")
     p.add_argument("--session", help="paksa huruf sesi, mis. b, c (default: otomatis)")
@@ -225,9 +228,12 @@ def main(argv=None) -> int:
         )
         return 1
 
-    topic_no = args.topic_no or next_unchecked_topic_no() or day
+    topic_no = None if args.bonus else (args.topic_no or next_unchecked_topic_no() or day)
     nb_type, topic = args.type, args.topic
     if nb_type is None or topic is None:
+        if topic_no is None:
+            print("Butuh --type dan --topic untuk sesi --bonus.", file=sys.stderr)
+            return 2
         entry = roadmap_entry(topic_no)
         if entry is None:
             print("Butuh --type dan --topic (topik tidak ditemukan di ROADMAP.md).", file=sys.stderr)
@@ -237,12 +243,14 @@ def main(argv=None) -> int:
 
     slug = slugify(args.slug or topic)
     path = DAYS_DIR / f"day{day:03d}{session}_{nb_type}_{slug}.ipynb"
-    nb = build_notebook(day, nb_type, topic, args.date, slug, session=session, topic_no=topic_no)
+    nb = build_notebook(
+        day, nb_type, topic, args.date, slug, session=session, topic_no=topic_no, bonus=args.bonus
+    )
 
     if args.dry_run:
         print("[dry-run] Tidak ada file yang dibuat.")
         print(f"  hari    : {day:03d}{session}")
-        print(f"  topik_no: {topic_no:03d}")
+        print(f"  topik_no: {'bonus' if topic_no is None else f'{topic_no:03d}'}")
         print(f"  jenis   : {nb_type}")
         print(f"  topik   : {topic}")
         print(f"  tanggal : {args.date}")
