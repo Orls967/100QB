@@ -82,3 +82,59 @@ python scripts/run_all.py --day 7      # hanya hari 007
 python scripts/run_all.py --template   # ikut uji template
 python scripts/run_all.py --inplace    # simpan output ke notebook
 ```
+
+## 📁 Struktur folder
+
+```text
+100QB/
+├── README.md              # dokumentasi ini
+├── ROADMAP.md             # daftar 100 topik (quant & sim)
+├── CHANGELOG.md           # catatan perubahan per hari
+├── LICENSE                # MIT
+├── requirements.txt       # dependensi Python
+├── pyproject.toml         # metadata package qb100 + konfigurasi pytest
+├── .env.example           # contoh variabel environment
+├── days/                  # notebook harian (dayNNN_<jenis>_<topik>.ipynb)
+├── templates/
+│   └── day_template.ipynb # template notebook harian
+├── src/qb100/             # package helper bersama
+│   ├── plotting.py        # style grafik seragam + save_figure
+│   ├── data.py            # ambil & cache harga yfinance ke data/cache
+│   ├── finance.py         # returns, log returns, volatilitas, Sharpe, drawdown
+│   └── simulation.py      # seed (get_rng), random walk, Monte Carlo generik
+├── scripts/
+│   ├── new_day.py         # buat notebook hari berikutnya
+│   ├── update_readme.py   # perbarui tabel progres README
+│   └── run_all.py         # eksekusi semua notebook
+├── tests/                 # pytest untuk src/ dan scripts/
+├── data/                  # data lokal (raw/ & cache/ tidak di-commit)
+└── outputs/figures/       # grafik hasil notebook
+```
+
+> Nama package Python adalah `qb100` karena identifier Python tidak boleh diawali angka.
+
+## 🏷️ Konvensi penamaan notebook
+
+```text
+days/dayNNN_<quant|sim>_<topik-singkat>.ipynb
+```
+
+- `NNN` = nomor hari 3 digit (`001` … `100`).
+- `<quant|sim>` = jenis notebook.
+- `<topik-singkat>` = slug huruf kecil dengan tanda hubung, mis. `monte-carlo-harga-saham`.
+
+Contoh: `days/day027_quant_gerak-brown-geometrik-gbm.ipynb`, `days/day014_sim_game-of-life-conway.ipynb`.
+
+Grafik yang disimpan memakai awalan yang sama, mis. `outputs/figures/day027_gbm-paths.png`.
+
+## 📓 Isi standar tiap notebook
+
+Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
+
+1. **Judul + metadata** — nomor hari, tanggal, jenis, dan topik (juga disimpan di metadata JSON notebook `metadata.qb100`).
+2. **Konsep** — penjelasan singkat dalam bahasa Indonesia.
+3. **Setup** — import library dan helper dari package `qb100`.
+4. **Implementasi** — kode Python utama.
+5. **Visualisasi** — minimal satu grafik.
+6. **Kesimpulan (3 poin)** — tiga hal yang dipelajari.
+7. **Referensi** — sumber bacaan.
