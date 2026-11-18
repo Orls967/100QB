@@ -42,3 +42,19 @@ def test_log_and_simple_returns_relation(prices):
     np.testing.assert_allclose(
         np.exp(fin.log_returns(prices).values) - 1, fin.simple_returns(prices).values
     )
+
+
+def test_volatility_annualized():
+    r = pd.Series([0.01, -0.02, 0.015, 0.0, -0.005])
+    expected = r.std(ddof=1) * np.sqrt(252)
+    assert fin.volatility(r) == pytest.approx(expected)
+
+
+def test_volatility_not_annualized_and_custom_periods():
+    r = pd.Series([0.01, -0.02, 0.015, 0.0, -0.005])
+    assert fin.volatility(r, annualize=False) == pytest.approx(r.std(ddof=1))
+    assert fin.volatility(r, periods_per_year=12) == pytest.approx(r.std(ddof=1) * np.sqrt(12))
+
+
+def test_volatility_constant_returns_is_zero():
+    assert fin.volatility([0.01, 0.01, 0.01]) == pytest.approx(0.0)
