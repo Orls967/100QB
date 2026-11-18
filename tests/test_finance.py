@@ -77,3 +77,24 @@ def test_sharpe_ratio_dataframe_per_column():
     sr = fin.sharpe_ratio(df)
     assert sr["a"] == pytest.approx(df["a"].mean() / df["a"].std() * np.sqrt(252))
     assert np.isnan(sr["b"])
+
+
+def test_drawdown_series(prices):
+    dd = fin.drawdown(prices)
+    np.testing.assert_allclose(dd.values, [0.0, 0.0, -0.1, 108.9 / 110 - 1, 0.0])
+    assert (dd <= 0).all()
+
+
+def test_max_drawdown_value(prices):
+    assert fin.max_drawdown(prices) == pytest.approx(-0.1)
+
+
+def test_max_drawdown_monotonic_increase_is_zero():
+    assert fin.max_drawdown([1.0, 2.0, 3.0, 4.0]) == 0.0
+
+
+def test_max_drawdown_dataframe():
+    df = pd.DataFrame({"a": [100.0, 50.0, 75.0], "b": [10.0, 20.0, 15.0]})
+    mdd = fin.max_drawdown(df)
+    assert mdd["a"] == pytest.approx(-0.5)
+    assert mdd["b"] == pytest.approx(-0.25)
