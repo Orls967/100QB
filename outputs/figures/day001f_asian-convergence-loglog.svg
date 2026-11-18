@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" viewBox="0 0 900 520" font-family="system-ui, -apple-system, sans-serif">
+<rect width="900" height="520" fill="#ffffff"/>
+<text x="450" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#111827">Konvergensi Standard Error vs Jumlah Path (Log-Log, TypeScript)</text>
+<line x1="99.9" y1="55" x2="99.9" y2="455" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+<text x="99.9" y="477" text-anchor="middle" font-size="12" fill="#374151">1,000</text>
+<line x1="426.0" y1="55" x2="426.0" y2="455" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+<text x="426.0" y="477" text-anchor="middle" font-size="12" fill="#374151">10,000</text>
+<line x1="752.1" y1="55" x2="752.1" y2="455" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+<text x="752.1" y="477" text-anchor="middle" font-size="12" fill="#374151">100,000</text>
+<line x1="85" y1="393.6" x2="870" y2="393.6" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+<text x="75" y="397.6" text-anchor="end" font-size="12" fill="#374151">1e-3</text>
+<line x1="85" y1="260.4" x2="870" y2="260.4" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+<text x="75" y="264.4" text-anchor="end" font-size="12" fill="#374151">1e-2</text>
+<line x1="85" y1="127.2" x2="870" y2="127.2" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+<text x="75" y="131.2" text-anchor="end" font-size="12" fill="#374151">1e-1</text>
+<rect x="85" y="55" width="785" height="400" fill="none" stroke="#9ca3af"/>
+<polyline fill="none" stroke="#1f6feb" stroke-width="2.5" points="99.9,72.4 198.1,93.7 327.8,119.8 426.0,139.8 524.1,160.2 653.9,186.6 752.1,206.5 850.2,226.7"/>
+<circle cx="99.9" cy="72.4" r="4" fill="#1f6feb"/>
+<circle cx="198.1" cy="93.7" r="4" fill="#1f6feb"/>
+<circle cx="327.8" cy="119.8" r="4" fill="#1f6feb"/>
+<circle cx="426.0" cy="139.8" r="4" fill="#1f6feb"/>
+<circle cx="524.1" cy="160.2" r="4" fill="#1f6feb"/>
+<circle cx="653.9" cy="186.6" r="4" fill="#1f6feb"/>
+<circle cx="752.1" cy="206.5" r="4" fill="#1f6feb"/>
+<circle cx="850.2" cy="226.7" r="4" fill="#1f6feb"/>
+<polyline fill="none" stroke="#d1495b" stroke-width="2.5" points="99.9,92.4 198.1,114.1 327.8,140.9 426.0,160.6 524.1,180.4 653.9,207.5 752.1,227.8 850.2,247.8"/>
+<circle cx="99.9" cy="92.4" r="4" fill="#d1495b"/>
+<circle cx="198.1" cy="114.1" r="4" fill="#d1495b"/>
+<circle cx="327.8" cy="140.9" r="4" fill="#d1495b"/>
+<circle cx="426.0" cy="160.6" r="4" fill="#d1495b"/>
+<circle cx="524.1" cy="180.4" r="4" fill="#d1495b"/>
+<circle cx="653.9" cy="207.5" r="4" fill="#d1495b"/>
+<circle cx="752.1" cy="227.8" r="4" fill="#d1495b"/>
+<circle cx="850.2" cy="247.8" r="4" fill="#d1495b"/>
+<polyline fill="none" stroke="#2a9d8f" stroke-width="2.5" points="99.9,283.9 198.1,303.1 327.8,328.0 426.0,346.6 524.1,367.9 653.9,394.4 752.1,414.4 850.2,434.4"/>
+<circle cx="99.9" cy="283.9" r="4" fill="#2a9d8f"/>
+<circle cx="198.1" cy="303.1" r="4" fill="#2a9d8f"/>
+<circle cx="327.8" cy="328.0" r="4" fill="#2a9d8f"/>
+<circle cx="426.0" cy="346.6" r="4" fill="#2a9d8f"/>
+<circle cx="524.1" cy="367.9" r="4" fill="#2a9d8f"/>
+<circle cx="653.9" cy="394.4" r="4" fill="#2a9d8f"/>
+<circle cx="752.1" cy="414.4" r="4" fill="#2a9d8f"/>
+<circle cx="850.2" cy="434.4" r="4" fill="#2a9d8f"/>
+<rect x="618" y="63" width="244" height="72" rx="6" fill="#ffffff" fill-opacity="0.9" stroke="#d1d5db"/>
+<line x1="630" y1="77" x2="654" y2="77" stroke="#1f6feb" stroke-width="2.5"/>
+<text x="662" y="81" font-size="12" fill="#111827">Naive MC (slope=-0.502)</text>
+<line x1="630" y1="99" x2="654" y2="99" stroke="#d1495b" stroke-width="2.5"/>
+<text x="662" y="103" font-size="12" fill="#111827">Antithetic (slope=-0.505)</text>
+<line x1="630" y1="121" x2="654" y2="121" stroke="#2a9d8f" stroke-width="2.5"/>
+<text x="662" y="125" font-size="12" fill="#111827">Control Variate (slope=-0.493)</text>
+<text x="477.5" y="504" text-anchor="middle" font-size="13" fill="#111827">Jumlah Path N (skala log)</text>
+<text x="22" y="255" text-anchor="middle" font-size="13" fill="#111827" transform="rotate(-90 22 255)">Standard Error (SE)</text>
+</svg>
