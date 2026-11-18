@@ -46,3 +46,39 @@ pytest
 > `uv venv --python 3.11 .venv && uv pip install -r requirements.txt -e .`
 
 Lalu buka notebook dengan `jupyter lab` atau `jupyter notebook`.
+
+## 🛠️ Cara pakai scripts
+
+### `scripts/new_day.py` — buat notebook hari berikutnya
+
+Nomor hari otomatis (nomor terbesar di `days/` + 1). Bila `--type`/`--topic` tidak diisi,
+jenis dan topik diambil dari ROADMAP.md.
+
+```bash
+python scripts/new_day.py --type quant --topic "Return harian & kumulatif"
+python scripts/new_day.py --type sim --topic "Estimasi pi Monte Carlo" --dry-run   # cek tanpa membuat file
+python scripts/new_day.py                                                           # ikuti ROADMAP.md
+```
+
+Opsi lain: `--slug` (nama file singkat), `--day` (paksa nomor), `--date YYYY-MM-DD`, `--force`.
+
+### `scripts/update_readme.py` — perbarui tabel progres
+
+Membaca metadata semua notebook di `days/` lalu menulis ulang tabel di bagian **Progres** README ini.
+
+```bash
+python scripts/update_readme.py            # tulis ke README.md
+python scripts/update_readme.py --dry-run  # tampilkan tabel saja
+python scripts/update_readme.py --check    # exit 1 bila README belum up to date
+```
+
+### `scripts/run_all.py` — jalankan semua notebook
+
+Mengeksekusi setiap notebook dari atas ke bawah dan melaporkan yang gagal.
+
+```bash
+python scripts/run_all.py              # semua notebook di days/
+python scripts/run_all.py --day 7      # hanya hari 007
+python scripts/run_all.py --template   # ikut uji template
+python scripts/run_all.py --inplace    # simpan output ke notebook
+```
