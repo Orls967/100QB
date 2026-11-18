@@ -78,3 +78,19 @@ def test_monte_carlo_reproducible():
 def test_monte_carlo_invalid_n():
     with pytest.raises(ValueError):
         sim.monte_carlo(lambda r: 0.0, 0)
+
+
+def test_mc_summary_keys_and_values():
+    x = np.arange(1, 101, dtype=float)
+    s = sim.mc_summary(x, ci=0.9)
+    assert set(s) == {"mean", "std", "se", "ci_low", "ci_high"}
+    assert s["mean"] == pytest.approx(50.5)
+    assert s["std"] == pytest.approx(x.std(ddof=1))
+    assert s["se"] == pytest.approx(x.std(ddof=1) / 10)
+    assert s["ci_low"] == pytest.approx(np.quantile(x, 0.05))
+    assert s["ci_high"] == pytest.approx(np.quantile(x, 0.95))
+
+
+def test_mc_summary_needs_two_samples():
+    with pytest.raises(ValueError):
+        sim.mc_summary([1.0])
