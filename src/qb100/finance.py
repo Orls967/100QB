@@ -40,3 +40,21 @@ def volatility(returns, periods_per_year: int = TRADING_DAYS, annualize: bool = 
     r = _to_pandas(returns)
     vol = r.std(ddof=1)
     return vol * np.sqrt(periods_per_year) if annualize else vol
+
+
+def sharpe_ratio(returns, risk_free: float = 0.0, periods_per_year: int = TRADING_DAYS):
+    """Sharpe ratio tahunan.
+
+    ``risk_free`` adalah suku bunga bebas risiko TAHUNAN; dikonversi ke per-periode
+    lalu ``Sharpe = mean(excess) / std(excess) * sqrt(periods_per_year)``.
+    Mengembalikan ``nan`` bila standar deviasi nol.
+    """
+    r = _to_pandas(returns)
+    excess = r - risk_free / periods_per_year
+    std = excess.std(ddof=1)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        sr = excess.mean() / std * np.sqrt(periods_per_year)
+    flat = np.isclose(std, 0.0, atol=1e-14)
+    if np.isscalar(sr):
+        return float("nan") if (flat or not np.isfinite(sr)) else float(sr)
+    return sr.where(~flat)
