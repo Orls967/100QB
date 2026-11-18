@@ -88,3 +88,17 @@ def test_resolve_day_and_session_new_date(tmp_path):
     nb = new_day.build_notebook(1, "sim", "Pi", "2026-11-19", "pi", session="b", topic_no=2)
     nbformat.write(nb, tmp_path / "day001b_sim_pi.ipynb")
     assert new_day.resolve_day_and_session(tmp_path, today="2026-11-20") == (2, "")
+
+
+def test_resolve_day_and_session_midnight_wita(tmp_path):
+    before_midnight = dt.datetime(2026, 11, 19, 15, 59, tzinfo=ZoneInfo("UTC"))
+    after_midnight = dt.datetime(2026, 11, 19, 16, 0, tzinfo=ZoneInfo("UTC"))
+    date_before = new_day.wita_today(before_midnight)
+    date_after = new_day.wita_today(after_midnight)
+    assert date_before == "2026-11-19"
+    assert date_after == "2026-11-20"
+
+    nb = new_day.build_notebook(1, "quant", "Return", date_before, "return", topic_no=1)
+    nbformat.write(nb, tmp_path / "day001_quant_return.ipynb")
+    assert new_day.resolve_day_and_session(tmp_path, today=date_before) == (1, "b")
+    assert new_day.resolve_day_and_session(tmp_path, today=date_after) == (2, "")
