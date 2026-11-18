@@ -42,3 +42,6 @@ typescript/**/dist/
 # C++
 cpp/**/build*/
 cmake-build-*/
+
+# C
+c/**/build*/
