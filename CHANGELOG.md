@@ -3,6 +3,16 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 001e] — 2026-11-19 · Opsi Asia (Go): Monte Carlo, variance reduction & Greeks (Bonus)
+
+### Ditambahkan
+- Module Go `go/day001e_asian_options/` (Black-Scholes, Kemna–Vorst diskret, simulasi GBM paralel deterministik `sync.WaitGroup` + `math/rand/v2` PCG, estimator Naive/Antithetic/Control Variate, Delta *pathwise* & *bump-and-revalue* CRN, slope konvergensi log-log) beserta 5 unit test.
+- Output hasil `outputs/day001e/results.json` dan grafik `day001e_asian-convergence-loglog.png`, `day001e_asian-estimators-ci.png` di `outputs/figures/`.
+
+### Diperbarui
+- Generalisasi `scripts/update_readme.py` untuk membaca `*/meta.json` lintas bahasa (`rust`, `go`, `ts`, `cpp`, `c`) dan menambah kolom `Bahasa` di tabel progres `README.md`.
+- `.gitignore` (`go/**/bin/`, `*.test`).
+
 ## [Hari 001d] — 2026-11-19 · Opsi Asia (Rust): Monte Carlo, variance reduction & Greeks (Bonus)
 
 ### Ditambahkan

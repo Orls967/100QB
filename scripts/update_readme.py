@@ -23,7 +23,7 @@ import nbformat
 
 ROOT = Path(__file__).resolve().parents[1]
 DAYS_DIR = ROOT / "days"
-RUST_DIR = ROOT / "rust"
+LANG_DIRS = ("rust", "go", "ts", "cpp", "c")
 README = ROOT / "README.md"
 TOTAL_DAYS = 100
 
@@ -38,8 +38,11 @@ def _session_rank(session: str | None) -> int:
     return ord(session.lower()) - ord("a")
 
 
-def collect_days(days_dir: Path = DAYS_DIR, rust_dir: Path | None = None) -> list[dict]:
-    """Kumpulkan metadata semua notebook harian dan crate Rust, urut (day, session)."""
+def collect_days(
+    days_dir: Path = DAYS_DIR,
+    lang_roots: list[Path] | None = None,
+) -> list[dict]:
+    """Kumpulkan metadata semua notebook harian dan modul bahasa lain, urut (day, session)."""
     rows = []
     if days_dir.exists():
         for path in sorted(days_dir.glob("day*.ipynb")):
@@ -65,15 +68,19 @@ def collect_days(days_dir: Path = DAYS_DIR, rust_dir: Path | None = None) -> lis
                     "session": session,
                     "topic_no": topic_no,
                     "type": meta.get("type") or m.group(3),
+                    "language": meta.get("language") or "python",
                     "topic": meta.get("topic") or m.group(4).replace("-", " ").title(),
                     "date": meta.get("date") or "-",
                     "file": path.relative_to(ROOT).as_posix(),
                 }
             )
 
-    target_rust = rust_dir if rust_dir is not None else (RUST_DIR if days_dir == DAYS_DIR else None)
-    if target_rust is not None and target_rust.exists():
-        for meta_path in sorted(target_rust.glob("*/meta.json")):
+    if lang_roots is None:
+        lang_roots = [ROOT / name for name in LANG_DIRS] if days_dir == DAYS_DIR else []
+    for lang_dir in lang_roots:
+        if not lang_dir.exists():
+            continue
+        for meta_path in sorted(lang_dir.glob("*/meta.json")):
             try:
                 meta = json.loads(meta_path.read_text(encoding="utf-8"))
             except Exception as exc:
@@ -91,6 +98,7 @@ def collect_days(days_dir: Path = DAYS_DIR, rust_dir: Path | None = None) -> lis
                     "session": session,
                     "topic_no": topic_no,
                     "type": meta.get("type", "quant"),
+                    "language": meta.get("language") or lang_dir.name,
                     "topic": meta.get("topic", meta_path.parent.name),
                     "date": meta.get("date", "-"),
                     "file": link,
@@ -111,16 +119,17 @@ def render_table(rows: list[dict], total: int = TOTAL_DAYS) -> str:
     lines = [
         f"**Progres: {done}/{total} topik ({pct}%)** · quant: {n_quant} · sim: {n_sim}",
         "",
-        "| Hari | Topik No | Jenis | Topik | Tanggal | Notebook |",
-        "|:----:|:--------:|:-----:|-------|---------|----------|",
+        "| Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |",
+        "|:----:|:--------:|:-----:|:------:|-------|---------|-----------------|",
     ]
     for r in rows:
         topic = str(r["topic"]).replace("|", "\\|")
         day_label = f"{r['day']}{r.get('session', '')}"
         raw_tno = r.get("topic_no") if "topic_no" in r else r["day"]
         topic_no = "bonus" if raw_tno is None else f"{int(raw_tno):03d}"
+        lang = r.get("language") or "python"
         lines.append(
-            f"| {day_label} | {topic_no} | `{r['type']}` | {topic} | {r['date']} | "
+            f"| {day_label} | {topic_no} | `{r['type']}` | `{lang}` | {topic} | {r['date']} | "
             f"[{Path(r['file']).name}]({r['file']}) |"
         )
     return "\n".join(lines)

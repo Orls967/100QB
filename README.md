@@ -147,14 +147,15 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [ROADMAP.md](ROADMAP.md) · Riwayat: [CHANGELOG.md](CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 4/100 topik (4%)** · quant: 3 · sim: 1
+**Progres: 5/100 topik (5%)** · quant: 4 · sim: 1
 
-| Hari | Topik No | Jenis | Topik | Tanggal | Notebook |
-|:----:|:--------:|:-----:|-------|---------|----------|
-| 1 | 001 | `quant` | Return harian & kumulatif | 2026-11-19 | [day001_quant_return-harian-kumulatif.ipynb](days/day001_quant_return-harian-kumulatif.ipynb) |
-| 1b | 002 | `sim` | Estimasi π dengan Monte Carlo | 2026-11-19 | [day001b_sim_estimasi-dengan-monte-carlo.ipynb](days/day001b_sim_estimasi-dengan-monte-carlo.ipynb) |
-| 1c | bonus | `quant` | Opsi Asia: Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001c_quant_opsi-asia-monte-carlo-variance.ipynb](days/day001c_quant_opsi-asia-monte-carlo-variance.ipynb) |
-| 1d | bonus | `quant` | Opsi Asia (Rust): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001d_asian_options](rust/day001d_asian_options) |
+| Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
+|:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
+| 1 | 001 | `quant` | `python` | Return harian & kumulatif | 2026-11-19 | [day001_quant_return-harian-kumulatif.ipynb](days/day001_quant_return-harian-kumulatif.ipynb) |
+| 1b | 002 | `sim` | `python` | Estimasi π dengan Monte Carlo | 2026-11-19 | [day001b_sim_estimasi-dengan-monte-carlo.ipynb](days/day001b_sim_estimasi-dengan-monte-carlo.ipynb) |
+| 1c | bonus | `quant` | `python` | Opsi Asia: Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001c_quant_opsi-asia-monte-carlo-variance.ipynb](days/day001c_quant_opsi-asia-monte-carlo-variance.ipynb) |
+| 1d | bonus | `quant` | `rust` | Opsi Asia (Rust): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001d_asian_options](rust/day001d_asian_options) |
+| 1e | bonus | `quant` | `go` | Opsi Asia (Go): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001e_asian_options](go/day001e_asian_options) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi
