@@ -54,3 +54,76 @@ def collect_days(days_dir: Path = DAYS_DIR) -> list[dict]:
             }
         )
     return sorted(rows, key=lambda r: r["day"])
+
+
+def render_table(rows: list[dict], total: int = TOTAL_DAYS) -> str:
+    """Render ringkasan + tabel markdown progres."""
+    n_quant = sum(r["type"] == "quant" for r in rows)
+    n_sim = sum(r["type"] == "sim" for r in rows)
+    done = len(rows)
+    pct = round(100 * done / total) if total else 0
+    lines = [
+        f"**Progres: {done}/{total} hari ({pct}%)** · quant: {n_quant} · sim: {n_sim}",
+        "",
+    ]
+    if not rows:
+        lines.append("_Belum ada notebook. Hari ke-1 segera dimulai!_")
+        return "\n".join(lines)
+    lines += [
+        "| Hari | Tanggal | Jenis | Topik | Notebook |",
+        "|:----:|:-------:|:-----:|-------|----------|",
+    ]
+    for r in rows:
+        topic = str(r["topic"]).replace("|", "\\|")
+        lines.append(
+            f"| {r['day']:03d} | {r['date']} | `{r['type']}` | {topic} | "
+            f"[{Path(r['file']).name}]({r['file']}) |"
+        )
+    return "\n".join(lines)
+
+
+def replace_block(text: str, block: str) -> str:
+    """Ganti isi di antara marker START/END dengan ``block``."""
+    pattern = re.compile(re.escape(START) + r".*?" + re.escape(END), re.DOTALL)
+    if not pattern.search(text):
+        raise ValueError(f"Marker {START} / {END} tidak ditemukan di README.md")
+    return pattern.sub(lambda _: f"{START}\n{block}\n{END}", text, count=1)
+
+
+def main(argv=None) -> int:
+    p = argparse.ArgumentParser(description="Regenerasi tabel progres di README.md.")
+    p.add_argument("--readme", type=Path, default=README, help="path README (default: README.md)")
+    p.add_argument("--check", action="store_true", help="exit 1 bila README belum up to date")
+    p.add_argument("--dry-run", action="store_true", help="cetak tabel tanpa menulis file")
+    args = p.parse_args(argv)
+
+    rows = collect_days()
+    block = render_table(rows)
+    if args.dry_run:
+        print(block)
+        return 0
+
+    old = args.readme.read_text(encoding="utf-8")
+    try:
+        new = replace_block(old, block)
+    except ValueError as exc:
+        print(exc, file=sys.stderr)
+        return 2
+
+    if args.check:
+        if new != old:
+            print("README.md belum up to date. Jalankan: python scripts/update_readme.py")
+            return 1
+        print("README.md sudah up to date.")
+        return 0
+
+    if new != old:
+        args.readme.write_text(new, encoding="utf-8")
+        print(f"README.md diperbarui ({len(rows)} notebook).")
+    else:
+        print(f"README.md sudah up to date ({len(rows)} notebook).")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
