@@ -3,6 +3,15 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 001g] — 2026-11-19 · Opsi Asia (C++): Monte Carlo, variance reduction & Greeks (Bonus)
+
+### Ditambahkan
+- Project C++20 `cpp/day001g_asian_options/` (CMake, `Xoshiro256**` + Polar Marsaglia, `std::erfc`, Black-Scholes, Kemna–Vorst diskret, simulasi GBM paralel deterministik `std::thread`, estimator Naive/Antithetic/Control Variate, Delta *pathwise* & *bump-and-revalue* CRN, slope log-log, generator SVG murni) beserta 6 unit test `doctest`.
+- Output hasil `outputs/day001g/results.json` dan grafik `day001g_asian-convergence-loglog.svg`, `day001g_asian-estimators-ci.svg` di `outputs/figures/`.
+
+### Diperbarui
+- `README.md` (tabel progres baris `1g` otomatis terbaca tanpa mengubah `update_readme.py`) dan `.gitignore` (`cpp/**/build*/`, `cmake-build-*/`).
+
 ## [Hari 001f] — 2026-11-19 · Opsi Asia (TypeScript): Monte Carlo, variance reduction & Greeks (Bonus)
 
 ### Ditambahkan
