@@ -3,6 +3,15 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 001f] — 2026-11-19 · Opsi Asia (TypeScript): Monte Carlo, variance reduction & Greeks (Bonus)
+
+### Ditambahkan
+- Package TypeScript `typescript/day001f_asian_options/` (PRNG `Xoshiro128++` + Polar Marsaglia, `erf` Cody, Black-Scholes, Kemna–Vorst diskret, simulasi GBM paralel deterministik `worker_threads`, estimator Naive/Antithetic/Control Variate, Delta *pathwise* & *bump-and-revalue* CRN, slope log-log, generator grafik SVG murni) beserta 6 unit test Vitest.
+- Output hasil `outputs/day001f/results.json` dan grafik `day001f_asian-convergence-loglog.svg`, `day001f_asian-estimators-ci.svg` di `outputs/figures/`.
+
+### Diperbarui
+- `scripts/update_readme.py` (`typescript` di `LANG_DIRS`), `README.md` (tabel progres baris `1f`), dan `.gitignore` (`node_modules/`, `typescript/**/dist/`).
+
 ## [Hari 001e] — 2026-11-19 · Opsi Asia (Go): Monte Carlo, variance reduction & Greeks (Bonus)
 
 ### Ditambahkan

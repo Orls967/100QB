@@ -145,9 +145,11 @@ def test_update_readme_collects_multi_language_meta(tmp_path, monkeypatch):
     days = tmp_path / "days"
     rust = tmp_path / "rust" / "day001d_asian"
     go_dir = tmp_path / "go" / "day001e_asian"
+    ts_dir = tmp_path / "typescript" / "day001f_asian"
     days.mkdir()
     rust.mkdir(parents=True)
     go_dir.mkdir(parents=True)
+    ts_dir.mkdir(parents=True)
     (rust / "meta.json").write_text(
         '{"day": 1, "session": "d", "topic_no": null, "type": "quant", '
         '"topic": "Opsi Asia (Rust)", "date": "2026-11-19", "link": "rust/day001d_asian"}',
@@ -158,10 +160,18 @@ def test_update_readme_collects_multi_language_meta(tmp_path, monkeypatch):
         '"topic": "Opsi Asia (Go)", "date": "2026-11-19", "link": "go/day001e_asian"}',
         encoding="utf-8",
     )
+    (ts_dir / "meta.json").write_text(
+        '{"day": 1, "session": "f", "topic_no": null, "type": "quant", "language": "typescript", '
+        '"topic": "Opsi Asia (TypeScript)", "date": "2026-11-19", "link": "typescript/day001f_asian"}',
+        encoding="utf-8",
+    )
     monkeypatch.setattr(update_readme, "ROOT", tmp_path)
-    rows = update_readme.collect_days(days, lang_roots=[tmp_path / "rust", tmp_path / "go"])
-    assert len(rows) == 2
-    assert [r["language"] for r in rows] == ["rust", "go"]
+    rows = update_readme.collect_days(
+        days, lang_roots=[tmp_path / "rust", tmp_path / "go", tmp_path / "typescript"]
+    )
+    assert len(rows) == 3
+    assert [r["language"] for r in rows] == ["rust", "go", "typescript"]
     table = update_readme.render_table(rows)
     assert "| 1d | bonus | `quant` | `rust` | Opsi Asia (Rust) | 2026-11-19 | [day001d_asian](rust/day001d_asian) |" in table
     assert "| 1e | bonus | `quant` | `go` | Opsi Asia (Go) | 2026-11-19 | [day001e_asian](go/day001e_asian) |" in table
+    assert "| 1f | bonus | `quant` | `typescript` | Opsi Asia (TypeScript) | 2026-11-19 | [day001f_asian](typescript/day001f_asian) |" in table
