@@ -47,3 +47,20 @@ def random_walk(
     paths[0] = start
     paths[1:] = start + np.cumsum(steps, axis=0)
     return paths
+
+
+def monte_carlo(
+    func: Callable[[np.random.Generator], float],
+    n_sims: int,
+    seed: int | None | np.random.Generator = None,
+) -> np.ndarray:
+    """Monte Carlo generik: jalankan ``func(rng)`` sebanyak ``n_sims`` kali.
+
+    ``func`` menerima satu argumen ``Generator`` dan mengembalikan satu angka
+    (atau array). Hasil dikumpulkan dalam satu ``np.ndarray``.
+    """
+    if n_sims < 1:
+        raise ValueError("n_sims harus >= 1")
+    rng = get_rng(seed)
+    return np.array([func(rng) for _ in range(n_sims)])
+
