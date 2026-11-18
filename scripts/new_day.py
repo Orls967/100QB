@@ -63,3 +63,82 @@ def roadmap_entry(day: int, roadmap: Path = ROADMAP) -> tuple[str, str] | None:
         if m and int(m.group(1)) == day:
             return m.group(2), m.group(3)
     return None
+
+
+def build_notebook(day: int, nb_type: str, topic: str, date: str, slug: str):
+    """Isi template dengan metadata hari dan kembalikan objek notebook."""
+    nb = nbformat.read(TEMPLATE, as_version=4)
+    repl = {
+        "{{DAY}}": f"{day:03d}",
+        "{{DATE}}": date,
+        "{{TYPE}}": nb_type,
+        "{{TOPIC}}": topic,
+        "{{SLUG}}": slug,
+    }
+    for cell in nb.cells:
+        for key, val in repl.items():
+            cell.source = cell.source.replace(key, val)
+    nb.metadata["qb100"] = {
+        "template": False,
+        "day": day,
+        "date": date,
+        "type": nb_type,
+        "topic": topic,
+        "slug": slug,
+    }
+    return nb
+
+
+def parse_args(argv=None):
+    p = argparse.ArgumentParser(description="Buat notebook hari berikutnya dari template.")
+    p.add_argument("--type", choices=TYPES, help="jenis notebook: quant atau sim")
+    p.add_argument("--topic", help="topik hari ini (default: ambil dari ROADMAP.md)")
+    p.add_argument("--slug", help="nama singkat untuk file (default: dari topik)")
+    p.add_argument("--day", type=int, help="paksa nomor hari (default: otomatis)")
+    p.add_argument("--date", default=dt.date.today().isoformat(), help="tanggal YYYY-MM-DD")
+    p.add_argument("--dry-run", action="store_true", help="tampilkan rencana tanpa membuat file")
+    p.add_argument("--force", action="store_true", help="timpa file bila sudah ada")
+    return p.parse_args(argv)
+
+
+def main(argv=None) -> int:
+    args = parse_args(argv)
+    day = args.day or next_day_number()
+    if not 1 <= day <= 999:
+        print(f"Nomor hari tidak valid: {day}", file=sys.stderr)
+        return 2
+    if day in existing_days() and not args.force:
+        print(f"Hari {day:03d} sudah ada di days/ (pakai --force untuk menimpa).", file=sys.stderr)
+        return 1
+
+    nb_type, topic = args.type, args.topic
+    if nb_type is None or topic is None:
+        entry = roadmap_entry(day)
+        if entry is None:
+            print("Butuh --type dan --topic (topik tidak ditemukan di ROADMAP.md).", file=sys.stderr)
+            return 2
+        nb_type = nb_type or entry[0]
+        topic = topic or entry[1]
+
+    slug = slugify(args.slug or topic)
+    path = DAYS_DIR / f"day{day:03d}_{nb_type}_{slug}.ipynb"
+    nb = build_notebook(day, nb_type, topic, args.date, slug)
+
+    if args.dry_run:
+        print("[dry-run] Tidak ada file yang dibuat.")
+        print(f"  hari   : {day:03d}")
+        print(f"  jenis  : {nb_type}")
+        print(f"  topik  : {topic}")
+        print(f"  tanggal: {args.date}")
+        print(f"  file   : {path.relative_to(ROOT)}")
+        print(f"  sel    : {len(nb.cells)}")
+        return 0
+
+    DAYS_DIR.mkdir(parents=True, exist_ok=True)
+    nbformat.write(nb, path)
+    print(f"Notebook dibuat: {path.relative_to(ROOT)}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
