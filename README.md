@@ -118,14 +118,15 @@ python scripts/run_all.py --inplace    # simpan output ke notebook
 ## 🏷️ Konvensi penamaan notebook
 
 ```text
-days/dayNNN_<quant|sim>_<topik-singkat>.ipynb
+days/dayNNN[sesi]_<quant|sim>_<topik-singkat>.ipynb
 ```
 
 - `NNN` = nomor hari 3 digit (`001` … `100`).
+- `[sesi]` = kosong untuk sesi pertama di hari itu, lalu `b`, `c`, dst. bila ada lebih dari satu notebook pada tanggal WITA yang sama (`day001_...`, `day001b_...`).
 - `<quant|sim>` = jenis notebook.
 - `<topik-singkat>` = slug huruf kecil dengan tanda hubung, mis. `monte-carlo-harga-saham`.
 
-Contoh: `days/day027_quant_gerak-brown-geometrik-gbm.ipynb`, `days/day014_sim_game-of-life-conway.ipynb`.
+Contoh: `days/day001_quant_return-harian-kumulatif.ipynb`, `days/day001b_sim_estimasi-pi-monte-carlo.ipynb`.
 
 Grafik yang disimpan memakai awalan yang sama, mis. `outputs/figures/day027_gbm-paths.png`.
 
