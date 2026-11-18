@@ -84,3 +84,17 @@ def running_mean(samples: np.ndarray) -> np.ndarray:
     if x.size == 0:
         raise ValueError("samples tidak boleh kosong")
     return np.cumsum(x) / np.arange(1, x.size + 1, dtype=float)
+
+
+def running_se(samples: np.ndarray) -> np.ndarray:
+    """Standard error kumulatif dari indeks 1..N (indeks pertama bernilai nan)."""
+    x = np.asarray(samples, dtype=float).ravel()
+    if x.size == 0:
+        raise ValueError("samples tidak boleh kosong")
+    n = np.arange(1, x.size + 1, dtype=float)
+    mean = np.cumsum(x) / n
+    var_pop = np.maximum(0.0, np.cumsum(x * x) / n - mean * mean)
+    se = np.full_like(n, np.nan)
+    if x.size > 1:
+        se[1:] = np.sqrt(var_pop[1:] / (n[1:] - 1.0))
+    return se
