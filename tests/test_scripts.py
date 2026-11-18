@@ -82,3 +82,9 @@ def test_resolve_day_and_session_same_date(tmp_path):
     nb2 = new_day.build_notebook(1, "sim", "Pi", "2026-11-19", "pi", session="b", topic_no=2)
     nbformat.write(nb2, tmp_path / "day001b_sim_pi.ipynb")
     assert new_day.resolve_day_and_session(tmp_path, today="2026-11-19") == (1, "c")
+
+
+def test_resolve_day_and_session_new_date(tmp_path):
+    nb = new_day.build_notebook(1, "sim", "Pi", "2026-11-19", "pi", session="b", topic_no=2)
+    nbformat.write(nb, tmp_path / "day001b_sim_pi.ipynb")
+    assert new_day.resolve_day_and_session(tmp_path, today="2026-11-20") == (2, "")
