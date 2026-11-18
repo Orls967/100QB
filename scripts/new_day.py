@@ -50,11 +50,68 @@ def slugify(text: str, max_len: int = 40) -> str:
     return text or "topik"
 
 
+def session_rank(session: str | None) -> int:
+    """Urutan numerik huruf sesi: '' atau 'a' -> 0, 'b' -> 1, dst."""
+    if not session:
+        return 0
+    return ord(session.lower()) - ord("a")
+
+
+def next_session_letter(session: str | None) -> str:
+    """Huruf sesi berikutnya: ''/'a' -> 'b', 'b' -> 'c', dst."""
+    rank = session_rank(session)
+    return chr(ord("a") + rank + 1)
+
+
+def existing_sessions(days_dir: Path = DAYS_DIR) -> set[tuple[int, str]]:
+    """Kumpulan (day, session) yang sudah ada di folder days/."""
+    if not days_dir.exists():
+        return set()
+    found: set[tuple[int, str]] = set()
+    for p in days_dir.iterdir():
+        if m := DAY_FILE_RE.match(p.name):
+            sess = "" if (m.group(2) in (None, "a")) else m.group(2)
+            found.add((int(m.group(1)), sess))
+    return found
+
+
+def latest_notebook_meta(days_dir: Path = DAYS_DIR) -> dict | None:
+    """Ambil metadata notebook terakhir di days/ berdasarkan (day, session)."""
+    if not days_dir.exists():
+        return None
+    entries: list[dict] = []
+    for p in days_dir.iterdir():
+        m = DAY_FILE_RE.match(p.name)
+        if not m:
+            continue
+        meta = {}
+        try:
+            meta = nbformat.read(p, as_version=4).metadata.get("qb100", {}) or {}
+        except Exception:
+            pass
+        day = int(meta.get("day") or m.group(1))
+        raw_sess = meta.get("session") if meta.get("session") is not None else (m.group(2) or "")
+        sess = "" if raw_sess in ("", "a") else str(raw_sess)
+        entries.append(
+            {
+                "day": day,
+                "session": sess,
+                "date": meta.get("date") or "",
+                "topic_no": meta.get("topic_no"),
+                "path": p,
+            }
+        )
+    if not entries:
+        return None
+    entries.sort(key=lambda e: (e["day"], session_rank(e["session"])))
+    return entries[-1]
+
+
 def existing_days(days_dir: Path = DAYS_DIR) -> list[int]:
     """Daftar nomor hari yang sudah ada di folder days/."""
     if not days_dir.exists():
         return []
-    return sorted(int(m.group(1)) for p in days_dir.iterdir() if (m := DAY_FILE_RE.match(p.name)))
+    return sorted({int(m.group(1)) for p in days_dir.iterdir() if (m := DAY_FILE_RE.match(p.name))})
 
 
 def next_day_number(days_dir: Path = DAYS_DIR) -> int:
