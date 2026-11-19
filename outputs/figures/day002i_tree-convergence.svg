@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="440" viewBox="0 0 780 440">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<style>text{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;fill:#1f2937;}.title{font-size:16px;font-weight:700;}.axis{stroke:#4b5563;stroke-width:1.2;}.grid{stroke:#e5e7eb;stroke-width:0.8;}.lbl{font-size:11px;fill:#4b5563;}.leg{font-size:12px;}</style>
+<text x="390" y="28" text-anchor="middle" class="title">Hull-White Trinomial Tree Convergence (Log-Log Error vs Steps/Year)</text>
+<line x1="85" y1="375" x2="730" y2="375" class="axis"/>
+<line x1="85" y1="60" x2="85" y2="375" class="axis"/>
+<line x1="85" y1="60" x2="85" y2="375" class="grid"/>
+<text x="85" y="393" text-anchor="middle" class="lbl">m=12</text>
+<line x1="246.25" y1="60" x2="246.25" y2="375" class="grid"/>
+<text x="246.25" y="393" text-anchor="middle" class="lbl">m=24</text>
+<line x1="407.5" y1="60" x2="407.5" y2="375" class="grid"/>
+<text x="407.5" y="393" text-anchor="middle" class="lbl">m=48</text>
+<line x1="568.75" y1="60" x2="568.75" y2="375" class="grid"/>
+<text x="568.75" y="393" text-anchor="middle" class="lbl">m=96</text>
+<line x1="730" y1="60" x2="730" y2="375" class="grid"/>
+<text x="730" y="393" text-anchor="middle" class="lbl">m=192</text>
+<line x1="85" y1="316.395" x2="730" y2="316.395" class="grid"/>
+<text x="75" y="320.395" text-anchor="end" class="lbl">1e-6</text>
+<line x1="85" y1="243.14" x2="730" y2="243.14" class="grid"/>
+<text x="75" y="247.14" text-anchor="end" class="lbl">1e-5</text>
+<line x1="85" y1="169.884" x2="730" y2="169.884" class="grid"/>
+<text x="75" y="173.884" text-anchor="end" class="lbl">1e-4</text>
+<line x1="85" y1="96.6279" x2="730" y2="96.6279" class="grid"/>
+<text x="75" y="100.628" text-anchor="end" class="lbl">1e-3</text>
+<polyline fill="none" stroke="#2563eb" stroke-width="2.2" points="85.00,159.97 246.25,191.20 407.50,230.51 568.75,330.36 730.00,273.69 "/>
+<circle cx="85.00" cy="159.97" r="4" fill="#2563eb"/>
+<circle cx="246.25" cy="191.20" r="4" fill="#2563eb"/>
+<circle cx="407.50" cy="230.51" r="4" fill="#2563eb"/>
+<circle cx="568.75" cy="330.36" r="4" fill="#2563eb"/>
+<circle cx="730.00" cy="273.69" r="4" fill="#2563eb"/>
+<polyline fill="none" stroke="#dc2626" stroke-width="2.2" points="85.00,159.97 246.25,191.20 407.50,230.51 568.75,330.36 730.00,273.69 "/>
+<circle cx="85.00" cy="159.97" r="4" fill="#dc2626"/>
+<circle cx="246.25" cy="191.20" r="4" fill="#dc2626"/>
+<circle cx="407.50" cy="230.51" r="4" fill="#dc2626"/>
+<circle cx="568.75" cy="330.36" r="4" fill="#dc2626"/>
+<circle cx="730.00" cy="273.69" r="4" fill="#dc2626"/>
+<polyline fill="none" stroke="#059669" stroke-width="2.2" points="85.00,144.91 246.25,178.04 407.50,219.37 568.75,207.35 730.00,239.48 "/>
+<circle cx="85.00" cy="144.91" r="4" fill="#059669"/>
+<circle cx="246.25" cy="178.04" r="4" fill="#059669"/>
+<circle cx="407.50" cy="219.37" r="4" fill="#059669"/>
+<circle cx="568.75" cy="207.35" r="4" fill="#059669"/>
+<circle cx="730.00" cy="239.48" r="4" fill="#059669"/>
+<text x="407.5" y="418" text-anchor="middle" class="lbl">Steps per year (m, log scale)</text>
+<rect x="480" y="65" width="240" height="76" fill="#ffffff" stroke="#d1d5db" rx="4"/>
+<line x1="492" y1="84" x2="518" y2="84" stroke="#2563eb" stroke-width="2.5"/><text x="526" y="88" class="leg">ZBP (slope -1.66)</text>
+<line x1="492" y1="106" x2="518" y2="106" stroke="#dc2626" stroke-width="2.5"/><text x="526" y="110" class="leg">ZBC (slope -1.66)</text>
+<line x1="492" y1="128" x2="518" y2="128" stroke="#059669" stroke-width="2.5"/><text x="526" y="132" class="leg">5y Cap</text>
+</svg>
