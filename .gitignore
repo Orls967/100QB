@@ -45,3 +45,7 @@ cmake-build-*/
 
 # C
 c/**/build*/
+
+# Ruby
+.bundle/
+ruby/**/vendor/bundle/
