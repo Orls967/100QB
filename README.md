@@ -147,7 +147,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [ROADMAP.md](ROADMAP.md) · Riwayat: [CHANGELOG.md](CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 15/100 topik (15%)** · quant: 14 · sim: 1
+**Progres: 16/100 topik (16%)** · quant: 15 · sim: 1
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -165,6 +165,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 2d | bonus | `quant` | `python` | Risiko kredit Vasicek: distribusi kerugian eksak, LHP & importance sampling | 2026-11-20 | [day002d_quant_risiko-kredit-vasicek-distribusi.ipynb](days/day002d_quant_risiko-kredit-vasicek-distribusi.ipynb) |
 | 2e | bonus | `quant` | `python` | Model Heston: pricing Fourier, kalibrasi & Monte Carlo QE | 2026-11-20 | [day002e_quant_model-heston-pricing-fourier-kalibrasi.ipynb](days/day002e_quant_model-heston-pricing-fourier-kalibrasi.ipynb) |
 | 2f | bonus | `quant` | `rust` | Inferensi Bayesian state-space: Kalman, particle filter & PMMH | 2026-11-20 | [day002f_state_space_pmmh](rust/day002f_state_space_pmmh) |
+| 2g | bonus | `quant` | `cpp` | AAD untuk Greeks Monte Carlo: tape mode-balik, pathwise & keranjang 10 aset | 2026-11-20 | [day002g_aad_greeks](cpp/day002g_aad_greeks) |
 | 2g | bonus | `quant` | `ruby` | Opsi Put Amerika (Ruby): CRR Binomial, LSM Monte Carlo & PSOR PDE | 2026-11-20 | [day002g_american_put](ruby/day002g_american_put) |
 <!-- PROGRESS:END -->
 

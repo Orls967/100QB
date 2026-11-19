@@ -3,6 +3,16 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 002g] — 2026-11-20 · AAD untuk Greeks Monte Carlo: tape mode-balik, pathwise & keranjang 10 aset (C++, Bonus)
+
+### Ditambahkan
+- Project C++20 `cpp/day002g_aad_greeks/` tanpa library AD/numerik eksternal: *tape* mode-balik (`mark`/`rewind_to_mark`), `Dual<T>` mode maju, *forward-over-reverse* Gamma (`Dual<Number>`), faktorisasi Cholesky terdiferensiasi, dan mesin Monte Carlo paralel deterministik `std::thread` (`200.000` path) untuk GBM 1-langkah, Opsi Asia 252-langkah, *Digital call* (penghalusan $\Phi((S_T-K)/\varepsilon)$), keranjang aritmetik 10 aset (67 sensitivitas vs beda hingga CRN), dan keranjang geometrik 10 aset (vs gradien rumus tertutup).
+- Unit test `doctest` (`tests/test_aad.cpp`) lulus di build Release dan UBSan (`-fsanitize=undefined`).
+- Output `outputs/day002g/results.json` dan grafik `day002g_aad-vs-analytic.svg`, `day002g_digital-bias-variance.svg`, `day002g_basket-speedup.svg`, `day002g_tape-growth.svg` di `outputs/figures/`.
+
+### Diperbarui
+- `README.md` (tabel progres baris `2g` C++) dan `CHANGELOG.md`.
+
 ## [Hari 002f] — 2026-11-20 · Inferensi Bayesian state-space: Kalman, particle filter & PMMH (Rust, Bonus)
 
 ### Ditambahkan
