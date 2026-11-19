@@ -3,6 +3,16 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 002i] — 2026-11-20 · Model short-rate Hull–White 1-faktor: pohon trinomial, Jamshidian, kalibrasi & Bermudan LSM (C++, Bonus)
+
+### Ditambahkan
+- Project C++20 `cpp/day002i_hull_white/` (hanya standard library): pohon trinomial Hull–White terkalibrasi ke kurva Nelson–Siegel via induksi maju Arrow–Debreu ($m \in \{12..192\}$, galat kurva $< 1.5 \times 10^{-15}$), pricing analitik & pohon ZBP/ZBC dan cap 5y, dekomposisi Jamshidian (Brent) vs pohon vs Monte Carlo antitetik OU + *control variate* martingale (`N = 200.000`, `dt = 1/52`), kalibrasi Nelder–Mead bebas-noise & 100 replikasi bernoise paralel (`std::thread`), swaption Bermudan 10y (pohon + Richardson vs *two-pass* LSM `N = 100.000`), serta DV01 pergeseran paralel $\pm 1\text{ bp}$.
+- Unit test `doctest` (`tests/test_hw.cpp`) lulus di build Release dan UBSan (`-fsanitize=undefined`).
+- Output `outputs/day002i/results.json` dan grafik `day002i_tree-convergence.svg`, `day002i_curve-and-swaptions.svg`, `day002i_calib-scatter.svg`, `day002i_bermudan-bounds-dv01.svg` di `outputs/figures/`.
+
+### Diperbarui
+- `README.md` (tabel progres baris `2i` C++) dan `CHANGELOG.md`.
+
 ## [Hari 002h] — 2026-11-20 · Hawkes + limit order book: simulasi eksak, MLE, mesin pencocokan & fakta stilistik (C++, Bonus)
 
 ### Ditambahkan

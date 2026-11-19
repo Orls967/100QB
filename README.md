@@ -147,7 +147,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [ROADMAP.md](ROADMAP.md) · Riwayat: [CHANGELOG.md](CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 17/100 topik (17%)** · quant: 16 · sim: 1
+**Progres: 18/100 topik (18%)** · quant: 17 · sim: 1
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -168,6 +168,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 2g | bonus | `quant` | `cpp` | AAD untuk Greeks Monte Carlo: tape mode-balik, pathwise & keranjang 10 aset | 2026-11-20 | [day002g_aad_greeks](cpp/day002g_aad_greeks) |
 | 2g | bonus | `quant` | `ruby` | Opsi Put Amerika (Ruby): CRR Binomial, LSM Monte Carlo & PSOR PDE | 2026-11-20 | [day002g_american_put](ruby/day002g_american_put) |
 | 2h | bonus | `quant` | `cpp` | Hawkes + limit order book: simulasi eksak, MLE, mesin pencocokan & fakta stilistik | 2026-11-20 | [day002h_hawkes_orderbook](cpp/day002h_hawkes_orderbook) |
+| 2i | bonus | `quant` | `cpp` | Hull-White: pohon trinomial, Jamshidian, kalibrasi & Bermudan | 2026-11-20 | [day002i_hull_white](cpp/day002i_hull_white) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi
