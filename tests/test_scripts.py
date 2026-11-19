@@ -146,10 +146,12 @@ def test_update_readme_collects_multi_language_meta(tmp_path, monkeypatch):
     rust = tmp_path / "rust" / "day001d_asian"
     go_dir = tmp_path / "go" / "day001e_asian"
     ts_dir = tmp_path / "typescript" / "day001f_asian"
+    rb_dir = tmp_path / "ruby" / "day001i_asian"
     days.mkdir()
     rust.mkdir(parents=True)
     go_dir.mkdir(parents=True)
     ts_dir.mkdir(parents=True)
+    rb_dir.mkdir(parents=True)
     (rust / "meta.json").write_text(
         '{"day": 1, "session": "d", "topic_no": null, "type": "quant", '
         '"topic": "Opsi Asia (Rust)", "date": "2026-11-19", "link": "rust/day001d_asian"}',
@@ -165,13 +167,20 @@ def test_update_readme_collects_multi_language_meta(tmp_path, monkeypatch):
         '"topic": "Opsi Asia (TypeScript)", "date": "2026-11-19", "link": "typescript/day001f_asian"}',
         encoding="utf-8",
     )
+    (rb_dir / "meta.json").write_text(
+        '{"day": 1, "session": "i", "topic_no": null, "type": "quant", "language": "ruby", '
+        '"topic": "Opsi Asia (Ruby)", "date": "2026-11-19", "link": "ruby/day001i_asian"}',
+        encoding="utf-8",
+    )
+    assert "ruby" in update_readme.LANG_DIRS
     monkeypatch.setattr(update_readme, "ROOT", tmp_path)
     rows = update_readme.collect_days(
-        days, lang_roots=[tmp_path / "rust", tmp_path / "go", tmp_path / "typescript"]
+        days, lang_roots=[tmp_path / "rust", tmp_path / "go", tmp_path / "typescript", tmp_path / "ruby"]
     )
-    assert len(rows) == 3
-    assert [r["language"] for r in rows] == ["rust", "go", "typescript"]
+    assert len(rows) == 4
+    assert [r["language"] for r in rows] == ["rust", "go", "typescript", "ruby"]
     table = update_readme.render_table(rows)
     assert "| 1d | bonus | `quant` | `rust` | Opsi Asia (Rust) | 2026-11-19 | [day001d_asian](rust/day001d_asian) |" in table
     assert "| 1e | bonus | `quant` | `go` | Opsi Asia (Go) | 2026-11-19 | [day001e_asian](go/day001e_asian) |" in table
     assert "| 1f | bonus | `quant` | `typescript` | Opsi Asia (TypeScript) | 2026-11-19 | [day001f_asian](typescript/day001f_asian) |" in table
+    assert "| 1i | bonus | `quant` | `ruby` | Opsi Asia (Ruby) | 2026-11-19 | [day001i_asian](ruby/day001i_asian) |" in table

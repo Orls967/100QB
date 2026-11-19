@@ -147,7 +147,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [ROADMAP.md](ROADMAP.md) · Riwayat: [CHANGELOG.md](CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 8/100 topik (8%)** · quant: 7 · sim: 1
+**Progres: 9/100 topik (9%)** · quant: 8 · sim: 1
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -159,6 +159,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 1f | bonus | `quant` | `typescript` | Opsi Asia (TypeScript): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001f_asian_options](typescript/day001f_asian_options) |
 | 1g | bonus | `quant` | `cpp` | Opsi Asia (C++): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001g_asian_options](cpp/day001g_asian_options) |
 | 1h | bonus | `quant` | `c` | Opsi Asia (C): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001h_asian_options](c/day001h_asian_options) |
+| 1i | bonus | `quant` | `ruby` | Opsi Asia (Ruby): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001i_asian_options](ruby/day001i_asian_options) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi

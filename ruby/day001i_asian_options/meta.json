@@ -1,0 +1,10 @@
+{
+  "day": 1,
+  "session": "i",
+  "topic_no": null,
+  "type": "quant",
+  "language": "ruby",
+  "topic": "Opsi Asia (Ruby): Monte Carlo, variance reduction & Greeks",
+  "date": "2026-11-19",
+  "link": "ruby/day001i_asian_options"
+}

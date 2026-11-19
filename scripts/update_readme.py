@@ -23,7 +23,7 @@ import nbformat
 
 ROOT = Path(__file__).resolve().parents[1]
 DAYS_DIR = ROOT / "days"
-LANG_DIRS = ("rust", "go", "typescript", "ts", "cpp", "c")
+LANG_DIRS = ("rust", "go", "typescript", "ts", "cpp", "c", "ruby")
 README = ROOT / "README.md"
 TOTAL_DAYS = 100
 

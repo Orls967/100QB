@@ -3,6 +3,15 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 001i] — 2026-11-19 · Opsi Asia (Ruby): Monte Carlo, variance reduction & Greeks (Bonus)
+
+### Ditambahkan
+- Project Ruby murni `ruby/day001i_asian_options/` (Ruby 3.3+ / YJIT, nol dependensi runtime, `Random.new` + Box–Muller polar buatan sendiri, `Math.erfc`, Black-Scholes, Kemna–Vorst diskret, paralelisasi deterministik `Process.fork` + `IO.pipe` + `Marshal`, buffer pra-alokasi, estimator Naive/Antithetic/Control Variate, Delta *pathwise* & *bump-and-revalue* CRN, slope log-log, generator SVG murni Ruby) beserta 7 unit test Minitest (40 assertions) dan RuboCop bersih (0 offense).
+- Output hasil `outputs/day001i/results.json` dan grafik `day001i_asian-convergence-loglog.svg`, `day001i_asian-estimators-ci.svg` di `outputs/figures/`.
+
+### Diperbarui
+- `scripts/update_readme.py` (menambah `ruby` ke `LANG_DIRS` beserta test di `tests/test_scripts.py`), `README.md` (tabel progres baris `1i`), dan `.gitignore` (`.bundle/`, `ruby/**/vendor/bundle/`).
+
 ## [Hari 001h] — 2026-11-19 · Opsi Asia (C): Monte Carlo, variance reduction & Greeks (Bonus)
 
 ### Ditambahkan
