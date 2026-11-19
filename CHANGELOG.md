@@ -3,6 +3,16 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 002e] — 2026-11-20 · Model Heston: pricing Fourier, kalibrasi & Monte Carlo QE (Bonus)
+
+### Ditambahkan
+- Paket `src/qb100/heston/` (`cf.py`, `pricing.py`, `calibration.py`, `simulation.py`): fungsi karakteristik *Little Heston Trap* (Albrecher et al. 2007), *pricing* Fourier Gil-Pelaez & COS (Fang–Oosterlee 2008), *implied volatility* (Newton + Brent), kalibrasi *least-squares* dengan *multi-start* & analisis identifiabilitas Jacobian ($100$ replikasi noisy), serta Monte Carlo QE (Andersen 2008) vs Euler *full-truncation* pada kasus pelanggaran kondisi Feller, lengkap dengan *control variate* $S_T$ dan Greeks CRN.
+- Unit test `tests/test_heston_pricing.py` & `tests/test_heston_calib_mc.py` (6 test).
+- Notebook `days/day002e_quant_model-heston-pricing-fourier-kalibrasi.ipynb` beserta grafik `day002e_smile-and-fourier.png`, `day002e_calibration-noisy.png`, dan `day002e_qe-vs-euler.png` di `outputs/figures/`.
+
+### Diperbarui
+- `README.md` (tabel progres baris `2e`) dan `CHANGELOG.md`.
+
 ## [Hari 002d] — 2026-11-20 · Risiko kredit Vasicek: distribusi kerugian eksak, LHP & importance sampling (Bonus)
 
 ### Ditambahkan
