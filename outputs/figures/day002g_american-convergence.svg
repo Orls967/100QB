@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="500" viewBox="0 0 860 500">
+  <rect width="860" height="500" fill="#ffffff"/>
+  <text x="430" y="30" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="bold" fill="#0f172a">Konvergensi Harga Put Amerika: CRR, PSOR PDE & LSM</text>
+  <rect x="82" y="54" width="746" height="382" fill="#f8fafc" stroke="#cbd5e1"/>
+  <line x1="82" y1="436.0" x2="828" y2="436.0" stroke="#e2e8f0" stroke-dasharray="4,4"/>
+  <text x="74" y="440.0" text-anchor="end" font-family="monospace" font-size="11" fill="#475569">5.927</text>
+  <line x1="82" y1="340.5" x2="828" y2="340.5" stroke="#e2e8f0" stroke-dasharray="4,4"/>
+  <text x="74" y="344.5" text-anchor="end" font-family="monospace" font-size="11" fill="#475569">5.995</text>
+  <line x1="82" y1="245.0" x2="828" y2="245.0" stroke="#e2e8f0" stroke-dasharray="4,4"/>
+  <text x="74" y="249.0" text-anchor="end" font-family="monospace" font-size="11" fill="#475569">6.063</text>
+  <line x1="82" y1="149.5" x2="828" y2="149.5" stroke="#e2e8f0" stroke-dasharray="4,4"/>
+  <text x="74" y="153.5" text-anchor="end" font-family="monospace" font-size="11" fill="#475569">6.131</text>
+  <line x1="82" y1="54.0" x2="828" y2="54.0" stroke="#e2e8f0" stroke-dasharray="4,4"/>
+  <text x="74" y="58.0" text-anchor="end" font-family="monospace" font-size="11" fill="#475569">6.199</text>
+  <text x="20" y="245" text-anchor="middle" transform="rotate(-90 20 245)" font-family="sans-serif" font-size="12" fill="#334155">Harga Put Amerika (USD)</text>
+  <line x1="82" y1="207.27" x2="828" y2="207.27" stroke="#0f172a" stroke-width="1.2" stroke-dasharray="6,4"/>
+  <polyline fill="none" stroke="#1d4ed8" stroke-width="2.2" points="82.0,230.36 206.33,218.25 330.67,212.6 455.0,209.2 579.33,208.1 703.67,207.54 828.0,207.27"/>
+  <circle cx="82.0" cy="230.36" r="3.5" fill="#1d4ed8"/>
+  <circle cx="206.33" cy="218.25" r="3.5" fill="#1d4ed8"/>
+  <circle cx="330.67" cy="212.6" r="3.5" fill="#1d4ed8"/>
+  <circle cx="455.0" cy="209.2" r="3.5" fill="#1d4ed8"/>
+  <circle cx="579.33" cy="208.1" r="3.5" fill="#1d4ed8"/>
+  <circle cx="703.67" cy="207.54" r="3.5" fill="#1d4ed8"/>
+  <circle cx="828.0" cy="207.27" r="3.5" fill="#1d4ed8"/>
+  <polyline fill="none" stroke="#059669" stroke-width="2.2" points="82.0,266.9 330.67,222.28 579.33,210.96 828.0,208.04"/>
+  <circle cx="82.0" cy="266.9" r="3.5" fill="#059669"/>
+  <circle cx="330.67" cy="222.28" r="3.5" fill="#059669"/>
+  <circle cx="579.33" cy="210.96" r="3.5" fill="#059669"/>
+  <circle cx="828.0" cy="208.04" r="3.5" fill="#059669"/>
+  <polyline fill="none" stroke="#d97706" stroke-width="2.2" points="82.0,245.0 268.5,233.14 455.0,257.22 641.5,252.91 828.0,260.96"/>
+  <circle cx="82.0" cy="245.0" r="3.5" fill="#d97706"/>
+  <circle cx="268.5" cy="233.14" r="3.5" fill="#d97706"/>
+  <circle cx="455.0" cy="257.22" r="3.5" fill="#d97706"/>
+  <circle cx="641.5" cy="252.91" r="3.5" fill="#d97706"/>
+  <circle cx="828.0" cy="260.96" r="3.5" fill="#d97706"/>
+  <line x1="82.0" y1="407.94" x2="82.0" y2="82.06" stroke="#d97706" stroke-width="1.5"/>
+  <line x1="268.5" y1="351.35" x2="268.5" y2="114.93" stroke="#d97706" stroke-width="1.5"/>
+  <line x1="455.0" y1="332.11" x2="455.0" y2="182.33" stroke="#d97706" stroke-width="1.5"/>
+  <line x1="641.5" y1="304.81" x2="641.5" y2="201.01" stroke="#d97706" stroke-width="1.5"/>
+  <line x1="828.0" y1="298.26" x2="828.0" y2="223.65" stroke="#d97706" stroke-width="1.5"/>
+  <rect x="90" y="60" width="210" height="78" fill="#ffffff" fill-opacity="0.9" stroke="#cbd5e1"/>
+  <text x="98" y="76" font-family="sans-serif" font-size="12" fill="#1d4ed8">● CRR Binomial (n=50..4000)</text>
+  <text x="98" y="94" font-family="sans-serif" font-size="12" fill="#059669">● PSOR PDE (100..800)</text>
+  <text x="98" y="112" font-family="sans-serif" font-size="12" fill="#d97706">● LSM MC (5k..100k, CI 95%)</text>
+  <text x="98" y="130" font-family="sans-serif" font-size="12" fill="#0f172a">-- Referensi CRR-4000</text>
+</svg>
