@@ -3,6 +3,16 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 002f] — 2026-11-20 · Inferensi Bayesian state-space: Kalman, particle filter & PMMH (Rust, Bonus)
+
+### Ditambahkan
+- Crate Rust `rust/day002f_state_space_pmmh/` (Kalman filter eksak + verifikasi *brute force* $T=10$ via Cholesky, bootstrap particle filter tanpa alokasi di loop panas + resampling sistematik, posterior grid 2D trapesium, Haario adaptive MH & PMMH paralel `rayon` deterministik, split $\hat{R}$, ESS *initial positive sequence*, MCSE, dan Model B Stochastic Volatility).
+- 5 unit test `cargo test` (Kalman vs *brute force*, resampling sistematik tak bias, ketidakbiasan PF & normalisasi grid, validasi ESS AR(1) & $\hat{R}$ i.i.d., reproduktibilitas & invariansi jumlah thread).
+- Output `outputs/day002f/results.json` dan grafik `day002f_pf-unbiased-and-var.png`, `day002f_model_a_posteriors.png`, `day002f_model_b_sv.png` di `outputs/figures/`.
+
+### Diperbarui
+- `README.md` (tabel progres baris `2f`) dan `CHANGELOG.md`.
+
 ## [Hari 002e] — 2026-11-20 · Model Heston: pricing Fourier, kalibrasi & Monte Carlo QE (Bonus)
 
 ### Ditambahkan
