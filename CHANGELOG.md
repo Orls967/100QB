@@ -3,6 +3,16 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 002b] — 2026-11-20 · Estimasi kovarians & portofolio varians minimum: Wishart, Marchenko–Pastur, Ledoit–Wolf (Bonus)
+
+### Ditambahkan
+- Modul `src/qb100/covariance.py` (model faktor sintetis, kovarians sampel, shrinkage Ledoit–Wolf target identitas buatan sendiri, GMV bentuk tertutup & `SLSQP`, frontier *long-only*, spektrum Marchenko–Pastur, eksperimen Monte Carlo batched & sapuan rasio $q = N/T$).
+- Unit test `tests/test_covariance.py` (5 test: SPD model faktor, GMV tertutup vs numerik, sifat & asimtotik Ledoit–Wolf, rasio Wishart & reprodusibilitas, batas eigenvalue Marchenko–Pastur).
+- Notebook `days/day002b_quant_estimasi-kovarians-portofolio-varians.ipynb` beserta grafik `day002b_wishart-lw.png`, `day002b_marchenko-pastur.png`, `day002b_q-sweep.png`, dan `day002b_long-only-frontier.png` di `outputs/figures/`.
+
+### Diperbarui
+- `README.md` (tabel progres baris `2b`) dan `CHANGELOG.md`.
+
 ## [Hari 001i] — 2026-11-19 · Opsi Asia (Ruby): Monte Carlo, variance reduction & Greeks (Bonus)
 
 ### Ditambahkan

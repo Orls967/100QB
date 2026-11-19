@@ -147,7 +147,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [ROADMAP.md](ROADMAP.md) · Riwayat: [CHANGELOG.md](CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 9/100 topik (9%)** · quant: 8 · sim: 1
+**Progres: 11/100 topik (11%)** · quant: 10 · sim: 1
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -160,6 +160,8 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 1g | bonus | `quant` | `cpp` | Opsi Asia (C++): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001g_asian_options](cpp/day001g_asian_options) |
 | 1h | bonus | `quant` | `c` | Opsi Asia (C): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001h_asian_options](c/day001h_asian_options) |
 | 1i | bonus | `quant` | `ruby` | Opsi Asia (Ruby): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001i_asian_options](ruby/day001i_asian_options) |
+| 2b | bonus | `quant` | `python` | Estimasi kovarians & portofolio varians minimum: Wishart, Marchenko-Pastur, Ledoit-Wolf | 2026-11-20 | [day002b_quant_estimasi-kovarians-portofolio-varians.ipynb](days/day002b_quant_estimasi-kovarians-portofolio-varians.ipynb) |
+| 2g | bonus | `quant` | `ruby` | Opsi Put Amerika (Ruby): CRR Binomial, LSM Monte Carlo & PSOR PDE | 2026-11-20 | [day002g_american_put](ruby/day002g_american_put) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi
