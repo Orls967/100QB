@@ -3,6 +3,16 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 002c] — 2026-11-20 · HMM dua rezim: forward-backward, Baum–Welch & Viterbi (Bonus)
+
+### Ditambahkan
+- Modul `src/qb100/hmm.py` dengan NumPy murni (simulator HMM Gaussian, forward naif vs forward–backward ber-skala Rabiner, dekode Viterbi ruang log, enumerasi *brute force* untuk verifikasi, Baum–Welch EM *batched* `(S, K)` dengan inisialisasi kuantil $|r|$ deterministik & pengurutan state menurut $\sigma$, seleksi BIC, diagnostik Viterbi, dan diagram reliabilitas).
+- Unit test `tests/test_hmm.py` (3 test: verifikasi *brute force* $T=10$ multi-seed, *overflow* versi naif vs stabilitas versi ber-skala $T=2000$, dan monotonisitas/reprodusibilitas EM).
+- Notebook `days/day002c_quant_hmm-dua-rezim-forward-backward-baum.ipynb` beserta grafik `day002c_viterbi-and-em-ll.png`, `day002c_param-recovery.png`, dan `day002c_calibration-and-bic.png` di `outputs/figures/`.
+
+### Diperbarui
+- `README.md` (tabel progres baris `2c`) dan `CHANGELOG.md`.
+
 ## [Hari 002b] — 2026-11-20 · Estimasi kovarians & portofolio varians minimum: Wishart, Marchenko–Pastur, Ledoit–Wolf (Bonus)
 
 ### Ditambahkan
