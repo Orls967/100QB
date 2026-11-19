@@ -1,0 +1,244 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'fileutils'
+require 'json'
+require_relative '../lib/longevity'
+
+repo_root = File.expand_path('../../..', __dir__)
+out_dir = File.join(repo_root, 'outputs', 'day002j')
+fig_dir = File.join(repo_root, 'outputs', 'figures')
+FileUtils.mkdir_p(out_dir)
+FileUtils.mkdir_p(fig_dir)
+
+workers = Longevity::Parallel.default_workers
+timings = {}
+
+# --- Bagian 1: SVD, Lee-Carter (tanpa & dengan noise R=200), Gompertz-Makeham ---
+t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
+svd_checks = [[6, 4, 11], [10, 7, 29]].map do |m, n, seed|
+  rng = Longevity::Rng.new(seed)
+  mat = Array.new(m) { Array.new(n) { rng.next_normal } }
+  res = Longevity::Linalg.svd(mat)
+  rec = Longevity::Linalg.reconstruct_from_svd(res[:u], res[:s], res[:v])
+  diff = Array.new(m) { |i| Array.new(n) { |j| mat[i][j] - rec[i][j] } }
+  utu = Longevity::Linalg.matmul(Longevity::Linalg.transpose(res[:u]), res[:u])
+  vtv = Longevity::Linalg.matmul(Longevity::Linalg.transpose(res[:v]), res[:v])
+  k = res[:s].size
+  eye_k = Longevity::Linalg.eye(k)
+  eu = Array.new(k) { |i| Array.new(k) { |j| utu[i][j] - eye_k[i][j] } }
+  ev = Array.new(k) { |i| Array.new(k) { |j| vtv[i][j] - eye_k[i][j] } }
+  {
+    shape: "#{m}x#{n}",
+    recon_err: Longevity::Linalg.frobenius_norm(diff),
+    u_ortho_err: Longevity::Linalg.frobenius_norm(eu),
+    v_ortho_err: Longevity::Linalg.frobenius_norm(ev)
+  }
+end
+
+truth = Longevity::LeeCarter.true_parameters(seed: 42)
+ln_m_clean = Longevity::LeeCarter.simulate_log_mortality(truth, noise_sd: 0.0, seed: 42)
+lc_clean = Longevity::LeeCarter.fit(ln_m_clean)
+lc_clean_err = {
+  max_a: truth[:a].each_index.map { |i| (lc_clean[:a][i] - truth[:a][i]).abs }.max,
+  max_b: truth[:b].each_index.map { |i| (lc_clean[:b][i] - truth[:b][i]).abs }.max,
+  max_k: truth[:k].each_index.map { |t| (lc_clean[:k][t] - truth[:k][t]).abs }.max
+}
+a_clean_gm = lc_clean[:a].each_with_index.map { |ax, i| ax - (lc_clean[:b][i] * truth[:k_raw_mean]) }
+gm_clean = Longevity::GompertzMakeham.fit(truth[:ages], a_clean_gm)
+
+# Main noisy realization (seed 42) used for Bagian 2-4
+ln_m_obs = Longevity::LeeCarter.simulate_log_mortality(truth, seed: 42)
+lc_obs = Longevity::LeeCarter.fit(ln_m_obs)
+a_obs_gm = lc_obs[:a].each_with_index.map { |ax, i| ax - (lc_obs[:b][i] * truth[:k_raw_mean]) }
+gm_obs = Longevity::GompertzMakeham.fit(truth[:ages], a_obs_gm)
+
+# R = 200 noisy replications in parallel
+reps = 200
+noisy_reps = Longevity::Parallel.map_indices(reps, workers: workers, base_seed: 4200) do |_r, rseed|
+  ln_m_r = Longevity::LeeCarter.simulate_log_mortality(truth, seed: rseed)
+  fit_r = Longevity::LeeCarter.fit(ln_m_r)
+  a_r_gm = fit_r[:a].each_with_index.map { |ax, i| ax - (fit_r[:b][i] * truth[:k_raw_mean]) }
+  gm_r = Longevity::GompertzMakeham.fit(truth[:ages], a_r_gm)
+  b_rms = Math.sqrt(truth[:b].each_index.sum(0.0) { |i| (fit_r[:b][i] - truth[:b][i])**2 } / truth[:b].size)
+  k_rms = Math.sqrt(truth[:k].each_index.sum(0.0) { |t| (fit_r[:k][t] - truth[:k][t])**2 } / truth[:k].size)
+  { a: fit_r[:a], b_rms: b_rms, k_rms: k_rms, gm: gm_r }
+end
+
+theo_var_a = (Longevity::LeeCarter::TRUE_NOISE_SD**2) / Longevity::LeeCarter::YEARS.size.to_f
+var_ratios = truth[:ages].each_index.map do |i|
+  emp_var = Longevity::Stats.variance(noisy_reps.map { |r| r[:a][i] }, ddof: 1)
+  emp_var / theo_var_a
+end
+gm_as = noisy_reps.map { |r| r[:gm][:a] }
+gm_bs = noisy_reps.map { |r| r[:gm][:b] }
+gm_cs = noisy_reps.map { |r| r[:gm][:c] }
+
+bagian1 = {
+  svd_checks: svd_checks,
+  lc_clean_err: lc_clean_err,
+  gm_clean: gm_clean,
+  gm_obs: gm_obs,
+  noisy200: {
+    mean_var_ratio_a: Longevity::Stats.mean(var_ratios),
+    theo_var_a: theo_var_a,
+    mean_b_rms: Longevity::Stats.mean(noisy_reps.map { |r| r[:b_rms] }),
+    mean_k_rms: Longevity::Stats.mean(noisy_reps.map { |r| r[:k_rms] }),
+    gm_mean_a: Longevity::Stats.mean(gm_as),
+    gm_sd_a: Longevity::Stats.std_dev(gm_as),
+    gm_mean_b: Longevity::Stats.mean(gm_bs),
+    gm_sd_b: Longevity::Stats.std_dev(gm_bs),
+    gm_mean_c: Longevity::Stats.mean(gm_cs),
+    gm_sd_c: Longevity::Stats.std_dev(gm_cs),
+    gm_corr_bc: Longevity::Stats.correlation(gm_bs, gm_cs)
+  }
+}
+timings[:bagian1_sec] = Process.clock_gettime(Process::CLOCK_MONOTONIC) - t0
+
+# --- Bagian 2: Proyeksi stokastik k_t (N=20,000) & bootstrap parameter ---
+t1 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+rw_params = Longevity::Forecast.estimate_rw_drift(lc_obs[:k])
+k_paths_fixed = Longevity::Forecast.simulate_k_paths(
+  rw_params, horizon: 40, num_paths: 20_000, param_uncertainty: false, base_seed: 10_001, workers: workers
+)
+k_paths_param = Longevity::Forecast.simulate_k_paths(
+  rw_params, horizon: 40, num_paths: 20_000, param_uncertainty: true, base_seed: 20_001, workers: workers
+)
+moments_fixed = Longevity::Forecast.check_moments(k_paths_fixed, rw_params, horizons: [1, 10, 40],
+                                                                            param_uncertainty: false)
+moments_param = Longevity::Forecast.check_moments(k_paths_param, rw_params, horizons: [40], param_uncertainty: true)
+boot_refit = Longevity::Forecast.parametric_bootstrap_refit(
+  lc_obs[:a], lc_obs[:b], lc_obs[:k], rw_params, reps: 200, base_seed: 30_001, workers: workers
+)
+e65_fan = Longevity::Forecast.cohort_life_expectancy_fan(lc_obs[:a], lc_obs[:b], k_paths_fixed)
+
+bagian2 = {
+  rw_params: rw_params,
+  moments_fixed: moments_fixed,
+  moments_param_h40: moments_param[0],
+  bootstrap200: boot_refit,
+  e65_fan_summary: {
+    q05: e65_fan[:e65_q05],
+    q50: e65_fan[:e65_q50],
+    q95: e65_fan[:e65_q95],
+    mean: e65_fan[:e65_mean]
+  }
+}
+timings[:bagian2_sec] = Process.clock_gettime(Process::CLOCK_MONOTONIC) - t1
+
+# --- Bagian 3: Anuitas (anchor eksak, simulasi 200,000, anuitas stokastik) ---
+t2 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+k_med = Array.new(35) { |j| rw_params[:k_last] + ((j + 1) * rw_params[:d_hat]) }
+qx_med = Longevity::Annuity.cohort_qx(lc_obs[:a], lc_obs[:b], k_med)
+ann_det = Longevity::Annuity.deterministic_moments(qx_med)
+ann_sim = Longevity::Annuity.simulate_individual_lives(
+  qx_med, num_lives: 200_000, base_seed: 40_001, workers: workers
+)
+
+# Stochastic annuity on S=10,000 paths (reused in Bagian 4)
+scen_paths_base = k_paths_fixed[0, 10_000].map { |p| p[0, 35] }
+scen_paths_param = k_paths_param[0, 10_000].map { |p| p[0, 35] }
+scen_mom_base = Longevity::Portfolio.scenario_moments(lc_obs[:a], lc_obs[:b], scen_paths_base, workers: workers)
+scen_mom_param = Longevity::Portfolio.scenario_moments(lc_obs[:a], lc_obs[:b], scen_paths_param, workers: workers)
+
+mu_sorted = scen_mom_base[:mus].sort
+bagian3 = {
+  deterministic: ann_det,
+  sim_200k: ann_sim,
+  stochastic_mu: {
+    mean: Longevity::Stats.mean(scen_mom_base[:mus]),
+    sd: Longevity::Stats.std_dev(scen_mom_base[:mus]),
+    q05: Longevity::Stats.quantile_sorted(mu_sorted, 0.05),
+    q50: Longevity::Stats.quantile_sorted(mu_sorted, 0.50),
+    q95: Longevity::Stats.quantile_sorted(mu_sorted, 0.95)
+  }
+}
+timings[:bagian3_sec] = Process.clock_gettime(Process::CLOCK_MONOTONIC) - t2
+
+# --- Bagian 4: Portofolio, LTV, CV vs N, Modal VaR/ES, Stres 0.5% ---
+t3 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+n_list = [10, 100, 1000, 10_000, Float::INFINITY]
+ltv_base = Longevity::Portfolio.total_variance_summary(scen_mom_base, n_list)
+ltv_param = Longevity::Portfolio.total_variance_summary(scen_mom_param, n_list)
+
+sim_n100 = Longevity::Portfolio.simulate_portfolio_full(
+  lc_obs[:a], lc_obs[:b], scen_paths_base[0, 5000], num_policies: 100, base_seed: 50_001, workers: workers
+)
+sim_n1000 = Longevity::Portfolio.simulate_portfolio_full(
+  lc_obs[:a], lc_obs[:b], scen_paths_base[0, 5000], num_policies: 1000, base_seed: 60_001, workers: workers
+)
+sim_n10 = Longevity::Portfolio.simulate_portfolio_full(
+  lc_obs[:a], lc_obs[:b], scen_paths_base[0, 5000], num_policies: 10, base_seed: 70_001, workers: workers
+)
+
+cap_base = [100, 1000, 10_000].map do |n_pol|
+  Longevity::Portfolio.capital_conditional_normal(
+    scen_mom_base, num_policies: n_pol, base_seed: 80_000 + n_pol, workers: workers
+  )
+end
+cap_param = [100, 1000, 10_000].map do |n_pol|
+  Longevity::Portfolio.capital_conditional_normal(
+    scen_mom_param, num_policies: n_pol, base_seed: 90_000 + n_pol, workers: workers
+  )
+end
+
+stress_per_policy = Longevity::Portfolio.deterministic_stress_p005(lc_obs[:a], lc_obs[:b], rw_params)
+
+bagian4 = {
+  ltv_base: ltv_base,
+  ltv_param: ltv_param,
+  full_sim: {
+    n10: sim_n10.except(:samples),
+    n100: sim_n100.except(:samples),
+    n1000: sim_n1000.except(:samples)
+  },
+  capital_normal_base: cap_base,
+  capital_normal_param: cap_param,
+  stress_005_per_policy: stress_per_policy,
+  stress_005_n10000: stress_per_policy * 10_000.0
+}
+timings[:bagian4_sec] = Process.clock_gettime(Process::CLOCK_MONOTONIC) - t3
+timings[:total_sec] = timings.values.sum(0.0)
+timings[:workers] = workers
+
+# --- Write SVGs ---
+Longevity::Svg.write_mortality_surface(
+  File.join(fig_dir, 'day002j_mortality-surface.svg'), truth[:ages], truth[:years], ln_m_obs
+)
+Longevity::Svg.write_life_expectancy_fan(
+  File.join(fig_dir, 'day002j_life-expectancy-fan.svg'), e65_fan
+)
+Longevity::Svg.write_k_moments_qq(
+  File.join(fig_dir, 'day002j_k-moments-qq.svg'), k_paths_fixed, rw_params
+)
+Longevity::Svg.write_cv_vs_n(
+  File.join(fig_dir, 'day002j_cv-vs-n.svg'),
+  ltv_base[:by_n],
+  [bagian4[:full_sim][:n10], bagian4[:full_sim][:n100], bagian4[:full_sim][:n1000]]
+)
+Longevity::Svg.write_liability_hist_var(
+  File.join(fig_dir, 'day002j_liability-hist-var.svg'),
+  sim_n100[:samples], sim_n100[:mean], sim_n100[:var995]
+)
+Longevity::Svg.write_capital_vs_n(
+  File.join(fig_dir, 'day002j_capital-vs-n.svg'), cap_base, cap_param
+)
+
+results = {
+  timings: timings,
+  bagian1: bagian1,
+  bagian2: bagian2,
+  bagian3: bagian3,
+  bagian4: bagian4
+}
+File.write(File.join(out_dir, 'results.json'), JSON.pretty_generate(results))
+
+puts format('day002j complete in %<sec>.2fs (%<w>d workers).', sec: timings[:total_sec], w: workers)
+puts format('LC clean max err: a=%<a>.2e b=%<b>.2e k=%<k>.2e',
+            a: lc_clean_err[:max_a], b: lc_clean_err[:max_b], k: lc_clean_err[:max_k])
+puts format('Noisy 200 var ratio a_hat: %<r>.4f', r: bagian1[:noisy200][:mean_var_ratio_a])
+puts format('Annuity det=%<det>.6f | sim=%<sim>.6f +- %<se>.6f',
+            det: ann_det[:mean_backward], sim: ann_sim[:mean], se: ann_sim[:mean_se])
+puts format('Stress 0.5%% (N=10,000)=%<st>.2f vs VaR 99.5%% (N=10,000)=%<var>.2f',
+            st: bagian4[:stress_005_n10000], var: cap_base.last[:var995])

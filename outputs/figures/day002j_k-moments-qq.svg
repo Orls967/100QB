@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="420" viewBox="0 0 760 420">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<style>text{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;fill:#1f2937;}.title{font-size:15px;font-weight:700;}.axis{stroke:#4b5563;stroke-width:1.2;}.lbl{font-size:11px;fill:#4b5563;}</style>
+<text x="380" y="26" text-anchor="middle" class="title">Forecast k(T+40) Empirical vs Theoretical Normal Quantiles</text>
+<line x1="80.0" y1="365.0" x2="710.0" y2="365.0" class="axis"/>
+<line x1="80.0" y1="55.0" x2="80.0" y2="365.0" class="axis"/>
+<line x1="80.00" y1="365.00" x2="710.00" y2="55.00" stroke="#dc2626" stroke-dasharray="5,4" stroke-width="1.8"/>
+<circle cx="107.36" cy="352.51" r="4.5" fill="#2563eb"/>
+<circle cx="191.90" cy="310.84" r="4.5" fill="#2563eb"/>
+<circle cx="236.97" cy="288.40" r="4.5" fill="#2563eb"/>
+<circle cx="312.30" cy="251.62" r="4.5" fill="#2563eb"/>
+<circle cx="395.98" cy="209.66" r="4.5" fill="#2563eb"/>
+<circle cx="479.67" cy="167.84" r="4.5" fill="#2563eb"/>
+<circle cx="554.99" cy="131.26" r="4.5" fill="#2563eb"/>
+<circle cx="600.07" cy="109.92" r="4.5" fill="#2563eb"/>
+<circle cx="684.61" cy="69.01" r="4.5" fill="#2563eb"/>
+<text x="395" y="398" text-anchor="middle" class="lbl">Theoretical Normal Quantile (h=40) vs Empirical</text>
+</svg>
