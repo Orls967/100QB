@@ -3,6 +3,16 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 002h] — 2026-11-20 · Hawkes + limit order book: simulasi eksak, MLE, mesin pencocokan & fakta stilistik (C++, Bonus)
+
+### Ditambahkan
+- Project C++20 `cpp/day002h_hawkes_orderbook/` (hanya standard library): proses titik Hawkes (*Ogata thinning*, eksak *Dassios–Zhao*, uji penskalaan ulang waktu KS & Ljung–Box, MLE $O(n)$ + BFGS paralel `std::thread` $R=200$), mesin *limit order book* berkinerja tinggi (*pool allocator*, antrean FIFO intrusif, bitmap 2-level 64-bit, `0` alokasi *heap* setelah *warmup*, `23.9M ops/detik`) vs mesin referensi $O(n)$ pada 1.000.000 order, dan simulasi pasar gabungan ($T=20.000$) dengan fakta stilistik lengkap.
+- Unit test `doctest` (`tests/test_hawkes_ob.cpp`) lulus di build Release dan UBSan (`-fsanitize=undefined`).
+- Output `outputs/day002h/results.json` dan grafik `day002h_hawkes-fano-qq.svg`, `day002h_hawkes-mle-scatter.svg`, `day002h_ob-latency.svg`, `day002h_market-stylized-facts.svg` di `outputs/figures/`.
+
+### Diperbarui
+- `README.md` (tabel progres baris `2h` C++) dan `CHANGELOG.md`.
+
 ## [Hari 002g] — 2026-11-20 · AAD untuk Greeks Monte Carlo: tape mode-balik, pathwise & keranjang 10 aset (C++, Bonus)
 
 ### Ditambahkan
