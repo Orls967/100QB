@@ -3,6 +3,16 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 002j] — 2026-11-20 · Longevity risk: Lee–Carter, anuitas stokastik & modal solvabilitas (Ruby, Bonus)
+
+### Ditambahkan
+- Project Ruby 3.3+ murni `ruby/day002j_longevity_risk/` (tanpa gem runtime, YJIT aktif, paralelisme `Process.fork` deterministik): SVD Jacobi satu sisi, estimasi Lee–Carter (tanpa & dengan noise $R=200$), fit Gompertz–Makeham (Nelder–Mead), proyeksi stokastik $k_t$ ($N=20.000$) & bootstrap parametrik, anuitas kohor usia 65 (rekursi eksak vs simulasi 200.000 umur), Hukum Total Variansi portofolio, kurva $\mathrm{CV}(N)$, modal VaR 99.5% / ES 99% (simulasi penuh & aproksimasi normal bersyarat), serta stres deterministik 0.5%.
+- Unit test `minitest` (`test/test_longevity.rb`) dan `rubocop` lulus bersih.
+- Output `outputs/day002j/results.json` dan 6 grafik SVG (`day002j_mortality-surface.svg`, `day002j_life-expectancy-fan.svg`, `day002j_k-moments-qq.svg`, `day002j_cv-vs-n.svg`, `day002j_liability-hist-var.svg`, `day002j_capital-vs-n.svg`) di `outputs/figures/`.
+
+### Diperbarui
+- `README.md` (tabel progres baris `2j` Ruby) dan `CHANGELOG.md`.
+
 ## [Hari 002i] — 2026-11-20 · Model short-rate Hull–White 1-faktor: pohon trinomial, Jamshidian, kalibrasi & Bermudan LSM (C++, Bonus)
 
 ### Ditambahkan
