@@ -3,6 +3,16 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 002d] — 2026-11-20 · Risiko kredit Vasicek: distribusi kerugian eksak, LHP & importance sampling (Bonus)
+
+### Ditambahkan
+- Modul `src/qb100/credit.py` (kopula Gaussian satu faktor Vasicek, DP konvolusi PMF bersyarat + Gauss–Hermite probabilis 200 node, verifikasi varians bivariat $\Phi_2$ dan `scipy.integrate.quad`, VaR/ES diskret, pendekatan LHP, dan 3 estimator Monte Carlo: Naif, Conditional MC via `CubicSpline` 2001-node DP, serta Importance Sampling pada $Z \sim \mathcal{N}(-\theta, 1)$).
+- Unit test `tests/test_credit.py` (4 test: PMF/mean/varians bivariat, kesesuaian `quad`, konvergensi LHP pada $N=5000$, dan ketiga estimator tidak bias/reprodusibel/VRF).
+- Notebook `days/day002d_quant_risiko-kredit-vasicek-distribusi.ipynb` beserta grafik `day002d_pmf-and-tail.png`, `day002d_lhp-vs-exact.png`, `day002d_is-variance-and-vrf.png`, dan `day002d_convergence-loglog.png` di `outputs/figures/`.
+
+### Diperbarui
+- `README.md` (tabel progres baris `2d`) dan `CHANGELOG.md`.
+
 ## [Hari 002c] — 2026-11-20 · HMM dua rezim: forward-backward, Baum–Welch & Viterbi (Bonus)
 
 ### Ditambahkan

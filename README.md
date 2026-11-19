@@ -147,7 +147,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [ROADMAP.md](ROADMAP.md) · Riwayat: [CHANGELOG.md](CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 12/100 topik (12%)** · quant: 11 · sim: 1
+**Progres: 13/100 topik (13%)** · quant: 12 · sim: 1
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -162,6 +162,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 1i | bonus | `quant` | `ruby` | Opsi Asia (Ruby): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001i_asian_options](ruby/day001i_asian_options) |
 | 2b | bonus | `quant` | `python` | Estimasi kovarians & portofolio varians minimum: Wishart, Marchenko-Pastur, Ledoit-Wolf | 2026-11-20 | [day002b_quant_estimasi-kovarians-portofolio-varians.ipynb](days/day002b_quant_estimasi-kovarians-portofolio-varians.ipynb) |
 | 2c | bonus | `quant` | `python` | HMM dua rezim: forward-backward, Baum-Welch & Viterbi | 2026-11-20 | [day002c_quant_hmm-dua-rezim-forward-backward-baum.ipynb](days/day002c_quant_hmm-dua-rezim-forward-backward-baum.ipynb) |
+| 2d | bonus | `quant` | `python` | Risiko kredit Vasicek: distribusi kerugian eksak, LHP & importance sampling | 2026-11-20 | [day002d_quant_risiko-kredit-vasicek-distribusi.ipynb](days/day002d_quant_risiko-kredit-vasicek-distribusi.ipynb) |
 | 2g | bonus | `quant` | `ruby` | Opsi Put Amerika (Ruby): CRR Binomial, LSM Monte Carlo & PSOR PDE | 2026-11-20 | [day002g_american_put](ruby/day002g_american_put) |
 <!-- PROGRESS:END -->
 
