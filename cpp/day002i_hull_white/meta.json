@@ -1,0 +1,10 @@
+{
+  "day": 2,
+  "session": "i",
+  "topic_no": null,
+  "type": "quant",
+  "language": "cpp",
+  "topic": "Hull-White: pohon trinomial, Jamshidian, kalibrasi & Bermudan",
+  "date": "2026-11-20",
+  "link": "cpp/day002i_hull_white"
+}
