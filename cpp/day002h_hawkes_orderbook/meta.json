@@ -1,0 +1,10 @@
+{
+  "day": 2,
+  "session": "h",
+  "topic_no": null,
+  "type": "quant",
+  "language": "cpp",
+  "topic": "Hawkes + limit order book: simulasi eksak, MLE, mesin pencocokan & fakta stilistik",
+  "date": "2026-11-20",
+  "link": "cpp/day002h_hawkes_orderbook"
+}
