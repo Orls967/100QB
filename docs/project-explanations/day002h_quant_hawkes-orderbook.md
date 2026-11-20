@@ -3,18 +3,18 @@
 ## 1. Identitas dan Ringkasan Proyek
 - **ID Progress**: `day002h` (Hari 2, Sesi h)
 - **Tanggal**: 2026-11-20 (WITA) · **Topik No**: `bonus` · **Jenis**: `quant` · **Bahasa**: C++20 (`cpp`)
-- **Folder Proyek**: [cpp/day002h_hawkes_orderbook](../../cpp/day002h_hawkes_orderbook) · **Metadata**: [meta.json](../../cpp/day002h_hawkes_orderbook/meta.json)
+- **Folder Proyek**: [projects/cpp/day002h_hawkes_orderbook](../../cpp/day002h_hawkes_orderbook) · **Metadata**: [meta.json](../../cpp/day002h_hawkes_orderbook/meta.json)
 - **Ringkasan**: Proses titik self-exciting Hawkes (simulasi Ogata thinning vs eksak Dassios–Zhao, teorema penskalaan waktu Meyer–Papangelou dengan uji KS & Ljung–Box, MLE rekursif $O(n)$ + BFGS $R=200$), mesin *limit order book* (LOB) nol-alokasi heap (>23 juta operasi/detik) vs mesin referensi, serta simulasi mikrostruktur pasar gabungan.
 
 ## 2. Masalah dan Tujuan
 Kedatangan order di bursa elektronik bersifat mengelompok (*self-exciting*) dan buku order harus memproses jutaan pesan *add/cancel/execute* per detik dengan latensi sub-mikrodetik tanpa alokasi memori dinamis.
 
 ## 3. Apa yang Dikerjakan Proyek
-Proyek C++20 `cpp/day002h_hawkes_orderbook` mengimplementasikan simulasi dan inferensi MLE $O(n)$ untuk proses Hawkes eksponensial, membangun mesin pencocokan LOB price-time priority menggunakan *pool allocator*, antrean intrusif doubly-linked list, dan bitmap hierarkis 64-bit, memverifikasi kesamaan bit-demi-bit terhadap mesin referensi pada 1.000.000 order, serta mensimulasikan aliran order Hawkes di atas LOB untuk mereproduksi fakta stilistik pasar.
+Proyek C++20 `projects/cpp/day002h_hawkes_orderbook` mengimplementasikan simulasi dan inferensi MLE $O(n)$ untuk proses Hawkes eksponensial, membangun mesin pencocokan LOB price-time priority menggunakan *pool allocator*, antrean intrusif doubly-linked list, dan bitmap hierarkis 64-bit, memverifikasi kesamaan bit-demi-bit terhadap mesin referensi pada 1.000.000 order, serta mensimulasikan aliran order Hawkes di atas LOB untuk mereproduksi fakta stilistik pasar.
 
 ## 4. Uraian Kode
-- [cpp/day002h_hawkes_orderbook/include/](../../cpp/day002h_hawkes_orderbook/include/) & `src/`: modul proses Hawkes (Ogata, Dassios–Zhao, kompensator $\Lambda(t_i)$, log-likelihood $O(n)$ + gradien analitik + BFGS), mesin LOB cepat (pool + bitmap 2-level) vs LOB referensi `std::map`, dan simulator pasar gabungan.
-- [cpp/day002h_hawkes_orderbook/app/main.cpp](../../cpp/day002h_hawkes_orderbook/app/main.cpp) & `tests/test_hawkes_ob.cpp`: runner benchmark dan suite tes `doctest`.
+- [projects/cpp/day002h_hawkes_orderbook/include/](../../cpp/day002h_hawkes_orderbook/include/) & `src/`: modul proses Hawkes (Ogata, Dassios–Zhao, kompensator $\Lambda(t_i)$, log-likelihood $O(n)$ + gradien analitik + BFGS), mesin LOB cepat (pool + bitmap 2-level) vs LOB referensi `std::map`, dan simulator pasar gabungan.
+- [projects/cpp/day002h_hawkes_orderbook/app/main.cpp](../../cpp/day002h_hawkes_orderbook/app/main.cpp) & `tests/test_hawkes_ob.cpp`: runner benchmark dan suite tes `doctest`.
 
 ## 5. Metode dan Alur Kerja
 Simulasi Hawkes Ogata vs Dassios–Zhao $\to$ transformasi waktu $\tau_i = \Lambda(t_i)$ & uji KS/Ljung–Box $\to$ estimasi MLE $O(n)$ dengan BFGS pada $R=200$ replikasi paralel $\to$ benchmark 1.000.000 pesan LOB (0 alokasi heap setelah warmup) vs mesin referensi $\to$ analisis *fat tails*, tanda autokorelasi order, dan kecekungan *market impact*.
@@ -52,4 +52,4 @@ Proyek `day002h` menggabungkan ekonometrika proses titik waktu-kontinu dengan re
 ## 11. Referensi dan Jejak Bukti
 - Hawkes, A. G. (1971). *Spectra of some self-exciting and mutually exciting point processes*. Biometrika, 58(1), 83–90.
 - Dassios, A., & Zhao, H. (2013). *Exact simulation of Hawkes process with exponentially decaying intensity*. Electronic Communications in Probability, 18, 1–13.
-- Artefak: [cpp/day002h_hawkes_orderbook/README.md](../../cpp/day002h_hawkes_orderbook/README.md), [outputs/day002h/results.json](../../outputs/day002h/results.json).
+- Artefak: [projects/cpp/day002h_hawkes_orderbook/README.md](../../cpp/day002h_hawkes_orderbook/README.md), [outputs/day002h/results.json](../../outputs/day002h/results.json).

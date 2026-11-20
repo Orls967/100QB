@@ -17,7 +17,7 @@ Setiap notebook harian masuk ke salah satu dari dua jenis:
 | `quant` | Konsep keuangan/kuantitatif, memakai data nyata (yfinance) atau data simulasi | return, volatilitas, Sharpe, Monte Carlo harga saham, VaR, GBM, Black-Scholes, korelasi, backtest sederhana |
 | `sim` | Simulasi atau perhitungan iseng ("Kebun Simulasi") | estimasi π Monte Carlo, Game of Life, fraktal Mandelbrot, random walk, antrean, gerak peluru, peluruhan radioaktif |
 
-Daftar lengkap 100 topik (dari dasar ke lanjut) ada di **[ROADMAP.md](ROADMAP.md)**.
+Daftar lengkap 100 topik (dari dasar ke lanjut) ada di **[docs/ROADMAP.md](docs/ROADMAP.md)**.
 
 ## ⚙️ Setup
 
@@ -54,12 +54,12 @@ Lalu buka notebook dengan `jupyter lab` atau `jupyter notebook`.
 Nomor hari dan huruf sesi (`b`, `c`, dst.) ditentukan otomatis dari metadata notebook terakhir
 dan tanggal hari ini (zona waktu WITA). Bila masih di tanggal yang sama, nomor hari tetap sama
 dan sesi naik ke huruf berikutnya. Bila `--type`/`--topic` tidak diisi, topik berikutnya yang
-belum dicentang di ROADMAP.md diambil otomatis.
+belum dicentang di docs/ROADMAP.md diambil otomatis.
 
 ```bash
 python scripts/new_day.py --type quant --topic "Return harian & kumulatif"
 python scripts/new_day.py --type sim --topic "Estimasi pi Monte Carlo" --dry-run   # cek tanpa membuat file
-python scripts/new_day.py                                                           # ikuti ROADMAP.md
+python scripts/new_day.py                                                           # ikuti docs/ROADMAP.md
 ```
 
 Opsi lain: `--slug` (nama file singkat), `--day` (paksa nomor), `--session` (paksa huruf sesi), `--topic-no` (paksa nomor topik), `--date YYYY-MM-DD`, `--force`.
@@ -90,8 +90,8 @@ python scripts/run_all.py --inplace    # simpan output ke notebook
 ```text
 100QB/
 ├── README.md              # dokumentasi ini
-├── ROADMAP.md             # daftar 100 topik (quant & sim)
-├── CHANGELOG.md           # catatan perubahan per hari
+├── docs/                  # ROADMAP, CHANGELOG, dan penjelasan proyek
+├── projects/              # implementasi bonus per bahasa (C, C++, Go, Ruby, Rust, TypeScript)
 ├── LICENSE                # MIT
 ├── requirements.txt       # dependensi Python
 ├── pyproject.toml         # metadata package qb100 + konfigurasi pytest
@@ -110,7 +110,7 @@ python scripts/run_all.py --inplace    # simpan output ke notebook
 │   └── run_all.py         # eksekusi semua notebook
 ├── tests/                 # pytest untuk src/ dan scripts/
 ├── data/                  # data lokal (raw/ & cache/ tidak di-commit)
-└── outputs/figures/       # grafik hasil notebook
+└── outputs/               # hasil proyek dan grafik
 ```
 
 > Nama package Python adalah `qb100` karena identifier Python tidak boleh diawali angka.
@@ -144,7 +144,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 
 ## 📈 Progres
 
-Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [ROADMAP.md](ROADMAP.md) · Riwayat: [CHANGELOG.md](CHANGELOG.md).
+Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [docs/ROADMAP.md](docs/ROADMAP.md) · Riwayat: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 <!-- PROGRESS:START -->
 **Progres: 22/100 topik (22%)** · quant: 21 · sim: 1
@@ -154,25 +154,25 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 1 | 001 | `quant` | `python` | Return harian & kumulatif | 2026-11-19 | [day001_quant_return-harian-kumulatif.ipynb](days/day001_quant_return-harian-kumulatif.ipynb) |
 | 1b | 002 | `sim` | `python` | Estimasi π dengan Monte Carlo | 2026-11-19 | [day001b_sim_estimasi-dengan-monte-carlo.ipynb](days/day001b_sim_estimasi-dengan-monte-carlo.ipynb) |
 | 1c | bonus | `quant` | `python` | Opsi Asia: Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001c_quant_opsi-asia-monte-carlo-variance.ipynb](days/day001c_quant_opsi-asia-monte-carlo-variance.ipynb) |
-| 1d | bonus | `quant` | `rust` | Opsi Asia (Rust): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001d_asian_options](rust/day001d_asian_options) |
-| 1e | bonus | `quant` | `go` | Opsi Asia (Go): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001e_asian_options](go/day001e_asian_options) |
-| 1f | bonus | `quant` | `typescript` | Opsi Asia (TypeScript): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001f_asian_options](typescript/day001f_asian_options) |
-| 1g | bonus | `quant` | `cpp` | Opsi Asia (C++): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001g_asian_options](cpp/day001g_asian_options) |
-| 1h | bonus | `quant` | `c` | Opsi Asia (C): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001h_asian_options](c/day001h_asian_options) |
-| 1i | bonus | `quant` | `ruby` | Opsi Asia (Ruby): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001i_asian_options](ruby/day001i_asian_options) |
+| 1d | bonus | `quant` | `rust` | Opsi Asia (Rust): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001d_asian_options](projects/rust/day001d_asian_options) |
+| 1e | bonus | `quant` | `go` | Opsi Asia (Go): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001e_asian_options](projects/go/day001e_asian_options) |
+| 1f | bonus | `quant` | `typescript` | Opsi Asia (TypeScript): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001f_asian_options](projects/typescript/day001f_asian_options) |
+| 1g | bonus | `quant` | `cpp` | Opsi Asia (C++): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001g_asian_options](projects/cpp/day001g_asian_options) |
+| 1h | bonus | `quant` | `c` | Opsi Asia (C): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001h_asian_options](projects/c/day001h_asian_options) |
+| 1i | bonus | `quant` | `ruby` | Opsi Asia (Ruby): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001i_asian_options](projects/ruby/day001i_asian_options) |
 | 2b | bonus | `quant` | `python` | Estimasi kovarians & portofolio varians minimum: Wishart, Marchenko-Pastur, Ledoit-Wolf | 2026-11-20 | [day002b_quant_estimasi-kovarians-portofolio-varians.ipynb](days/day002b_quant_estimasi-kovarians-portofolio-varians.ipynb) |
 | 2c | bonus | `quant` | `python` | HMM dua rezim: forward-backward, Baum-Welch & Viterbi | 2026-11-20 | [day002c_quant_hmm-dua-rezim-forward-backward-baum.ipynb](days/day002c_quant_hmm-dua-rezim-forward-backward-baum.ipynb) |
 | 2d | bonus | `quant` | `python` | Risiko kredit Vasicek: distribusi kerugian eksak, LHP & importance sampling | 2026-11-20 | [day002d_quant_risiko-kredit-vasicek-distribusi.ipynb](days/day002d_quant_risiko-kredit-vasicek-distribusi.ipynb) |
 | 2e | bonus | `quant` | `python` | Model Heston: pricing Fourier, kalibrasi & Monte Carlo QE | 2026-11-20 | [day002e_quant_model-heston-pricing-fourier-kalibrasi.ipynb](days/day002e_quant_model-heston-pricing-fourier-kalibrasi.ipynb) |
-| 2f | bonus | `quant` | `rust` | Inferensi Bayesian state-space: Kalman, particle filter & PMMH | 2026-11-20 | [day002f_state_space_pmmh](rust/day002f_state_space_pmmh) |
-| 2g | bonus | `quant` | `cpp` | AAD untuk Greeks Monte Carlo: tape mode-balik, pathwise & keranjang 10 aset | 2026-11-20 | [day002g_aad_greeks](cpp/day002g_aad_greeks) |
-| 2h | bonus | `quant` | `cpp` | Hawkes + limit order book: simulasi eksak, MLE, mesin pencocokan & fakta stilistik | 2026-11-20 | [day002h_hawkes_orderbook](cpp/day002h_hawkes_orderbook) |
-| 2i | bonus | `quant` | `cpp` | Hull-White: pohon trinomial, Jamshidian, kalibrasi & Bermudan | 2026-11-20 | [day002i_hull_white](cpp/day002i_hull_white) |
-| 2j | bonus | `quant` | `ruby` | Longevity risk: Lee–Carter, anuitas stokastik & modal solvabilitas | 2026-11-20 | [day002j_longevity_risk](ruby/day002j_longevity_risk) |
-| 2k | bonus | `quant` | `ruby` | Opsi Put Amerika (Ruby): CRR Binomial, LSM Monte Carlo & PSOR PDE | 2026-11-20 | [day002k_american_put](ruby/day002k_american_put) |
+| 2f | bonus | `quant` | `rust` | Inferensi Bayesian state-space: Kalman, particle filter & PMMH | 2026-11-20 | [day002f_state_space_pmmh](projects/rust/day002f_state_space_pmmh) |
+| 2g | bonus | `quant` | `cpp` | AAD untuk Greeks Monte Carlo: tape mode-balik, pathwise & keranjang 10 aset | 2026-11-20 | [day002g_aad_greeks](projects/cpp/day002g_aad_greeks) |
+| 2h | bonus | `quant` | `cpp` | Hawkes + limit order book: simulasi eksak, MLE, mesin pencocokan & fakta stilistik | 2026-11-20 | [day002h_hawkes_orderbook](projects/cpp/day002h_hawkes_orderbook) |
+| 2i | bonus | `quant` | `cpp` | Hull-White: pohon trinomial, Jamshidian, kalibrasi & Bermudan | 2026-11-20 | [day002i_hull_white](projects/cpp/day002i_hull_white) |
+| 2j | bonus | `quant` | `ruby` | Longevity risk: Lee–Carter, anuitas stokastik & modal solvabilitas | 2026-11-20 | [day002j_longevity_risk](projects/ruby/day002j_longevity_risk) |
+| 2k | bonus | `quant` | `ruby` | Opsi Put Amerika (Ruby): CRR Binomial, LSM Monte Carlo & PSOR PDE | 2026-11-20 | [day002k_american_put](projects/ruby/day002k_american_put) |
 | 3 | bonus | `quant` | `python` | Volatilitas lokal Dupire dari permukaan SSVI | 2026-11-21 | [day003_quant_volatilitas-lokal-dupire-ssvi.ipynb](days/day003_quant_volatilitas-lokal-dupire-ssvi.ipynb) |
-| 3b | bonus | `quant` | `rust` | Eksekusi optimal: Almgren–Chriss, dampak transien, likuiditas stokastik | 2026-11-21 | [day003b_optimal_execution](rust/day003b_optimal_execution) |
-| 3c | bonus | `quant` | `go` | Risiko sistemik jaringan: kliring Eisenberg–Noe, kaskade Watts & biaya kebangkrutan | 2026-11-21 | [day003c_systemic_risk](go/day003c_systemic_risk) |
+| 3b | bonus | `quant` | `rust` | Eksekusi optimal: Almgren–Chriss, dampak transien, likuiditas stokastik | 2026-11-21 | [day003b_optimal_execution](projects/rust/day003b_optimal_execution) |
+| 3c | bonus | `quant` | `go` | Risiko sistemik jaringan: kliring Eisenberg–Noe, kaskade Watts & biaya kebangkrutan | 2026-11-21 | [day003c_systemic_risk](projects/go/day003c_systemic_risk) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi

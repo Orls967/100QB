@@ -1,0 +1,10 @@
+{
+  "day": 1,
+  "session": "g",
+  "topic_no": null,
+  "type": "quant",
+  "language": "cpp",
+  "topic": "Opsi Asia (C++): Monte Carlo, variance reduction & Greeks",
+  "date": "2026-11-19",
+  "link": "projects/cpp/day001g_asian_options"
+}

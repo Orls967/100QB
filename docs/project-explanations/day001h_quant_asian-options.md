@@ -3,19 +3,19 @@
 ## 1. Identitas dan Ringkasan Proyek
 - **ID Progress**: `day001h` (Hari 1, Sesi h)
 - **Tanggal**: 2026-11-19 (WITA) · **Topik No**: `bonus` (off-roadmap) · **Jenis**: `quant` · **Bahasa**: C (`c`)
-- **Folder Proyek**: [c/day001h_asian_options](../../c/day001h_asian_options) · **Metadata**: [c/day001h_asian_options/meta.json](../../c/day001h_asian_options/meta.json)
+- **Folder Proyek**: [projects/c/day001h_asian_options](../../c/day001h_asian_options) · **Metadata**: [projects/c/day001h_asian_options/meta.json](../../c/day001h_asian_options/meta.json)
 - **Rujukan Silang**: Implementasi kembar dari [day001c (Python)](day001c_quant_opsi-asia-monte-carlo-variance.md) dengan spesifikasi parameter identik ($S_0=100, K=100, r=0.05, \sigma=0.2, T=1, M=252, N=200.000, \text{seed}=42$).
 
 ## 2. Masalah dan Tujuan
 Bagaimana mereplikasi mesin penilaian opsi Asia aritmetik (Naive MC, Antithetic Variates, Control Variate Kemna–Vorst, serta Delta Pathwise & Bump-and-Revalue CRN) di dalam ekosistem **C** secara deterministik dan tervalidasi silang secara statistik terhadap Python `day001c` (anchor Black–Scholes `10.450583572185565`, Kemna–Vorst `5.5655088313493559`)?
 
 ## 3. Apa yang Dikerjakan Proyek
-Program biner/runner di `c/day001h_asian_options` menjalankan simulasi $N=200.000$ jalur GBM ($M=252$ langkah), mengevaluasi sanity check Eropa, ketiga estimator harga opsi Asia, kedua estimator Delta, dan kurva konvergensi $N \in [1.000, 200.000]$, lalu menulis hasil ke [outputs/day001h/results.json](../../outputs/day001h/results.json) serta grafik SVG ke `outputs/figures/day001h_*.svg`.
+Program biner/runner di `projects/c/day001h_asian_options` menjalankan simulasi $N=200.000$ jalur GBM ($M=252$ langkah), mengevaluasi sanity check Eropa, ketiga estimator harga opsi Asia, kedua estimator Delta, dan kurva konvergensi $N \in [1.000, 200.000]$, lalu menulis hasil ke [outputs/day001h/results.json](../../outputs/day001h/results.json) serta grafik SVG ke `outputs/figures/day001h_*.svg`.
 
 ## 4. Uraian Kode
-- [c/day001h_asian_options/CMakeLists.txt](../../c/day001h_asian_options/CMakeLists.txt): konfigurasi build C17 murni dengan POSIX threads (`pthread`) dan `libm`.
-- [c/day001h_asian_options/include/](../../c/day001h_asian_options/include/) & [c/day001h_asian_options/src/](../../c/day001h_asian_options/src/): PRNG `xoshiro256++` + Box–Muller dalam C17, worker `pthread_create`/`pthread_join`, dan serialisasi JSON/SVG manual (`fprintf`).
-- [c/day001h_asian_options/app/](../../c/day001h_asian_options/app/) & [c/day001h_asian_options/tests/](../../c/day001h_asian_options/tests/): runner CLI dan biner pengujian CTest.
+- [projects/c/day001h_asian_options/CMakeLists.txt](../../c/day001h_asian_options/CMakeLists.txt): konfigurasi build C17 murni dengan POSIX threads (`pthread`) dan `libm`.
+- [projects/c/day001h_asian_options/include/](../../c/day001h_asian_options/include/) & [projects/c/day001h_asian_options/src/](../../c/day001h_asian_options/src/): PRNG `xoshiro256++` + Box–Muller dalam C17, worker `pthread_create`/`pthread_join`, dan serialisasi JSON/SVG manual (`fprintf`).
+- [projects/c/day001h_asian_options/app/](../../c/day001h_asian_options/app/) & [projects/c/day001h_asian_options/tests/](../../c/day001h_asian_options/tests/): runner CLI dan biner pengujian CTest.
 
 ## 5. Metode dan Alur Kerja
 Arsitektur spesifik **C**: menggunakan C17 murni dengan `pthread_t`, `erfc` dari `<math.h>`, dan manajemen memori stack eksplisit. Setiap worker menghitung statistik cukup lokal pada jalur yang ditugaskan, lalu direduksi secara deterministik.
@@ -36,7 +36,7 @@ Cocok dengan anchor Black–Scholes (`10.450583572185565`) dan Kemna–Vorst (`5
 | Verifikasi test suite C | `tercapai` | `cmake` + `ctest --output-on-failure` dijalankan pada sesi `day003c`: lulus dalam 0.12 detik; waktu inti 200k jalur = `398.2 ms` |
 
 ## 8. Jika Belum Tercapai atau Belum Diketahui (Fakta vs Hipotesis)
-Seluruh kriteria lulus dan terverifikasi. **FAKTA**: Test suite `c/day001h_asian_options` telah dijalankan ulang pada sesi `day003c` dan lulus bersih.
+Seluruh kriteria lulus dan terverifikasi. **FAKTA**: Test suite `projects/c/day001h_asian_options` telah dijalankan ulang pada sesi `day003c` dan lulus bersih.
 
 ## 9. Landasan Teori (Minimal 10 Poin)
 1. **Arsitektur Konkurensi & Memori C**: Struktur akumulator per-thread di C17 yang dipass ke `pthread_create` mengeliminasi kebutuhan mutex dan menyamai akurasi implementasi tingkat tinggi hingga 15 digit.
@@ -55,4 +55,4 @@ Proyek `day001h` menunjukkan bahwa spesifikasi kuantitatif opsi Asia di `day001c
 
 ## 11. Referensi dan Jejak Bukti
 - Rujukan induk: [day001c_quant_opsi-asia-monte-carlo-variance.md](day001c_quant_opsi-asia-monte-carlo-variance.md).
-- Artefak: [c/day001h_asian_options/README.md](../../c/day001h_asian_options/README.md), [outputs/day001h/results.json](../../outputs/day001h/results.json), [day001h_asian-se-convergence.svg](../../outputs/figures/day001h_asian-se-convergence.svg), [day001h_asian-ci-comparison.svg](../../outputs/figures/day001h_asian-ci-comparison.svg).
+- Artefak: [projects/c/day001h_asian_options/README.md](../../c/day001h_asian_options/README.md), [outputs/day001h/results.json](../../outputs/day001h/results.json), [day001h_asian-se-convergence.svg](../../outputs/figures/day001h_asian-se-convergence.svg), [day001h_asian-ci-comparison.svg](../../outputs/figures/day001h_asian-ci-comparison.svg).

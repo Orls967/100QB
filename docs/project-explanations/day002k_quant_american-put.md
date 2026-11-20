@@ -3,20 +3,20 @@
 ## 1. Identitas dan Ringkasan Proyek
 - **ID Progress**: `day002k` (Hari 2, Sesi k; direlabel dari `2g` pada sesi `day003c` A3 untuk menghilangkan benturan ID dengan C++ AAD)
 - **Tanggal**: 2026-11-20 (WITA) · **Topik No**: `bonus` · **Jenis**: `quant` · **Bahasa**: Ruby (`ruby`)
-- **Folder Proyek**: [ruby/day002k_american_put](../../ruby/day002k_american_put) · **Metadata**: [meta.json](../../ruby/day002k_american_put/meta.json)
+- **Folder Proyek**: [projects/ruby/day002k_american_put](../../ruby/day002k_american_put) · **Metadata**: [meta.json](../../ruby/day002k_american_put/meta.json)
 - **Ringkasan**: Tiga metode independen untuk menilai *American Put Option* ($S_0=100, K=100, r=0.05, \sigma=0.2, T=1$) dalam Ruby murni tanpa gem runtime: pohon binomial Cox–Ross–Rubinstein ($N=4.000$), *Least-Squares Monte Carlo* Longstaff–Schwartz ($100.000$ jalur, basis Laguerre/polinomial derajat 3), dan PDE Crank–Nicolson dengan *Projected Successive Over-Relaxation* (PSOR $400\times 400$).
 
 ## 2. Masalah dan Tujuan
 Opsi Put Amerika memberikan hak latihan lebih awal kapan saja sebelum maturitas ($V(S,t) \ge (K-S)_+$), menciptakan masalah batas bebas (*free-boundary / optimal stopping problem*) yang tidak memiliki solusi analitik tertutup.
 
 ## 3. Apa yang Dikerjakan Proyek
-Proyek Ruby `ruby/day002k_american_put` menghitung harga, *early exercise premium* (EEP), dan Greeks opsi put Amerika dengan tiga paradigma numerik berbeda (pohon diskrit CRR, simulasi mundur LSM paralel `Process.fork`, dan masalah komplementaritas linear PDE dengan solver iteratif PSOR), lalu memvalidasi silang ketiganya di [outputs/day002k/results.json](../../outputs/day002k/results.json).
+Proyek Ruby `projects/ruby/day002k_american_put` menghitung harga, *early exercise premium* (EEP), dan Greeks opsi put Amerika dengan tiga paradigma numerik berbeda (pohon diskrit CRR, simulasi mundur LSM paralel `Process.fork`, dan masalah komplementaritas linear PDE dengan solver iteratif PSOR), lalu memvalidasi silang ketiganya di [outputs/day002k/results.json](../../outputs/day002k/results.json).
 
 ## 4. Uraian Kode
-- [ruby/day002k_american_put/lib/american_put/crr.rb](../../ruby/day002k_american_put/lib/american_put/crr.rb): pohon binomial CRR $N=4.000$ beserta ekstraksi Delta, Gamma, dan Theta dari simpul awal.
-- [ruby/day002k_american_put/lib/american_put/lsm.rb](../../ruby/day002k_american_put/lib/american_put/lsm.rb) & [lsm_simulator.rb](../../ruby/day002k_american_put/lib/american_put/lsm_simulator.rb): simulasi jalur antitetik dan regresi nilai kelanjutan Longstaff–Schwartz pada jalur *in-the-money*.
-- [ruby/day002k_american_put/lib/american_put/psor.rb](../../ruby/day002k_american_put/lib/american_put/psor.rb) & [psor_grid.rb](../../ruby/day002k_american_put/lib/american_put/psor_grid.rb): diskretisasi PDE Crank–Nicolson dan iterasi PSOR dengan proyeksi $\max(V_i^{(k)}, g_i)$.
-- [ruby/day002k_american_put/lib/american_put/runner.rb](../../ruby/day002k_american_put/lib/american_put/runner.rb) & [test/test_american_put.rb](../../ruby/day002k_american_put/test/test_american_put.rb): runner benchmark dan suite tes `minitest`.
+- [projects/ruby/day002k_american_put/lib/american_put/crr.rb](../../ruby/day002k_american_put/lib/american_put/crr.rb): pohon binomial CRR $N=4.000$ beserta ekstraksi Delta, Gamma, dan Theta dari simpul awal.
+- [projects/ruby/day002k_american_put/lib/american_put/lsm.rb](../../ruby/day002k_american_put/lib/american_put/lsm.rb) & [lsm_simulator.rb](../../ruby/day002k_american_put/lib/american_put/lsm_simulator.rb): simulasi jalur antitetik dan regresi nilai kelanjutan Longstaff–Schwartz pada jalur *in-the-money*.
+- [projects/ruby/day002k_american_put/lib/american_put/psor.rb](../../ruby/day002k_american_put/lib/american_put/psor.rb) & [psor_grid.rb](../../ruby/day002k_american_put/lib/american_put/psor_grid.rb): diskretisasi PDE Crank–Nicolson dan iterasi PSOR dengan proyeksi $\max(V_i^{(k)}, g_i)$.
+- [projects/ruby/day002k_american_put/lib/american_put/runner.rb](../../ruby/day002k_american_put/lib/american_put/runner.rb) & [test/test_american_put.rb](../../ruby/day002k_american_put/test/test_american_put.rb): runner benchmark dan suite tes `minitest`.
 
 ## 5. Metode dan Alur Kerja
 Evaluasi acuan Black–Scholes Put Eropa (`5.57352602`) $\to$ induksi mundur CRR ($N=4.000$) $\to$ penyelesaian LCP Crank–Nicolson dengan PSOR ($400\times 400$, $\omega=1.3$) $\to$ simulasi LSM ($100.000$ jalur, 50 langkah latihan) $\to$ uji konsistensi silang ketiga metode dan pemetaan profil harga terhadap spot $S_0 \in [70, 130]$.
@@ -54,4 +54,4 @@ Proyek `day002k` memvalidasi kesesuaian tiga metode numerik utama penilaian opsi
 ## 11. Referensi dan Jejak Bukti
 - Longstaff, F. A., & Schwartz, E. S. (2001). *Valuing American options by simulation: A simple least-squares approach*. Review of Financial Studies, 14(1), 113–147.
 - Wilmott, P., Dewynne, J., & Howison, S. (1993). *Option Pricing: Mathematical Models and Computation*. Oxford Financial Press.
-- Artefak: [ruby/day002k_american_put/README.md](../../ruby/day002k_american_put/README.md), [outputs/day002k/results.json](../../outputs/day002k/results.json).
+- Artefak: [projects/ruby/day002k_american_put/README.md](../../ruby/day002k_american_put/README.md), [outputs/day002k/results.json](../../outputs/day002k/results.json).

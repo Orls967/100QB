@@ -3,19 +3,19 @@
 ## 1. Identitas dan Ringkasan Proyek
 - **ID Progress**: `day001e` (Hari 1, Sesi e)
 - **Tanggal**: 2026-11-19 (WITA) · **Topik No**: `bonus` (off-roadmap) · **Jenis**: `quant` · **Bahasa**: Go (`go`)
-- **Folder Proyek**: [go/day001e_asian_options](../../go/day001e_asian_options) · **Metadata**: [go/day001e_asian_options/meta.json](../../go/day001e_asian_options/meta.json)
+- **Folder Proyek**: [projects/go/day001e_asian_options](../../go/day001e_asian_options) · **Metadata**: [projects/go/day001e_asian_options/meta.json](../../go/day001e_asian_options/meta.json)
 - **Rujukan Silang**: Implementasi kembar dari [day001c (Python)](day001c_quant_opsi-asia-monte-carlo-variance.md) dengan spesifikasi parameter identik ($S_0=100, K=100, r=0.05, \sigma=0.2, T=1, M=252, N=200.000, \text{seed}=42$).
 
 ## 2. Masalah dan Tujuan
 Bagaimana mereplikasi mesin penilaian opsi Asia aritmetik (Naive MC, Antithetic Variates, Control Variate Kemna–Vorst, serta Delta Pathwise & Bump-and-Revalue CRN) di dalam ekosistem **Go** secara deterministik dan tervalidasi silang secara statistik terhadap Python `day001c` (anchor Black–Scholes `10.450583572185565`, Kemna–Vorst `5.5655088313493559`)?
 
 ## 3. Apa yang Dikerjakan Proyek
-Program biner/runner di `go/day001e_asian_options` menjalankan simulasi $N=200.000$ jalur GBM ($M=252$ langkah), mengevaluasi sanity check Eropa, ketiga estimator harga opsi Asia, kedua estimator Delta, dan kurva konvergensi $N \in [1.000, 200.000]$, lalu menulis hasil ke [outputs/day001e/results.json](../../outputs/day001e/results.json) serta grafik SVG ke `outputs/figures/day001e_*.svg`.
+Program biner/runner di `projects/go/day001e_asian_options` menjalankan simulasi $N=200.000$ jalur GBM ($M=252$ langkah), mengevaluasi sanity check Eropa, ketiga estimator harga opsi Asia, kedua estimator Delta, dan kurva konvergensi $N \in [1.000, 200.000]$, lalu menulis hasil ke [outputs/day001e/results.json](../../outputs/day001e/results.json) serta grafik SVG ke `outputs/figures/day001e_*.svg`.
 
 ## 4. Uraian Kode
-- [go/day001e_asian_options/go.mod](../../go/day001e_asian_options/go.mod): modul Go 1.22+ murni tanpa dependensi eksternal.
-- [go/day001e_asian_options/options/options.go](../../go/day001e_asian_options/options/options.go): rumus tertutup BS & Kemna–Vorst (`math.Erfc`), RNG `xoshiro256++` + Box–Muller, worker pool goroutine deterministik per chunk, serta estimator harga & Delta.
-- [go/day001e_asian_options/cmd/run/main.go](../../go/day001e_asian_options/cmd/run/main.go) & [options_test.go](../../go/day001e_asian_options/options/options_test.go): runner CLI dan tes `go test`.
+- [projects/go/day001e_asian_options/go.mod](../../go/day001e_asian_options/go.mod): modul Go 1.22+ murni tanpa dependensi eksternal.
+- [projects/go/day001e_asian_options/options/options.go](../../go/day001e_asian_options/options/options.go): rumus tertutup BS & Kemna–Vorst (`math.Erfc`), RNG `xoshiro256++` + Box–Muller, worker pool goroutine deterministik per chunk, serta estimator harga & Delta.
+- [projects/go/day001e_asian_options/cmd/run/main.go](../../go/day001e_asian_options/cmd/run/main.go) & [options_test.go](../../go/day001e_asian_options/options/options_test.go): runner CLI dan tes `go test`.
 
 ## 5. Metode dan Alur Kerja
 Arsitektur spesifik **Go**: menggunakan Goroutine worker pool deterministik dengan pembagian chunk tetap dan seed per chunk, serta `math.Erfc` dari standard library Go. Setiap worker menghitung statistik cukup lokal pada jalur yang ditugaskan, lalu direduksi secara deterministik.
@@ -36,7 +36,7 @@ Cocok dengan anchor Black–Scholes (`10.450583572185565`) dan Kemna–Vorst (`5
 | Verifikasi test suite Go | `tercapai` | `go test ./...` dijalankan pada sesi `day003c`: paket `options` lulus bersih (`ok`); waktu inti 200k jalur = `440.7 ms` |
 
 ## 8. Jika Belum Tercapai atau Belum Diketahui (Fakta vs Hipotesis)
-Seluruh kriteria lulus dan terverifikasi. **FAKTA**: Test suite `go/day001e_asian_options` telah dijalankan ulang pada sesi `day003c` dan lulus bersih.
+Seluruh kriteria lulus dan terverifikasi. **FAKTA**: Test suite `projects/go/day001e_asian_options` telah dijalankan ulang pada sesi `day003c` dan lulus bersih.
 
 ## 9. Landasan Teori (Minimal 10 Poin)
 1. **Arsitektur Konkurensi & Memori Go**: Konkurensi `sync.WaitGroup` di Go mempartisi $N=200.000$ jalur ke sejumlah chunk tetap yang menulis ke slot berindeks tetap sebelum direduksi berurutan, mencegah *race condition*.
@@ -55,4 +55,4 @@ Proyek `day001e` menunjukkan bahwa spesifikasi kuantitatif opsi Asia di `day001c
 
 ## 11. Referensi dan Jejak Bukti
 - Rujukan induk: [day001c_quant_opsi-asia-monte-carlo-variance.md](day001c_quant_opsi-asia-monte-carlo-variance.md).
-- Artefak: [go/day001e_asian_options/README.md](../../go/day001e_asian_options/README.md), [outputs/day001e/results.json](../../outputs/day001e/results.json), [day001e_asian-se-convergence.svg](../../outputs/figures/day001e_asian-se-convergence.svg), [day001e_asian-ci-comparison.svg](../../outputs/figures/day001e_asian-ci-comparison.svg).
+- Artefak: [projects/go/day001e_asian_options/README.md](../../go/day001e_asian_options/README.md), [outputs/day001e/results.json](../../outputs/day001e/results.json), [day001e_asian-se-convergence.svg](../../outputs/figures/day001e_asian-se-convergence.svg), [day001e_asian-ci-comparison.svg](../../outputs/figures/day001e_asian-ci-comparison.svg).

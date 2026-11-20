@@ -3,21 +3,21 @@
 ## 1. Identitas dan Ringkasan Proyek
 - **ID Progress**: `day002g` (Hari 2, Sesi g)
 - **Tanggal**: 2026-11-20 (WITA) · **Topik No**: `bonus` · **Jenis**: `quant` · **Bahasa**: C++20 (`cpp`)
-- **Folder Proyek**: [cpp/day002g_aad_greeks](../../cpp/day002g_aad_greeks) · **Metadata**: [meta.json](../../cpp/day002g_aad_greeks/meta.json)
+- **Folder Proyek**: [projects/cpp/day002g_aad_greeks](../../cpp/day002g_aad_greeks) · **Metadata**: [meta.json](../../cpp/day002g_aad_greeks/meta.json)
 - **Ringkasan**: Mesin *Adjoint Automatic Differentiation* (AAD) mode-balik buatan sendiri (`Tape` dengan `mark`/`rewind_to_mark`), nomor ganda mode-maju (`Dual<T>`), *forward-over-reverse* (`Dual<Number>`) untuk Gamma, faktorisasi Cholesky terdiferensiasi, dan Monte Carlo pathwise untuk GBM, Opsi Asia, Digital call terhalus, serta keranjang 10 aset (67 sensitivitas sekaligus).
 
 ## 2. Masalah dan Tujuan
 Menghitung $P=67$ sensitivitas (10 Delta, 10 Vega, 1 Rho, 1 Theta, dan 45 korelasi $\partial V/\partial \rho_{ij}$) pada opsi keranjang 10 aset dengan beda hingga membutuhkan minimal $P+1 = 68$ evaluasi harga penuh. Dengan AAD mode-balik, seluruh 67 gradien dihitung dalam satu sapuan balik dengan biaya konstan $\sim 3\text{--}4\times$ satu evaluasi maju.
 
 ## 3. Apa yang Dikerjakan Proyek
-Proyek C++20 `cpp/day002g_aad_greeks` membangun `thread_local Tape` tanpa library AD eksternal, memverifikasi gradien terhadap `Dual<double>` dan beda hingga hingga `< 1e-10`, menghitung Gamma analitik lewat komposisi `Dual<Number>`, serta menjalankan simulasi Monte Carlo paralel `std::thread` (`200.000` jalur) dengan manajemen memori `rewind_to_mark()` per jalur.
+Proyek C++20 `projects/cpp/day002g_aad_greeks` membangun `thread_local Tape` tanpa library AD eksternal, memverifikasi gradien terhadap `Dual<double>` dan beda hingga hingga `< 1e-10`, menghitung Gamma analitik lewat komposisi `Dual<Number>`, serta menjalankan simulasi Monte Carlo paralel `std::thread` (`200.000` jalur) dengan manajemen memori `rewind_to_mark()` per jalur.
 
 ## 4. Uraian Kode
-- [cpp/day002g_aad_greeks/include/aad/tape.hpp](../../cpp/day002g_aad_greeks/include/aad/tape.hpp) & [number.hpp](../../cpp/day002g_aad_greeks/include/aad/number.hpp): struktur `Node` phẳng, `Tape` dengan `mark()`/`rewind_to_mark()`, dan overloading operator `Number`.
-- [cpp/day002g_aad_greeks/include/aad/dual.hpp](../../cpp/day002g_aad_greeks/include/aad/dual.hpp): template `Dual<T>` untuk AD mode-maju dan *forward-over-reverse* `Dual<Number>`.
-- [cpp/day002g_aad_greeks/include/aad/cholesky.hpp](../../cpp/day002g_aad_greeks/include/aad/cholesky.hpp): dekomposisi Cholesky generik di atas `Number` untuk mengalirkan adjoint dari faktor $L$ kembali ke matriks korelasi $\Sigma$.
-- [cpp/day002g_aad_greeks/include/aad/models.hpp](../../cpp/day002g_aad_greeks/include/aad/models.hpp) & [src/mc_engine.cpp](../../cpp/day002g_aad_greeks/src/mc_engine.cpp): model Black–Scholes, GBM 1-step, Asian 252-step, Digital smoothed, serta keranjang aritmetik & geometrik 10 aset.
-- [cpp/day002g_aad_greeks/tests/test_aad.cpp](../../cpp/day002g_aad_greeks/tests/test_aad.cpp): unit test `doctest`.
+- [projects/cpp/day002g_aad_greeks/include/aad/tape.hpp](../../cpp/day002g_aad_greeks/include/aad/tape.hpp) & [number.hpp](../../cpp/day002g_aad_greeks/include/aad/number.hpp): struktur `Node` phẳng, `Tape` dengan `mark()`/`rewind_to_mark()`, dan overloading operator `Number`.
+- [projects/cpp/day002g_aad_greeks/include/aad/dual.hpp](../../cpp/day002g_aad_greeks/include/aad/dual.hpp): template `Dual<T>` untuk AD mode-maju dan *forward-over-reverse* `Dual<Number>`.
+- [projects/cpp/day002g_aad_greeks/include/aad/cholesky.hpp](../../cpp/day002g_aad_greeks/include/aad/cholesky.hpp): dekomposisi Cholesky generik di atas `Number` untuk mengalirkan adjoint dari faktor $L$ kembali ke matriks korelasi $\Sigma$.
+- [projects/cpp/day002g_aad_greeks/include/aad/models.hpp](../../cpp/day002g_aad_greeks/include/aad/models.hpp) & [src/mc_engine.cpp](../../cpp/day002g_aad_greeks/src/mc_engine.cpp): model Black–Scholes, GBM 1-step, Asian 252-step, Digital smoothed, serta keranjang aritmetik & geometrik 10 aset.
+- [projects/cpp/day002g_aad_greeks/tests/test_aad.cpp](../../cpp/day002g_aad_greeks/tests/test_aad.cpp): unit test `doctest`.
 
 ## 5. Metode dan Alur Kerja
 Rekam parameter input di `Tape` sebelum loop jalur $\to$ pasang `mark()` $\to$ jalankan 1 jalur simulasi menggunakan `Number` $\to$ propagasi balik `propagate_to(mark)` untuk mengakumulasi adjoint ke parameter $\to$ `rewind_to_mark()` agar ukuran tape konstan $O(1)$ sepanjang 200.000 jalur.
@@ -55,4 +55,4 @@ Proyek `day002g` membuktikan bahwa mesin AAD C++20 murni dengan `mark`/`rewind` 
 ## 11. Referensi dan Jejak Bukti
 - Giles, M. B., & Glasserman, P. (2006). *Smoking adjoints: Fast Monte Carlo Greeks*. Risk, 19(1), 88–92.
 - Griewank, A., & Walther, A. (2008). *Evaluating Derivatives: Principles and Techniques of Algorithmic Differentiation* (2nd ed.). SIAM.
-- Artefak: [cpp/day002g_aad_greeks/README.md](../../cpp/day002g_aad_greeks/README.md), [outputs/day002g/results.json](../../outputs/day002g/results.json).
+- Artefak: [projects/cpp/day002g_aad_greeks/README.md](../../cpp/day002g_aad_greeks/README.md), [outputs/day002g/results.json](../../outputs/day002g/results.json).

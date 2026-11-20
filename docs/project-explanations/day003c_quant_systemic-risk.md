@@ -6,7 +6,7 @@
 - **Topik**: Risiko sistemik jaringan: kliring Eisenberg–Noe, kaskade Watts & biaya kebangkrutan
 - **Jenis**: `quant` (`bonus` / off-roadmap)
 - **Bahasa**: Go 1.22+ (`go`, standard library murni tanpa modul eksternal)
-- **Folder Proyek**: [go/day003c_systemic_risk](../../go/day003c_systemic_risk) · **Metadata**: [meta.json](../../go/day003c_systemic_risk/meta.json)
+- **Folder Proyek**: [projects/go/day003c_systemic_risk](../../go/day003c_systemic_risk) · **Metadata**: [meta.json](../../go/day003c_systemic_risk/meta.json)
 
 Proyek ini memodelkan tiga mekanisme penularan krisis sistemik pada jaringan keuangan dalam Go murni: penyelesaian kewajiban simultan antarbank (Eisenberg–Noe 2001), kaskade kegagalan ambang pada graf acak besar $n=100.000$ (Watts 2002), serta amplifikasi kerugian akibat biaya kebangkrutan tak-kontinu (Rogers–Veraart 2013) melalui uji stres Monte Carlo paralel deterministik.
 
@@ -15,7 +15,7 @@ Proyek ini memodelkan tiga mekanisme penularan krisis sistemik pada jaringan keu
 ## 2. Masalah dan Tujuan
 Keterkaitan kewajiban antarbank dan ketergantungan ambang pada jaringan keuangan membuat guncangan lokal dapat menyebar menjadi krisis sistemik. Proyek ini menjawab:
 1. Bagaimana menghitung vektor pembayaran kliring simultan $p^*$ secara eksak dan memverifikasi kesetaraan antara iterasi titik tetap Picard, algoritma default fiktif berbasis sistem linear LU, dan enumerasi *brute-force* $2^n$ himpunan gagal?
-2. Kapan benih kegagalan kecil ($\rho_0 = 0.001$) pada jaringan acak $G(n, c/n)$ memicu kaskade global, seberapa akurat pendekatan pohon medan rata-rata terhadap simulasi $n=100.000$, dan di mana batas fase $(c_1, c_2)$ berada?
+2. Kapan benih kegagalan kecil ($\rho_0 = 0.001$) pada jaringan acak $G(n, projects/c/n)$ memicu kaskade global, seberapa akurat pendekatan pohon medan rata-rata terhadap simulasi $n=100.000$, dan di mana batas fase $(c_1, c_2)$ berada?
 3. Seberapa besar biaya likuidasi kebangkrutan ($\alpha = \beta = 0.9$) mengamplifikasi kehilangan nilai sistemik (VaR 99% dan ES 97.5%), dan bagaimana kerentanan jaringan derajat Poisson dibandingkan jaringan pangkat-hukum (*scale-free hubs*) terhadap guncangan acak vs guncangan terarah?
 
 ---
@@ -26,14 +26,14 @@ Runner [cmd/run/main.go](../../go/day003c_systemic_risk/cmd/run/main.go) menjala
 ---
 
 ## 4. Uraian Kode
-- [go/day003c_systemic_risk/internal/rng/rng.go](../../go/day003c_systemic_risk/internal/rng/rng.go): `RNG` (`xoshiro256++` + `SplitMix64`), `NormFloat64` (Box–Muller), `Poisson`, dan `Perm` (Fisher–Yates).
-- [go/day003c_systemic_risk/internal/parallel/parallel.go](../../go/day003c_systemic_risk/internal/parallel/parallel.go): `RunChunks` membagi pekerjaan ke `nChunks` chunk tetap dengan seed `SplitMix64(baseSeed ^ (idx+1))`, menjamin hasil identik untuk 1 maupun banyak worker.
-- [go/day003c_systemic_risk/internal/linalg/linalg.go](../../go/day003c_systemic_risk/internal/linalg/linalg.go): `SolveLU` menyelesaikan sistem linear $Ax=b$ dengan eliminasi Gauss dan *partial pivoting*.
-- [go/day003c_systemic_risk/internal/graphs/graphs.go](../../go/day003c_systemic_risk/internal/graphs/graphs.go): `InterbankNet`, `BuildSmallRandomNetwork`, `BuildDirectedPoissonNetwork`, `BuildDirectedPowerLawNetwork`, `TopHubs`, dan `BuildUndirectedER` (algoritma Batagelj–Brandes $O(n+m)$ dalam format CSR datar `UndirectedCSR`).
-- [go/day003c_systemic_risk/internal/clearing/clearing.go](../../go/day003c_systemic_risk/internal/clearing/clearing.go): `Picard`, `PicardFromZero`, `FictitiousDefault`, dan `BruteForce`.
-- [go/day003c_systemic_risk/internal/cascade/cascade.go](../../go/day003c_systemic_risk/internal/cascade/cascade.go): `Simulate` (antrean FIFO vs tumpukan LIFO), `MeanField`, `VulnerableBranching`, dan `PhaseBoundaries`.
-- [go/day003c_systemic_risk/internal/rv/rv.go](../../go/day003c_systemic_risk/internal/rv/rv.go): `Clear` (Rogers–Veraart), `ChainClosedForm`, dan `RunMonteCarloStress`.
-- [go/day003c_systemic_risk/internal/stats/stats.go](../../go/day003c_systemic_risk/internal/stats/stats.go), [jsonout.go](../../go/day003c_systemic_risk/internal/jsonout/jsonout.go), [svg.go](../../go/day003c_systemic_risk/internal/svg/svg.go): perhitungan `VaRAndES`, penulis JSON 17 digit, dan penulis SVG.
+- [projects/go/day003c_systemic_risk/internal/rng/rng.go](../../go/day003c_systemic_risk/internal/rng/rng.go): `RNG` (`xoshiro256++` + `SplitMix64`), `NormFloat64` (Box–Muller), `Poisson`, dan `Perm` (Fisher–Yates).
+- [projects/go/day003c_systemic_risk/internal/parallel/parallel.go](../../go/day003c_systemic_risk/internal/parallel/parallel.go): `RunChunks` membagi pekerjaan ke `nChunks` chunk tetap dengan seed `SplitMix64(baseSeed ^ (idx+1))`, menjamin hasil identik untuk 1 maupun banyak worker.
+- [projects/go/day003c_systemic_risk/internal/linalg/linalg.go](../../go/day003c_systemic_risk/internal/linalg/linalg.go): `SolveLU` menyelesaikan sistem linear $Ax=b$ dengan eliminasi Gauss dan *partial pivoting*.
+- [projects/go/day003c_systemic_risk/internal/graphs/graphs.go](../../go/day003c_systemic_risk/internal/graphs/graphs.go): `InterbankNet`, `BuildSmallRandomNetwork`, `BuildDirectedPoissonNetwork`, `BuildDirectedPowerLawNetwork`, `TopHubs`, dan `BuildUndirectedER` (algoritma Batagelj–Brandes $O(n+m)$ dalam format CSR datar `UndirectedCSR`).
+- [projects/go/day003c_systemic_risk/internal/clearing/clearing.go](../../go/day003c_systemic_risk/internal/clearing/clearing.go): `Picard`, `PicardFromZero`, `FictitiousDefault`, dan `BruteForce`.
+- [projects/go/day003c_systemic_risk/internal/cascade/cascade.go](../../go/day003c_systemic_risk/internal/cascade/cascade.go): `Simulate` (antrean FIFO vs tumpukan LIFO), `MeanField`, `VulnerableBranching`, dan `PhaseBoundaries`.
+- [projects/go/day003c_systemic_risk/internal/rv/rv.go](../../go/day003c_systemic_risk/internal/rv/rv.go): `Clear` (Rogers–Veraart), `ChainClosedForm`, dan `RunMonteCarloStress`.
+- [projects/go/day003c_systemic_risk/internal/stats/stats.go](../../go/day003c_systemic_risk/internal/stats/stats.go), [jsonout.go](../../go/day003c_systemic_risk/internal/jsonout/jsonout.go), [svg.go](../../go/day003c_systemic_risk/internal/svg/svg.go): perhitungan `VaRAndES`, penulis JSON 17 digit, dan penulis SVG.
 - Suite tes: [clearing_test.go](../../go/day003c_systemic_risk/internal/clearing/clearing_test.go), [cascade_test.go](../../go/day003c_systemic_risk/internal/cascade/cascade_test.go), dan [rv_test.go](../../go/day003c_systemic_risk/internal/rv/rv_test.go).
 
 ---
@@ -42,7 +42,7 @@ Runner [cmd/run/main.go](../../go/day003c_systemic_risk/cmd/run/main.go) menjala
 ```mermaid
 flowchart LR
     A["Seed 20261121 & Generator Jaringan"] --> B["C1: Kliring EN (Picard vs Fictitious LU vs BruteForce 2^n)"]
-    A --> C["C2: Kaskade Watts G(100k, c/n) vs Teori Pohon & Bisection (c1, c2)"]
+    A --> C["C2: Kaskade Watts G(100k, projects/c/n) vs Teori Pohon & Bisection (c1, c2)"]
     A --> D["C3: Rogers-Veraart & Uji Stres MC (4 x 20.000 skenario) + Hub Shock"]
     B --> E["Validasi: go test -race ./..."]
     C --> E
@@ -91,7 +91,7 @@ Tidak ada kriteria yang gagal. Dua catatan diagnostik penting yang ditemukan dar
 3. **Algoritma Default Fiktif & Eliminasi LU**: Karena $\Phi$ sepotong-linear, titik tetap terbesar ditemukan dalam paling banyak $n$ langkah dengan memperluas himpunan bank gagal $D$ dan menyelesaikan $(I - \Pi_D^T)p_D = e_D + \Pi_{S\to D}^T \bar{p}_S$ lewat `linalg.SolveLU` (`FictitiousDefault`).
 4. **Keteraturan Jaringan (Regular Network) & Keunikan Titik Tetap**: Jika setiap koalisi tertutup memiliki akses berarah ke sedikitnya satu simpul dengan $e_i > 0$, matriks $(I - \Pi_D^T)$ adalah M-matriks nonsingular sehingga $p^* = p_*$ unik (`TestMonotonicityAndRegularUniqueness`).
 5. **Model Kaskade Ambang Watts (2002) & Automaton Monoton**: Simpul $v$ gagal bila fraksi tetangga gagalnya mencapai $\phi$. Karena fungsi transisi bersifat monoton terhadap himpunan gagal, hasil akhir bersifat konfluen (invarian terhadap urutan antrean FIFO vs LIFO pada `cascade.Simulate`).
-6. **Pendekatan Pohon Lokal & Distribusi Derajat Berlebih (Excess Degree)**: Pada graf Erdős–Rényi $G(n, c/n)$ jarang, tetangga yang dicapai melalui sebuah sisi memiliki distribusi derajat $\tilde{p}_k = k p_k / c = p_{k-1}$, menjadi dasar rekursi titik tetap $q_\infty$ pada `cascade.MeanField`.
+6. **Pendekatan Pohon Lokal & Distribusi Derajat Berlebih (Excess Degree)**: Pada graf Erdős–Rényi $G(n, projects/c/n)$ jarang, tetangga yang dicapai melalui sebuah sisi memiliki distribusi derajat $\tilde{p}_k = k p_k / c = p_{k-1}$, menjadi dasar rekursi titik tetap $q_\infty$ pada `cascade.MeanField`.
 7. **Kondisi Perkolasi Klaster Rentan & Transisi Fase Ganda**: Kaskade global dari benih infinitesimal terjadi jika faktor percabangan simpul rentan ($k \le \lfloor 1/\phi \rfloor$) memenuhi $\frac{1}{c}\sum_{k=1}^{\lfloor 1/\phi \rfloor} k(k-1)p_k \ge 1$. Batas bawah $c_1$ adalah munculnya komponen raksasa, sedangkan batas atas $c_2$ adalah stabilisasi oleh derajat tinggi (`cascade.PhaseBoundaries`).
 8. **Pembangkitan Graf Jarang Batagelj–Brandes (2005) $O(n+m)$**: Mengambil sampel jarak antar-sisi dalam urutan pasangan kandidat menggunakan lompatan geometrik $\lfloor \ln U / \ln(1-p) \rfloor$ menghindari pemeriksaan $\binom{n}{2} \approx 5\times 10^9$ pasangan pada $n=100.000$ (`graphs.BuildUndirectedER`).
 9. **Biaya Kebangkrutan Rogers–Veraart (2013)**: Diskontinuitas pembayaran dari $\bar{p}_i$ jatuh ke $\alpha e_i + \beta \sum_j \Pi_{ji}p_j$ saat gagal bayar tetap mempertahankan monotonisitas $\Phi^{\mathrm{RV}}$, sehingga $p_{\mathrm{RV}}^* \le p_{\mathrm{EN}}^*$ dan menciptakan amplifikasi kerugian sistemik (`rv.Clear`).

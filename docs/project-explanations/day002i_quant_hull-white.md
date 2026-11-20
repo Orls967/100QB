@@ -3,18 +3,18 @@
 ## 1. Identitas dan Ringkasan Proyek
 - **ID Progress**: `day002i` (Hari 2, Sesi i)
 - **Tanggal**: 2026-11-20 (WITA) · **Topik No**: `bonus` · **Jenis**: `quant` · **Bahasa**: C++20 (`cpp`)
-- **Folder Proyek**: [cpp/day002i_hull_white](../../cpp/day002i_hull_white) · **Metadata**: [meta.json](../../cpp/day002i_hull_white/meta.json)
+- **Folder Proyek**: [projects/cpp/day002i_hull_white](../../cpp/day002i_hull_white) · **Metadata**: [meta.json](../../cpp/day002i_hull_white/meta.json)
 - **Ringkasan**: Model suku bunga pendek Hull–White 1-faktor di atas kurva awal Nelson–Siegel: rumus analitik obligasi $P(t,T)$ dan opsi ZBP/ZBC/caplet, pohon trinomial dua-tahap Hull–White (1994) dengan induksi maju Arrow–Debreu, dekomposisi Jamshidian untuk swaption Eropa vs pohon vs Monte Carlo OU, kalibrasi $(a,\sigma)$ ($R=100$), swaption Bermudan 10y (pohon vs LSM dua-pass), dan DV01.
 
 ## 2. Masalah dan Tujuan
 Bagaimana membangun model suku bunga pendek bebas-arbitrase yang cocok persis dengan kurva diskonto awal $P^{M}(0,T)$ hingga presisi mesin, menilai opsi kupon dan swaption Eropa secara analitik lewat trik Jamshidian (1989), serta menilai swaption Bermudan baik dengan pohon trinomial maupun *Least-Squares Monte Carlo* (LSM)?
 
 ## 3. Apa yang Dikerjakan Proyek
-Proyek C++20 `cpp/day002i_hull_white` mengimplementasikan seluruh pipeline derivatif suku bunga Hull–White dalam C++20 murni tanpa pustaka eksternal, menjalankan verifikasi konvergensi pohon $m \in \{12..192\}$ + ekstrapolasi Richardson, kalibrasi paralel 100 replikasi, dan menulis [outputs/day002i/results.json](../../outputs/day002i/results.json) serta 4 grafik SVG.
+Proyek C++20 `projects/cpp/day002i_hull_white` mengimplementasikan seluruh pipeline derivatif suku bunga Hull–White dalam C++20 murni tanpa pustaka eksternal, menjalankan verifikasi konvergensi pohon $m \in \{12..192\}$ + ekstrapolasi Richardson, kalibrasi paralel 100 replikasi, dan menulis [outputs/day002i/results.json](../../outputs/day002i/results.json) serta 4 grafik SVG.
 
 ## 4. Uraian Kode
-- [cpp/day002i_hull_white/include/](../../cpp/day002i_hull_white/include/) & `src/`: kurva Nelson–Siegel, rumus tertutup $A(t,T), B(t,T)$, ZBP/ZBC, solver Brent untuk $r^*$ Jamshidian, pohon trinomial Hull–White dengan harga keadaan Arrow–Debreu $Q_{i,j}$, simulator eksak OU + control variate, kalibrasi Nelder–Mead, dan Bermudan LSM.
-- [cpp/day002i_hull_white/app/main.cpp](../../cpp/day002i_hull_white/app/main.cpp) & `tests/test_hw.cpp`: runner utama dan suite tes `doctest`.
+- [projects/cpp/day002i_hull_white/include/](../../cpp/day002i_hull_white/include/) & `src/`: kurva Nelson–Siegel, rumus tertutup $A(t,T), B(t,T)$, ZBP/ZBC, solver Brent untuk $r^*$ Jamshidian, pohon trinomial Hull–White dengan harga keadaan Arrow–Debreu $Q_{i,j}$, simulator eksak OU + control variate, kalibrasi Nelder–Mead, dan Bermudan LSM.
+- [projects/cpp/day002i_hull_white/app/main.cpp](../../cpp/day002i_hull_white/app/main.cpp) & `tests/test_hw.cpp`: runner utama dan suite tes `doctest`.
 
 ## 5. Metode dan Alur Kerja
 Konstruksi kurva Nelson–Siegel $\to$ kalibrasi pergeseran deterministik $\alpha_i$ pohon trinomial via induksi maju Arrow–Debreu $\to$ pricing ZBP/ZBC/Cap 5y analitik vs pohon $\to$ dekomposisi Jamshidian swaption Eropa vs pohon & MC $\to$ kalibrasi $(a,\sigma)$ $\to$ induksi mundur Bermudan di pohon vs regresi polinomial LSM dua-pass & sensitivitas DV01.
@@ -53,4 +53,4 @@ Proyek `day002i` menyajikan kerangka penilaian derivatif suku bunga Hull–White
 ## 11. Referensi dan Jejak Bukti
 - Hull, J., & White, A. (1994). *Numerical procedures for implementing term structure models I: Single-factor models*. Journal of Derivatives, 2(1), 7–16.
 - Jamshidian, F. (1989). *An exact bond option formula*. Journal of Finance, 44(1), 205–209.
-- Artefak: [cpp/day002i_hull_white/README.md](../../cpp/day002i_hull_white/README.md), [outputs/day002i/results.json](../../outputs/day002i/results.json).
+- Artefak: [projects/cpp/day002i_hull_white/README.md](../../cpp/day002i_hull_white/README.md), [outputs/day002i/results.json](../../outputs/day002i/results.json).

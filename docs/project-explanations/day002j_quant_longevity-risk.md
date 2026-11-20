@@ -3,18 +3,18 @@
 ## 1. Identitas dan Ringkasan Proyek
 - **ID Progress**: `day002j` (Hari 2, Sesi j)
 - **Tanggal**: 2026-11-20 (WITA) · **Topik No**: `bonus` · **Jenis**: `quant` · **Bahasa**: Ruby (`ruby`)
-- **Folder Proyek**: [ruby/day002j_longevity_risk](../../ruby/day002j_longevity_risk) · **Metadata**: [meta.json](../../ruby/day002j_longevity_risk/meta.json)
+- **Folder Proyek**: [projects/ruby/day002j_longevity_risk](../../ruby/day002j_longevity_risk) · **Metadata**: [meta.json](../../ruby/day002j_longevity_risk/meta.json)
 - **Ringkasan**: Pemodelan aktuaria mortalitas stokastik dalam Ruby murni tanpa gem runtime: SVD Jacobi satu-sisi buatan sendiri, estimasi model Lee–Carter (1992) & hukum Gompertz–Makeham, proyeksi stokastik RWD $k_t$ & bootstrap parameter, valuasi anuitas kohor usia 65, dekomposisi Hukum Variansi Total (risiko idiosinkratik vs sistematik), serta modal VaR 99.5% / ES 99% Solvency II.
 
 ## 2. Masalah dan Tujuan
 Dalam portofolio dana pensiun atau anuitas seumur hidup, risiko waktu kematian individu (*idiosyncratic mortality risk*) habis terdiversifikasi saat ukuran kohor $N \to \infty$, tetapi risiko tren peningkatan harapan hidup (*systematic longevity risk*) tidak dapat didiversifikasi dengan memperbesar jumlah peserta.
 
 ## 3. Apa yang Dikerjakan Proyek
-Proyek Ruby `ruby/day002j_longevity_risk` mengimplementasikan dekomposisi nilai singular (SVD) dari nol untuk mengestimasi permukaan log-mortalitas Lee–Carter, memfit parameter Gompertz–Makeham, memproyeksikan jalur mortalitas masa depan, memverifikasi Hukum Variansi Total dan asimtotik $\mathrm{CV}(N)$ pada portofolio anuitas, serta menghitung modal ekonomi VaR 99.5% dan ES 99%.
+Proyek Ruby `projects/ruby/day002j_longevity_risk` mengimplementasikan dekomposisi nilai singular (SVD) dari nol untuk mengestimasi permukaan log-mortalitas Lee–Carter, memfit parameter Gompertz–Makeham, memproyeksikan jalur mortalitas masa depan, memverifikasi Hukum Variansi Total dan asimtotik $\mathrm{CV}(N)$ pada portofolio anuitas, serta menghitung modal ekonomi VaR 99.5% dan ES 99%.
 
 ## 4. Uraian Kode
-- [ruby/day002j_longevity_risk/lib/](../../ruby/day002j_longevity_risk/lib/): modul SVD Jacobi satu-sisi, estimator Lee–Carter dengan normalisasi identifiabilitas, Nelder–Mead Gompertz–Makeham, simulator RWD $k_t$ & anuitas kohor paralel `Process.fork`, serta penulis JSON/SVG.
-- [ruby/day002j_longevity_risk/bin/run](../../ruby/day002j_longevity_risk/bin/run) & [test/test_longevity.rb](../../ruby/day002j_longevity_risk/test/test_longevity.rb): runner benchmark YJIT dan unit test `minitest`.
+- [projects/ruby/day002j_longevity_risk/lib/](../../ruby/day002j_longevity_risk/lib/): modul SVD Jacobi satu-sisi, estimator Lee–Carter dengan normalisasi identifiabilitas, Nelder–Mead Gompertz–Makeham, simulator RWD $k_t$ & anuitas kohor paralel `Process.fork`, serta penulis JSON/SVG.
+- [projects/ruby/day002j_longevity_risk/bin/run](../../ruby/day002j_longevity_risk/bin/run) & [test/test_longevity.rb](../../ruby/day002j_longevity_risk/test/test_longevity.rb): runner benchmark YJIT dan unit test `minitest`.
 
 ## 5. Metode dan Alur Kerja
 Konstruksi matriks log-mortalitas $\ln m_{x,t}$ $\to$ pemusatan baris $a_x$ & SVD peringkat-1 untuk $(b_x, k_t)$ $\to$ estimasi drift RWD $\hat{d}$ dan $\sigma_k$ $\to$ rekursi aktuaria eksak $a_{65}$ vs simulasi umur kematian $\to$ dekomposisi variansi portofolio untuk berbagai ukuran kohor $N$ $\to$ perhitungan VaR 99.5%, ES 99%, dan kejut mortalitas Solvency II $-0.5\%$.
@@ -52,4 +52,4 @@ Proyek `day002j` mendemonstrasikan secara aktuaria dan statistik perbedaan menda
 
 ## 11. Referensi dan Jejak Bukti
 - Lee, R. D., & Carter, L. R. (1992). *Modeling and forecasting U.S. mortality*. Journal of the American Statistical Association, 87(419), 659–671.
-- Artefak: [ruby/day002j_longevity_risk/README.md](../../ruby/day002j_longevity_risk/README.md), [outputs/day002j/results.json](../../outputs/day002j/results.json).
+- Artefak: [projects/ruby/day002j_longevity_risk/README.md](../../ruby/day002j_longevity_risk/README.md), [outputs/day002j/results.json](../../outputs/day002j/results.json).

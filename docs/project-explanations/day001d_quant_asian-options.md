@@ -3,19 +3,19 @@
 ## 1. Identitas dan Ringkasan Proyek
 - **ID Progress**: `day001d` (Hari 1, Sesi d)
 - **Tanggal**: 2026-11-19 (WITA) · **Topik No**: `bonus` (off-roadmap) · **Jenis**: `quant` · **Bahasa**: Rust (`rust`)
-- **Folder Proyek**: [rust/day001d_asian_options](../../rust/day001d_asian_options) · **Metadata**: [rust/day001d_asian_options/meta.json](../../rust/day001d_asian_options/meta.json)
+- **Folder Proyek**: [projects/rust/day001d_asian_options](../../rust/day001d_asian_options) · **Metadata**: [projects/rust/day001d_asian_options/meta.json](../../rust/day001d_asian_options/meta.json)
 - **Rujukan Silang**: Implementasi kembar dari [day001c (Python)](day001c_quant_opsi-asia-monte-carlo-variance.md) dengan spesifikasi parameter identik ($S_0=100, K=100, r=0.05, \sigma=0.2, T=1, M=252, N=200.000, \text{seed}=42$).
 
 ## 2. Masalah dan Tujuan
 Bagaimana mereplikasi mesin penilaian opsi Asia aritmetik (Naive MC, Antithetic Variates, Control Variate Kemna–Vorst, serta Delta Pathwise & Bump-and-Revalue CRN) di dalam ekosistem **Rust** secara deterministik dan tervalidasi silang secara statistik terhadap Python `day001c` (anchor Black–Scholes `10.450583572185565`, Kemna–Vorst `5.5655088313493559`)?
 
 ## 3. Apa yang Dikerjakan Proyek
-Program biner/runner di `rust/day001d_asian_options` menjalankan simulasi $N=200.000$ jalur GBM ($M=252$ langkah), mengevaluasi sanity check Eropa, ketiga estimator harga opsi Asia, kedua estimator Delta, dan kurva konvergensi $N \in [1.000, 200.000]$, lalu menulis hasil ke [outputs/day001d/results.json](../../outputs/day001d/results.json) serta grafik SVG ke `outputs/figures/day001d_*.svg`.
+Program biner/runner di `projects/rust/day001d_asian_options` menjalankan simulasi $N=200.000$ jalur GBM ($M=252$ langkah), mengevaluasi sanity check Eropa, ketiga estimator harga opsi Asia, kedua estimator Delta, dan kurva konvergensi $N \in [1.000, 200.000]$, lalu menulis hasil ke [outputs/day001d/results.json](../../outputs/day001d/results.json) serta grafik SVG ke `outputs/figures/day001d_*.svg`.
 
 ## 4. Uraian Kode
-- [rust/day001d_asian_options/Cargo.toml](../../rust/day001d_asian_options/Cargo.toml): crate Rust edisi 2021 dengan `rayon`, `rand_chacha` (`ChaCha8Rng`), `statrs`, `serde_json`, dan `plotters`.
-- [rust/day001d_asian_options/src/lib.rs](../../rust/day001d_asian_options/src/lib.rs): `OptionParams`, `bs_call_price`, `geometric_asian_call_price`, simulator GBM paralel `rayon`, estimator Naive/Antithetic/Control Variate, `asian_delta_pathwise`, dan `asian_delta_bump`.
-- [rust/day001d_asian_options/src/main.rs](../../rust/day001d_asian_options/src/main.rs): runner CLI penghasil `outputs/day001d/results.json` dan grafik SVG.
+- [projects/rust/day001d_asian_options/Cargo.toml](../../rust/day001d_asian_options/Cargo.toml): crate Rust edisi 2021 dengan `rayon`, `rand_chacha` (`ChaCha8Rng`), `statrs`, `serde_json`, dan `plotters`.
+- [projects/rust/day001d_asian_options/src/lib.rs](../../rust/day001d_asian_options/src/lib.rs): `OptionParams`, `bs_call_price`, `geometric_asian_call_price`, simulator GBM paralel `rayon`, estimator Naive/Antithetic/Control Variate, `asian_delta_pathwise`, dan `asian_delta_bump`.
+- [projects/rust/day001d_asian_options/src/main.rs](../../rust/day001d_asian_options/src/main.rs): runner CLI penghasil `outputs/day001d/results.json` dan grafik SVG.
 
 ## 5. Metode dan Alur Kerja
 Arsitektur spesifik **Rust**: menggunakan ChaCha8Rng (`rand_chacha`) dengan seeding per jalur deterministik `seed + path_id` di atas work-stealing thread pool `rayon`. Setiap worker menghitung statistik cukup lokal pada jalur yang ditugaskan, lalu direduksi secara deterministik.
@@ -36,7 +36,7 @@ Cocok dengan anchor Black–Scholes (`10.450583572185565`) dan Kemna–Vorst (`5
 | Verifikasi test suite Rust | `tercapai` | `cargo test --release -q` dijalankan pada sesi `day003c`: 5/5 unit test lulus dalam 0.07s; waktu inti 200k jalur = `379.8 ms` |
 
 ## 8. Jika Belum Tercapai atau Belum Diketahui (Fakta vs Hipotesis)
-Seluruh kriteria lulus dan terverifikasi. **FAKTA**: Test suite `rust/day001d_asian_options` telah dijalankan ulang pada sesi `day003c` dan lulus bersih.
+Seluruh kriteria lulus dan terverifikasi. **FAKTA**: Test suite `projects/rust/day001d_asian_options` telah dijalankan ulang pada sesi `day003c` dan lulus bersih.
 
 ## 9. Landasan Teori (Minimal 10 Poin)
 1. **Arsitektur Konkurensi & Memori Rust**: Trait iterator paralel `rayon::prelude::ParallelIterator` mereduksi akumulator `(sum, sum_sq, sum_xy)` secara *lock-free* dan deterministik karena setiap indeks jalur menurunkan stream `ChaCha8Rng` sendiri.
@@ -55,4 +55,4 @@ Proyek `day001d` menunjukkan bahwa spesifikasi kuantitatif opsi Asia di `day001c
 
 ## 11. Referensi dan Jejak Bukti
 - Rujukan induk: [day001c_quant_opsi-asia-monte-carlo-variance.md](day001c_quant_opsi-asia-monte-carlo-variance.md).
-- Artefak: [rust/day001d_asian_options/README.md](../../rust/day001d_asian_options/README.md), [outputs/day001d/results.json](../../outputs/day001d/results.json), [day001d_asian-se-convergence.svg](../../outputs/figures/day001d_asian-se-convergence.svg), [day001d_asian-ci-comparison.svg](../../outputs/figures/day001d_asian-ci-comparison.svg).
+- Artefak: [projects/rust/day001d_asian_options/README.md](../../rust/day001d_asian_options/README.md), [outputs/day001d/results.json](../../outputs/day001d/results.json), [day001d_asian-se-convergence.svg](../../outputs/figures/day001d_asian-se-convergence.svg), [day001d_asian-ci-comparison.svg](../../outputs/figures/day001d_asian-ci-comparison.svg).

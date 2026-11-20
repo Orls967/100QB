@@ -3,19 +3,19 @@
 ## 1. Identitas dan Ringkasan Proyek
 - **ID Progress**: `day001i` (Hari 1, Sesi i)
 - **Tanggal**: 2026-11-19 (WITA) · **Topik No**: `bonus` (off-roadmap) · **Jenis**: `quant` · **Bahasa**: Ruby (`ruby`)
-- **Folder Proyek**: [ruby/day001i_asian_options](../../ruby/day001i_asian_options) · **Metadata**: [ruby/day001i_asian_options/meta.json](../../ruby/day001i_asian_options/meta.json)
+- **Folder Proyek**: [projects/ruby/day001i_asian_options](../../ruby/day001i_asian_options) · **Metadata**: [projects/ruby/day001i_asian_options/meta.json](../../ruby/day001i_asian_options/meta.json)
 - **Rujukan Silang**: Implementasi kembar dari [day001c (Python)](day001c_quant_opsi-asia-monte-carlo-variance.md) dengan spesifikasi parameter identik ($S_0=100, K=100, r=0.05, \sigma=0.2, T=1, M=252, N=200.000, \text{seed}=42$).
 
 ## 2. Masalah dan Tujuan
 Bagaimana mereplikasi mesin penilaian opsi Asia aritmetik (Naive MC, Antithetic Variates, Control Variate Kemna–Vorst, serta Delta Pathwise & Bump-and-Revalue CRN) di dalam ekosistem **Ruby** secara deterministik dan tervalidasi silang secara statistik terhadap Python `day001c` (anchor Black–Scholes `10.450583572185565`, Kemna–Vorst `5.5655088313493559`)?
 
 ## 3. Apa yang Dikerjakan Proyek
-Program biner/runner di `ruby/day001i_asian_options` menjalankan simulasi $N=200.000$ jalur GBM ($M=252$ langkah), mengevaluasi sanity check Eropa, ketiga estimator harga opsi Asia, kedua estimator Delta, dan kurva konvergensi $N \in [1.000, 200.000]$, lalu menulis hasil ke [outputs/day001i/results.json](../../outputs/day001i/results.json) serta grafik SVG ke `outputs/figures/day001i_*.svg`.
+Program biner/runner di `projects/ruby/day001i_asian_options` menjalankan simulasi $N=200.000$ jalur GBM ($M=252$ langkah), mengevaluasi sanity check Eropa, ketiga estimator harga opsi Asia, kedua estimator Delta, dan kurva konvergensi $N \in [1.000, 200.000]$, lalu menulis hasil ke [outputs/day001i/results.json](../../outputs/day001i/results.json) serta grafik SVG ke `outputs/figures/day001i_*.svg`.
 
 ## 4. Uraian Kode
-- [ruby/day001i_asian_options/Gemfile](../../ruby/day001i_asian_options/Gemfile) & `Rakefile`: proyek Ruby murni tanpa gem runtime eksternal, menggunakan `minitest` dan `rubocop`.
-- [ruby/day001i_asian_options/lib/](../../ruby/day001i_asian_options/lib/): PRNG `xoshiro256++` 64-bit, `Math.erfc`, paralelisme multi-proses `Process.fork` + pipe, estimator MC, dan generator SVG.
-- [ruby/day001i_asian_options/bin/run](../../ruby/day001i_asian_options/bin/run) & `test/`: skrip runner dengan `RubyVM::YJIT.enable` dan 7 unit test `minitest`.
+- [projects/ruby/day001i_asian_options/Gemfile](../../ruby/day001i_asian_options/Gemfile) & `Rakefile`: proyek Ruby murni tanpa gem runtime eksternal, menggunakan `minitest` dan `rubocop`.
+- [projects/ruby/day001i_asian_options/lib/](../../ruby/day001i_asian_options/lib/): PRNG `xoshiro256++` 64-bit, `Math.erfc`, paralelisme multi-proses `Process.fork` + pipe, estimator MC, dan generator SVG.
+- [projects/ruby/day001i_asian_options/bin/run](../../ruby/day001i_asian_options/bin/run) & `test/`: skrip runner dengan `RubyVM::YJIT.enable` dan 7 unit test `minitest`.
 
 ## 5. Metode dan Alur Kerja
 Arsitektur spesifik **Ruby**: menggunakan Ruby 4.0.9 dengan `RubyVM::YJIT` dan paralelisme `Process.fork` melewati batas GVL (*Global VM Lock*). Setiap worker menghitung statistik cukup lokal pada jalur yang ditugaskan, lalu direduksi secara deterministik.
@@ -36,7 +36,7 @@ Cocok dengan anchor Black–Scholes (`10.450583572185565`) dan Kemna–Vorst (`5
 | Verifikasi test suite Ruby | `tercapai` | `bundle exec rake test` dijalankan pada sesi `day003c`: 7 runs, 40 assertions, 0 failures, 0 errors; waktu inti 200k jalur = `4328.4 ms` |
 
 ## 8. Jika Belum Tercapai atau Belum Diketahui (Fakta vs Hipotesis)
-Seluruh kriteria lulus dan terverifikasi. **FAKTA**: Test suite `ruby/day001i_asian_options` telah dijalankan ulang pada sesi `day003c` dan lulus bersih.
+Seluruh kriteria lulus dan terverifikasi. **FAKTA**: Test suite `projects/ruby/day001i_asian_options` telah dijalankan ulang pada sesi `day003c` dan lulus bersih.
 
 ## 9. Landasan Teori (Minimal 10 Poin)
 1. **Arsitektur Konkurensi & Memori Ruby**: Karena CRuby memiliki GVL, proyek ini menggunakan `Process.fork` untuk menjalankan worker paralel di banyak core CPU dengan IPC deterministik melalui pipe.
@@ -55,4 +55,4 @@ Proyek `day001i` menunjukkan bahwa spesifikasi kuantitatif opsi Asia di `day001c
 
 ## 11. Referensi dan Jejak Bukti
 - Rujukan induk: [day001c_quant_opsi-asia-monte-carlo-variance.md](day001c_quant_opsi-asia-monte-carlo-variance.md).
-- Artefak: [ruby/day001i_asian_options/README.md](../../ruby/day001i_asian_options/README.md), [outputs/day001i/results.json](../../outputs/day001i/results.json), [day001i_asian-se-convergence.svg](../../outputs/figures/day001i_asian-se-convergence.svg), [day001i_asian-ci-comparison.svg](../../outputs/figures/day001i_asian-ci-comparison.svg).
+- Artefak: [projects/ruby/day001i_asian_options/README.md](../../ruby/day001i_asian_options/README.md), [outputs/day001i/results.json](../../outputs/day001i/results.json), [day001i_asian-se-convergence.svg](../../outputs/figures/day001i_asian-se-convergence.svg), [day001i_asian-ci-comparison.svg](../../outputs/figures/day001i_asian-ci-comparison.svg).

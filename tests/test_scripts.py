@@ -154,22 +154,22 @@ def test_update_readme_collects_multi_language_meta(tmp_path, monkeypatch):
     rb_dir.mkdir(parents=True)
     (rust / "meta.json").write_text(
         '{"day": 1, "session": "d", "topic_no": null, "type": "quant", '
-        '"topic": "Opsi Asia (Rust)", "date": "2026-11-19", "link": "rust/day001d_asian"}',
+        '"topic": "Opsi Asia (Rust)", "date": "2026-11-19", "link": "projects/rust/day001d_asian"}',
         encoding="utf-8",
     )
     (go_dir / "meta.json").write_text(
         '{"day": 1, "session": "e", "topic_no": null, "type": "quant", "language": "go", '
-        '"topic": "Opsi Asia (Go)", "date": "2026-11-19", "link": "go/day001e_asian"}',
+        '"topic": "Opsi Asia (Go)", "date": "2026-11-19", "link": "projects/go/day001e_asian"}',
         encoding="utf-8",
     )
     (ts_dir / "meta.json").write_text(
         '{"day": 1, "session": "f", "topic_no": null, "type": "quant", "language": "typescript", '
-        '"topic": "Opsi Asia (TypeScript)", "date": "2026-11-19", "link": "typescript/day001f_asian"}',
+        '"topic": "Opsi Asia (TypeScript)", "date": "2026-11-19", "link": "projects/typescript/day001f_asian"}',
         encoding="utf-8",
     )
     (rb_dir / "meta.json").write_text(
         '{"day": 1, "session": "i", "topic_no": null, "type": "quant", "language": "ruby", '
-        '"topic": "Opsi Asia (Ruby)", "date": "2026-11-19", "link": "ruby/day001i_asian"}',
+        '"topic": "Opsi Asia (Ruby)", "date": "2026-11-19", "link": "projects/ruby/day001i_asian"}',
         encoding="utf-8",
     )
     assert "ruby" in update_readme.LANG_DIRS
@@ -180,7 +180,7 @@ def test_update_readme_collects_multi_language_meta(tmp_path, monkeypatch):
     assert len(rows) == 4
     assert [r["language"] for r in rows] == ["rust", "go", "typescript", "ruby"]
     table = update_readme.render_table(rows)
-    assert "| 1d | bonus | `quant` | `rust` | Opsi Asia (Rust) | 2026-11-19 | [day001d_asian](rust/day001d_asian) |" in table
-    assert "| 1e | bonus | `quant` | `go` | Opsi Asia (Go) | 2026-11-19 | [day001e_asian](go/day001e_asian) |" in table
-    assert "| 1f | bonus | `quant` | `typescript` | Opsi Asia (TypeScript) | 2026-11-19 | [day001f_asian](typescript/day001f_asian) |" in table
-    assert "| 1i | bonus | `quant` | `ruby` | Opsi Asia (Ruby) | 2026-11-19 | [day001i_asian](ruby/day001i_asian) |" in table
+    assert "| 1d | bonus | `quant` | `rust` | Opsi Asia (Rust) | 2026-11-19 | [day001d_asian](projects/rust/day001d_asian) |" in table
+    assert "| 1e | bonus | `quant` | `go` | Opsi Asia (Go) | 2026-11-19 | [day001e_asian](projects/go/day001e_asian) |" in table
+    assert "| 1f | bonus | `quant` | `typescript` | Opsi Asia (TypeScript) | 2026-11-19 | [day001f_asian](projects/typescript/day001f_asian) |" in table
+    assert "| 1i | bonus | `quant` | `ruby` | Opsi Asia (Ruby) | 2026-11-19 | [day001i_asian](projects/ruby/day001i_asian) |" in table

@@ -6,7 +6,7 @@
 - **Topik**: Eksekusi optimal — Almgren–Chriss, dampak transien (Obizhaeva–Wang), dan likuiditas stokastik (DP)
 - **Jenis**: `quant` (off-roadmap / `bonus`)
 - **Bahasa**: Rust (edisi 2021, `#![forbid(unsafe_code)]`, nol crate eksternal runtime)
-- **Lokasi Kode**: [rust/day003b_optimal_execution/](../../rust/day003b_optimal_execution/Cargo.toml)
+- **Lokasi Kode**: [projects/rust/day003b_optimal_execution/](../../rust/day003b_optimal_execution/Cargo.toml)
 
 Proyek ini mengimplementasikan dan memvalidasi tiga kerangka teori eksekusi optimal institusional dalam Rust murni tanpa dependensi eksternal: penyeimbangan *market impact* vs risiko volatilitas (Almgren–Chriss), peluruhan dampak sementara dalam buku order (*limit order book*) pada model Obizhaeva–Wang serta keragaman kernel dampaknya, dan pengendalian eksekusi adaptif di bawah rezim likuiditas Markov melalui *dynamic programming* (DP).
 
@@ -31,7 +31,7 @@ Program biner `day003b_optimal_execution` mengeksekusi seluruh eksperimen Bagian
 ---
 
 ## 4. Uraian Kode
-Seluruh kode berada di [rust/day003b_optimal_execution/src/](../../rust/day003b_optimal_execution/src/lib.rs):
+Seluruh kode berada di [projects/rust/day003b_optimal_execution/src/](../../rust/day003b_optimal_execution/src/lib.rs):
 - **`linalg.rs`** ([linalg.rs](../../rust/day003b_optimal_execution/src/linalg.rs)): `cholesky`, `solve_cholesky`, `solve_spd` untuk sistem simetris positif-definit; `solve_tridiagonal` (algoritma Thomas $O(N)$); dan `jacobi_min_eigenvalue` untuk menghitung eigenvalue minimum dan eigenvector matriks simetris.
 - **`rng.rs`** ([rng.rs](../../rust/day003b_optimal_execution/src/rng.rs)): `Xoshiro256PlusPlus` dengan seeding `splitmix64` dan transformasi Box–Muller `next_normal`.
 - **`parallel.rs`** ([parallel.rs](../../rust/day003b_optimal_execution/src/parallel.rs)): `parallel_fixed_chunks` membagi pekerjaan ke sejumlah chunk tetap yang seed-nya hanya bergantung pada indeks chunk, menjamin hasil identik bit-demi-bit untuk 1 maupun banyak thread.

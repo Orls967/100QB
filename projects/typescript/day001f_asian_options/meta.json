@@ -1,0 +1,10 @@
+{
+  "day": 1,
+  "session": "f",
+  "topic_no": null,
+  "type": "quant",
+  "language": "typescript",
+  "topic": "Opsi Asia (TypeScript): Monte Carlo, variance reduction & Greeks",
+  "date": "2026-11-19",
+  "link": "projects/typescript/day001f_asian_options"
+}

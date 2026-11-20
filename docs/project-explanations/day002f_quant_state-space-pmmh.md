@@ -3,21 +3,21 @@
 ## 1. Identitas dan Ringkasan Proyek
 - **ID Progress**: `day002f` (Hari 2, Sesi f)
 - **Tanggal**: 2026-11-20 (WITA) · **Topik No**: `bonus` · **Jenis**: `quant` · **Bahasa**: Rust (`rust`)
-- **Folder Proyek**: [rust/day002f_state_space_pmmh](../../rust/day002f_state_space_pmmh) · **Metadata**: [meta.json](../../rust/day002f_state_space_pmmh/meta.json)
+- **Folder Proyek**: [projects/rust/day002f_state_space_pmmh](../../rust/day002f_state_space_pmmh) · **Metadata**: [meta.json](../../rust/day002f_state_space_pmmh/meta.json)
 - **Ringkasan**: Inferensi Bayesian model ruang-keadaan linear-Gaussian (Model A) dan volatilitas stokastik non-linear (Model B) menggunakan Kalman Filter eksak, Bootstrap Particle Filter (systematic resampling), kuadratur grid, Metropolis–Hastings, serta Particle Marginal Metropolis–Hastings (PMMH) dengan diagnostik split-$\hat{R}$, ESS Geyer, dan MCSE.
 
 ## 2. Masalah dan Tujuan
 Pada model ruang-keadaan non-linear seperti volatilitas stokastik ($y_t = \exp(x_t/2)\varepsilon_t$), likelihood marginal $p(y_{1:T}|\theta)$ tidak memiliki bentuk tertutup. Proyek ini membuktikan ketakbiasan estimator likelihood *bootstrap particle filter* $\hat{Z}$ terhadap Kalman filter eksak pada Model A, lalu memasukkannya ke dalam skema pseudo-marginal PMMH (Andrieu–Doucet–Holenstein 2010) untuk mengambil sampel posterior eksak pada Model A dan Model B.
 
 ## 3. Apa yang Dikerjakan Proyek
-Crate `rust/day002f_state_space_pmmh` menjalankan verifikasi Kalman vs matriks kovarians penuh $T\times T$, menguji ketakbiasan $\hat{Z}$ dan penskalaan $\mathrm{Var}(\log\hat{Z}) \propto 1/N_p$, menghitung posterior acuan via integrasi grid deterministik, menjalankan rantai jamak MH dan PMMH secara paralel dengan `rayon`, serta menulis [outputs/day002f/results.json](../../outputs/day002f/results.json) dan 4 grafik SVG.
+Crate `projects/rust/day002f_state_space_pmmh` menjalankan verifikasi Kalman vs matriks kovarians penuh $T\times T$, menguji ketakbiasan $\hat{Z}$ dan penskalaan $\mathrm{Var}(\log\hat{Z}) \propto 1/N_p$, menghitung posterior acuan via integrasi grid deterministik, menjalankan rantai jamak MH dan PMMH secara paralel dengan `rayon`, serta menulis [outputs/day002f/results.json](../../outputs/day002f/results.json) dan 4 grafik SVG.
 
 ## 4. Uraian Kode
-- [rust/day002f_state_space_pmmh/src/kalman.rs](../../rust/day002f_state_space_pmmh/src/kalman.rs): Kalman filter 1D eksak dan pembanding log-likelihood Gaussian multivariat $T\times T$ (`Cholesky`).
-- [rust/day002f_state_space_pmmh/src/pf.rs](../../rust/day002f_state_space_pmmh/src/pf.rs): bootstrap particle filter dengan *systematic resampling* dan pemicu ESS $< N_p/2$.
-- [rust/day002f_state_space_pmmh/src/grid.rs](../../rust/day002f_state_space_pmmh/src/grid.rs): kuadratur grid posterior eksak (Model A) dan filter HMM terdiskretisasi 2D (Model B).
-- [rust/day002f_state_space_pmmh/src/mcmc.rs](../../rust/day002f_state_space_pmmh/src/mcmc.rs): sampler random-walk Metropolis–Hastings dan PMMH multi-rantai.
-- [rust/day002f_state_space_pmmh/src/diagnostics.rs](../../rust/day002f_state_space_pmmh/src/diagnostics.rs): split-$\hat{R}$ Gelman–Rubin, ESS *initial positive sequence* Geyer, dan MCSE.
+- [projects/rust/day002f_state_space_pmmh/src/kalman.rs](../../rust/day002f_state_space_pmmh/src/kalman.rs): Kalman filter 1D eksak dan pembanding log-likelihood Gaussian multivariat $T\times T$ (`Cholesky`).
+- [projects/rust/day002f_state_space_pmmh/src/pf.rs](../../rust/day002f_state_space_pmmh/src/pf.rs): bootstrap particle filter dengan *systematic resampling* dan pemicu ESS $< N_p/2$.
+- [projects/rust/day002f_state_space_pmmh/src/grid.rs](../../rust/day002f_state_space_pmmh/src/grid.rs): kuadratur grid posterior eksak (Model A) dan filter HMM terdiskretisasi 2D (Model B).
+- [projects/rust/day002f_state_space_pmmh/src/mcmc.rs](../../rust/day002f_state_space_pmmh/src/mcmc.rs): sampler random-walk Metropolis–Hastings dan PMMH multi-rantai.
+- [projects/rust/day002f_state_space_pmmh/src/diagnostics.rs](../../rust/day002f_state_space_pmmh/src/diagnostics.rs): split-$\hat{R}$ Gelman–Rubin, ESS *initial positive sequence* Geyer, dan MCSE.
 
 ## 5. Metode dan Alur Kerja
 Verifikasi Kalman vs brute-force $\to$ simulasi $R$ replikasi particle filter untuk menguji $E[\hat{Z}/Z] = 1$ dan kemiringan log-log $\mathrm{Var}(\log \hat{Z})$ vs $N_p$ $\to$ kuadratur grid posterior $\to$ eksekusi 4 rantai paralel MH & PMMH pada Model A dan PMMH pada Model B $\to$ perbandingan momen posterior dan diagnostik MCMC.
@@ -55,4 +55,4 @@ Proyek `day002f` mendemonstrasikan inferensi Bayesian eksak pada model volatilit
 
 ## 11. Referensi dan Jejak Bukti
 - Andrieu, C., Doucet, A., & Holenstein, R. (2010). *Particle Markov chain Monte Carlo methods*. Journal of the Royal Statistical Society: Series B, 72(3), 269–342.
-- Artefak: [rust/day002f_state_space_pmmh/README.md](../../rust/day002f_state_space_pmmh/README.md), [outputs/day002f/results.json](../../outputs/day002f/results.json).
+- Artefak: [projects/rust/day002f_state_space_pmmh/README.md](../../rust/day002f_state_space_pmmh/README.md), [outputs/day002f/results.json](../../outputs/day002f/results.json).

@@ -32,23 +32,23 @@ data/cache/
 target/
 
 # Go
-go/**/bin/
+projects/go/**/bin/
 *.test
 
 # TypeScript / Node
 node_modules/
-typescript/**/dist/
+projects/typescript/**/dist/
 
 # C++
-cpp/**/build*/
+projects/cpp/**/build*/
 cmake-build-*/
 
 # C
-c/**/build*/
+projects/c/**/build*/
 
 # Ruby
 .bundle/
-ruby/**/vendor/bundle/
+projects/ruby/**/vendor/bundle/
 
 # Instruksi kerja agen (lokal)
 docs/project-explanations/PROMPT.md

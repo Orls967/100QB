@@ -31,6 +31,6 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 
 ## Sesi yang Tidak Ada di Repositori
 
-Sesuai pemeriksaan artefak repositori (`days/`, folder bahasa `rust/`, `go/`, `typescript/`, `cpp/`, `c/`, `ruby/`, serta `outputs/`), sesi berikut **tidak pernah ada** di dalam repositori ini dan oleh karena itu tidak dibuatkan dokumen penjelasan:
+Sesuai pemeriksaan artefak repositori (`days/`, folder bahasa `projects/rust/`, `projects/go/`, `projects/typescript/`, `projects/cpp/`, `projects/c/`, `projects/ruby/`, serta `outputs/`), sesi berikut **tidak pernah ada** di dalam repositori ini dan oleh karena itu tidak dibuatkan dokumen penjelasan:
 - **`day001j`, `day001k`, `day001l`** (implementasi Opsi Asia dalam Java, Kotlin, atau JavaScript murni): seri lintas bahasa Hari 1 berhenti pada `day001i` (Ruby).
 - **`day002a`** (notebook/modul Python sesi pertama Hari 2, misalnya LSM Python): Hari 2 di repositori langsung dimulai dari `day002b` (*Estimasi kovarians & portofolio varians minimum*).

@@ -4,7 +4,7 @@
 Contoh:
     python scripts/new_day.py --type quant --topic "Return harian & kumulatif"
     python scripts/new_day.py --type sim --topic "Estimasi pi Monte Carlo" --dry-run
-    python scripts/new_day.py            # ambil jenis & topik dari ROADMAP.md
+    python scripts/new_day.py            # ambil jenis & topik dari docs/ROADMAP.md
 
 Nomor hari otomatis = nomor terbesar di ``days/`` + 1 (bisa dipaksa dengan ``--day``).
 Nama file: ``days/dayNNN_<quant|sim>_<topik-singkat>.ipynb``.
@@ -25,7 +25,7 @@ import nbformat
 ROOT = Path(__file__).resolve().parents[1]
 DAYS_DIR = ROOT / "days"
 TEMPLATE = ROOT / "templates" / "day_template.ipynb"
-ROADMAP = ROOT / "ROADMAP.md"
+ROADMAP = ROOT / "docs/ROADMAP.md"
 WITA_TZ = ZoneInfo("Asia/Makassar")
 
 
@@ -133,7 +133,7 @@ def next_day_number(days_dir: Path = DAYS_DIR) -> int:
 
 
 def next_unchecked_topic_no(roadmap: Path = ROADMAP) -> int | None:
-    """Cari nomor topik pertama di ROADMAP.md yang belum dicentang."""
+    """Cari nomor topik pertama di docs/ROADMAP.md yang belum dicentang."""
     if not roadmap.exists():
         return None
     for line in roadmap.read_text(encoding="utf-8").splitlines():
@@ -144,7 +144,7 @@ def next_unchecked_topic_no(roadmap: Path = ROADMAP) -> int | None:
 
 
 def roadmap_entry(topic_no: int, roadmap: Path = ROADMAP) -> tuple[str, str] | None:
-    """Cari (jenis, topik) untuk nomor topik tertentu di ROADMAP.md."""
+    """Cari (jenis, topik) untuk nomor topik tertentu di docs/ROADMAP.md."""
     if not roadmap.exists():
         return None
     for line in roadmap.read_text(encoding="utf-8").splitlines():
@@ -194,7 +194,7 @@ def build_notebook(
 def parse_args(argv=None):
     p = argparse.ArgumentParser(description="Buat notebook hari berikutnya dari template.")
     p.add_argument("--type", choices=TYPES, help="jenis notebook: quant atau sim")
-    p.add_argument("--topic", help="topik hari ini (default: ambil dari ROADMAP.md)")
+    p.add_argument("--topic", help="topik hari ini (default: ambil dari docs/ROADMAP.md)")
     p.add_argument("--topic-no", type=int, help="nomor topik ROADMAP (default: belum dicentang berikutnya)")
     p.add_argument("--bonus", action="store_true", help="topik off-roadmap/bonus (topic_no = null)")
     p.add_argument("--slug", help="nama singkat untuk file (default: dari topik)")
@@ -236,7 +236,7 @@ def main(argv=None) -> int:
             return 2
         entry = roadmap_entry(topic_no)
         if entry is None:
-            print("Butuh --type dan --topic (topik tidak ditemukan di ROADMAP.md).", file=sys.stderr)
+            print("Butuh --type dan --topic (topik tidak ditemukan di docs/ROADMAP.md).", file=sys.stderr)
             return 2
         nb_type = nb_type or entry[0]
         topic = topic or entry[1]
