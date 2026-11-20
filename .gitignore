@@ -49,3 +49,6 @@ c/**/build*/
 # Ruby
 .bundle/
 ruby/**/vendor/bundle/
+
+# Instruksi kerja agen (lokal)
+docs/project-explanations/PROMPT.md

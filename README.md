@@ -147,7 +147,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [ROADMAP.md](ROADMAP.md) · Riwayat: [CHANGELOG.md](CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 20/100 topik (20%)** · quant: 19 · sim: 1
+**Progres: 21/100 topik (21%)** · quant: 20 · sim: 1
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -171,6 +171,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 2i | bonus | `quant` | `cpp` | Hull-White: pohon trinomial, Jamshidian, kalibrasi & Bermudan | 2026-11-20 | [day002i_hull_white](cpp/day002i_hull_white) |
 | 2j | bonus | `quant` | `ruby` | Longevity risk: Lee–Carter, anuitas stokastik & modal solvabilitas | 2026-11-20 | [day002j_longevity_risk](ruby/day002j_longevity_risk) |
 | 3 | bonus | `quant` | `python` | Volatilitas lokal Dupire dari permukaan SSVI | 2026-11-21 | [day003_quant_volatilitas-lokal-dupire-ssvi.ipynb](days/day003_quant_volatilitas-lokal-dupire-ssvi.ipynb) |
+| 3b | bonus | `quant` | `rust` | Eksekusi optimal: Almgren–Chriss, dampak transien, likuiditas stokastik | 2026-11-21 | [day003b_optimal_execution](rust/day003b_optimal_execution) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi

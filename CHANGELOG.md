@@ -3,6 +3,16 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 003b] — 2026-11-21 · Eksekusi optimal: Almgren–Chriss, dampak transien, likuiditas stokastik (Rust, Bonus)
+
+### Ditambahkan
+- Project Rust 2021 murni `rust/day003b_optimal_execution/` (`#![forbid(unsafe_code)]`, nol crate eksternal runtime): Cholesky, Thomas tridiagonal $O(N)$, Jacobi eigenvalue simetris, RNG `xoshiro256++` + Box–Muller, paralelisme `std::thread` deterministik (chunk tetap), penulis JSON (17 digit) & SVG buatan sendiri.
+- Bagian 1–3: Almgren–Chriss (QP KKT vs `sinh` diskrit, limit kontinu, frontier 40 titik, MC `400.000` jalur), Obizhaeva–Wang (solusi umum, anchor eksak, benchmark $N=2000$ $O(N)$ vs $O(N^3)$, power-law, osilasi PD dengan manipulasi harga, non-PD, gabungan), dan DP likuiditas stokastik 2-rezim (rekursi kuadratik, brute-force $N=5$, simulasi `400.000` jalur, nilai adaptivitas `14.09%`, sensitivitas persistensi).
+- Output `outputs/day003b/results.json`, 7 grafik SVG `outputs/figures/day003b_*.svg`, serta dokumen penjelasan `docs/project-explanations/day003b_quant_optimal-execution.md`.
+
+### Diperbarui
+- `README.md` (tabel progres baris `3b` Rust), `CHANGELOG.md`, dan `docs/project-explanations/README.md`.
+
 ## [Hari 003a] — 2026-11-21 · Volatilitas lokal Dupire dari permukaan SSVI (Python, Bonus)
 
 ### Ditambahkan
