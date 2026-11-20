@@ -1,0 +1,7 @@
+[package]
+name = "day003b_optimal_execution"
+version = "0.1.0"
+edition = "2021"
+description = "Optimal execution in pure Rust: Almgren-Chriss, Obizhaeva-Wang transient impact, and stochastic liquidity DP"
+
+[dependencies]
