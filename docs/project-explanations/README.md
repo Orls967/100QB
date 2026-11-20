@@ -1,7 +1,35 @@
-# Penjelasan Proyek
+# Penjelasan Proyek 100QB
 
-Folder ini menyimpan satu dokumen penjelasan untuk setiap progress/proyek, mulai sesi `day003b`. Dokumen dibuat terpisah agar uraian implementasi, hasil, dan landasan teori tiap sesi mudah dicari tanpa membuat satu Markdown panjang.
+Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap sesi/proyek di repositori **100QB**, mengikuti spesifikasi struktur 11 bagian (identitas, masalah, fungsi, uraian kode, metode, target, status pencapaian berbasis bukti, pemisahan fakta vs hipotesis, minimal 10 landasan teori, kesimpulan, dan jejak bukti).
 
-## Daftar proyek
+## Daftar Proyek (Urut Hari & Sesi)
 
-- **day003b** (`quant`, `rust`): [Eksekusi optimal: Almgren–Chriss, dampak transien, likuiditas stokastik](day003b_quant_optimal-execution.md)
+| Hari / Sesi | Topik No | Jenis | Bahasa | Dokumen Penjelasan |
+|:---:|:---:|:---:|:---:|---|
+| `1` (`day001`) | `001` | `quant` | `python` | [Return harian & kumulatif](day001_quant_return-harian-kumulatif.md) |
+| `1b` (`day001b`) | `002` | `sim` | `python` | [Estimasi π dengan Monte Carlo](day001b_sim_estimasi-dengan-monte-carlo.md) |
+| `1c` (`day001c`) | `bonus` | `quant` | `python` | [Opsi Asia: Monte Carlo, variance reduction & Greeks (Python)](day001c_quant_opsi-asia-monte-carlo-variance.md) |
+| `1d` (`day001d`) | `bonus` | `quant` | `rust` | [Opsi Asia (Rust): Monte Carlo, variance reduction & Greeks](day001d_quant_asian-options.md) |
+| `1e` (`day001e`) | `bonus` | `quant` | `go` | [Opsi Asia (Go): Monte Carlo, variance reduction & Greeks](day001e_quant_asian-options.md) |
+| `1f` (`day001f`) | `bonus` | `quant` | `typescript` | [Opsi Asia (TypeScript): Monte Carlo, variance reduction & Greeks](day001f_quant_asian-options.md) |
+| `1g` (`day001g`) | `bonus` | `quant` | `cpp` | [Opsi Asia (C++): Monte Carlo, variance reduction & Greeks](day001g_quant_asian-options.md) |
+| `1h` (`day001h`) | `bonus` | `quant` | `c` | [Opsi Asia (C): Monte Carlo, variance reduction & Greeks](day001h_quant_asian-options.md) |
+| `1i` (`day001i`) | `bonus` | `quant` | `ruby` | [Opsi Asia (Ruby): Monte Carlo, variance reduction & Greeks](day001i_quant_asian-options.md) |
+| `2b` (`day002b`) | `bonus` | `quant` | `python` | [Estimasi kovarians & portofolio varians minimum: Wishart, Marchenko–Pastur, Ledoit–Wolf](day002b_quant_estimasi-kovarians-portofolio-varians.md) |
+| `2c` (`day002c`) | `bonus` | `quant` | `python` | [HMM dua rezim: forward-backward, Baum–Welch & Viterbi](day002c_quant_hmm-dua-rezim-forward-backward-baum.md) |
+| `2d` (`day002d`) | `bonus` | `quant` | `python` | [Risiko kredit Vasicek: distribusi kerugian eksak, LHP & importance sampling](day002d_quant_risiko-kredit-vasicek-distribusi.md) |
+| `2e` (`day002e`) | `bonus` | `quant` | `python` | [Model Heston: pricing Fourier, kalibrasi & Monte Carlo QE](day002e_quant_model-heston-pricing-fourier-kalibrasi.md) |
+| `2f` (`day002f`) | `bonus` | `quant` | `rust` | [Inferensi Bayesian state-space: Kalman, particle filter & PMMH](day002f_quant_state-space-pmmh.md) |
+| `2g` (`day002g`) | `bonus` | `quant` | `cpp` | [AAD untuk Greeks Monte Carlo: tape mode-balik, pathwise & keranjang 10 aset](day002g_quant_aad-greeks.md) |
+| `2h` (`day002h`) | `bonus` | `quant` | `cpp` | [Hawkes + limit order book: simulasi eksak, MLE, mesin pencocokan & fakta stilistik](day002h_quant_hawkes-orderbook.md) |
+| `2i` (`day002i`) | `bonus` | `quant` | `cpp` | [Hull–White: pohon trinomial, Jamshidian, kalibrasi & Bermudan](day002i_quant_hull-white.md) |
+| `2j` (`day002j`) | `bonus` | `quant` | `ruby` | [Longevity risk: Lee–Carter, anuitas stokastik & modal solvabilitas](day002j_quant_longevity-risk.md) |
+| `2k` (`day002k`) | `bonus` | `quant` | `ruby` | [Opsi Put Amerika (Ruby): CRR Binomial, LSM Monte Carlo & PSOR PDE](day002k_quant_american-put.md) |
+| `3` / `3a` (`day003`) | `bonus` | `quant` | `python` | [Volatilitas lokal Dupire dari permukaan SSVI](day003_quant_volatilitas-lokal-dupire-ssvi.md) |
+| `3b` (`day003b`) | `bonus` | `quant` | `rust` | [Eksekusi optimal: Almgren–Chriss, dampak transien, likuiditas stokastik](day003b_quant_optimal-execution.md) |
+
+## Sesi yang Tidak Ada di Repositori
+
+Sesuai pemeriksaan artefak repositori (`days/`, folder bahasa `rust/`, `go/`, `typescript/`, `cpp/`, `c/`, `ruby/`, serta `outputs/`), sesi berikut **tidak pernah ada** di dalam repositori ini dan oleh karena itu tidak dibuatkan dokumen penjelasan:
+- **`day001j`, `day001k`, `day001l`** (implementasi Opsi Asia dalam Java, Kotlin, atau JavaScript murni): seri lintas bahasa Hari 1 berhenti pada `day001i` (Ruby).
+- **`day002a`** (notebook/modul Python sesi pertama Hari 2, misalnya LSM Python): Hari 2 di repositori langsung dimulai dari `day002b` (*Estimasi kovarians & portofolio varians minimum*).
