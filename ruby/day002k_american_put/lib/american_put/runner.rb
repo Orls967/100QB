@@ -30,13 +30,13 @@ module AmericanPut
     end
 
     def write_outputs(result, repo_root:)
-      out_dir = File.join(repo_root, 'outputs', 'day002g')
+      out_dir = File.join(repo_root, 'outputs', 'day002k')
       fig_dir = File.join(repo_root, 'outputs', 'figures')
       FileUtils.mkdir_p([out_dir, fig_dir])
       paths = {
         json: File.join(out_dir, 'results.json'),
-        svg_convergence: File.join(fig_dir, 'day002g_american-convergence.svg'),
-        svg_spot: File.join(fig_dir, 'day002g_american-spot-profile.svg')
+        svg_convergence: File.join(fig_dir, 'day002k_american-convergence.svg'),
+        svg_spot: File.join(fig_dir, 'day002k_american-spot-profile.svg')
       }
       File.write(paths[:json], "#{JSON.pretty_generate(result[:payload])}\n")
       Svg.write_convergence_svg(paths[:svg_convergence], result[:crr_sweep], result[:psor_sweep],

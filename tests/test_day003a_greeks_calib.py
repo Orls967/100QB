@@ -74,3 +74,33 @@ def test_calibration_noiseless_and_noisy_crosscheck():
         bounds=([-0.995, 1e-5, 0.01] + [1e-6] * 5, [0.995, 10.0, 0.99] + [5.0] * 5),
     )
     assert np.max(np.abs(fit_noisy["beta"] - scipy_fit.x)) < 1e-6
+
+
+# Toleransi dinyatakan SEBELUM dijalankan (diagnosis gamma SSVI, day003a A1):
+#  - di titik non-sudut (S0 = 95, 105; permukaan sigma_loc halus di sana) gamma grid vs beda hingga
+#    harga (grid tetap, bump 0.5) harus cocok dalam 2e-3 relatif;
+#  - di S0 = params.S0 (sudut singular t->0) gamma TIDAK dijamin cocok: tes hanya menegaskan bahwa
+#    gamma grid stabil terhadap resolusi (1201 vs 2401 titik dalam 2%) dan sensitif terhadap t_min
+#    (selisih > 20% antara t_min=1e-3 dan 1e-5), sesuai diagnosis.
+def test_ssvi_gamma_grid_vs_fd_off_corner_and_corner_diagnosis():
+    from qb100.day003a_local_vol.dupire import dupire_local_vol_from_spot
+
+    params = SSVIParams()
+    vf = lambda s, t: dupire_local_vol_from_spot(s, t, params)
+    for s0 in (95.0, 105.0):
+        res = pde_delta_gamma(s0, 100.0, 1.0, params.r, params.q, vf, n_space=601, n_time=300,
+                              fd_bump=0.5, time_power=2.0)
+        assert abs(res["gamma_grid"] - res["gamma_fd"]) / res["gamma_fd"] < 2e-3
+
+    g_coarse = pde_delta_gamma(100.0, 100.0, 1.0, params.r, params.q, vf, n_space=1201, n_time=800,
+                               fd_bump=0.5, time_power=2.0)["gamma_grid"]
+    g_fine = pde_delta_gamma(100.0, 100.0, 1.0, params.r, params.q, vf, n_space=2401, n_time=1600,
+                             fd_bump=0.5, time_power=2.0)["gamma_grid"]
+    assert abs(g_fine - g_coarse) / g_fine < 0.02
+
+    def gamma_tmin(tm):
+        fn = lambda s, t: dupire_local_vol_from_spot(s, t, params, t_min=tm)
+        return pde_delta_gamma(100.0, 100.0, 1.0, params.r, params.q, fn, n_space=601, n_time=300,
+                               fd_bump=0.5, time_power=2.0)["gamma_grid"]
+
+    assert abs(gamma_tmin(1e-5) - gamma_tmin(1e-3)) / gamma_tmin(1e-5) > 0.2

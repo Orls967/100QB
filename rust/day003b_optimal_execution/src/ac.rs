@@ -310,3 +310,101 @@ pub fn simulate_ac_mc(
         z_var,
     }
 }
+
+/// Hasil MC TANPA antitetik (jalur independen) untuk rata-rata dan variansi shortfall.
+#[derive(Clone, Debug)]
+pub struct AcPlainMcResult {
+    pub mc_mean: f64,
+    pub mc_mean_se: f64,
+    pub exact_mean: f64,
+    pub z_mean: f64,
+    pub mc_var: f64,
+    pub mc_var_se: f64,
+    pub exact_var: f64,
+    pub z_var: f64,
+}
+
+/// Simulasi MC jalur independen (tanpa antitetik). Karena shortfall linear di xi, mean dengan
+/// antitetik identik dengan rumus eksak (uji vakum); di sini z berukuran O(1) dan dilaporkan apa adanya.
+pub fn simulate_ac_mc_plain(
+    p: &AcParams,
+    x: &[f64],
+    n_paths: usize,
+    n_threads: usize,
+    seed: u64,
+) -> AcPlainMcResult {
+    let n = x.len();
+    let dt = p.t_horizon / (n as f64);
+    let sqrt_dt = dt.sqrt();
+    let (exact_mean, exact_var) = evaluate_ac_moments(p, x);
+
+    let chunk_vecs = parallel_fixed_chunks(n_paths, 100, n_threads, seed, &|_idx, count, cseed| {
+        let mut rng = Xoshiro256PlusPlus::from_seed(cseed);
+        let mut out = Vec::with_capacity(count);
+        for _ in 0..count {
+            let mut s = p.s0;
+            let mut rev = 0.0;
+            for &xk in x {
+                rev += xk * (s - p.eta * xk / dt);
+                s = s + p.sigma * sqrt_dt * rng.next_normal() - p.gamma * xk;
+            }
+            out.push(p.x_total * p.s0 - rev);
+        }
+        out
+    });
+    let all: Vec<f64> = chunk_vecs.into_iter().flatten().collect();
+    let mc_mean = mean(&all);
+    let mc_mean_se = mean_se(&all);
+    let mc_var = variance(&all);
+    let mc_var_se = variance_se_batch_means(&all, 100);
+    AcPlainMcResult {
+        mc_mean,
+        mc_mean_se,
+        exact_mean,
+        z_mean: (mc_mean - exact_mean).abs() / mc_mean_se.max(1e-12),
+        mc_var,
+        mc_var_se,
+        exact_var,
+        z_var: if exact_var == 0.0 {
+            0.0
+        } else {
+            (mc_var - exact_var).abs() / mc_var_se.max(1e-12)
+        },
+    }
+}
+
+/// Holding kontinu dengan koefisien impact efektif ``eta_eff``: y(t) = X sinh(k (T-t)) / sinh(k T).
+fn continuous_holding_eta(p: &AcParams, eta_eff: f64, t: f64) -> f64 {
+    let kappa = (p.lambda * p.sigma * p.sigma / eta_eff).sqrt();
+    p.x_total * (kappa * (p.t_horizon - t)).sinh() / (kappa * p.t_horizon).sinh()
+}
+
+/// Dekomposisi galat limit kontinu: total = d1 + d2 dengan
+/// d1 = y_sinh-diskrit - y_kontinu(eta_tilde)  (murni diskretisasi),
+/// d2 = y_kontinu(eta_tilde) - y_kontinu(eta)  (efek eta_tilde vs eta).
+/// Mengembalikan (sup|d1|, sup|d2|, sup|total|, sup|d1+d2| terhadap tanda: apakah d1 dan d2 berlawanan tanda di
+/// titik galat total maksimum) sebagai (e1, e2, e_total, opposite_sign_at_max).
+pub fn ac_error_decomposition(p: &AcParams, n_steps: usize) -> (f64, f64, f64, bool) {
+    let mut pn = *p;
+    pn.n_steps = n_steps;
+    let sched = solve_ac_sinh_discrete(&pn);
+    let dt = p.t_horizon / (n_steps as f64);
+    let eta_tilde = p.eta - 0.5 * p.gamma * dt;
+    let (mut e1, mut e2, mut et) = (0.0f64, 0.0f64, 0.0f64);
+    let mut opp = false;
+    for (j, &yj) in sched.y.iter().enumerate() {
+        let t = (j as f64) * dt;
+        let y_et = continuous_holding_eta(&pn, eta_tilde, t);
+        let y_e = ac_continuous_holding(&pn, t);
+        let d1 = (yj - y_et) / p.x_total;
+        let d2 = (y_et - y_e) / p.x_total;
+        let tot = d1 + d2;
+        e1 = e1.max(d1.abs());
+        e2 = e2.max(d2.abs());
+        if tot.abs() > et {
+            et = tot.abs();
+            opp = d1 * d2 < 0.0;
+        }
+    }
+    (e1, e2, et, opp)
+}

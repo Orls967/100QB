@@ -1,6 +1,6 @@
 use day003b_optimal_execution::ac::{
-    ac_continuous_sup_error, ac_efficient_frontier, evaluate_ac_moments, simulate_ac_mc,
-    solve_ac_qp, solve_ac_sinh_discrete, AcParams,
+    ac_continuous_sup_error, ac_efficient_frontier, ac_error_decomposition, evaluate_ac_moments,
+    simulate_ac_mc, simulate_ac_mc_plain, solve_ac_qp, solve_ac_sinh_discrete, AcParams,
 };
 use day003b_optimal_execution::dp_liquidity::{
     compute_adaptivity_value, simulate_dp_paths, solve_liquidity_dp, verify_dp_bruteforce,
@@ -9,7 +9,8 @@ use day003b_optimal_execution::dp_liquidity::{
 use day003b_optimal_execution::linalg::{cholesky, jacobi_min_eigenvalue, solve_tridiagonal};
 use day003b_optimal_execution::transient::{
     analyze_non_pd_kernel, analyze_oscillating_kernel, build_kernel_matrix,
-    solve_ow_exponential_analytic, solve_transient_general, solve_transient_with_risk, OwParams,
+    scan_oscillating_kernels, solve_ow_exponential_analytic, solve_transient_general,
+    solve_transient_with_risk, OwParams,
 };
 
 #[test]
@@ -160,4 +161,46 @@ fn test_dp_liquidity_bruteforce_sim_adaptivity_and_determinism() {
     assert!(rep.j_dp <= rep.j_static_liquid + 1e-6);
     assert!(rep.j_dp <= rep.j_static_illiquid + 1e-6);
     assert!(rep.adaptivity_pct_vs_stationary > 0.0);
+}
+
+// Kriteria dinyatakan sebelum dijalankan: MC TANPA antitetik (jalur independen) -> z mean harus berukuran
+// O(1): 1e-4 < z < 3 untuk jadwal optimal dan TWAP (z ~ 1e-11 berarti uji vakum).
+#[test]
+fn test_ac_plain_mc_mean_is_not_vacuous() {
+    let p = AcParams::default();
+    let qp = solve_ac_qp(&p);
+    let twap = vec![p.x_total / (p.n_steps as f64); p.n_steps];
+    for (sched, seed) in [(&qp.x, 20261131u64), (&twap, 20261132u64)] {
+        let r = simulate_ac_mc_plain(&p, sched, 100_000, 4, seed);
+        assert!(r.z_mean > 1e-4 && r.z_mean < 3.0, "z_mean={}", r.z_mean);
+        assert!(r.z_var < 3.0, "z_var={}", r.z_var);
+    }
+}
+
+// Dekomposisi galat limit kontinu: total = d1 + d2 secara identitas; sup total <= sup d1 + sup d2.
+#[test]
+fn test_ac_error_decomposition_identity() {
+    let p = AcParams::default();
+    for n in [10usize, 50, 200] {
+        let (e1, e2, et, _opp) = ac_error_decomposition(&p, n);
+        let tot = ac_continuous_sup_error(&p, n);
+        assert!((et - tot).abs() < 1e-14, "n={n}: et={et} tot={tot}");
+        assert!(et <= e1 + e2 + 1e-15);
+    }
+}
+
+// Kelas "PD tetapi x* negatif" harus ada pada scan yang dinyatakan (grid kecil).
+#[test]
+fn test_oscillating_scan_finds_pd_manipulation_class() {
+    let rows = scan_oscillating_kernels(
+        20,
+        1.0,
+        5e-7,
+        1_000_000.0,
+        &[0.2, 0.5],
+        &[6.0, 10.0],
+        &[0.0, 0.05],
+    );
+    let found = rows.iter().filter(|r| r.is_pd && r.min_x < 0.0).count();
+    assert!(found > 0);
 }

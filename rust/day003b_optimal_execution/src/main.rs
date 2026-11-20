@@ -5,22 +5,23 @@ use std::path::PathBuf;
 use std::time::Instant;
 
 use day003b_optimal_execution::ac::{
-    ac_continuous_sup_error, ac_efficient_frontier, evaluate_ac_moments, simulate_ac_mc,
-    solve_ac_qp, solve_ac_sinh_discrete, AcParams,
+    ac_continuous_sup_error, ac_efficient_frontier, ac_error_decomposition, evaluate_ac_moments,
+    simulate_ac_mc, simulate_ac_mc_plain, solve_ac_qp, solve_ac_sinh_discrete, AcParams,
 };
 use day003b_optimal_execution::dp_liquidity::{
     compute_adaptivity_value, simulate_dp_paths, solve_liquidity_dp, verify_dp_bruteforce,
     LiquidityDpParams,
 };
 use day003b_optimal_execution::json::JsonValue;
+use day003b_optimal_execution::linalg::jacobi_extreme_eigenvalues;
 use day003b_optimal_execution::parallel::default_num_threads;
 use day003b_optimal_execution::svg::{
     write_bar_chart_svg, write_line_chart_svg, LineSeries, PALETTE,
 };
 use day003b_optimal_execution::transient::{
     analyze_non_pd_kernel, analyze_oscillating_kernel, benchmark_ow_cholesky_vs_analytic,
-    build_kernel_matrix, solve_ow_exponential_analytic, solve_transient_general,
-    solve_transient_with_risk, OwParams,
+    build_kernel_matrix, scan_oscillating_kernels, solve_ow_exponential_analytic,
+    solve_transient_general, solve_transient_with_risk, OscScanRow, OwParams,
 };
 
 const SEED: u64 = 2026_1121;
@@ -80,6 +81,18 @@ fn main() {
         .collect();
     let cont_ns_f: Vec<f64> = cont_ns.iter().map(|&n| n as f64).collect();
     let cont_slope = log_log_slope(&cont_ns_f, &cont_errs);
+    // Slope ekor (N >= 100) dan dekomposisi galat (diagnosis hipotesis pembatalan O(D^2) vs O(D))
+    let cont_slope_tail = log_log_slope(&cont_ns_f[3..], &cont_errs[3..]);
+    let decomp: Vec<(f64, f64, f64, bool)> = cont_ns
+        .iter()
+        .map(|&n| ac_error_decomposition(&ac_p, n))
+        .collect();
+    let dec_e1: Vec<f64> = decomp.iter().map(|d| d.0).collect();
+    let dec_e2: Vec<f64> = decomp.iter().map(|d| d.1).collect();
+    let dec_et: Vec<f64> = decomp.iter().map(|d| d.2).collect();
+    let dec_opp: Vec<bool> = decomp.iter().map(|d| d.3).collect();
+    let dec_slope_e1 = log_log_slope(&cont_ns_f, &dec_e1);
+    let dec_slope_e2 = log_log_slope(&cont_ns_f, &dec_e2);
 
     let mut p_twap_lim = ac_p;
     p_twap_lim.lambda = 1e-16;
@@ -112,6 +125,10 @@ fn main() {
     let mut sell_all = vec![0.0; ac_p.n_steps];
     sell_all[0] = ac_p.x_total;
     let mc_sell_all = simulate_ac_mc(&ac_p, &sell_all, 400_000, n_threads, SEED + 2);
+    // Uji mean TANPA antitetik (jalur independen): z berukuran O(1), dilaporkan apa adanya
+    let plain_opt = simulate_ac_mc_plain(&ac_p, &ac_qp.x, 400_000, n_threads, SEED + 10);
+    let plain_twap = simulate_ac_mc_plain(&ac_p, &twap_sched, 400_000, n_threads, SEED + 11);
+    let sell_all_mean_abs_err = (mc_sell_all.mc_mean - mc_sell_all.exact_mean).abs();
     let time_part1 = t1.elapsed().as_secs_f64();
 
     // === BAGIAN 2: Dampak Transien (Obizhaeva-Wang) ===
@@ -155,6 +172,37 @@ fn main() {
     // Kernel osilasi (PD dengan komponen negatif)
     let (osc_pd, osc_min_eig, x_osc, osc_min_x, c_osc) =
         analyze_oscillating_kernel(20, 1.0, ow.lambda_ow, 0.2, 6.0, 0.001, ow.x_total);
+
+    // Scan kernel osilasi (grid dinyatakan SEBELUM dijalankan): kondisi dan kelas "PD tetapi x* negatif"
+    let osc_rhos = [0.2, 0.5, 1.0, 2.0, 5.0];
+    let osc_omegas = [3.0, 6.0, 10.0, 15.0, 20.0];
+    let osc_epss = [0.0, 0.001, 0.01, 0.05, 0.1, 0.2, 0.5];
+    let osc_scan = scan_oscillating_kernels(
+        20,
+        1.0,
+        ow.lambda_ow,
+        ow.x_total,
+        &osc_rhos,
+        &osc_omegas,
+        &osc_epss,
+    );
+    let osc_manip: Vec<&OscScanRow> = osc_scan
+        .iter()
+        .filter(|r| r.is_pd && r.min_x < 0.0)
+        .collect();
+    let osc_best = osc_manip
+        .iter()
+        .copied()
+        .max_by(|a, b| a.min_eig_rel.partial_cmp(&b.min_eig_rel).unwrap());
+    let osc_g_used = {
+        let mut g = build_kernel_matrix(20, 1.0, |d| {
+            ow.lambda_ow * (-0.2 * d).exp() * (6.0 * d).cos()
+        });
+        for (i, row) in g.iter_mut().enumerate() {
+            row[i] += 0.001 * ow.lambda_ow;
+        }
+        jacobi_extreme_eigenvalues(&g)
+    };
 
     // Kernel non-PD
     let (non_pd_chol_failed, non_pd_min_eig, non_pd_d_quad, non_pd_cost_pert) =
@@ -412,6 +460,34 @@ fn main() {
                     JsonValue::Num(cont_slope),
                 ),
                 (
+                    "continuous_log_log_slope_tail_n_ge_100".to_string(),
+                    JsonValue::Num(cont_slope_tail),
+                ),
+                (
+                    "continuous_decomp_sup_discretization".to_string(),
+                    JsonValue::from_f64_slice(&dec_e1),
+                ),
+                (
+                    "continuous_decomp_sup_eta_tilde_effect".to_string(),
+                    JsonValue::from_f64_slice(&dec_e2),
+                ),
+                (
+                    "continuous_decomp_sup_total".to_string(),
+                    JsonValue::from_f64_slice(&dec_et),
+                ),
+                (
+                    "continuous_decomp_opposite_sign_at_max".to_string(),
+                    JsonValue::Arr(dec_opp.iter().map(|&b| JsonValue::Bool(b)).collect()),
+                ),
+                (
+                    "continuous_decomp_slope_discretization".to_string(),
+                    JsonValue::Num(dec_slope_e1),
+                ),
+                (
+                    "continuous_decomp_slope_eta_tilde_effect".to_string(),
+                    JsonValue::Num(dec_slope_e2),
+                ),
+                (
                     "limit_lambda0_twap_max_rel_err".to_string(),
                     JsonValue::Num(twap_limit_err),
                 ),
@@ -442,12 +518,30 @@ fn main() {
                 ("mc_twap_z_mean".to_string(), JsonValue::Num(mc_twap.z_mean)),
                 ("mc_twap_z_var".to_string(), JsonValue::Num(mc_twap.z_var)),
                 (
-                    "mc_sell_all_z_mean".to_string(),
-                    JsonValue::Num(mc_sell_all.z_mean),
+                    "mc_opt_antithetic_z_mean_note".to_string(),
+                    JsonValue::Str("VAKUM: shortfall linear di xi, mean antitetik = rumus eksak (z ~ 1e-11); bukan bukti statistik".to_string()),
                 ),
+                ("mc_plain_opt_mean".to_string(), JsonValue::Num(plain_opt.mc_mean)),
+                ("mc_plain_opt_mean_se".to_string(), JsonValue::Num(plain_opt.mc_mean_se)),
+                ("mc_plain_opt_exact_mean".to_string(), JsonValue::Num(plain_opt.exact_mean)),
+                ("mc_plain_opt_z_mean".to_string(), JsonValue::Num(plain_opt.z_mean)),
+                ("mc_plain_opt_z_var".to_string(), JsonValue::Num(plain_opt.z_var)),
+                ("mc_plain_twap_mean".to_string(), JsonValue::Num(plain_twap.mc_mean)),
+                ("mc_plain_twap_mean_se".to_string(), JsonValue::Num(plain_twap.mc_mean_se)),
+                ("mc_plain_twap_exact_mean".to_string(), JsonValue::Num(plain_twap.exact_mean)),
+                ("mc_plain_twap_z_mean".to_string(), JsonValue::Num(plain_twap.z_mean)),
+                ("mc_plain_twap_z_var".to_string(), JsonValue::Num(plain_twap.z_var)),
                 (
-                    "mc_sell_all_z_var".to_string(),
-                    JsonValue::Num(mc_sell_all.z_var),
+                    "sell_all_deterministic_check".to_string(),
+                    JsonValue::Obj(vec![
+                        ("mean_abs_err".to_string(), JsonValue::Num(sell_all_mean_abs_err)),
+                        ("exact_var".to_string(), JsonValue::Num(mc_sell_all.exact_var)),
+                        ("mc_var".to_string(), JsonValue::Num(mc_sell_all.mc_var)),
+                        (
+                            "note".to_string(),
+                            JsonValue::Str("Uji deterministik (variansi teoretis 0 karena y_1..y_{N-1} = 0), BUKAN bukti statistik; tidak ada z".to_string()),
+                        ),
+                    ]),
                 ),
             ]),
         ),
@@ -496,6 +590,44 @@ fn main() {
                     JsonValue::Num(osc_min_eig),
                 ),
                 ("oscillating_min_x".to_string(), JsonValue::Num(osc_min_x)),
+                ("oscillating_min_eig_over_lambda_ow".to_string(), JsonValue::Num(osc_g_used.0 / ow.lambda_ow)),
+                ("oscillating_max_eig_over_lambda_ow".to_string(), JsonValue::Num(osc_g_used.1 / ow.lambda_ow)),
+                ("oscillating_condition_number".to_string(), JsonValue::Num(osc_g_used.1 / osc_g_used.0)),
+                ("oscillating_scan_n_configs".to_string(), JsonValue::Int(osc_scan.len() as i64)),
+                ("oscillating_scan_n_pd".to_string(), JsonValue::Int(osc_scan.iter().filter(|r| r.is_pd).count() as i64)),
+                ("oscillating_scan_n_pd_with_negative_x".to_string(), JsonValue::Int(osc_manip.len() as i64)),
+                (
+                    "oscillating_scan_best_far_from_pd_boundary".to_string(),
+                    match osc_best {
+                        Some(r) => JsonValue::Obj(vec![
+                            ("rho".to_string(), JsonValue::Num(r.rho)),
+                            ("omega".to_string(), JsonValue::Num(r.omega)),
+                            ("eps".to_string(), JsonValue::Num(r.eps)),
+                            ("min_eig_over_lambda_ow".to_string(), JsonValue::Num(r.min_eig_rel)),
+                            ("max_eig_over_lambda_ow".to_string(), JsonValue::Num(r.max_eig_rel)),
+                            ("condition_number".to_string(), JsonValue::Num(r.cond)),
+                            ("min_x".to_string(), JsonValue::Num(r.min_x)),
+                        ]),
+                        None => JsonValue::Null,
+                    },
+                ),
+                (
+                    "oscillating_scan_pd_negative_x_rows".to_string(),
+                    JsonValue::Arr(
+                        osc_manip
+                            .iter()
+                            .map(|r| {
+                                JsonValue::Obj(vec![
+                                    ("rho".to_string(), JsonValue::Num(r.rho)),
+                                    ("omega".to_string(), JsonValue::Num(r.omega)),
+                                    ("eps".to_string(), JsonValue::Num(r.eps)),
+                                    ("min_eig_over_lambda_ow".to_string(), JsonValue::Num(r.min_eig_rel)),
+                                    ("min_x".to_string(), JsonValue::Num(r.min_x)),
+                                ])
+                            })
+                            .collect(),
+                    ),
+                ),
                 ("oscillating_min_cost".to_string(), JsonValue::Num(c_osc)),
                 (
                     "non_pd_chol_failed".to_string(),

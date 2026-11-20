@@ -43,6 +43,6 @@ cargo run --release
 - `src/main.rs` — runner utama penghasil `outputs/day003b/results.json` dan 7 grafik SVG.
 
 ## Ringkasan Hasil
-- **Almgren–Chriss**: QP vs `sinh` diskrit selisih relatif `4.15e-16`; MC `400.000` jalur `z_mean = 0.000`, `z_var = 0.641`.
+- **Almgren–Chriss**: QP vs `sinh` diskrit selisih relatif `4.15e-16`; MC `400.000` jalur: variansi `z_var = 0.641`; mean tanpa antitetik `z = 1.032` (optimal), `0.945` (TWAP); mean dengan antitetik adalah uji vakum (z ~ 1e-11).
 - **Obizhaeva–Wang**: Anchor eksak selisih relatif `1.37e-15`; pada $N=2000$, Cholesky `0.625 s` vs analitik `4 us`.
 - **DP Likuiditas**: Brute-force $N=5$ selisih `1.20e-16`; simulasi `400.000` jalur `z = 1.641`; penghematan adaptivitas `14.09%` terhadap strategi statis stasioner.

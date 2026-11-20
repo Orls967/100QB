@@ -136,6 +136,7 @@ def mc_euler_weak_convergence(
         "prices": prices,
         "se": se,
         "abs_errors": abs_errors,
+        "signed_errors": prices - ref_price,
         "slope": slope,
         "target_slope": WEAK_ORDER_SLOPE_TARGET,
         "tolerance": WEAK_ORDER_SLOPE_TOL,

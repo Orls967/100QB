@@ -3,6 +3,14 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 003c — pemeliharaan A] — 2026-11-21 · Perbaikan day003, day003b, relabel 2k, tautan relatif
+
+### Diperbaiki
+- `day003` (notebook "3a"): diagnosis gamma SSVI di $S_0$. Selisih gamma grid (`0.0380`) vs beda hingga harga (`0.0234`) bukan bug: di sudut singular $(S_0, t\to0)$ permukaan $\sigma_{loc}$ gamma bergantung pada regularisasi `t_min` dan tidak konvergen; di $S_0 \ne 100$ keduanya cocok (~1e-4 relatif). `pde_delta_gamma` kini memakai grid TETAP untuk beda hingga (opsi `x_bounds` di `solve_backward_european_call`); fungsi `gamma_diagnosis_ssvi`, tes baru, sel notebook, dan `results.json` diperbarui. Bias Euler MC diukur menyusut dengan jumlah langkah (CRN, 50/100/200/400).
+- `day003b` (Rust): uji mean AC dengan antitetik dinyatakan vakum; ditambahkan uji mean tanpa antitetik (z O(1)); `sell-all-at-once` dicatat sebagai uji deterministik; dua slope limit kontinu (seluruh rentang dan ekor) plus dekomposisi galat yang membuktikan penjelasan pembatalan; kondisi kernel osilasi dan scan kelas "PD tetapi $x^*$ negatif".
+- ID ganda `2g`: Ruby put Amerika dipindah menjadi `2k` (`ruby/day002k_american_put`, `outputs/day002k/`); `outputs/day002g/results.json` tetap hasil AAD C++. Angka kunci Ruby identik dengan riwayat git (hanya waktu yang berbeda).
+- Dokumen `day003b`: 14 tautan absolut mesin lokal diganti tautan relatif.
+
 ## [Hari 003b] — 2026-11-21 · Eksekusi optimal: Almgren–Chriss, dampak transien, likuiditas stokastik (Rust, Bonus)
 
 ### Ditambahkan

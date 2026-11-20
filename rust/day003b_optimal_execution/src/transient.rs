@@ -3,7 +3,9 @@
 use std::time::Instant;
 
 use crate::ac::AcParams;
-use crate::linalg::{cholesky, dot, jacobi_min_eigenvalue, quad_form, solve_spd};
+use crate::linalg::{
+    cholesky, dot, jacobi_extreme_eigenvalues, jacobi_min_eigenvalue, quad_form, solve_spd,
+};
 
 /// Parameter model Obizhaeva-Wang.
 #[derive(Clone, Copy, Debug)]
@@ -167,4 +169,63 @@ pub fn solve_transient_with_risk(
         }
     }
     solve_transient_general(&h, p_ac.x_total)
+}
+
+/// Satu baris hasil scan kernel osilasi ``G(t) = lambda_ow e^{-rho t} cos(omega t)`` + ``eps * lambda_ow * I``.
+#[derive(Clone, Debug)]
+pub struct OscScanRow {
+    pub rho: f64,
+    pub omega: f64,
+    pub eps: f64,
+    pub is_pd: bool,
+    pub min_eig_rel: f64,
+    pub max_eig_rel: f64,
+    pub cond: f64,
+    pub min_x: f64,
+}
+
+/// Scan deterministik grid parameter (dinyatakan sebelum dijalankan di ``main.rs``): kembalikan semua baris
+/// berlabel PD; pemanggil menyaring yang memiliki ``min_x < 0`` ("PD tetapi manipulasi").
+pub fn scan_oscillating_kernels(
+    n: usize,
+    t_horizon: f64,
+    lambda_ow: f64,
+    x_total: f64,
+    rhos: &[f64],
+    omegas: &[f64],
+    epss: &[f64],
+) -> Vec<OscScanRow> {
+    let mut rows = Vec::new();
+    for &rho in rhos {
+        for &omega in omegas {
+            for &eps in epss {
+                let mut g = build_kernel_matrix(n, t_horizon, |d| {
+                    lambda_ow * (-rho * d).exp() * (omega * d).cos()
+                });
+                for (i, row) in g.iter_mut().enumerate() {
+                    row[i] += eps * lambda_ow;
+                }
+                let is_pd = cholesky(&g).is_ok();
+                let (lo, hi) = jacobi_extreme_eigenvalues(&g);
+                let min_x = if is_pd {
+                    solve_transient_general(&g, x_total)
+                        .map(|(x, _)| x.iter().copied().fold(f64::INFINITY, f64::min))
+                        .unwrap_or(f64::NAN)
+                } else {
+                    f64::NAN
+                };
+                rows.push(OscScanRow {
+                    rho,
+                    omega,
+                    eps,
+                    is_pd,
+                    min_eig_rel: lo / lambda_ow,
+                    max_eig_rel: hi / lambda_ow,
+                    cond: hi / lo,
+                    min_x,
+                });
+            }
+        }
+    }
+    rows
 }

@@ -1,4 +1,4 @@
-# day002g — Opsi Put Amerika (Ruby): CRR Binomial, LSM Monte Carlo & PSOR PDE
+# day002k — Opsi Put Amerika (Ruby): CRR Binomial, LSM Monte Carlo & PSOR PDE
 
 Implementasi **Opsi Put Amerika** dalam **Ruby murni (Ruby 3.3+)** tanpa gem numerik eksternal (nol dependensi *runtime*, hanya *standard library* Ruby):
 
@@ -12,7 +12,7 @@ Implementasi **Opsi Put Amerika** dalam **Ruby murni (Ruby 3.3+)** tanpa gem num
 Butuh **Ruby 3.3+** (diuji pada Ruby 4.0.9 + YJIT) dan Bundler.
 
 ```bash
-cd ruby/day002g_american_put
+cd ruby/day002k_american_put
 bundle install
 bundle exec rubocop
 bundle exec rake test
@@ -20,9 +20,9 @@ bundle exec bin/run
 ```
 
 Output dihasilkan ke:
-- `outputs/day002g/results.json`
-- `outputs/figures/day002g_american-convergence.svg`
-- `outputs/figures/day002g_american-spot-profile.svg`
+- `outputs/day002k/results.json`
+- `outputs/figures/day002k_american-convergence.svg`
+- `outputs/figures/day002k_american-spot-profile.svg`
 
 ## Ringkasan Hasil (`seed = 42`)
 

@@ -23,7 +23,7 @@ from .dupire import (
     dupire_local_vol_from_spot,
     dupire_local_vol_ssvi,
 )
-from .greeks import pde_delta_gamma, vega_bucket_analysis
+from .greeks import gamma_diagnosis_ssvi, pde_delta_gamma, vega_bucket_analysis
 from .mc import mc_euler_european_calls, mc_euler_weak_convergence
 from .pde_backward import solve_backward_european_call
 from .pde_forward import eval_forward_surface_at_strikes, solve_forward_dupire_surface
@@ -211,6 +211,23 @@ def run_all_day003a(save_outputs: bool = True) -> dict:
     )
     timings["part3_mc"] = time.perf_counter() - t0
 
+    # Diagnosis (A1): bias Euler vs jumlah langkah, CRN, kelima strike T=1 (bukan penyetelan)
+    t0 = time.perf_counter()
+    bias_steps = (50, 100, 200, 400)
+    bias_rows = []
+    for i_k, k_val in enumerate(strikes_T1):
+        wb = mc_euler_weak_convergence(
+            params.S0, float(k_val), 1.0, params.r, params.q, vol_fn_ssvi,
+            ref_price=float(pde_prices_T1[i_k]), steps_list=bias_steps, n_paths=400_000, seed=20261121,
+        )
+        bias_rows.append({
+            "m": m_vals[i_k], "K": float(k_val), "pde_price": float(pde_prices_T1[i_k]),
+            "steps": list(bias_steps), "mc_prices": wb["prices"].tolist(), "mc_se": wb["se"].tolist(),
+            "signed_bias": wb["signed_errors"].tolist(),
+            "z_signed": (wb["signed_errors"] / wb["se"]).tolist(),
+        })
+    timings["part3_mc_bias_diag"] = time.perf_counter() - t0
+
     # === BAGIAN 4: Barrier, Greeks, Kalibrasi ===
     t0 = time.perf_counter()
     H_bar, K_bar, T_bar = 85.0, 100.0, 1.0
@@ -238,6 +255,10 @@ def run_all_day003a(save_outputs: bool = True) -> dict:
     dg_ssvi = pde_delta_gamma(params.S0, 100.0, 1.0, params.r, params.q, vol_fn_ssvi, n_space=601, n_time=400, fd_bump=0.05, time_power=2.0)
     vb_res = vega_bucket_analysis(params=params, T=1.0, n_space=401, n_time=240)
     timings["part4_greeks"] = time.perf_counter() - t0
+
+    t0 = time.perf_counter()
+    gamma_diag = gamma_diagnosis_ssvi(params)
+    timings["part4_gamma_diag"] = time.perf_counter() - t0
 
     t0 = time.perf_counter()
     noisy_mkt = generate_noisy_ssvi_surface(params=params, noise_std=5e-4, seed=20261121)
@@ -292,6 +313,7 @@ def run_all_day003a(save_outputs: bool = True) -> dict:
                 "z_scores": z_scores_mc.tolist(),
                 "max_z_score": float(np.max(z_scores_mc)),
             },
+            "mc_euler_bias_vs_steps": bias_rows,
             "mc_weak_order": {
                 "K_test": K_weak,
                 "ref_price": ref_weak,
@@ -326,6 +348,7 @@ def run_all_day003a(save_outputs: bool = True) -> dict:
                 "flat_delta_fd_err": abs(dg_flat["delta_fd"] - bs_g_flat["delta"]),
                 "flat_gamma_fd_err": abs(dg_flat["gamma_fd"] - bs_g_flat["gamma"]),
                 "ssvi_pde": dg_ssvi,
+                "ssvi_gamma_diagnosis": gamma_diag,
             },
             "vega_bucket": vb_res,
             "calibration": {

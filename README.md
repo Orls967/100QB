@@ -166,10 +166,10 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 2e | bonus | `quant` | `python` | Model Heston: pricing Fourier, kalibrasi & Monte Carlo QE | 2026-11-20 | [day002e_quant_model-heston-pricing-fourier-kalibrasi.ipynb](days/day002e_quant_model-heston-pricing-fourier-kalibrasi.ipynb) |
 | 2f | bonus | `quant` | `rust` | Inferensi Bayesian state-space: Kalman, particle filter & PMMH | 2026-11-20 | [day002f_state_space_pmmh](rust/day002f_state_space_pmmh) |
 | 2g | bonus | `quant` | `cpp` | AAD untuk Greeks Monte Carlo: tape mode-balik, pathwise & keranjang 10 aset | 2026-11-20 | [day002g_aad_greeks](cpp/day002g_aad_greeks) |
-| 2g | bonus | `quant` | `ruby` | Opsi Put Amerika (Ruby): CRR Binomial, LSM Monte Carlo & PSOR PDE | 2026-11-20 | [day002g_american_put](ruby/day002g_american_put) |
 | 2h | bonus | `quant` | `cpp` | Hawkes + limit order book: simulasi eksak, MLE, mesin pencocokan & fakta stilistik | 2026-11-20 | [day002h_hawkes_orderbook](cpp/day002h_hawkes_orderbook) |
 | 2i | bonus | `quant` | `cpp` | Hull-White: pohon trinomial, Jamshidian, kalibrasi & Bermudan | 2026-11-20 | [day002i_hull_white](cpp/day002i_hull_white) |
 | 2j | bonus | `quant` | `ruby` | Longevity risk: Lee–Carter, anuitas stokastik & modal solvabilitas | 2026-11-20 | [day002j_longevity_risk](ruby/day002j_longevity_risk) |
+| 2k | bonus | `quant` | `ruby` | Opsi Put Amerika (Ruby): CRR Binomial, LSM Monte Carlo & PSOR PDE | 2026-11-20 | [day002k_american_put](ruby/day002k_american_put) |
 | 3 | bonus | `quant` | `python` | Volatilitas lokal Dupire dari permukaan SSVI | 2026-11-21 | [day003_quant_volatilitas-lokal-dupire-ssvi.ipynb](days/day003_quant_volatilitas-lokal-dupire-ssvi.ipynb) |
 | 3b | bonus | `quant` | `rust` | Eksekusi optimal: Almgren–Chriss, dampak transien, likuiditas stokastik | 2026-11-21 | [day003b_optimal_execution](rust/day003b_optimal_execution) |
 <!-- PROGRESS:END -->

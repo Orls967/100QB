@@ -106,6 +106,15 @@ pub fn solve_tridiagonal(lower: &[f64], diag: &[f64], upper: &[f64], rhs: &[f64]
     x
 }
 
+/// Eigenvalue minimum dan maksimum matriks simetris (untuk bilangan kondisi).
+pub fn jacobi_extreme_eigenvalues(a: &[Vec<f64>]) -> (f64, f64) {
+    let (min_val, _) = jacobi_min_eigenvalue(a);
+    // eigenvalue maksimum = -(eigenvalue minimum dari -A)
+    let neg: Vec<Vec<f64>> = a.iter().map(|r| r.iter().map(|v| -v).collect()).collect();
+    let (neg_min, _) = jacobi_min_eigenvalue(&neg);
+    (min_val, -neg_min)
+}
+
 /// Cari eigenvalue minimum dan eigenvector-nya untuk matriks simetris via rotasi Jacobi.
 pub fn jacobi_min_eigenvalue(a: &[Vec<f64>]) -> (f64, Vec<f64>) {
     let n = a.len();

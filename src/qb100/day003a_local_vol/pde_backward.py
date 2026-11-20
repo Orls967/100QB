@@ -63,6 +63,7 @@ def solve_backward_european_call(
     rannacher_steps: int = 4,
     time_power: float = 1.0,
     return_grid: bool = False,
+    x_bounds: tuple[float, float] | None = None,
 ) -> float | dict[str, np.ndarray | float]:
     """Hitung harga call Eropa dengan PDE backward di ``x = ln(S)``.
 
@@ -79,6 +80,8 @@ def solve_backward_european_call(
     half_span = max(x_width_stds * ref_vol * np.sqrt(T), 1.5) + abs(x0 - xk)
     x_min = xk - half_span
     x_max = xk + half_span
+    if x_bounds is not None:  # grid tetap, tidak bergantung S0 (untuk beda hingga bersih)
+        x_min, x_max = x_bounds
 
     x = sinh_grid(x_min, x_max, xk, n_space, concentration=concentration)
     S_grid = np.exp(x)
