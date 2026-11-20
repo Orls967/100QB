@@ -1,0 +1,122 @@
+{
+  "n_threads": 10,
+  "part1_almgren_chriss": {
+    "qp_vs_sinh_max_rel_err": 4.1472958400845530e-16,
+    "expected_c": 3.6806141018920173e6,
+    "var_c": 1.5214488646504688e11,
+    "std_c": 3.9005754250500898e5,
+    "moment_parity_err": 0.0000000000000000e0,
+    "continuous_ns": [
+      1.0000000000000000e1,
+      2.5000000000000000e1,
+      5.0000000000000000e1,
+      1.0000000000000000e2,
+      2.0000000000000000e2,
+      4.0000000000000000e2
+    ],
+    "continuous_sup_errors": [
+      1.6159628680336756e-4,
+      1.6944090977747691e-4,
+      1.2394919036852662e-4,
+      7.1798327076481655e-5,
+      3.8349514621717387e-5,
+      1.9787753811106087e-5
+    ],
+    "continuous_log_log_slope": -6.0100824062699143e-1,
+    "limit_lambda0_twap_max_rel_err": 2.3372558644041418e-13,
+    "limit_lambda_inf_first_frac": 9.9317581850241354e-1,
+    "frontier_monotone_convex": true,
+    "mc_opt_mean": 3.6806141018919982e6,
+    "mc_opt_mean_se": 6.1736743247646257e2,
+    "mc_opt_antithetic_mean": 3.6806141018938497e6,
+    "mc_opt_var": 1.5245701867303183e11,
+    "mc_opt_var_se": 4.8661974158931690e8,
+    "mc_opt_z_mean": 3.0925040381596747e-11,
+    "mc_opt_z_var": 6.4142939816933908e-1,
+    "mc_twap_z_mean": 1.3010676332459488e-10,
+    "mc_twap_z_var": 8.6608966770865248e-1,
+    "mc_sell_all_z_mean": 0.0000000000000000e0,
+    "mc_sell_all_z_var": 0.0000000000000000e0
+  },
+  "part2_transient": {
+    "ow_anchor_max_rel_err": 1.3733369996771217e-15,
+    "ow_min_cost": 7.2506633765953622e4,
+    "ow_min_cost_analytic": 7.2506633765953593e4,
+    "ow_continuous_cost_limit": 7.1428571428571435e4,
+    "ow_continuous_cost_rel_errs": [
+      4.0828108118068251e-2,
+      1.5092872723350213e-2,
+      7.3436782054734353e-3,
+      3.6215106404674006e-3,
+      1.7982192727906221e-3
+    ],
+    "ow_continuous_block_errs": [
+      2.4322601098685902e-2,
+      9.4007518679906782e-3,
+      4.6460035557523956e-3,
+      2.3094465949838631e-3,
+      1.1513395168530987e-3
+    ],
+    "ow_cost_convergence_order": -1.0409203880045284e0,
+    "bench_n2000_max_rel_err": 5.2699533625855115e-13,
+    "bench_n2000_cholesky_sec": 6.2481474999999997e-1,
+    "bench_n2000_analytic_sec": 4.1250000000000003e-6,
+    "powerlaw_min_x": 1.2648421084131809e4,
+    "powerlaw_min_cost": 1.3090126786550428e5,
+    "oscillating_is_pd": true,
+    "oscillating_min_eig": 3.0742448842970128e-9,
+    "oscillating_min_x": -2.4416027789656786e4,
+    "oscillating_min_cost": 4.3772684562575596e3,
+    "non_pd_chol_failed": true,
+    "non_pd_min_eig": -4.4316710419379710e-6,
+    "non_pd_descent_quad": -1.2970192004831474e-21,
+    "non_pd_perturbed_cost": -7.0360737215715330e6,
+    "combined_diag_vs_ac_max_rel_err": 0.0000000000000000e0
+  },
+  "part3_dp_liquidity": {
+    "dp_bruteforce_n5_rel_err": 1.2017745273903346e-16,
+    "v0_liquid_analytic": 5.5424957280240646e6,
+    "v0_illiquid_analytic": 6.3112545932916161e6,
+    "sim_mean_j": 5.5412505267058145e6,
+    "sim_se_j": 7.5862018254690281e2,
+    "sim_z_score": 1.6414028349068492e0,
+    "sim_illiquid_frac": 2.3746695000000001e-1,
+    "y_k10_mean": 5.1691695776059560e5,
+    "y_k10_std": 6.5409178087501736e4,
+    "y_k25_mean": 1.9564743534462864e5,
+    "y_k25_std": 4.8572294765460421e4,
+    "y_k40_mean": 5.3777269493738371e4,
+    "y_k40_std": 2.0357842582371446e4,
+    "adaptivity_j_dp": 5.5424957280240646e6,
+    "adaptivity_j_static_stationary": 6.4514908506487897e6,
+    "adaptivity_j_static_liquid": 6.4852447268227143e6,
+    "adaptivity_j_static_illiquid": 6.9388727492194343e6,
+    "adaptivity_pct_vs_stationary": 1.4089690951562190e1,
+    "sensitivity_p11": [
+      {
+        "p11": 5.0000000000000000e-1,
+        "j_dp": 5.3649774066642383e6,
+        "j_static_stationary": 6.0597128401992032e6,
+        "adaptivity_pct_vs_stationary": 1.1464824354814256e1
+      },
+      {
+        "p11": 6.9999999999999996e-1,
+        "j_dp": 5.5424957280240646e6,
+        "j_static_stationary": 6.4514908506487897e6,
+        "adaptivity_pct_vs_stationary": 1.4089690951562190e1
+      },
+      {
+        "p11": 9.4999999999999996e-1,
+        "j_dp": 6.5107404546613339e6,
+        "j_static_stationary": 7.9931891355438121e6,
+        "adaptivity_pct_vs_stationary": 1.8546398136513261e1
+      }
+    ]
+  },
+  "timings_seconds": {
+    "part1_ac": 6.0210917000000003e-2,
+    "part2_transient": 6.3825729200000003e-1,
+    "part3_dp_liquidity": 1.2334540999999999e-2,
+    "total": 7.1080312499999998e-1
+  }
+}

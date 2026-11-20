@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="460" viewBox="0 0 820 460" style="background:#ffffff;font-family:system-ui,sans-serif">
+<text x="410" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#111">Frontier Efisien Almgren-Chriss (SD vs E[C])</text>
+<line x1="82.0" y1="48" x2="82.0" y2="396.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<line x1="82" y1="396.0" x2="790.0" y2="396.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<text x="82.0" y="414.0" text-anchor="middle" font-size="11" fill="#444">126.416</text>
+<text x="74.0" y="400.0" text-anchor="end" font-size="11" fill="#444">1373.120</text>
+<line x1="259.0" y1="48" x2="259.0" y2="396.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<line x1="82" y1="309.0" x2="790.0" y2="309.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<text x="259.0" y="414.0" text-anchor="middle" font-size="11" fill="#444">229.840</text>
+<text x="74.0" y="313.0" text-anchor="end" font-size="11" fill="#444">7203.562</text>
+<line x1="436.0" y1="48" x2="436.0" y2="396.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<line x1="82" y1="222.0" x2="790.0" y2="222.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<text x="436.0" y="414.0" text-anchor="middle" font-size="11" fill="#444">333.265</text>
+<text x="74.0" y="226.0" text-anchor="end" font-size="11" fill="#444">13034.003</text>
+<line x1="613.0" y1="48" x2="613.0" y2="396.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<line x1="82" y1="135.0" x2="790.0" y2="135.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<text x="613.0" y="414.0" text-anchor="middle" font-size="11" fill="#444">436.690</text>
+<text x="74.0" y="139.0" text-anchor="end" font-size="11" fill="#444">18864.444</text>
+<line x1="790.0" y1="48" x2="790.0" y2="396.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<line x1="82" y1="48.0" x2="790.0" y2="48.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<text x="790.0" y="414.0" text-anchor="middle" font-size="11" fill="#444">540.115</text>
+<text x="74.0" y="52.0" text-anchor="end" font-size="11" fill="#444">24694.885</text>
+<rect x="82" y="48" width="708" height="348" fill="none" stroke="#333" stroke-width="1"/>
+<text x="436" y="446.0" text-anchor="middle" font-size="12" fill="#222">SD[C] (ribu $)</text>
+<text x="18" y="222" text-anchor="middle" font-size="12" fill="#222" transform="rotate(-90 18 222)">E[C] (ribu $)</text>
+<polyline fill="none" stroke="##1f6feb" stroke-width="2.2" points="790.00,377.36 789.92,377.36 789.82,377.36 789.67,377.36 789.48,377.36 789.23,377.36 788.88,377.36 788.42,377.36 787.81,377.36 786.98,377.35 785.87,377.35 784.39,377.35 782.41,377.34 779.77,377.33 776.26,377.32 771.62,377.29 765.50,377.23 757.48,377.13 747.07,376.97 733.69,376.68 716.72,376.21 695.57,375.43 669.79,374.20 639.15,372.30 603.84,369.48 564.54,365.48 522.38,360.05 478.77,352.99 435.17,344.17 392.76,333.48 352.30,320.82 314.13,306.03 278.29,288.86 244.70,268.97 213.21,245.98 183.65,219.43 155.87,188.81 129.76,153.56 105.17,113.05 82.00,66.64 "/>
+<line x1="96" y1="66" x2="116.0" y2="66" stroke="##1f6feb" stroke-width="2.5"/>
+<text x="122.0" y="70.0" font-size="11" fill="#222">Frontier Efisien (40 titik)</text>
+</svg>
