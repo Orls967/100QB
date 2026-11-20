@@ -7,7 +7,7 @@ Contoh:
     python scripts/new_day.py            # ambil jenis & topik dari docs/ROADMAP.md
 
 Nomor hari otomatis = nomor terbesar di ``days/`` + 1 (bisa dipaksa dengan ``--day``).
-Nama file: ``days/dayNNN_<quant|sim>_<topik-singkat>.ipynb``.
+Nama file: ``days/dayNNN<sesi>_<quant|sim>_<topik-singkat>.ipynb``; sesi pertama hari = ``a``.
 """
 
 from __future__ import annotations
@@ -50,8 +50,13 @@ def slugify(text: str, max_len: int = 40) -> str:
     return text or "topik"
 
 
+def normalize_session(session: str | None) -> str:
+    """Normalisasi huruf sesi: sesi pertama hari selalu 'a'. Metadata lama ('' atau None) dibaca sebagai 'a'."""
+    return "a" if not session else str(session).lower()
+
+
 def session_rank(session: str | None) -> int:
-    """Urutan numerik huruf sesi: '' atau 'a' -> 0, 'b' -> 1, dst."""
+    """Urutan numerik huruf sesi: '' (metadata lama) atau 'a' -> 0, 'b' -> 1, dst."""
     if not session:
         return 0
     return ord(session.lower()) - ord("a")
@@ -70,8 +75,7 @@ def existing_sessions(days_dir: Path = DAYS_DIR) -> set[tuple[int, str]]:
     found: set[tuple[int, str]] = set()
     for p in days_dir.iterdir():
         if m := DAY_FILE_RE.match(p.name):
-            sess = "" if (m.group(2) in (None, "a")) else m.group(2)
-            found.add((int(m.group(1)), sess))
+            found.add((int(m.group(1)), normalize_session(m.group(2))))
     return found
 
 
@@ -91,7 +95,7 @@ def latest_notebook_meta(days_dir: Path = DAYS_DIR) -> dict | None:
             pass
         day = int(meta.get("day") or m.group(1))
         raw_sess = meta.get("session") if meta.get("session") is not None else (m.group(2) or "")
-        sess = "" if raw_sess in ("", "a") else str(raw_sess)
+        sess = normalize_session(raw_sess)
         entries.append(
             {
                 "day": day,
@@ -121,10 +125,10 @@ def resolve_day_and_session(
     today = today or wita_today()
     last = latest_notebook_meta(days_dir)
     if last is None:
-        return 1, ""
+        return 1, "a"
     if last["date"] == today:
         return last["day"], next_session_letter(last["session"])
-    return last["day"] + 1, ""
+    return last["day"] + 1, "a"
 
 
 def next_day_number(days_dir: Path = DAYS_DIR) -> int:
@@ -160,11 +164,12 @@ def build_notebook(
     topic: str,
     date: str,
     slug: str,
-    session: str = "",
+    session: str = "a",
     topic_no: int | None = None,
     bonus: bool = False,
 ):
     """Isi template dengan metadata hari dan kembalikan objek notebook."""
+    session = normalize_session(session)
     nb = nbformat.read(TEMPLATE, as_version=4)
     day_label = f"{day:03d}{session}"
     repl = {
@@ -211,14 +216,14 @@ def main(argv=None) -> int:
     auto_day, auto_session = resolve_day_and_session(today=args.date)
     day = args.day if args.day is not None else auto_day
     if args.session is not None:
-        session = "" if args.session.lower() in ("", "a") else args.session.lower()
+        session = normalize_session(args.session)
     else:
-        session = "" if args.day is not None else auto_session
+        session = "a" if args.day is not None else auto_session
 
     if not 1 <= day <= 999:
         print(f"Nomor hari tidak valid: {day}", file=sys.stderr)
         return 2
-    if session and (len(session) != 1 or not ("b" <= session <= "z")):
+    if len(session) != 1 or not ("a" <= session <= "z"):
         print(f"Huruf sesi tidak valid: {session}", file=sys.stderr)
         return 2
     if (day, session) in existing_sessions() and not args.force:

@@ -71,12 +71,12 @@ def test_readme_progress_is_up_to_date():
 
 
 def test_resolve_day_and_session_empty_dir(tmp_path):
-    assert new_day.resolve_day_and_session(tmp_path, today="2026-11-19") == (1, "")
+    assert new_day.resolve_day_and_session(tmp_path, today="2026-11-19") == (1, "a")
 
 
 def test_resolve_day_and_session_same_date(tmp_path):
-    nb1 = new_day.build_notebook(1, "quant", "Return", "2026-11-19", "return", session="", topic_no=1)
-    nbformat.write(nb1, tmp_path / "day001_quant_return.ipynb")
+    nb1 = new_day.build_notebook(1, "quant", "Return", "2026-11-19", "return", session="a", topic_no=1)
+    nbformat.write(nb1, tmp_path / "day001a_quant_return.ipynb")
     assert new_day.resolve_day_and_session(tmp_path, today="2026-11-19") == (1, "b")
 
     nb2 = new_day.build_notebook(1, "sim", "Pi", "2026-11-19", "pi", session="b", topic_no=2)
@@ -87,7 +87,7 @@ def test_resolve_day_and_session_same_date(tmp_path):
 def test_resolve_day_and_session_new_date(tmp_path):
     nb = new_day.build_notebook(1, "sim", "Pi", "2026-11-19", "pi", session="b", topic_no=2)
     nbformat.write(nb, tmp_path / "day001b_sim_pi.ipynb")
-    assert new_day.resolve_day_and_session(tmp_path, today="2026-11-20") == (2, "")
+    assert new_day.resolve_day_and_session(tmp_path, today="2026-11-20") == (2, "a")
 
 
 def test_resolve_day_and_session_midnight_wita(tmp_path):
@@ -99,9 +99,9 @@ def test_resolve_day_and_session_midnight_wita(tmp_path):
     assert date_after == "2026-11-20"
 
     nb = new_day.build_notebook(1, "quant", "Return", date_before, "return", topic_no=1)
-    nbformat.write(nb, tmp_path / "day001_quant_return.ipynb")
+    nbformat.write(nb, tmp_path / "day001a_quant_return.ipynb")
     assert new_day.resolve_day_and_session(tmp_path, today=date_before) == (1, "b")
-    assert new_day.resolve_day_and_session(tmp_path, today=date_after) == (2, "")
+    assert new_day.resolve_day_and_session(tmp_path, today=date_after) == (2, "a")
 
 
 def test_next_unchecked_topic_no(tmp_path):
@@ -117,14 +117,14 @@ def test_next_unchecked_topic_no(tmp_path):
 
 def test_update_readme_collect_and_render_sessions(tmp_path, monkeypatch):
     nb1b = new_day.build_notebook(1, "sim", "Pi", "2026-11-19", "pi", session="b", topic_no=2)
-    nb1 = new_day.build_notebook(1, "quant", "Return", "2026-11-19", "ret", session="", topic_no=1)
+    nb1 = new_day.build_notebook(1, "quant", "Return", "2026-11-19", "ret", session="a", topic_no=1)
     nbformat.write(nb1b, tmp_path / "day001b_sim_pi.ipynb")
-    nbformat.write(nb1, tmp_path / "day001_quant_ret.ipynb")
+    nbformat.write(nb1, tmp_path / "day001a_quant_ret.ipynb")
     monkeypatch.setattr(update_readme, "ROOT", tmp_path.parent)
     rows = update_readme.collect_days(tmp_path)
-    assert [(r["day"], r["session"], r["topic_no"]) for r in rows] == [(1, "", 1), (1, "b", 2)]
+    assert [(r["day"], r["session"], r["topic_no"]) for r in rows] == [(1, "a", 1), (1, "b", 2)]
     table = update_readme.render_table(rows)
-    assert "| 1 | 001 | `quant` | `python` |" in table
+    assert "| 1a | 001 | `quant` | `python` |" in table
     assert "| 1b | 002 | `sim` | `python` |" in table
 
 
@@ -172,7 +172,7 @@ def test_update_readme_collects_multi_language_meta(tmp_path, monkeypatch):
         '"topic": "Opsi Asia (Ruby)", "date": "2026-11-19", "link": "projects/ruby/day001i_asian"}',
         encoding="utf-8",
     )
-    assert "ruby" in update_readme.LANG_DIRS
+    assert "projects/ruby" in update_readme.LANG_DIRS
     monkeypatch.setattr(update_readme, "ROOT", tmp_path)
     rows = update_readme.collect_days(
         days, lang_roots=[tmp_path / "rust", tmp_path / "go", tmp_path / "typescript", tmp_path / "ruby"]
@@ -184,3 +184,37 @@ def test_update_readme_collects_multi_language_meta(tmp_path, monkeypatch):
     assert "| 1e | bonus | `quant` | `go` | Opsi Asia (Go) | 2026-11-19 | [day001e_asian](projects/go/day001e_asian) |" in table
     assert "| 1f | bonus | `quant` | `typescript` | Opsi Asia (TypeScript) | 2026-11-19 | [day001f_asian](projects/typescript/day001f_asian) |" in table
     assert "| 1i | bonus | `quant` | `ruby` | Opsi Asia (Ruby) | 2026-11-19 | [day001i_asian](projects/ruby/day001i_asian) |" in table
+
+
+def test_first_session_of_day_is_a_and_legacy_metadata_is_read_as_a(tmp_path, monkeypatch):
+    """Sesi pertama hari berlabel 'a'; notebook lama tanpa huruf/dengan session '' dibaca sebagai 'a'."""
+    assert new_day.normalize_session("") == "a"
+    assert new_day.normalize_session(None) == "a"
+    assert new_day.normalize_session("B") == "b"
+    nb = new_day.build_notebook(4, "quant", "Uji", "2026-11-22", "uji", session="")
+    assert nb.metadata["qb100"]["session"] == "a"
+    assert "Hari 004a" in nb.cells[0].source
+
+    # nama lama tanpa huruf (day004_...) dan metadata session "" tetap terbaca sebagai sesi 'a'
+    legacy = new_day.build_notebook(4, "quant", "Uji", "2026-11-22", "uji", session="a")
+    legacy.metadata["qb100"]["session"] = ""
+    nbformat.write(legacy, tmp_path / "day004_quant_uji.ipynb")
+    assert new_day.existing_sessions(tmp_path) == {(4, "a")}
+    assert new_day.resolve_day_and_session(tmp_path, today="2026-11-22") == (4, "b")
+    assert new_day.resolve_day_and_session(tmp_path, today="2026-11-23") == (5, "a")
+    monkeypatch.setattr(update_readme, "ROOT", tmp_path.parent)
+    rows = update_readme.collect_days(tmp_path)
+    assert [(r["day"], r["session"]) for r in rows] == [(4, "a")]
+
+
+def test_new_day_dry_run_names_first_session_with_letter_a(capsys):
+    """Mode dry-run: nama berkas sesi pertama harus ...a_... dan tidak ada berkas yang dibuat."""
+    before = sorted(p.name for p in new_day.DAYS_DIR.glob("*.ipynb"))
+    rc = new_day.main(
+        ["--bonus", "--type", "quant", "--topic", "Uji Penamaan", "--day", "9", "--dry-run"]
+    )
+    out = capsys.readouterr().out
+    assert rc == 0
+    assert "days/day009a_quant_uji-penamaan.ipynb" in out
+    assert "hari    : 009a" in out
+    assert sorted(p.name for p in new_day.DAYS_DIR.glob("*.ipynb")) == before

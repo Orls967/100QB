@@ -32,6 +32,11 @@ END = "<!-- PROGRESS:END -->"
 DAY_FILE_RE = re.compile(r"^day(\d{3})([a-z])?_(quant|sim)_(.+)\.ipynb$")
 
 
+def _normalize_session(raw: str | None) -> str:
+    """Sesi pertama hari = 'a'; metadata lama ('' atau None) dibaca sebagai 'a'."""
+    return "a" if not raw else str(raw).lower()
+
+
 def _session_rank(session: str | None) -> int:
     if not session:
         return 0
@@ -56,7 +61,7 @@ def collect_days(
                 print(f"Peringatan: gagal membaca {path.name}: {exc}", file=sys.stderr)
             day = int(meta.get("day") or m.group(1))
             raw_sess = meta.get("session") if meta.get("session") is not None else (m.group(2) or "")
-            session = "" if raw_sess in ("", "a") else str(raw_sess)
+            session = _normalize_session(raw_sess)
             if "topic_no" in meta:
                 raw_tno = meta["topic_no"]
                 topic_no = None if raw_tno in (None, "bonus") else int(raw_tno)
@@ -88,7 +93,7 @@ def collect_days(
                 continue
             day = int(meta["day"])
             raw_sess = meta.get("session") or ""
-            session = "" if raw_sess in ("", "a") else str(raw_sess)
+            session = _normalize_session(raw_sess)
             raw_tno = meta.get("topic_no")
             topic_no = None if raw_tno in (None, "bonus") else int(raw_tno)
             link = meta.get("link") or meta_path.parent.relative_to(ROOT).as_posix()

@@ -3,6 +3,12 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Pemeliharaan] — 2026-11-21 · Rename sesi pertama harian (`1` → `1a`, `3` → `3a`) & sinkronisasi skrip
+
+### Diubah
+- Sesi pertama tiap hari kini secara konsisten berlabel huruf `a` (`days/day001a_quant_return-harian-kumulatif.ipynb`, `days/day003a_quant_volatilitas-lokal-dupire-ssvi.ipynb`, `outputs/figures/day001a_return-harian-kumulatif.png`, serta metadata `session: "a"`).
+- `scripts/new_day.py`, `scripts/update_readme.py`, `scripts/run_all.py`, dan `tests/test_scripts.py` diselaraskan agar sesi pertama bernama `a` sambil tetap kompatibel membaca metadata lama, serta menyesuaikan struktur `projects/<bahasa>/`.
+
 ## [Hari 003c] — 2026-11-21 · Risiko sistemik jaringan: kliring Eisenberg–Noe, kaskade Watts & biaya kebangkrutan (Go, Bonus)
 
 ### Ditambahkan

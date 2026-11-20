@@ -118,15 +118,15 @@ python scripts/run_all.py --inplace    # simpan output ke notebook
 ## 🏷️ Konvensi penamaan notebook
 
 ```text
-days/dayNNN[sesi]_<quant|sim>_<topik-singkat>.ipynb
+days/dayNNN<sesi>_<quant|sim>_<topik-singkat>.ipynb
 ```
 
 - `NNN` = nomor hari 3 digit (`001` … `100`).
-- `[sesi]` = kosong untuk sesi pertama di hari itu, lalu `b`, `c`, dst. bila ada lebih dari satu notebook pada tanggal WITA yang sama (`day001_...`, `day001b_...`).
+- `[sesi]` = `a` untuk sesi pertama di hari itu, lalu `b`, `c`, dst. bila ada lebih dari satu notebook pada tanggal WITA yang sama (`day001a_...`, `day001b_...`).
 - `<quant|sim>` = jenis notebook.
 - `<topik-singkat>` = slug huruf kecil dengan tanda hubung, mis. `monte-carlo-harga-saham`.
 
-Contoh: `days/day001_quant_return-harian-kumulatif.ipynb`, `days/day001b_sim_estimasi-pi-monte-carlo.ipynb`.
+Contoh: `days/day001a_quant_return-harian-kumulatif.ipynb`, `days/day001b_sim_estimasi-pi-monte-carlo.ipynb`.
 
 Grafik yang disimpan memakai awalan yang sama, mis. `outputs/figures/day027_gbm-paths.png`.
 
@@ -151,7 +151,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
-| 1 | 001 | `quant` | `python` | Return harian & kumulatif | 2026-11-19 | [day001_quant_return-harian-kumulatif.ipynb](days/day001_quant_return-harian-kumulatif.ipynb) |
+| 1a | 001 | `quant` | `python` | Return harian & kumulatif | 2026-11-19 | [day001a_quant_return-harian-kumulatif.ipynb](days/day001a_quant_return-harian-kumulatif.ipynb) |
 | 1b | 002 | `sim` | `python` | Estimasi π dengan Monte Carlo | 2026-11-19 | [day001b_sim_estimasi-dengan-monte-carlo.ipynb](days/day001b_sim_estimasi-dengan-monte-carlo.ipynb) |
 | 1c | bonus | `quant` | `python` | Opsi Asia: Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001c_quant_opsi-asia-monte-carlo-variance.ipynb](days/day001c_quant_opsi-asia-monte-carlo-variance.ipynb) |
 | 1d | bonus | `quant` | `rust` | Opsi Asia (Rust): Monte Carlo, variance reduction & Greeks | 2026-11-19 | [day001d_asian_options](projects/rust/day001d_asian_options) |
@@ -170,7 +170,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 2i | bonus | `quant` | `cpp` | Hull-White: pohon trinomial, Jamshidian, kalibrasi & Bermudan | 2026-11-20 | [day002i_hull_white](projects/cpp/day002i_hull_white) |
 | 2j | bonus | `quant` | `ruby` | Longevity risk: Lee–Carter, anuitas stokastik & modal solvabilitas | 2026-11-20 | [day002j_longevity_risk](projects/ruby/day002j_longevity_risk) |
 | 2k | bonus | `quant` | `ruby` | Opsi Put Amerika (Ruby): CRR Binomial, LSM Monte Carlo & PSOR PDE | 2026-11-20 | [day002k_american_put](projects/ruby/day002k_american_put) |
-| 3 | bonus | `quant` | `python` | Volatilitas lokal Dupire dari permukaan SSVI | 2026-11-21 | [day003_quant_volatilitas-lokal-dupire-ssvi.ipynb](days/day003_quant_volatilitas-lokal-dupire-ssvi.ipynb) |
+| 3a | bonus | `quant` | `python` | Volatilitas lokal Dupire dari permukaan SSVI | 2026-11-21 | [day003a_quant_volatilitas-lokal-dupire-ssvi.ipynb](days/day003a_quant_volatilitas-lokal-dupire-ssvi.ipynb) |
 | 3b | bonus | `quant` | `rust` | Eksekusi optimal: Almgren–Chriss, dampak transien, likuiditas stokastik | 2026-11-21 | [day003b_optimal_execution](projects/rust/day003b_optimal_execution) |
 | 3c | bonus | `quant` | `go` | Risiko sistemik jaringan: kliring Eisenberg–Noe, kaskade Watts & biaya kebangkrutan | 2026-11-21 | [day003c_systemic_risk](projects/go/day003c_systemic_risk) |
 <!-- PROGRESS:END -->

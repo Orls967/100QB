@@ -32,8 +32,8 @@ def find_notebooks(day: int | None = None, include_template: bool = False) -> li
         paths = []
     elif day:
         paths = sorted(
-            list(DAYS_DIR.glob(f"day{day:03d}_*.ipynb"))
-            + list(DAYS_DIR.glob(f"day{day:03d}[a-z]_*.ipynb"))
+            list(DAYS_DIR.glob(f"day{day:03d}[a-z]_*.ipynb"))
+            + list(DAYS_DIR.glob(f"day{day:03d}_*.ipynb"))  # nama lama tanpa huruf sesi
         )
     else:
         paths = sorted(DAYS_DIR.glob("day*.ipynb"))

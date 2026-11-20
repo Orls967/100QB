@@ -6,7 +6,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 
 | Hari / Sesi | Topik No | Jenis | Bahasa | Dokumen Penjelasan |
 |:---:|:---:|:---:|:---:|---|
-| `1` (`day001`) | `001` | `quant` | `python` | [Return harian & kumulatif](day001_quant_return-harian-kumulatif.md) |
+| `1a` (`day001a`) | `001` | `quant` | `python` | [Return harian & kumulatif](day001a_quant_return-harian-kumulatif.md) |
 | `1b` (`day001b`) | `002` | `sim` | `python` | [Estimasi π dengan Monte Carlo](day001b_sim_estimasi-dengan-monte-carlo.md) |
 | `1c` (`day001c`) | `bonus` | `quant` | `python` | [Opsi Asia: Monte Carlo, variance reduction & Greeks (Python)](day001c_quant_opsi-asia-monte-carlo-variance.md) |
 | `1d` (`day001d`) | `bonus` | `quant` | `rust` | [Opsi Asia (Rust): Monte Carlo, variance reduction & Greeks](day001d_quant_asian-options.md) |
@@ -25,7 +25,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `2i` (`day002i`) | `bonus` | `quant` | `cpp` | [Hull–White: pohon trinomial, Jamshidian, kalibrasi & Bermudan](day002i_quant_hull-white.md) |
 | `2j` (`day002j`) | `bonus` | `quant` | `ruby` | [Longevity risk: Lee–Carter, anuitas stokastik & modal solvabilitas](day002j_quant_longevity-risk.md) |
 | `2k` (`day002k`) | `bonus` | `quant` | `ruby` | [Opsi Put Amerika (Ruby): CRR Binomial, LSM Monte Carlo & PSOR PDE](day002k_quant_american-put.md) |
-| `3` / `3a` (`day003`) | `bonus` | `quant` | `python` | [Volatilitas lokal Dupire dari permukaan SSVI](day003_quant_volatilitas-lokal-dupire-ssvi.md) |
+| `3a` (`day003a`) | `bonus` | `quant` | `python` | [Volatilitas lokal Dupire dari permukaan SSVI](day003a_quant_volatilitas-lokal-dupire-ssvi.md) |
 | `3b` (`day003b`) | `bonus` | `quant` | `rust` | [Eksekusi optimal: Almgren–Chriss, dampak transien, likuiditas stokastik](day003b_quant_optimal-execution.md) |
 | `3c` (`day003c`) | `bonus` | `quant` | `go` | [Risiko sistemik jaringan: kliring Eisenberg–Noe, kaskade Watts & biaya kebangkrutan](day003c_quant_systemic-risk.md) |
 
