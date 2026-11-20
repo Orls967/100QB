@@ -85,6 +85,12 @@ python scripts/run_all.py --template   # ikut uji template
 python scripts/run_all.py --inplace    # simpan output ke notebook
 ```
 
+### `scripts/check_docs.py` — periksa tautan dan struktur dokumen
+
+```bash
+python scripts/check_docs.py           # verifikasi tautan relatif, path absolut, dan struktur docs/project-explanations/
+```
+
 ## 📁 Struktur folder
 
 ```text
@@ -107,7 +113,8 @@ python scripts/run_all.py --inplace    # simpan output ke notebook
 ├── scripts/
 │   ├── new_day.py         # buat notebook hari berikutnya
 │   ├── update_readme.py   # perbarui tabel progres README
-│   └── run_all.py         # eksekusi semua notebook
+│   ├── run_all.py         # eksekusi semua notebook
+│   └── check_docs.py      # periksa tautan & struktur dokumen penjelasan
 ├── tests/                 # pytest untuk src/ dan scripts/
 ├── data/                  # data lokal (raw/ & cache/ tidak di-commit)
 └── outputs/               # hasil proyek dan grafik
