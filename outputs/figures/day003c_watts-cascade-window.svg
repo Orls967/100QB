@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="460" viewBox="0 0 820 460" style="background:#ffffff;font-family:system-ui,sans-serif">
+<text x="410.0" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#111">Kaskade Watts: Teori Pohon vs Simulasi (n=100k, c1=1.02, c2=5.76)</text>
+<line x1="84.0" y1="48.0" x2="84.0" y2="396.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<line x1="84.0" y1="396.0" x2="790.0" y2="396.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<text x="84.0" y="414.0" text-anchor="middle" font-size="11" fill="#444">0.5</text>
+<text x="76.0" y="400.0" text-anchor="end" font-size="11" fill="#444">-0.0587</text>
+<line x1="260.5" y1="48.0" x2="260.5" y2="396.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<line x1="84.0" y1="309.0" x2="790.0" y2="309.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<text x="260.5" y="414.0" text-anchor="middle" font-size="11" fill="#444">3.38</text>
+<text x="76.0" y="313.0" text-anchor="end" font-size="11" fill="#444">0.22</text>
+<line x1="437.0" y1="48.0" x2="437.0" y2="396.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<line x1="84.0" y1="222.0" x2="790.0" y2="222.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<text x="437.0" y="414.0" text-anchor="middle" font-size="11" fill="#444">6.25</text>
+<text x="76.0" y="226.0" text-anchor="end" font-size="11" fill="#444">0.5</text>
+<line x1="613.5" y1="48.0" x2="613.5" y2="396.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<line x1="84.0" y1="135.0" x2="790.0" y2="135.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<text x="613.5" y="414.0" text-anchor="middle" font-size="11" fill="#444">9.12</text>
+<text x="76.0" y="139.0" text-anchor="end" font-size="11" fill="#444">0.779</text>
+<line x1="790.0" y1="48.0" x2="790.0" y2="396.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<line x1="84.0" y1="48.0" x2="790.0" y2="48.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<text x="790.0" y="414.0" text-anchor="middle" font-size="11" fill="#444">12</text>
+<text x="76.0" y="52.0" text-anchor="end" font-size="11" fill="#444">1.06</text>
+<rect x="84.0" y="48.0" width="706.0" height="348.0" fill="none" stroke="#333" stroke-width="1"/>
+<text x="437.0" y="446.0" text-anchor="middle" font-size="12" fill="#222">Derajat Rata-Rata c</text>
+<text x="18" y="222.0" text-anchor="middle" font-size="12" fill="#222" transform="rotate(-90 18 222.0)">Fraksi Gagal Akhir S</text>
+<polyline fill="none" stroke="#1f6feb" stroke-width="2.2" points="84.00,377.08 99.35,376.49 114.70,368.06 130.04,264.17 145.39,196.53 160.74,155.62 176.09,129.32 191.43,111.67 206.78,99.45 222.13,90.80 237.48,84.56 252.83,80.00 268.17,76.62 283.52,74.10 298.87,72.21 314.22,70.77 329.57,69.68 344.91,68.85 360.26,68.21 375.61,67.72 390.96,67.34 406.30,67.04 421.65,66.82 437.00,66.64 452.35,375.03 467.70,375.98 483.04,376.38 498.39,376.62 513.74,376.78 529.09,376.90 544.43,376.99 "/>
+<polyline fill="none" stroke="#d1495b" stroke-width="2.2" stroke-dasharray="6,4" points="84.00,377.07 114.70,368.21 176.09,129.29 237.48,84.58 298.87,72.22 421.65,66.82 544.43,376.99 667.22,377.28 790.00,377.36 "/>
+<line x1="98.0" y1="66.0" x2="118.0" y2="66.0" stroke="#1f6feb" stroke-width="2.5"/>
+<text x="124.0" y="70.0" font-size="11" fill="#222">Teori Pohon (dc=0.25)</text>
+<line x1="98.0" y1="84.0" x2="118.0" y2="84.0" stroke="#d1495b" stroke-width="2.5"/>
+<text x="124.0" y="88.0" font-size="11" fill="#222">Simulasi G(n, c/n) (R=200)</text>
+</svg>

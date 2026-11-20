@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="430" viewBox="0 0 780 430" style="background:#ffffff;font-family:system-ui,sans-serif">
+<text x="390.0" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#111">Kehilangan Nilai RV (s=0.8): 20 Bank Acak vs Top-20 Hub</text>
+<rect x="82.0" y="48.0" width="668.0" height="310.0" fill="none" stroke="#333" stroke-width="1"/>
+<rect x="118.7" y="153.7" width="93.5" height="204.3" fill="#1f6feb"/>
+<text x="165.5" y="148.7" text-anchor="middle" font-size="11" fill="#222">7734</text>
+<text x="165.5" y="376.0" text-anchor="middle" font-size="11" fill="#333">Poisson Acak-20</text>
+<rect x="285.7" y="152.2" width="93.5" height="205.8" fill="#d1495b"/>
+<text x="332.5" y="147.2" text-anchor="middle" font-size="11" fill="#222">7791</text>
+<text x="332.5" y="376.0" text-anchor="middle" font-size="11" fill="#333">Poisson Hub-20</text>
+<rect x="452.7" y="95.1" width="93.5" height="262.9" fill="#2a9d8f"/>
+<text x="499.5" y="90.1" text-anchor="middle" font-size="11" fill="#222">9954</text>
+<text x="499.5" y="376.0" text-anchor="middle" font-size="11" fill="#333">PowerLaw Acak-20</text>
+<rect x="619.7" y="88.4" width="93.5" height="269.6" fill="#e9c46a"/>
+<text x="666.5" y="83.4" text-anchor="middle" font-size="11" fill="#222">1.021e+04</text>
+<text x="666.5" y="376.0" text-anchor="middle" font-size="11" fill="#333">PowerLaw Hub-20</text>
+<text x="18" y="203.0" text-anchor="middle" font-size="12" fill="#222" transform="rotate(-90 18 203.0)">Total Kehilangan Nilai RV</text>
+</svg>

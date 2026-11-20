@@ -1,0 +1,235 @@
+{
+  "n_workers": 10,
+  "seed": 20261121,
+  "c1_eisenberg_noe": {
+    "small_networks_count": 210,
+    "picard_vs_fictitious_max_diff": 4.0500935938325711e-13,
+    "picard_vs_bruteforce_max_diff": 4.0500935938325711e-13,
+    "fictitious_vs_bruteforce_max_diff": 0,
+    "chain_anchor_pattern_a_err": 1.1102230246251565e-16,
+    "chain_anchor_pattern_b_err": 0,
+    "two_bank_cycle_anchor_err": 0,
+    "monotonicity_verified": true,
+    "bounded_p_le_pbar_verified": true,
+    "non_negative_loss_verified": true,
+    "regular_uniqueness_top_vs_zero_diff": 2.7888802378583932e-13,
+    "scale_n2000_poisson": {
+      "picard_iterations": 55,
+      "picard_sec": 0.0013545,
+      "fictitious_rounds": 5,
+      "fictitious_sec": 1.3573036250000001,
+      "inter_algo_max_diff": 9.6278540695493575e-13,
+      "default_count": 1337,
+      "total_loss": 5298.4402326722711
+    },
+    "scale_n2000_powerlaw": {
+      "picard_iterations": 45,
+      "picard_sec": 0.00053887499999999997,
+      "fictitious_rounds": 5,
+      "fictitious_sec": 0.96960879200000005,
+      "inter_algo_max_diff": 7.3185901783290319e-13,
+      "default_count": 1225,
+      "total_loss": 8532.798561743346
+    }
+  },
+  "c2_watts_cascade": {
+    "n_nodes": 100000,
+    "phi": 0.17999999999999999,
+    "rho0": 0.001,
+    "order_invariance_fifo_vs_lifo": true,
+    "fifo_failed_count": 98021,
+    "lifo_failed_count": 98021,
+    "formula_correction_note": "Rumus prompt memiliki indikator (m+1)/k >= phi pada persamaan q yang sirkular dan gagal di m=0; dikoreksi sesuai Watts (2002) Eq. 3-4 menjadi m/k >= phi.",
+    "c_comparison_r200": [
+      {
+        "c": 0.5,
+        "q_inf_theory": 0.0019935542142973614,
+        "s_theory": 0.0019951145515257874,
+        "s_sim_mean": 0.0020278000000000006,
+        "s_sim_se": 1.4187927488966132e-05,
+        "z_score": 2.3037507415817089,
+        "near_phase_transition": false
+      },
+      {
+        "c": 1,
+        "q_inf_theory": 0.030542656084062352,
+        "s_theory": 0.03095578135520867,
+        "s_sim_mean": 0.030455049999999997,
+        "s_sim_se": 0.0007891110990352391,
+        "z_score": 0.63455114979482918,
+        "near_phase_transition": true
+      },
+      {
+        "c": 2,
+        "q_inf_theory": 0.79670521447836729,
+        "s_theory": 0.79695052610475037,
+        "s_sim_mean": 0.79705319999999957,
+        "s_sim_se": 0.0001454143406004421,
+        "z_score": 0.70607819576285669,
+        "near_phase_transition": false
+      },
+      {
+        "c": 3,
+        "q_inf_theory": 0.94054476364762685,
+        "s_theory": 0.94055068222040505,
+        "s_sim_mean": 0.94051125000000046,
+        "s_sim_se": 6.5776534187723286e-05,
+        "z_score": 0.59948765759003941,
+        "near_phase_transition": false
+      },
+      {
+        "c": 4,
+        "q_inf_theory": 0.98019400220706931,
+        "s_theory": 0.98019411996095573,
+        "s_sim_mean": 0.98016399999999981,
+        "s_sim_se": 3.2845764127289317e-05,
+        "z_score": 0.91701203355157856,
+        "near_phase_transition": false
+      },
+      {
+        "c": 6,
+        "q_inf_theory": 0.99748609270198696,
+        "s_theory": 0.99748609273394984,
+        "s_sim_mean": 0.99748314999999932,
+        "s_sim_se": 1.133380621488559e-05,
+        "z_score": 0.25964216210546498,
+        "near_phase_transition": true
+      },
+      {
+        "c": 8,
+        "q_inf_theory": 0.0015801688446088755,
+        "s_theory": 0.0023084060492052855,
+        "s_sim_mean": 0.0022903499999999992,
+        "s_sim_se": 1.2535853605883436e-05,
+        "z_score": 1.4403525896961755,
+        "near_phase_transition": true
+      },
+      {
+        "c": 10,
+        "q_inf_theory": 0.001138825391953031,
+        "s_theory": 0.0013610985234436734,
+        "s_sim_mean": 0.0013591999999999999,
+        "s_sim_se": 5.2444562738228853e-06,
+        "z_score": 0.36200577229518194,
+        "near_phase_transition": false
+      },
+      {
+        "c": 12,
+        "q_inf_theory": 0.0010406862417840685,
+        "s_theory": 0.0011134157289724288,
+        "s_sim_mean": 0.0011155500000000001,
+        "s_sim_se": 2.6511564746854017e-06,
+        "z_score": 0.80503397213644845,
+        "near_phase_transition": false
+      }
+    ],
+    "phase_boundaries": {
+      "phi_018_c1": 1.0207039085137266,
+      "phi_018_c2": 5.7646770871617168,
+      "predeclared_scan_dc": 0.25,
+      "sim_jump_c1": 1.25,
+      "sim_jump_c2": 6.5,
+      "phi_010_c1": 1.0000011252141308,
+      "phi_010_c2": 13.659313949739161,
+      "phi_030_has_window": false,
+      "phi_030_c1": 0,
+      "phi_030_c2": 0
+    },
+    "single_seed_near_c1_r2000": {
+      "c_tested": 1.0207039085137266,
+      "global_cascade_prob": 0.002,
+      "empirical_ccdf_tail_loglog_slope": -0.55471131298123877
+    }
+  },
+  "c3_rogers_veraart_and_stress": {
+    "alpha_beta_1_vs_en_max_diff": 3.5527136788005009e-15,
+    "rv_chain_closed_form_max_err": 0,
+    "monotonicity_in_alpha_beta_verified": true,
+    "mc_stress_20k_per_s": [
+      {
+        "shock_s": 0.20000000000000001,
+        "en_mean_default_frac": 0.67501244999991161,
+        "rv_mean_default_frac": 0.79285614999988452,
+        "en_mean_loss": 5427.6792852798808,
+        "rv_mean_loss": 7897.4034565153379,
+        "en_prob_default_ge_10pct": 1,
+        "rv_prob_default_ge_10pct": 1,
+        "en_var_99": 5447.1644282615534,
+        "en_es_975": 5447.3935009219631,
+        "rv_var_99": 7930.7287934147125,
+        "rv_es_975": 7931.1280508569816,
+        "amplification_rv_over_en": 1.4550239690715447,
+        "all_rv_loss_ge_en_loss": true
+      },
+      {
+        "shock_s": 0.40000000000000002,
+        "en_mean_default_frac": 0.68102620000012226,
+        "rv_mean_default_frac": 0.80785327500003035,
+        "en_mean_loss": 5561.8913015009575,
+        "rv_mean_loss": 8122.7892007491218,
+        "en_prob_default_ge_10pct": 1,
+        "rv_prob_default_ge_10pct": 1,
+        "en_var_99": 5601.653306034058,
+        "en_es_975": 5602.3006852813987,
+        "rv_var_99": 8184.3343876514937,
+        "rv_es_975": 8184.8566749081738,
+        "amplification_rv_over_en": 1.4604365242731494,
+        "all_rv_loss_ge_en_loss": true
+      },
+      {
+        "shock_s": 0.59999999999999998,
+        "en_mean_default_frac": 0.68915397500003728,
+        "rv_mean_default_frac": 0.81901912499994622,
+        "en_mean_loss": 5702.5232852161589,
+        "rv_mean_loss": 8343.8081814490943,
+        "en_prob_default_ge_10pct": 1,
+        "rv_prob_default_ge_10pct": 1,
+        "en_var_99": 5764.3646281403808,
+        "en_es_975": 5765.2417702078892,
+        "rv_var_99": 8436.9546646633535,
+        "rv_es_975": 8437.099937178551,
+        "amplification_rv_over_en": 1.4631782746210769,
+        "all_rv_loss_ge_en_loss": true
+      },
+      {
+        "shock_s": 0.80000000000000004,
+        "en_mean_default_frac": 0.69887690000001712,
+        "rv_mean_default_frac": 0.8306963000000025,
+        "en_mean_loss": 5851.7307992591104,
+        "rv_mean_loss": 8577.4970794414112,
+        "en_prob_default_ge_10pct": 1,
+        "rv_prob_default_ge_10pct": 1,
+        "en_var_99": 5940.3139917018489,
+        "en_es_975": 5940.4642006261392,
+        "rv_var_99": 8706.3731588673036,
+        "rv_es_975": 8707.8885399539467,
+        "amplification_rv_over_en": 1.4658051393149205,
+        "all_rv_loss_ge_en_loss": true
+      }
+    ],
+    "poisson_vs_powerlaw_hub_s08": {
+      "poisson_random20_en_default_frac": 0.66971249999999982,
+      "poisson_random20_rv_default_frac": 0.78204999999999958,
+      "poisson_random20_en_loss": 5324.3381989055615,
+      "poisson_random20_rv_loss": 7733.8817841289074,
+      "poisson_top20_hub_en_default_frac": 0.67200000000000004,
+      "poisson_top20_hub_rv_default_frac": 0.78449999999999998,
+      "poisson_top20_hub_en_loss": 5361.6858381578031,
+      "poisson_top20_hub_rv_loss": 7791.4210403215629,
+      "powerlaw_random20_en_default_frac": 0.61438000000000081,
+      "powerlaw_random20_rv_default_frac": 0.69726249999999967,
+      "powerlaw_random20_en_loss": 8557.9746729295912,
+      "powerlaw_random20_rv_loss": 9953.9515464489123,
+      "powerlaw_top20_hub_en_default_frac": 0.628,
+      "powerlaw_top20_hub_rv_default_frac": 0.70850000000000002,
+      "powerlaw_top20_hub_en_loss": 8798.0651383393397,
+      "powerlaw_top20_hub_rv_loss": 10205.173636746869
+    }
+  },
+  "timings_seconds": {
+    "c1_clearing": 2.3560389580000001,
+    "c2_watts_cascade": 3.3410515840000001,
+    "c3_rv_and_stress": 19.204236833,
+    "total": 24.901327999999999
+  }
+}

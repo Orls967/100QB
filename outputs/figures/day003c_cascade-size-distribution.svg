@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="460" viewBox="0 0 820 460" style="background:#ffffff;font-family:system-ui,sans-serif">
+<text x="410.0" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#111">CCDF Ukuran Kaskade Lokal pada c1=1.021 (slope=-0.555)</text>
+<line x1="84.0" y1="48.0" x2="84.0" y2="396.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<line x1="84.0" y1="396.0" x2="790.0" y2="396.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<text x="84.0" y="414.0" text-anchor="middle" font-size="11" fill="#444">2</text>
+<text x="76.0" y="400.0" text-anchor="end" font-size="11" fill="#444">0.0914</text>
+<line x1="260.5" y1="48.0" x2="260.5" y2="396.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<line x1="84.0" y1="309.0" x2="790.0" y2="309.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<text x="260.5" y="414.0" text-anchor="middle" font-size="11" fill="#444">4.47</text>
+<text x="76.0" y="313.0" text-anchor="end" font-size="11" fill="#444">0.152</text>
+<line x1="437.0" y1="48.0" x2="437.0" y2="396.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<line x1="84.0" y1="222.0" x2="790.0" y2="222.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<text x="437.0" y="414.0" text-anchor="middle" font-size="11" fill="#444">10</text>
+<text x="76.0" y="226.0" text-anchor="end" font-size="11" fill="#444">0.254</text>
+<line x1="613.5" y1="48.0" x2="613.5" y2="396.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<line x1="84.0" y1="135.0" x2="790.0" y2="135.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<text x="613.5" y="414.0" text-anchor="middle" font-size="11" fill="#444">22.4</text>
+<text x="76.0" y="139.0" text-anchor="end" font-size="11" fill="#444">0.422</text>
+<line x1="790.0" y1="48.0" x2="790.0" y2="396.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<line x1="84.0" y1="48.0" x2="790.0" y2="48.0" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<text x="790.0" y="414.0" text-anchor="middle" font-size="11" fill="#444">50</text>
+<text x="76.0" y="52.0" text-anchor="end" font-size="11" fill="#444">0.703</text>
+<rect x="84.0" y="48.0" width="706.0" height="348.0" fill="none" stroke="#333" stroke-width="1"/>
+<text x="437.0" y="446.0" text-anchor="middle" font-size="12" fill="#222">Ukuran Kaskade s</text>
+<text x="18" y="222.0" text-anchor="middle" font-size="12" fill="#222" transform="rotate(-90 18 222.0)">P(Size &gt;= s)</text>
+<polyline fill="none" stroke="#2a9d8f" stroke-width="2.2" points="84.00,66.64 172.93,107.57 236.03,137.57 284.97,158.95 324.96,173.75 388.06,197.36 437.00,223.42 476.99,241.65 525.93,262.07 589.03,278.12 637.97,306.53 677.96,324.56 741.06,353.95 790.00,377.36 "/>
+<line x1="98.0" y1="66.0" x2="118.0" y2="66.0" stroke="#2a9d8f" stroke-width="2.5"/>
+<text x="124.0" y="70.0" font-size="11" fill="#222">CCDF Empiris (R=2000)</text>
+</svg>
