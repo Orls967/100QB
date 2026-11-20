@@ -3,6 +3,18 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 003c] — 2026-11-21 · Risiko sistemik jaringan: kliring Eisenberg–Noe, kaskade Watts & biaya kebangkrutan (Go, Bonus)
+
+### Ditambahkan
+- Project Go 1.22+ murni `go/day003c_systemic_risk/` (hanya standard library, paralelisme goroutine deterministik per chunk, RNG `xoshiro256++`, solver LU buatan sendiri, pembangkit graf CSR Erdős–Rényi Batagelj–Brandes $O(n+m)$, penulis JSON 17 digit & SVG):
+  - **C1 (Eisenberg–Noe)**: iterasi Picard, algoritma default fiktif, dan *brute-force* $2^n$ cocok hingga `4.05e-13` pada 210 jaringan acak kecil; anchor rantai & siklus 2 bank (`<= 1.11e-16`); benchmark $n=2.000$ bank (Poisson & Power-Law).
+  - **C2 (Kaskade Watts)**: bukti invariansi urutan FIFO vs LIFO pada $n=100.000$; koreksi & verifikasi rumus pendekatan pohon Watts (2002) terhadap simulasi $R=200$ pada 9 nilai $c$ (`z <= 2.30`); batas fase $(c_1, c_2)$ via bisection untuk $\phi \in \{0.10, 0.18, 0.30\}$; distribusi ukuran kaskade 1 benih ($R=2.000$).
+  - **C3 (Rogers–Veraart & Uji Stres)**: verifikasi $\alpha=\beta=1 \implies$ EN (`3.55e-15`) & rantai tertutup (`0.0`); uji stres Monte Carlo `20.000` skenario per $s \in \{0.2, 0.4, 0.6, 0.8\}$ (VaR 99%, ES 97.5%, amplifikasi RV/EN `~1.46x`); perbandingan ketahanan jaringan Poisson vs Pangkat-Hukum terhadap guncangan 20 bank acak vs top-20 hub.
+- Output `outputs/day003c/results.json`, 5 grafik SVG `outputs/figures/day003c_*.svg`, serta 21 dokumen penjelasan proyek di `docs/project-explanations/` (`day001`–`day003c`).
+
+### Diperbarui
+- `README.md` (tabel progres baris `3c` Go dan relabel `2k` Ruby), `CHANGELOG.md`, dan `docs/project-explanations/README.md`.
+
 ## [Hari 003c — pemeliharaan A] — 2026-11-21 · Perbaikan day003, day003b, relabel 2k, tautan relatif
 
 ### Diperbaiki

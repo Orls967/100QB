@@ -147,7 +147,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [ROADMAP.md](ROADMAP.md) · Riwayat: [CHANGELOG.md](CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 21/100 topik (21%)** · quant: 20 · sim: 1
+**Progres: 22/100 topik (22%)** · quant: 21 · sim: 1
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -172,6 +172,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 2k | bonus | `quant` | `ruby` | Opsi Put Amerika (Ruby): CRR Binomial, LSM Monte Carlo & PSOR PDE | 2026-11-20 | [day002k_american_put](ruby/day002k_american_put) |
 | 3 | bonus | `quant` | `python` | Volatilitas lokal Dupire dari permukaan SSVI | 2026-11-21 | [day003_quant_volatilitas-lokal-dupire-ssvi.ipynb](days/day003_quant_volatilitas-lokal-dupire-ssvi.ipynb) |
 | 3b | bonus | `quant` | `rust` | Eksekusi optimal: Almgren–Chriss, dampak transien, likuiditas stokastik | 2026-11-21 | [day003b_optimal_execution](rust/day003b_optimal_execution) |
+| 3c | bonus | `quant` | `go` | Risiko sistemik jaringan: kliring Eisenberg–Noe, kaskade Watts & biaya kebangkrutan | 2026-11-21 | [day003c_systemic_risk](go/day003c_systemic_risk) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi

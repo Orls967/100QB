@@ -27,6 +27,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `2k` (`day002k`) | `bonus` | `quant` | `ruby` | [Opsi Put Amerika (Ruby): CRR Binomial, LSM Monte Carlo & PSOR PDE](day002k_quant_american-put.md) |
 | `3` / `3a` (`day003`) | `bonus` | `quant` | `python` | [Volatilitas lokal Dupire dari permukaan SSVI](day003_quant_volatilitas-lokal-dupire-ssvi.md) |
 | `3b` (`day003b`) | `bonus` | `quant` | `rust` | [Eksekusi optimal: Almgren–Chriss, dampak transien, likuiditas stokastik](day003b_quant_optimal-execution.md) |
+| `3c` (`day003c`) | `bonus` | `quant` | `go` | [Risiko sistemik jaringan: kliring Eisenberg–Noe, kaskade Watts & biaya kebangkrutan](day003c_quant_systemic-risk.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 
