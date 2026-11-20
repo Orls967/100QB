@@ -3,6 +3,15 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 003a] — 2026-11-21 · Volatilitas lokal Dupire dari permukaan SSVI (Python, Bonus)
+
+### Ditambahkan
+- Paket `src/qb100/day003a_local_vol/` (`bs.py`, `ssvi.py`, `dupire.py`, `grids.py`, `pde_backward.py`, `pde_forward.py`, `mc.py`, `barrier.py`, `greeks.py`, `calibration.py`, `plotting.py`, `runner.py`): permukaan SSVI bebas-arbitrase beserta turunan analitik & uji kontrafaktual, volatilitas lokal Dupire analitik + verifikasi beda hingga orde 4 & anchor $\eta \to 0$, dua solver PDE independen (backward di $x = \ln S$ dan forward Dupire di $K$, grid tak-seragam `sinh`, Crank–Nicolson + 4 langkah Rannacher), Monte Carlo log-Euler antitetik (`N = 400.000`, `200` langkah/tahun, PCG64) & uji *weak order*, *down-and-out call* (Reiner–Rubinstein, PDE absorbing, MC jembatan Brownian), Greeks (delta, gamma, vega-bucket vs pergeseran paralel), dan kalibrasi balik Levenberg–Marquardt buatan sendiri ($R = 50$ replikasi).
+- Notebook `days/day003_quant_volatilitas-lokal-dupire-ssvi.ipynb`, unit test `tests/test_day003a_*.py`, `outputs/day003a/results.json` (presisi 17 digit), dan 7 grafik di `outputs/figures/day003a_*.png`.
+
+### Diperbarui
+- `README.md` (tabel progres baris `3`) dan `CHANGELOG.md`.
+
 ## [Hari 002j] — 2026-11-20 · Longevity risk: Lee–Carter, anuitas stokastik & modal solvabilitas (Ruby, Bonus)
 
 ### Ditambahkan
