@@ -40,4 +40,4 @@ go run ./cmd/run
 - `internal/cascade` — simulasi kaskade Watts (FIFO & LIFO), `MeanField`, dan `PhaseBoundaries`.
 - `internal/rv` — kliring Rogers–Veraart (`Clear`, `ChainClosedForm`) dan `RunMonteCarloStress`.
 - `internal/stats`, `internal/jsonout`, `internal/svg` — statistik VaR/ES, JSON 17 digit, dan grafik SVG.
-- `cmd/run/main.go` — runner utama penghasil [../../outputs/day003c/results.json](../../outputs/day003c/results.json) dan 5 grafik SVG.
+- `cmd/run/main.go` — runner utama penghasil [../../../outputs/day003c/results.json](../../../outputs/day003c/results.json) dan 5 grafik SVG.

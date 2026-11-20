@@ -6,7 +6,7 @@
 - **Topik**: Eksekusi optimal — Almgren–Chriss, dampak transien (Obizhaeva–Wang), dan likuiditas stokastik (DP)
 - **Jenis**: `quant` (off-roadmap / `bonus`)
 - **Bahasa**: Rust (edisi 2021, `#![forbid(unsafe_code)]`, nol crate eksternal runtime)
-- **Lokasi Kode**: [projects/rust/day003b_optimal_execution/](../../rust/day003b_optimal_execution/Cargo.toml)
+- **Lokasi Kode**: [projects/rust/day003b_optimal_execution/](../../projects/rust/day003b_optimal_execution/Cargo.toml)
 
 Proyek ini mengimplementasikan dan memvalidasi tiga kerangka teori eksekusi optimal institusional dalam Rust murni tanpa dependensi eksternal: penyeimbangan *market impact* vs risiko volatilitas (Almgren–Chriss), peluruhan dampak sementara dalam buku order (*limit order book*) pada model Obizhaeva–Wang serta keragaman kernel dampaknya, dan pengendalian eksekusi adaptif di bawah rezim likuiditas Markov melalui *dynamic programming* (DP).
 
@@ -31,17 +31,17 @@ Program biner `day003b_optimal_execution` mengeksekusi seluruh eksperimen Bagian
 ---
 
 ## 4. Uraian Kode
-Seluruh kode berada di [projects/rust/day003b_optimal_execution/src/](../../rust/day003b_optimal_execution/src/lib.rs):
-- **`linalg.rs`** ([linalg.rs](../../rust/day003b_optimal_execution/src/linalg.rs)): `cholesky`, `solve_cholesky`, `solve_spd` untuk sistem simetris positif-definit; `solve_tridiagonal` (algoritma Thomas $O(N)$); dan `jacobi_min_eigenvalue` untuk menghitung eigenvalue minimum dan eigenvector matriks simetris.
-- **`rng.rs`** ([rng.rs](../../rust/day003b_optimal_execution/src/rng.rs)): `Xoshiro256PlusPlus` dengan seeding `splitmix64` dan transformasi Box–Muller `next_normal`.
-- **`parallel.rs`** ([parallel.rs](../../rust/day003b_optimal_execution/src/parallel.rs)): `parallel_fixed_chunks` membagi pekerjaan ke sejumlah chunk tetap yang seed-nya hanya bergantung pada indeks chunk, menjamin hasil identik bit-demi-bit untuk 1 maupun banyak thread.
-- **`stats.rs`** ([stats.rs](../../rust/day003b_optimal_execution/src/stats.rs)): `mean`, `variance`, `mean_se`, dan `variance_se_batch_means`.
-- **`json.rs` & `svg.rs`** ([json.rs](../../rust/day003b_optimal_execution/src/json.rs), [svg.rs](../../rust/day003b_optimal_execution/src/svg.rs)): penulis JSON (`{v:.16e}`) dan plotter SVG (*line chart* linear/log-log serta *bar chart*) tanpa crate eksternal.
-- **`ac.rs`** ([ac.rs](../../rust/day003b_optimal_execution/src/ac.rs)): `solve_ac_qp`, `solve_ac_sinh_discrete`, `ac_continuous_sup_error`, `ac_efficient_frontier`, dan `simulate_ac_mc`.
-- **`transient.rs`** ([transient.rs](../../rust/day003b_optimal_execution/src/transient.rs)): `solve_transient_general`, `solve_ow_exponential_analytic`, `benchmark_ow_cholesky_vs_analytic`, `analyze_oscillating_kernel`, `analyze_non_pd_kernel`, dan `solve_transient_with_risk`.
-- **`dp_liquidity.rs`** ([dp_liquidity.rs](../../rust/day003b_optimal_execution/src/dp_liquidity.rs)): `solve_liquidity_dp`, `verify_dp_bruteforce`, `simulate_dp_paths`, `evaluate_static_schedule_under_markov`, dan `compute_adaptivity_value`.
-- **`main.rs`** ([main.rs](../../rust/day003b_optimal_execution/src/main.rs)): orkestrator runner penuh.
-- **`tests/integration_tests.rs`** ([integration_tests.rs](../../rust/day003b_optimal_execution/tests/integration_tests.rs)): 5 suite tes integrasi untuk seluruh bagian dan invariansi thread.
+Seluruh kode berada di [projects/rust/day003b_optimal_execution/src/](../../projects/rust/day003b_optimal_execution/src/lib.rs):
+- **`linalg.rs`** ([linalg.rs](../../projects/rust/day003b_optimal_execution/src/linalg.rs)): `cholesky`, `solve_cholesky`, `solve_spd` untuk sistem simetris positif-definit; `solve_tridiagonal` (algoritma Thomas $O(N)$); dan `jacobi_min_eigenvalue` untuk menghitung eigenvalue minimum dan eigenvector matriks simetris.
+- **`rng.rs`** ([rng.rs](../../projects/rust/day003b_optimal_execution/src/rng.rs)): `Xoshiro256PlusPlus` dengan seeding `splitmix64` dan transformasi Box–Muller `next_normal`.
+- **`parallel.rs`** ([parallel.rs](../../projects/rust/day003b_optimal_execution/src/parallel.rs)): `parallel_fixed_chunks` membagi pekerjaan ke sejumlah chunk tetap yang seed-nya hanya bergantung pada indeks chunk, menjamin hasil identik bit-demi-bit untuk 1 maupun banyak thread.
+- **`stats.rs`** ([stats.rs](../../projects/rust/day003b_optimal_execution/src/stats.rs)): `mean`, `variance`, `mean_se`, dan `variance_se_batch_means`.
+- **`json.rs` & `svg.rs`** ([json.rs](../../projects/rust/day003b_optimal_execution/src/json.rs), [svg.rs](../../projects/rust/day003b_optimal_execution/src/svg.rs)): penulis JSON (`{v:.16e}`) dan plotter SVG (*line chart* linear/log-log serta *bar chart*) tanpa crate eksternal.
+- **`ac.rs`** ([ac.rs](../../projects/rust/day003b_optimal_execution/src/ac.rs)): `solve_ac_qp`, `solve_ac_sinh_discrete`, `ac_continuous_sup_error`, `ac_efficient_frontier`, dan `simulate_ac_mc`.
+- **`transient.rs`** ([transient.rs](../../projects/rust/day003b_optimal_execution/src/transient.rs)): `solve_transient_general`, `solve_ow_exponential_analytic`, `benchmark_ow_cholesky_vs_analytic`, `analyze_oscillating_kernel`, `analyze_non_pd_kernel`, dan `solve_transient_with_risk`.
+- **`dp_liquidity.rs`** ([dp_liquidity.rs](../../projects/rust/day003b_optimal_execution/src/dp_liquidity.rs)): `solve_liquidity_dp`, `verify_dp_bruteforce`, `simulate_dp_paths`, `evaluate_static_schedule_under_markov`, dan `compute_adaptivity_value`.
+- **`main.rs`** ([main.rs](../../projects/rust/day003b_optimal_execution/src/main.rs)): orkestrator runner penuh.
+- **`tests/integration_tests.rs`** ([integration_tests.rs](../../projects/rust/day003b_optimal_execution/tests/integration_tests.rs)): 5 suite tes integrasi untuk seluruh bagian dan invariansi thread.
 
 ---
 
@@ -119,4 +119,4 @@ Proyek `day003b` berhasil memverifikasi seluruh persamaan analitik dan sifat kua
 - Almgren, R., & Chriss, N. (2000). *Optimal execution of portfolio transactions*. Journal of Risk, 3, 5–40.
 - Obizhaeva, A. A., & Wang, J. (2013). *Optimal trading strategy and supply/demand dynamics*. Journal of Financial Markets, 16(1), 1–32.
 - Alfonsi, A., Schied, A., & Slynko, A. (2012). *Order book resilience, price manipulation, and the positive portfolio problem*. SIAM Journal on Financial Mathematics, 3(1), 511–533.
-- Artefak lokal: [results.json](../../outputs/day003b/results.json), [integration_tests.rs](../../rust/day003b_optimal_execution/tests/integration_tests.rs), dan grafik `outputs/figures/day003b_*.svg`.
+- Artefak lokal: [results.json](../../outputs/day003b/results.json), [integration_tests.rs](../../projects/rust/day003b_optimal_execution/tests/integration_tests.rs), dan grafik `outputs/figures/day003b_*.svg`.

@@ -6,7 +6,7 @@
 - **Topik**: Risiko sistemik jaringan: kliring Eisenberg–Noe, kaskade Watts & biaya kebangkrutan
 - **Jenis**: `quant` (`bonus` / off-roadmap)
 - **Bahasa**: Go 1.22+ (`go`, standard library murni tanpa modul eksternal)
-- **Folder Proyek**: [projects/go/day003c_systemic_risk](../../go/day003c_systemic_risk) · **Metadata**: [meta.json](../../go/day003c_systemic_risk/meta.json)
+- **Folder Proyek**: [projects/go/day003c_systemic_risk](../../projects/go/day003c_systemic_risk) · **Metadata**: [meta.json](../../projects/go/day003c_systemic_risk/meta.json)
 
 Proyek ini memodelkan tiga mekanisme penularan krisis sistemik pada jaringan keuangan dalam Go murni: penyelesaian kewajiban simultan antarbank (Eisenberg–Noe 2001), kaskade kegagalan ambang pada graf acak besar $n=100.000$ (Watts 2002), serta amplifikasi kerugian akibat biaya kebangkrutan tak-kontinu (Rogers–Veraart 2013) melalui uji stres Monte Carlo paralel deterministik.
 
@@ -21,20 +21,20 @@ Keterkaitan kewajiban antarbank dan ketergantungan ambang pada jaringan keuangan
 ---
 
 ## 3. Apa yang Dikerjakan Proyek
-Runner [cmd/run/main.go](../../go/day003c_systemic_risk/cmd/run/main.go) menjalankan seluruh eksperimen C1–C3 menggunakan 10 worker goroutine deterministik dalam waktu `24.90 detik`, menyimpan metrik berpresisi 17 digit ke [outputs/day003c/results.json](../../outputs/day003c/results.json), serta menghasilkan 5 grafik SVG di `outputs/figures/day003c_*.svg`.
+Runner [cmd/run/main.go](../../projects/go/day003c_systemic_risk/cmd/run/main.go) menjalankan seluruh eksperimen C1–C3 menggunakan 10 worker goroutine deterministik dalam waktu `24.90 detik`, menyimpan metrik berpresisi 17 digit ke [outputs/day003c/results.json](../../outputs/day003c/results.json), serta menghasilkan 5 grafik SVG di `outputs/figures/day003c_*.svg`.
 
 ---
 
 ## 4. Uraian Kode
-- [projects/go/day003c_systemic_risk/internal/rng/rng.go](../../go/day003c_systemic_risk/internal/rng/rng.go): `RNG` (`xoshiro256++` + `SplitMix64`), `NormFloat64` (Box–Muller), `Poisson`, dan `Perm` (Fisher–Yates).
-- [projects/go/day003c_systemic_risk/internal/parallel/parallel.go](../../go/day003c_systemic_risk/internal/parallel/parallel.go): `RunChunks` membagi pekerjaan ke `nChunks` chunk tetap dengan seed `SplitMix64(baseSeed ^ (idx+1))`, menjamin hasil identik untuk 1 maupun banyak worker.
-- [projects/go/day003c_systemic_risk/internal/linalg/linalg.go](../../go/day003c_systemic_risk/internal/linalg/linalg.go): `SolveLU` menyelesaikan sistem linear $Ax=b$ dengan eliminasi Gauss dan *partial pivoting*.
-- [projects/go/day003c_systemic_risk/internal/graphs/graphs.go](../../go/day003c_systemic_risk/internal/graphs/graphs.go): `InterbankNet`, `BuildSmallRandomNetwork`, `BuildDirectedPoissonNetwork`, `BuildDirectedPowerLawNetwork`, `TopHubs`, dan `BuildUndirectedER` (algoritma Batagelj–Brandes $O(n+m)$ dalam format CSR datar `UndirectedCSR`).
-- [projects/go/day003c_systemic_risk/internal/clearing/clearing.go](../../go/day003c_systemic_risk/internal/clearing/clearing.go): `Picard`, `PicardFromZero`, `FictitiousDefault`, dan `BruteForce`.
-- [projects/go/day003c_systemic_risk/internal/cascade/cascade.go](../../go/day003c_systemic_risk/internal/cascade/cascade.go): `Simulate` (antrean FIFO vs tumpukan LIFO), `MeanField`, `VulnerableBranching`, dan `PhaseBoundaries`.
-- [projects/go/day003c_systemic_risk/internal/rv/rv.go](../../go/day003c_systemic_risk/internal/rv/rv.go): `Clear` (Rogers–Veraart), `ChainClosedForm`, dan `RunMonteCarloStress`.
-- [projects/go/day003c_systemic_risk/internal/stats/stats.go](../../go/day003c_systemic_risk/internal/stats/stats.go), [jsonout.go](../../go/day003c_systemic_risk/internal/jsonout/jsonout.go), [svg.go](../../go/day003c_systemic_risk/internal/svg/svg.go): perhitungan `VaRAndES`, penulis JSON 17 digit, dan penulis SVG.
-- Suite tes: [clearing_test.go](../../go/day003c_systemic_risk/internal/clearing/clearing_test.go), [cascade_test.go](../../go/day003c_systemic_risk/internal/cascade/cascade_test.go), dan [rv_test.go](../../go/day003c_systemic_risk/internal/rv/rv_test.go).
+- [projects/go/day003c_systemic_risk/internal/rng/rng.go](../../projects/go/day003c_systemic_risk/internal/rng/rng.go): `RNG` (`xoshiro256++` + `SplitMix64`), `NormFloat64` (Box–Muller), `Poisson`, dan `Perm` (Fisher–Yates).
+- [projects/go/day003c_systemic_risk/internal/parallel/parallel.go](../../projects/go/day003c_systemic_risk/internal/parallel/parallel.go): `RunChunks` membagi pekerjaan ke `nChunks` chunk tetap dengan seed `SplitMix64(baseSeed ^ (idx+1))`, menjamin hasil identik untuk 1 maupun banyak worker.
+- [projects/go/day003c_systemic_risk/internal/linalg/linalg.go](../../projects/go/day003c_systemic_risk/internal/linalg/linalg.go): `SolveLU` menyelesaikan sistem linear $Ax=b$ dengan eliminasi Gauss dan *partial pivoting*.
+- [projects/go/day003c_systemic_risk/internal/graphs/graphs.go](../../projects/go/day003c_systemic_risk/internal/graphs/graphs.go): `InterbankNet`, `BuildSmallRandomNetwork`, `BuildDirectedPoissonNetwork`, `BuildDirectedPowerLawNetwork`, `TopHubs`, dan `BuildUndirectedER` (algoritma Batagelj–Brandes $O(n+m)$ dalam format CSR datar `UndirectedCSR`).
+- [projects/go/day003c_systemic_risk/internal/clearing/clearing.go](../../projects/go/day003c_systemic_risk/internal/clearing/clearing.go): `Picard`, `PicardFromZero`, `FictitiousDefault`, dan `BruteForce`.
+- [projects/go/day003c_systemic_risk/internal/cascade/cascade.go](../../projects/go/day003c_systemic_risk/internal/cascade/cascade.go): `Simulate` (antrean FIFO vs tumpukan LIFO), `MeanField`, `VulnerableBranching`, dan `PhaseBoundaries`.
+- [projects/go/day003c_systemic_risk/internal/rv/rv.go](../../projects/go/day003c_systemic_risk/internal/rv/rv.go): `Clear` (Rogers–Veraart), `ChainClosedForm`, dan `RunMonteCarloStress`.
+- [projects/go/day003c_systemic_risk/internal/stats/stats.go](../../projects/go/day003c_systemic_risk/internal/stats/stats.go), [jsonout.go](../../projects/go/day003c_systemic_risk/internal/jsonout/jsonout.go), [svg.go](../../projects/go/day003c_systemic_risk/internal/svg/svg.go): perhitungan `VaRAndES`, penulis JSON 17 digit, dan penulis SVG.
+- Suite tes: [clearing_test.go](../../projects/go/day003c_systemic_risk/internal/clearing/clearing_test.go), [cascade_test.go](../../projects/go/day003c_systemic_risk/internal/cascade/cascade_test.go), dan [rv_test.go](../../projects/go/day003c_systemic_risk/internal/rv/rv_test.go).
 
 ---
 

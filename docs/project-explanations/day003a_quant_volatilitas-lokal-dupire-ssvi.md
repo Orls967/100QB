@@ -1,71 +1,96 @@
-# Penjelasan Proyek — day003 (alias 3a): Volatilitas Lokal Dupire dari Permukaan SSVI (Python)
+# Penjelasan Proyek — day003a: Permukaan SSVI, Volatilitas Lokal Dupire, Dua PDE & Kalibrasi (Python)
 
 ## 1. Identitas dan Ringkasan Proyek
-- **ID Progress**: `day003` / alias `day003a` (Hari 3, Sesi a / pertama)
-- **Tanggal**: 2026-11-21 (WITA) · **Topik No**: `bonus` · **Jenis**: `quant` · **Bahasa**: Python
-- **Notebook**: [days/day003_quant_volatilitas-lokal-dupire-ssvi.ipynb](../../days/day003_quant_volatilitas-lokal-dupire-ssvi.ipynb) · **Paket**: [src/qb100/day003a_local_vol/](../../src/qb100/day003a_local_vol/__init__.py)
-- **Ringkasan**: Permukaan total variansi implisit SSVI Gatheral–Jacquier bebas-arbitrase, volatilitas lokal Dupire analitik, dua solver PDE independen (backward di $x=\ln S$ dan forward Dupire di $K$), Monte Carlo log-Euler, opsi barrier Down-and-Out (Reiner–Rubinstein, PDE, MC jembatan Brownian), Greeks & diagnosis lapisan batas gamma di $S_0$, vega-bucket, serta kalibrasi balik Levenberg–Marquardt ($R=50$).
+- **ID Progress**: `day003a` (Hari 3, Sesi a — Sesi Tantangan Berat Python)
+- **Tanggal**: 2026-11-21 (WITA) · **Topik No**: `null` (*off-roadmap*) · **Jenis**: `quant` · **Bahasa**: Python
+- **Notebook**: [days/day003a_quant_volatilitas-lokal-dupire-ssvi.ipynb](../../days/day003a_quant_volatilitas-lokal-dupire-ssvi.ipynb)
+- **Paket & Output**: [src/qb100/day003a_local_vol/__init__.py](../../src/qb100/day003a_local_vol/__init__.py), [outputs/day003a/results.json](../../outputs/day003a/results.json)
+- **Ringkasan**: Pipeline volatilitas lokal Dupire berbasis permukaan *Surface SVI* (Gatheral & Jacquier 2014) yang bebas arbitrase statis: turunan analitik *butterfly* & *calendar*, konversi analitik ke varians lokal Dupire $\sigma_{\text{loc}}^2(K, T)$, dua solver PDE independen (Crank–Nicolson *backward* di $S$ dan Dupire *forward* di $K$), Monte Carlo Euler dengan diagnosis penyusutan bias *weak-order* 1, opsi *barrier down-and-out*, Greeks + diagnosis lapisan batas Gamma SSVI di sudut $(S_0=100, t\to 0)$, serta kalibrasi balik Levenberg–Marquardt beserta 50 replikasi Monte Carlo.
 
 ## 2. Masalah dan Tujuan
-Bagaimana membangun permukaan *implied volatility* parametrik SSVI yang bebas dari arbitrase kupu-kupu dan kalender, menurunkan volatilitas lokal Dupire $\sigma_{\text{loc}}(S,t)$ secara analitik, dan memverifikasi bahwa dua solver PDE independen (backward di spot dan forward di strike) serta simulasi Monte Carlo menghasilkan harga Eropa, opsi barrier, dan sensitivitas yang konsisten?
+Menginterpolasi *implied volatility* pasar secara naif dapat memicu kepadatan probabilitas risiko-netral negatif (*butterfly arbitrage*) atau varians total menurun terhadap waktu (*calendar arbitrage*), yang menyebabkan varians lokal Dupire menjadi negatif sehingga solver PDE dan Monte Carlo meledak. Sebaliknya, parametrisasi SSVI (Gatheral & Jacquier 2014) menjamin bebas arbitrase secara analitik melalui Teorema 4.2, memungkinkan penurunan rumus tertutup $\sigma_{\text{loc}}^2(K, T)$. Namun, ketika $\sigma_{\text{loc}}$ digunakan pada berbagai mesin numerik (PDE *backward*, PDE *forward*, MC Euler, opsi *barrier*, dan Greeks), muncul tantangan konsistensi numerik — termasuk bias diskretisasi waktu $O(\Delta t)$ pada MC Euler dan sensitivitas sudut $(S_0 = K, t \to 0)$ pada Gamma PDE SSVI. Tujuan proyek `day003a` adalah membangun sistem *end-to-end* yang memverifikasi seluruh komponen secara kuantitatif dan melaporkan secara jujur batasan numerik yang ditemukan.
 
 ## 3. Apa yang Dikerjakan Proyek
-Paket `src/qb100/day003a_local_vol/` dan notebook `day003` menjalankan seluruh pipeline Bagian 1–4 beserta diagnosis tambahan dari sesi `day003c` (Bagian A1: diagnosis gamma SSVI di sudut singular $S_0$ dan tabel penyusutan bias Euler MC terhadap jumlah langkah), lalu menyimpan [outputs/day003a/results.json](../../outputs/day003a/results.json) dan 7 grafik PNG.
+Paket [src/qb100/day003a_local_vol/](../../src/qb100/day003a_local_vol/__init__.py) (13 modul Python) dan notebook [day003a](../../days/day003a_quant_volatilitas-lokal-dupire-ssvi.ipynb) (dieksekusi lewat `runner.py` dalam `54.73 detik`) menjalankan empat bagian terintegrasi ke [outputs/day003a/results.json](../../outputs/day003a/results.json):
+1. **Bagian 1 — SSVI & Bebas Arbitrase (`ssvi.py`)**: verifikasi turunan analitik $(\partial_y w, \partial_{yy} w, \partial_T w)$ terhadap beda hingga, fungsi kepadatan *butterfly* $g(y, T)$ & *calendar* $\partial_T w$, syarat cukup Teorema 4.2 Gatheral–Jacquier, uji kontrafaktual parameter melanggar arbitrase, serta monotonisitas dan konveksitas harga call.
+2. **Bagian 2 — Volatilitas Lokal Dupire (`dupire.py`)**: verifikasi batas datar $\eta \to 0$ dan konsistensi rumus analitik $\sigma_{\text{loc}}^2(K, T)$ terhadap turunan *finite-difference* orde-4 pada grid $(T, m)$.
+3. **Bagian 3 — Dua PDE & Monte Carlo (`pde_backward.py`, `pde_forward.py`, `mc.py`)**: uji konvergensi orde-2 pada volatilitas datar, verifikasi ekuivalensi grid IV $(5 \times 4)$ antara PDE *backward* ($S$) dan PDE *forward* ($K$) di bawah SSVI, simulasi MC Euler (`200` langkah/tahun) plus diagnosis *weak-order* (`25..200` langkah) dan penyusutan bias CRN (`50..400` langkah).
+4. **Bagian 4 — Barrier, Greeks & Kalibrasi Balik (`barrier.py`, `greeks.py`, `calibration.py`)**: verifikasi opsi *down-and-out* (Reiner–Rubinstein analitik vs PDE *absorbing* vs MC *Brownian bridge*), Greeks datar & diagnosis khusus Gamma SSVI di sudut $S_0 = 100$ vs titik luar-sudut $\{90, 95, 105, 110\}$, *vega-bucket*, dan kalibrasi Levenberg–Marquardt (fit tunggal + 50 replikasi).
 
 ## 4. Uraian Kode
-- [src/qb100/day003a_local_vol/ssvi.py](../../src/qb100/day003a_local_vol/ssvi.py) & [dupire.py](../../src/qb100/day003a_local_vol/dupire.py): rumus SSVI, turunan analitik $\partial_y w, \partial_{yy} w, \partial_T w$, fungsi densitas $g(y,T)$, uji Gatheral–Jacquier, rumus Dupire analitik, dan pembanding FD orde-4.
-- [src/qb100/day003a_local_vol/grids.py](../../src/qb100/day003a_local_vol/grids.py), [pde_backward.py](../../src/qb100/day003a_local_vol/pde_backward.py), [pde_forward.py](../../src/qb100/day003a_local_vol/pde_forward.py): generator grid `sinh`, skema Crank–Nicolson + 4 langkah Rannacher, opsi `x_bounds` tetap, dan cell-averaging kink.
-- [src/qb100/day003a_local_vol/mc.py](../../src/qb100/day003a_local_vol/mc.py) & [barrier.py](../../src/qb100/day003a_local_vol/barrier.py): MC log-Euler antitetik PCG64, uji weak order CRN, rumus Reiner–Rubinstein, PDE barrier absorbing, dan MC jembatan Brownian.
-- [src/qb100/day003a_local_vol/greeks.py](../../src/qb100/day003a_local_vol/greeks.py) & [calibration.py](../../src/qb100/day003a_local_vol/calibration.py): `pde_delta_gamma` (dengan grid tetap untuk FD), `gamma_diagnosis_ssvi`, `vega_bucket_analysis`, dan optimizer Levenberg–Marquardt buatan sendiri.
-- [tests/test_day003a_ssvi_dupire.py](../../tests/test_day003a_ssvi_dupire.py), [test_day003a_pde.py](../../tests/test_day003a_pde.py), [test_day003a_mc_barrier.py](../../tests/test_day003a_mc_barrier.py), [test_day003a_greeks_calib.py](../../tests/test_day003a_greeks_calib.py): 17 unit test pytest.
+- [ssvi.py](../../src/qb100/day003a_local_vol/ssvi.py): parametrisasi SSVI $(\rho, \eta, \gamma, \theta_T)$, turunan parsial analitik, kepadatan *butterfly* $g(y, T)$, dan verifikasi Teorema 4.2.
+- [dupire.py](../../src/qb100/day003a_local_vol/dupire.py): rumus volatilitas lokal Dupire analitik dalam koordinat log-moneyness $y$ dan verifikator FD orde-4.
+- [pde_backward.py](../../src/qb100/day003a_local_vol/pde_backward.py) & [pde_forward.py](../../src/qb100/day003a_local_vol/pde_forward.py): dua solver Crank–Nicolson independen — *backward* dalam $S$ untuk satu kontrak, dan *forward* Dupire dalam $K$ untuk seluruh permukaan call sekaligus.
+- [mc.py](../../src/qb100/day003a_local_vol/mc.py): simulator Monte Carlo Euler dengan *Brownian bridge* untuk *barrier*, studi *weak order*, dan *CRN bias check*.
+- [barrier.py](../../src/qb100/day003a_local_vol/barrier.py) & [greeks.py](../../src/qb100/day003a_local_vol/greeks.py): rumus tertutup Reiner–Rubinstein, ekstraksi Delta/Gamma dari grid & *bump* FD, *vega-bucket*, serta diagnosis konvergensi Gamma di $(S_0=100, t_{\min})$.
+- [calibration.py](../../src/qb100/day003a_local_vol/calibration.py): kalibrator Levenberg–Marquardt 8 parameter $(\rho, \eta, \gamma, \theta_1..\theta_5)$ dan studi 50 replikasi *noisy*.
+- [bs.py](../../src/qb100/day003a_local_vol/bs.py), [grids.py](../../src/qb100/day003a_local_vol/grids.py), [plotting.py](../../src/qb100/day003a_local_vol/plotting.py), [runner.py](../../src/qb100/day003a_local_vol/runner.py): utilitas Black–Scholes, konstruktor grid non-seragam, visualisasi 7 grafik PNG, dan orkestrator.
 
 ## 5. Metode dan Alur Kerja
-Verifikasi turunan analitik SSVI & kondisi bebas-arbitrase $\to$ evaluasi $\sigma_{\text{loc}}^2(y,T) = (\partial_T w)/g(y,T)$ & anchor $\eta\to 0$ / FD4 $\to$ penyelesaian PDE backward & forward pada kasus datar dan SSVI ($5\times 4$ grid) $\to$ simulasi MC Euler & barrier $\to$ ekstraksi Greeks, diagnosis gamma di $S_0$, vega-bucket, dan kalibrasi balik LM $R=50$.
+Pipeline `day003a` menghubungkan permukaan volatilitas tersirat analitik ke dua solver PDE deterministik, simulasi stokastik, dan inversi kalibrasi:
+
+```mermaid
+flowchart LR
+    A["ssvi.py (Bebas Arbitrase)"] --> B["dupire.py (sigma_loc Analitik)"]
+    B --> C["pde_backward.py (Grid S)"]
+    B --> D["pde_forward.py (Grid K)"]
+    B --> E["mc.py (Euler + Brownian Bridge)"]
+    C & D & E --> F["Cross-Check IV (5x4), Barrier & Greeks"]
+    A --> G["calibration.py (LM + 50 Replikasi)"]
+```
+
+Setiap komponen diuji terhadap referensi analitik (volatilitas datar / Reiner–Rubinstein / SSVI tertutup) sebelum dihadapkan pada permukaan SSVI penuh. Khusus untuk ketidaksesuaian Gamma PDE di $S_0 = 100$, `greeks.py` menjalankan studi diagnostik terstruktur: menyapu resolusi grid hingga $(2401 \times 1600)$, memvariasikan lebar *bump* $h \in \{0.05, 0.5, 1.0\}$, menguji titik luar-sudut $S_0 \in \{90, 95, 105, 110\}$, menguji batas potong waktu awal $t_{\min} \in \{10^{-3}, 10^{-4}, 10^{-5}, 10^{-6}\}$, dan mengecek Gamma terhadap strike $C_{KK}$ dari solver *forward*.
 
 ## 6. Output yang Ditargetkan
-Turunan analitik vs FD `< 1e-6`; $g > 0, \partial_T w > 0$ dan kontrafaktual $g < 0$; anchor $\eta\to 0$ `< 1e-12` dan Dupire FD4 `< 1e-4`; orde PDE datar $\approx 2$; galat IV PDE SSVI `< 2 bp` dan selisih harga antar-solver `< 1e-5`; MC Euler & barrier dalam 3 SE; barrier flat PDE vs RR `< 1e-5`; Greeks datar `< 1e-5` (delta) dan `< 1e-4` (gamma); vega-bucket konsisten `< 1e-3`; kalibrasi LM tak-bias.
+1. Turunan analitik SSVI cocok dengan FD (`< 1e-5`), `min_g > 0`, `min_dw_dT > 0`, syarat Teorema 4.2 terpenuhi, dan uji kontrafaktual mendeteksi `min_g < 0`.
+2. `dupire_fd4_max_rel_err < 1e-4` dan `eta_zero_max_abs_err = 0.0`.
+3. Kedua solver PDE berkonvergensi orde-2 pada volatilitas datar (`slope ~ -2.0`), galat IV pada grid $5 \times 4$ `< 0.5 bp`, dan selisih harga antar-PDE `< 1e-5`.
+4. MC Euler menyusutkan bias dengan *weak order* `~ -1.0`; opsi *barrier* SSVI antara PDE dan MC *Brownian bridge* cocok dalam `3 SE`.
+5. Kalibrasi balik LM memulihkan parameter dengan RMS vol `< 1e-3` dan bias replikasi terkendali.
 
 ## 7. Status Pencapaian
 
 | Tujuan / Kriteria | Status | Bukti Spesifik (Artefak & Verifikasi) |
 |---|---|---|
-| Turunan analitik SSVI, bebas-arbitrase & uji kontrafaktual | `tercapai` | `dw_dy = 9.03e-7`, `d2w_dy2 = 5.87e-7`, `dw_dT = 1.92e-9`; `min_g = 0.2605`, `min_dw_dT = 0.01767`; kontrafaktual `min_g = -1.475 < 0` |
-| Anchor Dupire $\eta\to 0$ & konsistensi FD orde-4 | `tercapai` | `eta_zero_max_abs_err = 0.0`, `dupire_fd4_max_rel_err = 2.13e-9 < 1e-4` |
-| Konvergensi PDE datar & ekuivalensi 2 solver pada SSVI | `tercapai` | Slope datar backward `-2.0002`, forward `-1.9519`; maks galat IV SSVI `0.127 bp` (bwd) dan `0.119 bp` (fwd); maks selisih harga antar-solver `9.55e-6 < 1e-5` |
-| MC Euler, Weak Order & Diagnosis Penyusutan Bias (A1) | `tercapai` | Run utama 200 langkah/thn `max z = 2.344 < 3`, weak order slope `-0.9846`; diagnosis CRN 50/100/200/400 langkah membuktikan bias positif menyusut monoton (mis. ATM `0.1057 -> 0.0573 -> 0.0310 -> 0.0181`) |
-| Opsi Barrier (Reiner–Rubinstein, PDE absorbing, MC Brownian Bridge) | `tercapai` | Flat `|PDE - RR| = 6.01e-6 < 1e-5`, paritas `0.0`; SSVI PDE vs MC bridge `z = 0.299 < 3` |
-| Greeks datar, Diagnosis Gamma SSVI (A1) & Vega-Bucket | `tercapai` | Flat delta err `1.72e-6`, gamma err `2.17e-7`; di luar sudut ($S_0=90,95,105,110$) gamma grid vs FD cocok `~1e-4` relatif; di sudut $S_0=100$ terdiagnosis lapisan batas $t\to 0$; vega-bucket `rel_diff = 1.67e-5 < 1e-3` |
-| Kalibrasi balik Levenberg–Marquardt & studi $R=50$ | `tercapai` | Single-fit RMS vol `3.71e-4` (10 iterasi), $R=50$ mean RMS `4.42e-4`, maks `|bias/SD| = 0.266` |
-| Eksekusi Notebook (`run_all.py`) & Unit Test (`pytest -q`) | `tercapai` | `run_all.py --day 3 --inplace` (`1/1 lulus`, 56.1s) dan `pytest -q` dijalankan pada sesi `day003c`: lulus 100% |
+| Turunan analitik SSVI, bebas-arbitrase & kontrafaktual | `tercapai` | `dw_dy = 9.03e-7`, `d2w_dy2 = 5.87e-7`, `dw_dT = 1.92e-9`; `min_g = 0.2605 > 0`, `min_dw_dT = 0.01767 > 0`; `theorem_4_2_satisfied = 1`; kontrafaktual `min_g = -1.475 < 0` |
+| Anchor Dupire $\eta\to 0$ & FD orde-4 | `tercapai` | `eta_zero_max_abs_err = 0.0`, `dupire_fd4_max_rel_err = 2.126e-9 < 1e-4` |
+| Konvergensi PDE datar & ekuivalensi 2 solver SSVI | `tercapai` | Slope datar `backward = -2.0002`, `forward = -1.9519`; maks galat IV SSVI `0.1269 bp` (bwd) dan `0.1191 bp` (fwd) di [outputs/day003a/results.json](../../outputs/day003a/results.json) |
+| MC Euler (`200` langkah), *weak order* & bias | `tercapai` | *Weak order* slope `-0.9846` (pada $K=121.21$, galat menyusut `0.1466 -> 0.0189` dari `25` ke `200` langkah); *barrier* SSVI PDE `7.808602` vs MC bridge `7.812314 ± 0.012421` (`z = 0.299`) |
+| Opsi Barrier Datar & Greeks Datar | `tercapai` | `flat_pde_vs_rr_err = 6.006e-6`, `flat_rr_parity_err = 0.0`; Greeks datar `delta_grid_err = 1.718e-6`, `gamma_grid_err = 2.172e-7` |
+| Gamma SSVI (Luar-sudut vs Sudut $S_0 = 100$) | `sebagian` | **Luar-sudut** ($S_0 \in \{90, 95, 105, 110\}$): `rel_diff = 7.10e-5 .. 2.69e-4`; *forward* `C_KK = 0.01673769` vs analitik `0.01673763`. **Di sudut $S_0 = 100$**: `gamma_grid = 0.038032` vs `gamma_fd = 0.023404` (`h=0.05`) / `0.042338` (`h=0.5`) dan berubah tajam terhadap `t_min` (`0.0289 -> 0.0640` saat `t_min: 1e-3 -> 1e-6`) |
+| Kalibrasi balik LM & studi $R=50$ + Notebook & `pytest` | `tercapai` | `single_fit_rms_vol = 3.709e-4` (`10` iterasi); `run_all.py --day 3 --inplace` (`1/1 lulus`, `57.0s`); `pytest -q` lulus `100%` |
+
+Visualisasi hasil tersimpan pada:
+- [day003a_ssvi-implied-vol-and-local-vol.png](../../outputs/figures/day003a_ssvi-implied-vol-and-local-vol.png)
+- [day003a_butterfly-density-g.png](../../outputs/figures/day003a_butterfly-density-g.png)
+- [day003a_pde-convergence.png](../../outputs/figures/day003a_pde-convergence.png)
+- [day003a_iv-errors-5x4.png](../../outputs/figures/day003a_iv-errors-5x4.png)
+- [day003a_mc-vs-pde-and-weak-order.png](../../outputs/figures/day003a_mc-vs-pde-and-weak-order.png)
+- [day003a_barrier-and-vega-bucket.png](../../outputs/figures/day003a_barrier-and-vega-bucket.png)
+- [day003a_calibration-mc-dist.png](../../outputs/figures/day003a_calibration-mc-dist.png)
 
 ## 8. Jika Belum Tercapai atau Belum Diketahui (Fakta vs Hipotesis)
-Diagnosis jujur untuk dua temuan dari Bagian A1:
-- **Gamma SSVI di $S_0 = 100$ (FAKTA TERUKUR vs HIPOTESIS)**:
-  - **FAKTA**: Pada $S_0 = 100$, gamma grid (`0.03803` pada $601\times 400$; `0.03682` pada $2401\times 1600$) berbeda dari beda hingga harga (`0.02340` pada $h=0.05$; `0.04293` pada $h=0.5$).
-  - **FAKTA**: Hipotesis bahwa pergeseran grid saat $S_0$ di-bump yang menyebabkan selisih telah **dikesampingkan**: dengan `x_bounds` tetap (`pde_delta_gamma` yang telah diperbarui), beda hingga harga memberikan angka yang hampir identik (`0.02340` pada $h=0.05$).
-  - **FAKTA**: Di titik spot di luar pusat koordinat SSVI ($S_0 \in \{90, 95, 105, 110\}$), gamma grid dan beda hingga harga cocok sangat rapat (selisih relatif $4\times 10^{-5}$ hingga $2.3\times 10^{-4}$). Demikian pula gamma *strike* $C_{KK}(K=100)$ dari solver forward (`0.016738`) cocok dengan turunan analitik SSVI (`0.016762`).
-  - **FAKTA**: Di $S_0 = 100$ tepat, gamma sensitif terhadap pemotongan waktu dekat nol `t_min` di `dupire_local_vol_from_spot`: untuk `t_min` $\in \{10^{-3}, 10^{-4}, 10^{-5}, 10^{-6}\}$, gamma grid berubah drastis `0.02887 -> 0.03692 -> 0.05099 -> 0.06401` (sementara harga hanya berubah `< 5e-4`).
-  - **Penjelasan & HIPOTESIS**: Dalam model lokal-vol yang diturunkan dari permukaan SSVI berpusat di $S_0 = 100$, $y = \ln(S/F(t))$ dikalikan dengan $\varphi(\theta(t)) \sim \theta(t)^{-\gamma} \to \infty$ saat $t \to 0$. Ini menciptakan lapisan batas (*boundary layer*) selebar $|S - S_0| \sim O(\sqrt{t})$ di sekitar $(S_0, t=0)$ di mana kelengkungan $\partial_{SS} V(S, 0)$ menjadi singular bila `t_min` $\to 0$.
-- **Bias Positif MC Euler (FAKTA TERUKUR)**:
-  - **FAKTA**: Kelima z-score MC Euler pada 200 langkah/tahun bernilai positif (`+1.01` hingga `+2.34`). Uji CRN pada `{50, 100, 200, 400}` langkah/tahun di `mc_euler_bias_vs_steps` membuktikan bahwa ini adalah bias diskretisasi Euler orde-1 yang menyusut hampir separuh setiap kali langkah digandakan (misalnya di $K/F=1.0$: `+0.1057 -> +0.0573 -> +0.0310 -> +0.0181`).
+**FAKTA**: Dari `part4.greeks.ssvi_gamma_diagnosis` di [outputs/day003a/results.json](../../outputs/day003a/results.json), solver PDE SSVI menghasilkan harga dan Gamma yang konsisten secara numerik di titik luar-sudut $S_0 \in \{90, 95, 105, 110\}$ (`rel_diff` $7.1 \times 10^{-5}$ hingga $2.7 \times 10^{-4}$), dan Gamma terhadap *strike* pada PDE *forward* (`0.01673769`) cocok dengan turunan analitik SSVI (`0.01673763`). Namun tepat di $S_0 = K = 100$, `gamma_grid` (`0.038032`) dan `gamma_fd` (`0.023404` pada `h=0.05`; `0.042338` pada `h=0.5`) tidak menyatu bahkan ketika grid diperhalus hingga `2401 x 1600` (`0.036818` vs `0.042933`), sementara harga relatif stabil (`9.2849 -> 9.2854`) tetapi `gamma_grid` bergeser drastis seiring perubahan `t_min` (`0.02887` di `t_min=1e-3`, `0.03692` di `1e-4`, `0.05099` di `1e-5`, `0.06401` di `1e-6`). Karena itu kriteria Gamma SSVI di $S_0=100$ berstatus `sebagian`.
+
+**HIPOTESIS**: Divergensi lokal Gamma di $(S_0 = K, t \to 0)$ disebabkan oleh lapisan batas (*boundary layer*) berlebar $O(\sqrt{t})$ pada suku singular SSVI: dalam parametrisasi *power-law* $\varphi(\theta) = \eta / (\theta^\gamma (1+\theta)^{1-\gamma})$, saat $t \to 0$ maka $\theta_t \to 0$ dan $\varphi(\theta_t) \to \infty$, membuat volatilitas lokal Dupire $\sigma_{\text{loc}}(S, t)$ sangat curam tepat di sekitar *kink payoff* $(S - K)^+$ pada $t \approx 0$ sehingga *bump* spot $S_0 \pm h$ berinteraksi secara non-linear dengan lapisan batas tersebut sebelum difusi meratakan solusi.
 
 ## 9. Landasan Teori (Minimal 10 Poin)
-1. **Parametrisasi Total Variansi SSVI (Gatheral–Jacquier 2014)**: $w(y,\theta) = \frac{\theta}{2}(1 + \rho\varphi(\theta)y + \sqrt{(\varphi(\theta)y+\rho)^2 + 1-\rho^2})$ dengan fungsi power-law $\varphi(\theta) = \eta/(\theta^\gamma(1+\theta)^{1-\gamma})$.
-2. **Fungsi Densitas Kupu-Kupu Gatheral $g(y,T)$**: $g(y,T) = (1 - \frac{y w_y}{2w})^2 - \frac{w_y^2}{4}(\frac{1}{w}+\frac{1}{4}) + \frac{w_{yy}}{2} \ge 0$ menjamin kepositifan densitas risiko-netral $\partial_{KK} C(K,T) \ge 0$ (`ssvi.py`).
-3. **Bebas-Arbitrase Kalender & Syarat Cukup Gatheral–Jacquier**: $\partial_T w(y,T)|_y \ge 0$ bersama $\theta\varphi(\theta)(1+|\rho|) \le 4$ dan $\theta\varphi(\theta)^2(1+|\rho|) \le 4$ menjamin permukaan bebas arbitrase statis.
-4. **Rumus Volatilitas Lokal Dupire (1994) dalam Koordinat Total Variansi**: $\sigma_{\text{loc}}^2(y,T) = \frac{\partial_T w(y,T)}{g(y,T)}$ menghilangkan ketergantungan eksplisit pada $(r-q)$ karena pembatalan suku drift forward (`dupire.py`).
-5. **Dualitas PDE Backward Kolmogorov vs Forward Fokker–Planck / Dupire**: Solver backward menilai satu kontrak $(K,T)$ sebagai fungsi $(S,t)$, sedangkan solver forward Dupire $\partial_T C = \frac{1}{2}\sigma_{\text{loc}}^2 K^2 C_{KK} - (r-q)K C_K - q C$ menghasilkan seluruh permukaan $(K,T)$ dalam satu sapuan dari $C(K,0)=(S_0-K)_+$.
-6. **Transformasi Grid Hiperbolik `sinh` & Peredaman Rannacher (1984)**: Pemetaan `sinh` memusatkan simpul di sekitar kink $K$, sementara 4 half-step implisit penuh di awal meredam osilasi frekuensi tinggi Crank–Nicolson akibat ketidakhalusan turunan pertama payoff.
-7. **Koreksi Jembatan Brownian untuk Opsi Barrier Diskrit**: Peluang kondisional bahwa proses difusi lokal beku yang berada di $X_k, X_{k+1} > \ln H$ telah menembus $\ln H$ di dalam interval $\Delta t$ adalah $\exp(-2(X_k-\ln H)(X_{k+1}-\ln H)/(\sigma_k^2\Delta t))$ (`barrier.py`).
-8. **Rumus Tertutup Barrier Reiner–Rubinstein (1991) & Prinsip Refleksi**: Mengkombinasikan suku Black–Scholes langsung dan bayangan terpantul $(H/S_0)^{2\mu}$ untuk memenuhi syarat batas menyerap $V(H,t)=0$ dan paritas $C_{\text{DO}} + C_{\text{DI}} = C_{\text{vanilla}}$.
-9. **Dekomposisi Sensitivitas Vega-Bucket vs Pergeseran Paralel**: Oleh kelinearan variasi pertama operator PDE terhadap kurva $\theta(t)$ sepotong-linear, jumlah sensitivitas empat fungsi topi $\sum_i \partial C/\partial \theta_i$ sama dengan sensitivitas pergeseran paralel hingga galat $O(\delta)$ (`greeks.py`).
-10. **Algoritma Levenberg–Marquardt dengan Jacobian Analitik**: Interpolasi adaptif $(J^T J + \lambda \operatorname{diag}(J^T J))\Delta\beta = -J^T r$ antara Gauss–Newton dan penurunan gradien dengan matriks kovarians asimtotik $(J^T J)^{-1}\hat{\sigma}^2$ (`calibration.py`).
+1. **Parametrisasi Surface SSVI (Gatheral & Jacquier 2014)**: Total varians tersirat ditulis $w(y, \theta_t) = \frac{\theta_t}{2}\left\{1 + \rho\varphi(\theta_t)y + \sqrt{(\varphi(\theta_t)y + \rho)^2 + 1 - \rho^2}\right\}$ dengan $\theta_t = \sigma_{\text{ATM}}^2(t) t$ dan kurva *power-law* $\varphi(\theta) = \eta \theta^{-\gamma}(1+\theta)^{\gamma - 1}$ (`ssvi.py`). Struktur ini menjaga kelengkungan *smile* konsisten di seluruh maturitas dengan jumlah parameter minimal.
+2. **Syarat Bebas Arbitrase Statis (Butterfly & Calendar)**: Bebas arbitrase *calendar* menuntut $\partial_T w(y, T) \ge 0$, sedangkan bebas arbitrase *butterfly* menuntut kepadatan $g(y) = (1 - \frac{y w'}{2w})^2 - \frac{(w')^2}{4}(\frac{1}{w} + \frac{1}{4}) + \frac{w''}{2} \ge 0$. Teorema 4.2 Gatheral–Jacquier memberi syarat cukup analitik $\theta\varphi(\theta)(1+|\rho|) < 4$ dan $\theta\varphi(\theta)^2(1+|\rho|) \le 4$ (`theorem_4_2_satisfied = 1`).
+3. **Rumus Volatilitas Lokal Dupire (1994) dalam Log-Moneyness**: Dinyatakan dalam $w(y, T)$, varians lokal eksak adalah $\sigma_{\text{loc}}^2(K, T) = \frac{\partial_T w}{g(y, T)}$ (`dupire.py`). Penyebut $g(y, T) > 0$ menjamin $\sigma_{\text{loc}}^2 > 0$ di seluruh domain, terverifikasi hingga `2.126e-9` terhadap turunan FD orde-4.
+4. **PDE Backward Kolmogorov (Grid Spot $S$)**: `pde_backward.py` menyelesaikan $\partial_t V + \frac{1}{2}\sigma_{\text{loc}}^2(S, t) S^2 \partial_{SS} V + r S \partial_S V - r V = 0$ mundur dari $t = T$ ke $0$ menggunakan skema Crank–Nicolson pada grid non-seragam yang terkonsentrasi di sekitar *strike* $K=100$, menghasilkan konvergensi spasial-temporal orde-2 (`slope = -2.0002`).
+5. **PDE Forward Dupire (Grid Strike $K$)**: Secara dual, `pde_forward.py` menyelesaikan $\partial_T C - \frac{1}{2}\sigma_{\text{loc}}^2(K, T) K^2 \partial_{KK} C + r K \partial_K C = 0$ maju dari $T = 0$ ke $T_{\max}$. Satu kali eksekusi menghasilkan harga seluruh *strike* dan maturitas sekaligus, dan kesesuaian dengan PDE *backward* (`max IV err <= 0.127 bp`) menjadi uji silang independen yang kuat.
+6. **Monte Carlo Euler & Orde Konvergensi Lemah**: Skema log-Euler $d\ln S_t = (r - \frac{1}{2}\sigma_{\text{loc}}^2(S_t, t))\,dt + \sigma_{\text{loc}}(S_t, t)\,dW_t$ memiliki *weak order* $O(\Delta t)$ (`slope = -0.9846` di `mc.py`). Simulasi CRN dari `50` ke `400` langkah mengonfirmasi penyusutan bias diskretisasi secara monoton.
+7. **Koreksi Brownian Bridge untuk Opsi Barrier Kontinu**: Pada pemantauan diskrit, lintasan MC dapat melompati penghalang $H$ di antara langkah $t_k$ dan $t_{k+1}$ tanpa terdeteksi, menimbulkan bias atas. Dengan menggunakan peluang lintas-penghalang bersyarat $P(\min_{s \in [t_k, t_{k+1}]} S_s \le H \mid S_{t_k}, S_{t_{k+1}}) = \exp\left(-\frac{2\ln(S_{t_k}/H)\ln(S_{t_{k+1}}/H)}{\sigma_{\text{loc}}^2 \Delta t}\right)$, MC SSVI cocok dengan PDE *absorbing* (`7.8123 ± 0.0124` vs `7.8086`, `z = 0.299`).
+8. **Lapisan Batas (Boundary Layer) di $(S_0 = K, t \to 0)$**: Pada volatilitas lokal SSVI, singularitas $\varphi(\theta_t) \sim t^{-\gamma}$ saat $t \to 0$ berinteraksi dengan kondisi awal non-mulus $(S - K)^+$. Meskipun integral harga $V(0, S_0)$ konvergen baik (`~9.285`), turunan kedua $\partial_{SS} V$ di titik sudut $S_0 = K$ sensitif terhadap pemotongan `t_min` dan lebar *bump* `fd_bump`.
+9. **Sensitivitas Vega-Bucket & Perturbasi Permukaan**: Untuk mengukur risiko perubahan kurva ATM $\theta_t$, `greeks.py` menggeser setiap simpul waktu $\theta_j$ secara terpisah pada permukaan SSVI lalu mengevaluasi ulang PDE *backward*, memverifikasi konsistensi jumlah *bucket* terhadap pergeseran paralel (`rel_diff = 1.67e-5`).
+10. **Kalibrasi Balik Levenberg–Marquardt & Identifiabilitas**: `calibration.py` mencocokkan 8 parameter SSVI terhadap permukaan IV dengan `single_fit_rms_vol = 3.709e-4` dalam 10 iterasi, sementara 50 replikasi *noisy* memastikan estimator tak-bias (`max |bias/SD| = 0.266`).
 
 ## 10. Kesimpulan dan Batasan
-Proyek `day003` (`3a`) membangun dan mengaudit secara menyeluruh koherensi antara permukaan SSVI, rumus Dupire, dua solver PDE independen, simulasi Monte Carlo, dan diagnosis singularitas lapisan batas gamma di $S_0$.
+Proyek `day003a` membuktikan konsistensi tinggi antara formulasi SSVI analitik, volatilitas lokal Dupire, dua solver PDE independen (`<= 0.127 bp`), MC Euler *Brownian bridge* (`z = 0.299`), dan kalibrasi balik LM (`3.7e-4` RMS vol). Batasan yang terdokumentasi secara terbuka adalah sensitivitas Gamma SSVI di titik sudut $(S_0=K, t_{\min} \to 0)$ yang belum terselesaikan menjadi angka tunggal independen-`t_min` (`status: sebagian`), serta asumsi suku bunga deterministik konstan tanpa dividen diskrit.
 
 ## 11. Referensi dan Jejak Bukti
 - Gatheral, J., & Jacquier, A. (2014). *Arbitrage-free SVI volatility surfaces*. Quantitative Finance, 14(1), 59–71.
 - Dupire, B. (1994). *Pricing with a smile*. Risk, 7(1), 18–20.
 - Reiner, E., & Rubinstein, M. (1991). *Breaking down the barriers*. Risk, 4(8), 28–35.
-- Artefak: [days/day003_quant_volatilitas-lokal-dupire-ssvi.ipynb](../../days/day003_quant_volatilitas-lokal-dupire-ssvi.ipynb), [outputs/day003a/results.json](../../outputs/day003a/results.json).
+- Artefak: [day003a_quant_volatilitas-lokal-dupire-ssvi.ipynb](../../days/day003a_quant_volatilitas-lokal-dupire-ssvi.ipynb), [src/qb100/day003a_local_vol/__init__.py](../../src/qb100/day003a_local_vol/__init__.py), [outputs/day003a/results.json](../../outputs/day003a/results.json).

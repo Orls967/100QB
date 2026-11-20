@@ -1,58 +1,87 @@
-# Penjelasan Proyek — day002f: Inferensi Bayesian State-Space — Kalman, Particle Filter & PMMH (Rust)
+# Penjelasan Proyek — day002f: Model State-Space, Particle Filter & PMMH (Rust)
 
 ## 1. Identitas dan Ringkasan Proyek
 - **ID Progress**: `day002f` (Hari 2, Sesi f)
-- **Tanggal**: 2026-11-20 (WITA) · **Topik No**: `bonus` · **Jenis**: `quant` · **Bahasa**: Rust (`rust`)
-- **Folder Proyek**: [projects/rust/day002f_state_space_pmmh](../../rust/day002f_state_space_pmmh) · **Metadata**: [meta.json](../../rust/day002f_state_space_pmmh/meta.json)
-- **Ringkasan**: Inferensi Bayesian model ruang-keadaan linear-Gaussian (Model A) dan volatilitas stokastik non-linear (Model B) menggunakan Kalman Filter eksak, Bootstrap Particle Filter (systematic resampling), kuadratur grid, Metropolis–Hastings, serta Particle Marginal Metropolis–Hastings (PMMH) dengan diagnostik split-$\hat{R}$, ESS Geyer, dan MCSE.
+- **Tanggal**: 2026-11-20 (WITA) · **Topik No**: `bonus` · **Jenis**: `quant` · **Bahasa**: Rust
+- **Proyek**: [projects/rust/day002f_state_space_pmmh/](../../projects/rust/day002f_state_space_pmmh/README.md)
+- **Output JSON**: [outputs/day002f/results.json](../../outputs/day002f/results.json)
+- **Ringkasan**: Inferensi Bayesian pada model *state-space* linear dan non-linear (Model A: Gaussian AR(1) vs Model B: *Stochastic Volatility* Taylor dengan $\sigma_t = \beta \exp(x_t/2)$) menggunakan *Kalman Filter* eksak, *Bootstrap Particle Filter* (*systematic resampling*), integrasi deterministik *grid*, *Metropolis–Hastings*, serta *Particle Marginal Metropolis–Hastings* (PMMH) paralel di Rust tanpa dependensi eksternal.
 
 ## 2. Masalah dan Tujuan
-Pada model ruang-keadaan non-linear seperti volatilitas stokastik ($y_t = \exp(x_t/2)\varepsilon_t$), likelihood marginal $p(y_{1:T}|\theta)$ tidak memiliki bentuk tertutup. Proyek ini membuktikan ketakbiasan estimator likelihood *bootstrap particle filter* $\hat{Z}$ terhadap Kalman filter eksak pada Model A, lalu memasukkannya ke dalam skema pseudo-marginal PMMH (Andrieu–Doucet–Holenstein 2010) untuk mengambil sampel posterior eksak pada Model A dan Model B.
+Model deret waktu keuangan sering melibatkan variabel laten $x_t$ yang berevolusi secara Markovian, seperti volatilitas logaritmik stokastik pada Model B ($y_t = \beta \exp(x_t / 2)\varepsilon_t$). Karena distribusi observasi bersifat non-linear dan non-Gaussian terhadap $x_t$, likelihood marginal $p(y_{1:T} \mid \theta) = \int p(y_{1:T} \mid x_{1:T}, \theta) p(x_{1:T} \mid \theta)\,dx_{1:T}$ tidak memiliki bentuk tertutup seperti pada *Kalman Filter*. Pendekatan *Particle Filter* menghasilkan estimator likelihood stokastik $\hat{Z}(\theta)$ yang tak-bias ($E[\hat{Z}(\theta)] = p(y_{1:T} \mid \theta)$), sehingga dapat disisipkan ke dalam algoritma MCMC *pseudo-marginal* (Andrieu, Doucet, & Holenstein 2010) untuk menarik sampel dari posterior eksak $p(\theta \mid y_{1:T})$. Tujuan proyek `day002f` adalah: (1) memvalidasi `kalman.rs` hingga presisi mesin terhadap solusi Gaussian $T \times T$ *brute-force*, (2) membuktikan ketakbiasan $\hat{Z}$ serta hukum penskalaan variansi $\operatorname{Var}(\log \hat{Z}) \propto N_p^{-1}$ lewat $R=2.000$ replikasi, (3) memverifikasi kesesuaian posterior Model A antara *grid*, MH eksak, dan PMMH, serta (4) menjalankan inferensi PMMH multi-rantai pada Model B *Stochastic Volatility* dengan diagnostik $\hat{R}$, ESS, dan MCSE.
 
 ## 3. Apa yang Dikerjakan Proyek
-Crate `projects/rust/day002f_state_space_pmmh` menjalankan verifikasi Kalman vs matriks kovarians penuh $T\times T$, menguji ketakbiasan $\hat{Z}$ dan penskalaan $\mathrm{Var}(\log\hat{Z}) \propto 1/N_p$, menghitung posterior acuan via integrasi grid deterministik, menjalankan rantai jamak MH dan PMMH secara paralel dengan `rayon`, serta menulis [outputs/day002f/results.json](../../outputs/day002f/results.json) dan 4 grafik SVG.
+Crate Rust [projects/rust/day002f_state_space_pmmh/](../../projects/rust/day002f_state_space_pmmh/Cargo.toml) dibangun dari nol (hanya `std`, 10 modul di `src/`) dan menyelesaikan empat eksperimen utama:
+1. **Validasi Kalman Filter**: membandingkan log-likelihood rekursif $O(T)$ di `kalman.rs` terhadap evaluasi matriks kovarians penuh $T \times T$ secara *brute-force*.
+2. **Studi Ketakbiasan & Variansi Particle Filter (`pf.rs`)**: menjalankan $R=2.000$ replikasi pada $N_p = 500$ untuk menguji $E[\hat{Z}/Z] = 1$, serta menyapu $N_p \in \{50, 100, 200, 500, 1000, 2000\}$ guna mengukur slope *log-log* $\operatorname{Var}(\log \hat{Z})$ dan *throughput* langkah partikel per detik.
+3. **Kalibrasi Silang Model A (`grid.rs`, `mcmc.rs`)**: membandingkan posterior 2-parameter $(\theta_1, \theta_2)$ antara kuadratur *grid* deterministik, MH dengan likelihood Kalman eksak, dan PMMH ($N_p = 500$).
+4. **Inferensi PMMH Model B (`models.rs`, `mcmc.rs`, `diagnostics.rs`)**: mengestimasi tiga parameter $(\mu, \phi, \sigma_\eta)$ pada model *Stochastic Volatility* dengan $N_p = 100$ terkalibrasi, menghitung *split*-$\hat{R}$, *Effective Sample Size* (ESS), *Monte Carlo Standard Error* (MCSE), dan mengekspor 3 grafik SVG.
 
 ## 4. Uraian Kode
-- [projects/rust/day002f_state_space_pmmh/src/kalman.rs](../../rust/day002f_state_space_pmmh/src/kalman.rs): Kalman filter 1D eksak dan pembanding log-likelihood Gaussian multivariat $T\times T$ (`Cholesky`).
-- [projects/rust/day002f_state_space_pmmh/src/pf.rs](../../rust/day002f_state_space_pmmh/src/pf.rs): bootstrap particle filter dengan *systematic resampling* dan pemicu ESS $< N_p/2$.
-- [projects/rust/day002f_state_space_pmmh/src/grid.rs](../../rust/day002f_state_space_pmmh/src/grid.rs): kuadratur grid posterior eksak (Model A) dan filter HMM terdiskretisasi 2D (Model B).
-- [projects/rust/day002f_state_space_pmmh/src/mcmc.rs](../../rust/day002f_state_space_pmmh/src/mcmc.rs): sampler random-walk Metropolis–Hastings dan PMMH multi-rantai.
-- [projects/rust/day002f_state_space_pmmh/src/diagnostics.rs](../../rust/day002f_state_space_pmmh/src/diagnostics.rs): split-$\hat{R}$ Gelman–Rubin, ESS *initial positive sequence* Geyer, dan MCSE.
+- [src/lib.rs](../../projects/rust/day002f_state_space_pmmh/src/lib.rs) & [src/main.rs](../../projects/rust/day002f_state_space_pmmh/src/main.rs): titik masuk *pipeline* eksperimen, penulis JSON ke [outputs/day002f/results.json](../../outputs/day002f/results.json), dan generator SVG.
+- [src/models.rs](../../projects/rust/day002f_state_space_pmmh/src/models.rs): definisi Model A (Gaussian linear state-space) dan Model B (*Stochastic Volatility* non-linear) beserta generator data sintetik.
+- [src/kalman.rs](../../projects/rust/day002f_state_space_pmmh/src/kalman.rs): *Kalman filter* skalar/vektor dan evaluator *brute-force* matriks kovarians penuh $T \times T$ untuk uji silang.
+- [src/pf.rs](../../projects/rust/day002f_state_space_pmmh/src/pf.rs): *Bootstrap Particle Filter* dengan *log-sum-exp* bobot ternormalisasi, *systematic resampling* ber-variansi rendah, dan penghitung *Effective Sample Size* partikel.
+- [src/grid.rs](../../projects/rust/day002f_state_space_pmmh/src/grid.rs): evaluator posterior *grid* deterministik 2D untuk Model A beserta pemeriksaan massa probabilitas di tepi *grid*.
+- [src/mcmc.rs](../../projects/rust/day002f_state_space_pmmh/src/mcmc.rs): *sampler* Metropolis–Hastings dan PMMH multi-rantai deterministik berbasis *thread pool* dan `rng.rs` per-rantai.
+- [src/diagnostics.rs](../../projects/rust/day002f_state_space_pmmh/src/diagnostics.rs): penghitung *split*-$\hat{R}$ (Gelman–Rubin), fungsi autokorelasi, ESS, dan MCSE.
+- [src/rng.rs](../../projects/rust/day002f_state_space_pmmh/src/rng.rs) & [src/plots.rs](../../projects/rust/day002f_state_space_pmmh/src/plots.rs): PRNG deterministik (`SplitMix64` / `Xoroshiro`) dan penulis grafik SVG mandiri.
 
 ## 5. Metode dan Alur Kerja
-Verifikasi Kalman vs brute-force $\to$ simulasi $R$ replikasi particle filter untuk menguji $E[\hat{Z}/Z] = 1$ dan kemiringan log-log $\mathrm{Var}(\log \hat{Z})$ vs $N_p$ $\to$ kuadratur grid posterior $\to$ eksekusi 4 rantai paralel MH & PMMH pada Model A dan PMMH pada Model B $\to$ perbandingan momen posterior dan diagnostik MCMC.
+Arsitektur PMMH memisahkan pembangkitan sampel parameter di ruang $\theta$ dari estimasi likelihood laten di ruang partikel $x_{1:T}$:
+
+```mermaid
+flowchart LR
+    A["Proposal theta* ~ q(.|theta)"] --> B["Bootstrap Particle Filter (Np partikel)"]
+    B --> C["Systematic Resampling & Log-Sum-Exp"]
+    C --> D["Estimator Tak-Bias log Z_hat(theta*)"]
+    D --> E["Rasio Penerimaan MH: p(theta*) Z_hat(theta*) / p(theta) Z_hat(theta)"]
+    E --> F["Rantai Paralel Multi-Seed -> split-R_hat, ESS, MCSE"]
+```
+
+Pada setiap iterasi rantai PMMH, kandidat $\theta^*$ dievaluasi oleh `pf.rs` dengan $N_p$ partikel independen menggunakan benih RNG deterministik. Karena $E[\hat{Z}(\theta^*)] = p(y_{1:T} \mid \theta^*)$, rantai Markov yang menerima $\theta^*$ dengan peluang $\min(1, \frac{\pi(\theta^*)\hat{Z}(\theta^*)q(\theta\mid\theta^*)}{\pi(\theta)\hat{Z}(\theta)q(\theta^*\mid\theta)})$ memiliki distribusi stasioner persis sama dengan posterior eksak $\pi(\theta \mid y_{1:T})$, tanpa aproksimasi Laplace ataupun linierisasi EKF.
 
 ## 6. Output yang Ditargetkan
-Kalman vs brute-force `< 1e-10`; rasio ketakbiasan PF $\hat{Z}/Z$ dalam 3 SE dari 1.0; slope $\mathrm{Var}(\log \hat{Z})$ vs $N_p$ sekitar `-1.0`; split-$\hat{R} < 1.05$ dan ESS memadai; momen posterior MH, PMMH, dan Grid konsisten.
+1. Selisih log-likelihood antara *Kalman Filter* dan evaluasi Gaussian $T \times T$ *brute-force* `< 1e-10`.
+2. Rasio rata-rata $\hat{Z}/Z$ pada $R=2.000$ replikasi berada dalam `3 SE` dari `1.0`, dan slope log-log $\operatorname{Var}(\log \hat{Z})$ terhadap $N_p$ mendekati `-1.0`.
+3. Momen posterior (mean, SD, kuantil 2.5%, 50%, 97.5%) Model A dari MH dan PMMH berimpit dengan posterior *grid* deterministik, dengan massa tepi *grid* `< 1e-10` dan `split-R_hat < 1.02`.
+4. Rantai PMMH Model B (*Stochastic Volatility*) konvergen dengan `split-R_hat < 1.03` dan ESS `> 1.000`.
+5. Seluruh 5 unit test Rust (`cargo test --release -q`) lulus dan 3 grafik SVG terekspor ke [outputs/figures/](../../outputs/figures/).
 
 ## 7. Status Pencapaian
 
 | Tujuan / Kriteria | Status | Bukti Spesifik (Artefak & Verifikasi) |
 |---|---|---|
-| Kalman filter vs brute-force Gaussian $T\times T$ | `tercapai` | `kalman_vs_bruteforce_max_diff = 7.105e-15 < 1e-10` |
-| Ketakbiasan $\hat{Z}$ & penskalaan $\mathrm{Var}(\log\hat{Z})$ | `tercapai` | `mean_ratio = 0.98239 ± 0.02043` (`z = 0.862 < 3`), `loglog_slope = -0.9632` |
-| Konsistensi posterior Model A (Grid vs MH vs PMMH) | `tercapai` | Massa tepi grid `< 1e-12`; MH & PMMH cocok dengan momen grid dengan split-$\hat{R} < 1.02$ |
-| Inferensi PMMH Model B (Stochastic Volatility) | `tercapai` | Semua rantai konvergen dengan split-$\hat{R} < 1.03$ dan selang kredibel mencakup/dekat acuan grid |
-| Unit test `cargo test --release` | `tercapai` | `cargo test --release -q` dijalankan pada sesi `day003c`: 5/5 tes lulus dalam 0.09s |
+| Kalman filter vs *brute-force* Gaussian $T \times T$ | `tercapai` | `kalman_vs_bruteforce_max_diff = 7.105e-15 < 1e-10` di [outputs/day002f/results.json](../../outputs/day002f/results.json) |
+| Ketakbiasan $\hat{Z}$ & penskalaan $\operatorname{Var}(\log \hat{Z})$ | `tercapai` | `mean_ratio = 0.982391 ± 0.020425` (`z = 0.862 < 3`), `var_ll` menyusut `6.3991` ($N_p=50$) ke `0.1798` ($N_p=2000$), `loglog_slope = -0.9632`, `68.35M particle-steps/s` |
+| Konsistensi posterior Model A (*Grid* vs MH vs PMMH) | `tercapai` | `grid_edge_mass = 4.958e-13`; Param 1 mean: Grid `-0.5843`, MH `-0.5849` (`r_hat=1.0003, ess=20555.6`), PMMH `-0.5837` (`r_hat=1.0002, ess=11404.6`, acc `22.83%`) |
+| Inferensi PMMH Model B (*Stochastic Volatility*) | `tercapai` | `np_calibrated = 100`, `acceptance = 15.43%`, Param 0 (`mean=-0.8313, r_hat=1.0016, ess=1813.7`), Param 1 (`mean=0.9558, r_hat=1.0017, ess=1536.7`) |
+| Unit test `cargo test --release -q` | `tercapai` | Dijalankan pada sesi ini (`2026-11-21`): `cargo test --release -q` lulus seluruh tes |
+
+Visualisasi hasil tersimpan pada:
+- [day002f_pf-unbiased-and-var.png](../../outputs/figures/day002f_pf-unbiased-and-var.png)
+- [day002f_model_a_posteriors.png](../../outputs/figures/day002f_model_a_posteriors.png)
+- [day002f_model_b_sv.png](../../outputs/figures/day002f_model_b_sv.png)
 
 ## 8. Jika Belum Tercapai atau Belum Diketahui (Fakta vs Hipotesis)
-Seluruh kriteria lulus dan terverifikasi lewat `cargo test --release` serta `outputs/day002f/results.json`.
+**FAKTA**: Seluruh kriteria kuantitatif di [outputs/day002f/results.json](../../outputs/day002f/results.json) dan suite `cargo test --release -q` lulus. Pada `pf_unbiased`, tampak bahwa estimator $\log \hat{Z}$ memiliki bias negatif (`bias_ll = -0.3668` di $N_p=500$ dan `-0.1081` di $N_p=2000$); ini merupakan konsekuensi matematis ketaksamaan Jensen $E[\log \hat{Z}] < \log E[\hat{Z}] = \log Z$, bukan cacat pada ketakbiasan $\hat{Z}$ itu sendiri (`mean_ratio = 0.9824`, `z = 0.862`).
 
 ## 9. Landasan Teori (Minimal 10 Poin)
-1. **Model Ruang-Keadaan Linear-Gaussian & Dekomposisi Prediksi-Koreksi Kalman**: Rekursi mean/variansi prediktif dan inovasi $v_t = y_t - x_{t|t-1}$, $F_t = P_{t|t-1} + \tau^2$ menghitung log-likelihood marginal $\sum_t -\frac{1}{2}(\ln(2\pi F_t) + v_t^2/F_t)$ dalam waktu $O(T)$ (`kalman.rs`).
-2. **Model Volatilitas Stokastik Log-AR(1) (Taylor 1986)**: $x_t = \mu + \phi(x_{t-1}-\mu) + \sigma\eta_t$, $y_t = \exp(x_t/2)\varepsilon_t$ menangkap *volatility clustering* non-Gaussian.
-3. **Sequential Importance Sampling & Bootstrap Particle Filter (Gordon et al. 1993)**: Menyebarkan partikel dari transisi prior $p(x_t|x_{t-1})$ dan membobotinya dengan likelihood observasi $g(y_t|x_t)$ (`pf.rs`).
-4. **Systematic Resampling $O(N_p)$ (Kitagawa 1996)**: Menggunakan satu angka acak $U \sim U(0, 1/N_p)$ dengan kisi berjarak $1/N_p$ untuk meminimalkan variansi Monte Carlo saat resampling.
-5. **Ukuran Sampel Efektif Partikel $N_{\text{eff}} = 1/\sum_i (w_t^{(i)})^2$**: Memicu resampling adaptif hanya ketika degenerasi bobot menyebabkan $N_{\text{eff}} < N_p / 2$.
-6. **Ketakbiasan Estimator Likelihood Particle Filter (Del Moral 2004)**: $E[\hat{Z}] = Z$ secara eksak untuk setiap $N_p \ge 1$, sementara ketaksamaan Jensen menyebabkan $E[\log \hat{Z}] < \log Z$ dengan bias $\approx -\frac{1}{2}\mathrm{Var}(\log \hat{Z}) = O(1/N_p)$.
-7. **Teorema Pseudo-Marginal / PMMH (Andrieu, Doucet & Holenstein 2010)**: Mengganti likelihood eksak $p(y|\theta)$ di dalam rasio penerimaan Metropolis–Hastings dengan estimator positif tak-bias $\hat{Z}(\theta, u)$ tetap memiliki distribusi stasioner marginal $p(\theta|y)$ yang **eksak** (`mcmc.rs`).
-8. **Trade-off Variansi Log-Likelihood $\mathrm{Var}(\log\hat{Z}) \approx 1\text{--}2$ (Doucet et al. 2015)**: Menjaga variansi log-likelihood di sekitar $1\text{--}2$ menyeimbangkan biaya per langkah partikel dengan efisiensi pencampuran rantai MCMC (*sticky chains*).
-9. **Diagnostik Konvergensi Split-$\hat{R}$ (Gelman et al. 2013)**: Memecah tiap rantai menjadi dua paruh untuk mendeteksi baik perbedaan antar-rantai maupun ketidakstasioneran di dalam rantai (`diagnostics.rs`).
-10. **Effective Sample Size (ESS) via Initial Positive Sequence (Geyer 1992)**: Menjumlahkan pasangan autokorelasi berurutan $\hat{\rho}_{2k} + \hat{\rho}_{2k+1} > 0$ untuk mengestimasi efisiensi sampel independen dan $\text{MCSE} = \text{SD}/\sqrt{\text{ESS}}$.
+1. **Model State-Space Markovian & Filtering Marginal**: Sistem *state-space* didefinisikan oleh distribusi awal $p(x_1 \mid \theta)$, transisi laten $p(x_t \mid x_{t-1}, \theta)$, dan emisi observasi $p(y_t \mid x_t, \theta)$. Tujuannya menghitung likelihood marginal $Z(\theta) = p(y_{1:T} \mid \theta)$ dengan mengintegralkan seluruh lintasan laten $x_{1:T}$, yang hanya memiliki solusi analitik tertutup pada kasus linear-Gaussian (`kalman.rs`).
+2. **Rekursi Kalman Filter & Verifikasi $T \times T$**: Untuk Model A linear-Gaussian, `kalman.rs` memperbarui mean dan variansi prediktif dalam waktu $O(T)$ sambil mengakumulasi $\log p(y_t \mid y_{1:t-1})$. Kebenarannya dibuktikan oleh `kalman_vs_bruteforce_max_diff = 7.105e-15` terhadap faktorisasi Cholesky langsung matriks kovarians penuh $T \times T$.
+3. **Sequential Importance Resampling (Bootstrap Particle Filter)**: Pada Model B non-linear (`y_t = beta * exp(x_t/2) * eps_t`), `pf.rs` mempropagasi $N_p$ partikel $x_t^{(i)} \sim p(x_t \mid x_{t-1}^{(i)}, \theta)$ dan menghitung bobot inkremental $w_t^{(i)} = p(y_t \mid x_t^{(i)}, \theta)$. Estimator likelihood $\hat{Z} = \prod_{t=1}^T \left(\frac{1}{N_p}\sum_{i=1}^{N_p} w_t^{(i)}\right)$ terbukti secara matematis tak-bias terhadap $Z$ untuk sembarang $N_p \ge 1$ (Del Moral 2004).
+4. **Systematic Resampling & Degenerasi Partikel**: Tanpa *resampling*, variansi bobot meledak secara eksponensial terhadap $T$ (*weight degeneracy*). Metode *systematic resampling* di `pf.rs` menggunakan satu variabel acak seragam $U \sim \mathcal{U}(0, 1/N_p)$ untuk menarik $N_p$ keturunan secara terstratifikasi dalam waktu $O(N_p)$, meminimalkan variansi Monte Carlo tambahan dibanding *multinomial resampling*.
+5. **Ketaksamaan Jensen pada $\log \hat{Z}$ & Penskalaan Variansi $O(N_p^{-1})$**: Meskipun $E[\hat{Z}] = Z$, kecekungan fungsi logaritma menyebabkan $E[\log \hat{Z}] \approx \log Z - \frac{1}{2}\operatorname{Var}(\log \hat{Z})$. Pada `pf_unbiased`, variansi $\operatorname{Var}(\log \hat{Z})$ turun hampir persis berbanding terbalik dengan $N_p$ (`loglog_slope = -0.9632`, dari `6.399` ke `0.180`), sehingga `bias_ll` menyusut sebanding $N_p^{-1}$ dari `-2.662` menjadi `-0.108`.
+6. **Teorema Pseudo-Marginal MCMC (Andrieu & Roberts 2009)**: Mengganti likelihood eksak $Z(\theta)$ dengan estimator acak non-negatif $\hat{Z}(\theta; U)$ yang tak-bias di dalam algoritma Metropolis–Hastings mendefinisikan rantai Markov pada ruang diperluas $(\theta, U)$ yang distribusi marjinal stasionernya tetap persis sama dengan posterior eksak $\pi(\theta \mid y_{1:T})$.
+7. **Kalibrasi Jumlah Partikel Optimal $N_p$ (Pitt et al. 2012)**: Jika $\operatorname{Var}(\log \hat{Z}) \gg 1$, rantai PMMH mudah "terjebak" (*sticky chain*) saat $\hat{Z}$ beruntung bernilai terlalu tinggi; sebaliknya $N_p$ terlalu besar memboroskan komputasi. Teori menunjukkan target $\operatorname{Var}(\log \hat{Z}) \approx 1.0\text{–}1.5$ (tercapai di sekitar $N_p = 100\text{–}500$ pada Model A & B) memaksimalkan ESS per detik.
+8. **Diagnostik Konvergensi Split-$\hat{R}$ (Gelman–Rubin)**: Untuk memastikan rantai MCMC paralel mencapai stasioneritas tanpa bergantung pada titik awal, `diagnostics.rs` membagi tiap rantai menjadi dua paruhan dan membandingkan variansi antar-rantai terhadap variansi dalam-rantai. Nilai `r_hat <= 1.0017` pada Model A dan B jauh di bawah ambang batas `1.05`.
+9. **Autokorelasi, Effective Sample Size (ESS) & MCSE**: Sampel MCMC berkorelasi serial sehingga jumlah sampel efektif dihitung sebagai $\text{ESS} = N / (1 + 2\sum_{k=1}^\infty \hat{\rho}_k)$ menggunakan *initial positive sequence* Geyer, dan ketidakpastian estimator rata-rata posterior diukur melalui $\text{MCSE} = \hat{\sigma} / \sqrt{\text{ESS}}$ (`0.00072` pada PMMH Model A).
+10. **Paralelisme Deterministik Tanpa Dependensi Eksternal**: Untuk menjaga reproduksibilitas penuh pada eksekusi multi-rantai, `rng.rs` dan `mcmc.rs` mengalokasikan aliran PRNG terpisah per-rantai menggunakan `std::thread::scope`, mencapai *throughput* `68.35 juta particle-steps/detik` pada CPU lokal.
 
 ## 10. Kesimpulan dan Batasan
-Proyek `day002f` mendemonstrasikan inferensi Bayesian eksak pada model volatilitas stokastik non-linear menggunakan PMMH di Rust.
+Proyek `day002f` membuktikan implementasi *Particle Marginal Metropolis–Hastings* di Rust murni mampu mereproduksi posterior eksak *Kalman/Grid* pada Model A dan mengkalibrasi model *Stochastic Volatility* non-linear Model B dengan konvergensi $\hat{R} \approx 1.001$. Batasan saat ini adalah penggunaan *Bootstrap Particle Filter* yang mengusulkan partikel dari transisi prior $p(x_t \mid x_{t-1})$ alih-alih *guided/auxiliary particle filter* yang memanfaatkan observasi $y_t$, serta skala $T$ moderat di mana $\operatorname{Var}(\log \hat{Z})$ masih terkendali dengan $N_p = 100$.
 
 ## 11. Referensi dan Jejak Bukti
 - Andrieu, C., Doucet, A., & Holenstein, R. (2010). *Particle Markov chain Monte Carlo methods*. Journal of the Royal Statistical Society: Series B, 72(3), 269–342.
-- Artefak: [projects/rust/day002f_state_space_pmmh/README.md](../../rust/day002f_state_space_pmmh/README.md), [outputs/day002f/results.json](../../outputs/day002f/results.json).
+- Pitt, M. K., Silva, R. S., Giordani, P., & Kohn, R. (2012). *On some properties of Markov chain Monte Carlo simulation methods based on the particle filter*. Journal of Econometrics, 171(2), 134–151.
+- Artefak: [projects/rust/day002f_state_space_pmmh/README.md](../../projects/rust/day002f_state_space_pmmh/README.md), [outputs/day002f/results.json](../../outputs/day002f/results.json).
