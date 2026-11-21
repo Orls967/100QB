@@ -76,8 +76,12 @@ export interface RegimeDetectionMetrics {
   rollingDetectCumZ2: number | null;
   fixedFinalKupiecRejected: boolean;
   rollingFinalKupiecRejected: boolean;
+  fixedFinalCcRejected: boolean;
+  rollingFinalCcRejected: boolean;
   fixedFinalZ2Rejected: boolean;
   rollingFinalZ2Rejected: boolean;
+  fixedPostZ2: number;
+  rollingPostZ2: number;
   /** Binned post-break violation counts per 100-day block (30 blocks covering days 3000..5999). */
   fixedBinRates99: number[];
   rollingBinRates99: number[];
@@ -740,7 +744,9 @@ export function evaluateRegimeChangeSeries(
     cumZ2: number | null;
     ratePost: number;
     finalKupiecRej: boolean;
+    finalCcRej: boolean;
     finalZ2Rej: boolean;
+    finalZ2: number;
     binRates: number[];
   } => {
     let trailKupiec: number | null = null;
@@ -748,8 +754,6 @@ export function evaluateRegimeChangeSeries(
     let cumKupiec: number | null = null;
     let cumZ2: number | null = null;
 
-    // Precompute pre-break baseline zeros for trailing 250-day monitor?
-    // Better: monitor trailing 250-day post-break window once tau >= 250, AND cumulative from tau >= 50
     let cumSum = 0;
     let cumLR = 0.0;
     for (let d = 0; d < postDays; d += 1) {
@@ -758,7 +762,7 @@ export function evaluateRegimeChangeSeries(
       const len = d + 1;
       if (cumKupiec === null && len >= 50 && len % 5 === 0) {
         const k = kupiecFromCounts(cumSum, len, 0.01);
-        if (k.pValueExact < 0.05 && k.rate > 0.01) {
+        if (k.pValueExact < 0.05) {
           cumKupiec = len;
         }
       }
@@ -771,17 +775,18 @@ export function evaluateRegimeChangeSeries(
       if (len >= 250 && len % 10 === 0) {
         const win = exc.subarray(len - 250, len);
         const k = kupiecTest(win, 0.99);
-        if (trailKupiec === null && k.pValueExact < 0.05 && k.rate > 0.01) {
+        if (trailKupiec === null && k.pValueExact < 0.05) {
           trailKupiec = len;
         }
         const ch = christoffersenTest(win, 0.99);
-        if (trailCc === null && ch.pCc < 0.05 && k.rate > 0.01) {
+        if (trailCc === null && ch.pCc < 0.05) {
           trailCc = len;
         }
       }
     }
 
     const finalK = kupiecFromCounts(cumSum, postDays, 0.01);
+    const finalCh = christoffersenTest(exc, 0.99);
     const finalZ2 = 1.0 - cumLR / (postDays * 0.01);
     const nBins = Math.floor(postDays / 100);
     const binRates = new Array<number>(nBins);
@@ -797,8 +802,10 @@ export function evaluateRegimeChangeSeries(
       cumKupiec,
       cumZ2,
       ratePost: cumSum / postDays,
-      finalKupiecRej: finalK.pValueExact < 0.05 && finalK.rate > 0.01,
+      finalKupiecRej: finalK.pValueExact < 0.05,
+      finalCcRej: finalCh.pCc < 0.05,
       finalZ2Rej: finalZ2 < z2CritT3000,
+      finalZ2,
       binRates,
     };
   };
@@ -822,8 +829,12 @@ export function evaluateRegimeChangeSeries(
     rollingDetectCumZ2: dr.cumZ2,
     fixedFinalKupiecRejected: df.finalKupiecRej,
     rollingFinalKupiecRejected: dr.finalKupiecRej,
+    fixedFinalCcRejected: df.finalCcRej,
+    rollingFinalCcRejected: dr.finalCcRej,
     fixedFinalZ2Rejected: df.finalZ2Rej,
     rollingFinalZ2Rejected: dr.finalZ2Rej,
+    fixedPostZ2: df.finalZ2,
+    rollingPostZ2: dr.finalZ2,
     fixedBinRates99: df.binRates,
     rollingBinRates99: dr.binRates,
     rollingAlphaTrack,

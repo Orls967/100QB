@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="500" viewBox="0 0 820 500">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="410" y="26" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" fill="#111827">Ekor Kuantil &amp; ES: t_std(5) Eksak vs Aproksimasi GPD POT (q=0.90)</text>
+<text x="410" y="46" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#4b5563">N = 2.000.000 sampel inversi t_std(5) | sumbu-x = -log10(1 - p)</text>
+<line x1="161.1" y1="62" x2="161.1" y2="436" stroke="#e5e7eb" stroke-width="1"/>
+<text x="161.1" y="454" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#374151">1.50</text>
+<line x1="370.1" y1="62" x2="370.1" y2="436" stroke="#e5e7eb" stroke-width="1"/>
+<text x="370.1" y="454" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#374151">2</text>
+<line x1="579.0" y1="62" x2="579.0" y2="436" stroke="#e5e7eb" stroke-width="1"/>
+<text x="579.0" y="454" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#374151">2.50</text>
+<line x1="788.0" y1="62" x2="788.0" y2="436" stroke="#e5e7eb" stroke-width="1"/>
+<text x="788.0" y="454" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#374151">3</text>
+<line x1="78" y1="376.7" x2="788" y2="376.7" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="380.7" text-anchor="end" font-family="system-ui, sans-serif" font-size="11" fill="#374151">2</text>
+<line x1="78" y1="301.1" x2="788" y2="301.1" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="305.1" text-anchor="end" font-family="system-ui, sans-serif" font-size="11" fill="#374151">3</text>
+<line x1="78" y1="225.5" x2="788" y2="225.5" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="229.5" text-anchor="end" font-family="system-ui, sans-serif" font-size="11" fill="#374151">4</text>
+<line x1="78" y1="149.9" x2="788" y2="149.9" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="153.9" text-anchor="end" font-family="system-ui, sans-serif" font-size="11" fill="#374151">5</text>
+<line x1="78" y1="74.2" x2="788" y2="74.2" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="78.2" text-anchor="end" font-family="system-ui, sans-serif" font-size="11" fill="#374151">6</text>
+<rect x="78" y="62" width="710" height="374" fill="none" stroke="#374151" stroke-width="1.2"/>
+<polyline fill="none" stroke="#1d4ed8" stroke-width="2.2" points="78.00,409.95 203.80,377.41 370.10,330.87 495.90,291.79 788.00,182.75"/>
+<polyline fill="none" stroke="#0ea5e9" stroke-width="2.2" stroke-dasharray="5,4" points="78.00,410.21 203.80,376.66 370.10,328.47 495.90,288.86 788.00,185.22"/>
+<polyline fill="none" stroke="#b91c1c" stroke-width="2.2" points="78.00,358.69 203.80,321.70 370.10,267.17 495.90,220.44 788.00,87.79"/>
+<polyline fill="none" stroke="#f97316" stroke-width="2.2" stroke-dasharray="5,4" points="78.00,358.15 203.80,320.74 370.10,267.01 495.90,222.86 788.00,107.30"/>
+<rect x="560" y="68" width="218" height="82" fill="#ffffff" fill-opacity="0.9" stroke="#d1d5db" rx="4"/>
+<line x1="568" y1="80" x2="590" y2="80" stroke="#1d4ed8" stroke-width="2.2"/>
+<text x="596" y="84" font-family="system-ui, sans-serif" font-size="11" fill="#111827">t(5) VaR Eksak</text>
+<line x1="568" y1="98" x2="590" y2="98" stroke="#0ea5e9" stroke-width="2.2" stroke-dasharray="4,3"/>
+<text x="596" y="102" font-family="system-ui, sans-serif" font-size="11" fill="#111827">GPD POT VaR (u=q90)</text>
+<line x1="568" y1="116" x2="590" y2="116" stroke="#b91c1c" stroke-width="2.2"/>
+<text x="596" y="120" font-family="system-ui, sans-serif" font-size="11" fill="#111827">t(5) ES Eksak</text>
+<line x1="568" y1="134" x2="590" y2="134" stroke="#f97316" stroke-width="2.2" stroke-dasharray="4,3"/>
+<text x="596" y="138" font-family="system-ui, sans-serif" font-size="11" fill="#111827">GPD POT ES (u=q90)</text>
+<text x="433" y="484" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#111827">-log10(1 - p)  [1.30 = 95%, 2.00 = 99%, 3.00 = 99.9%]</text>
+<text x="18" y="249" text-anchor="middle" transform="rotate(-90 18 249)" font-family="system-ui, sans-serif" font-size="12" fill="#111827">Nilai Risiko Ekor (Skala Baku)</text>
+</svg>
