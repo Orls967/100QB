@@ -403,7 +403,7 @@ func main() {
 		mporRows = append(mporRows, rows...)
 	}
 
-	colPass := true
+	c8aThreshMonotone := true
 	colThreshObjs := make([]jsonout.Obj, 0, len(colThreshRows))
 	for _, rho := range colRhos {
 		prev := -1.0
@@ -412,7 +412,7 @@ func main() {
 				continue
 			}
 			if prev >= 0 && r.CVA <= prev {
-				colPass = false
+				c8aThreshMonotone = false
 			}
 			prev = r.CVA
 		}
@@ -438,6 +438,7 @@ func main() {
 	mporCVARho0 := make([]float64, 0, len(mporDeltas))
 	mporCVARho08 := make([]float64, 0, len(mporDeltas))
 	mporCVARawRho0 := make([]float64, 0, len(mporDeltas))
+	c8bMPORCleanConv := true
 	for _, rho := range colRhos {
 		prev := math.Inf(1)
 		for _, r := range mporRows {
@@ -445,7 +446,7 @@ func main() {
 				continue
 			}
 			if r.CVA >= prev {
-				colPass = false
+				c8bMPORCleanConv = false
 			}
 			prev = r.CVA
 		}
@@ -474,6 +475,10 @@ func main() {
 	}
 	mporSlopeRho0 := logLogSlope(mporRho0X, mporCVARho0)
 	mporSlopeEPE := logLogSlope(mporRho0X, mporEPE)
+	if mporSlopeRho0 <= 0.40 || len(mporCVARho0) == 0 || mporCVARho0[len(mporCVARho0)-1] >= 1e-4 {
+		c8bMPORCleanConv = false
+	}
+	c8cMPORRawCouponConv := len(mporCVARawRho0) > 0 && mporCVARawRho0[len(mporCVARawRho0)-1] < 1e-4
 
 	// =========================================================================
 	// GENERATE 7 SVG FIGURES
@@ -586,7 +591,13 @@ func main() {
 	crit5Pass := discPass
 	crit6Pass := wwrPass
 	crit7Pass := netPass
-	crit8Pass := colPass
+	crit8Pass := c8aThreshMonotone && c8bMPORCleanConv && c8cMPORRawCouponConv
+	c8Status := "belum tercapai"
+	if c8aThreshMonotone && c8bMPORCleanConv && c8cMPORRawCouponConv {
+		c8Status = "tercapai"
+	} else if c8aThreshMonotone && c8bMPORCleanConv {
+		c8Status = "sebagian"
+	}
 
 	rootObj := jsonout.Obj{
 		{Key: "metadata", Val: jsonout.Obj{
@@ -693,7 +704,11 @@ func main() {
 			{Key: "c5_independent_cva_mc_and_discretization", Val: crit5Pass},
 			{Key: "c6_wwr_monotonic_cva_rho", Val: crit6Pass},
 			{Key: "c7_netting_subadditivity_and_zero_identity", Val: crit7Pass},
+			{Key: "c8a_collateral_threshold_monotonicity", Val: c8aThreshMonotone},
+			{Key: "c8b_collateral_mpor_clean_schedule_convergence", Val: c8bMPORCleanConv},
+			{Key: "c8c_collateral_mpor_raw_coupon_convergence", Val: c8cMPORRawCouponConv},
 			{Key: "c8_collateral_threshold_and_mpor_convergence", Val: crit8Pass},
+			{Key: "c8_status", Val: c8Status},
 			{Key: "all_passed", Val: crit1Pass && crit2Pass && crit3Pass && crit4Pass && crit5Pass && crit6Pass && crit7Pass && crit8Pass},
 		}},
 	}

@@ -11,7 +11,7 @@
     "n_paths_core_mc": 100000,
     "notional_unit": 1,
     "notional_reference_scale": 1000000,
-    "elapsed_seconds": 13.54108325
+    "elapsed_seconds": 12.744493708
   },
   "parameters": {
     "hull_white": {
@@ -1366,7 +1366,11 @@
     "c5_independent_cva_mc_and_discretization": true,
     "c6_wwr_monotonic_cva_rho": true,
     "c7_netting_subadditivity_and_zero_identity": true,
-    "c8_collateral_threshold_and_mpor_convergence": true,
-    "all_passed": true
+    "c8a_collateral_threshold_monotonicity": true,
+    "c8b_collateral_mpor_clean_schedule_convergence": true,
+    "c8c_collateral_mpor_raw_coupon_convergence": false,
+    "c8_collateral_threshold_and_mpor_convergence": false,
+    "c8_status": "sebagian",
+    "all_passed": false
   }
 }
