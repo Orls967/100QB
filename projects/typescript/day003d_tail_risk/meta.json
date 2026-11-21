@@ -1,0 +1,10 @@
+{
+  "day": 3,
+  "session": "d",
+  "topic_no": null,
+  "type": "quant",
+  "language": "typescript",
+  "topic": "Risiko ekor: GARCH–EVT, VaR/ES dan backtesting",
+  "date": "2026-11-21",
+  "link": "projects/typescript/day003d_tail_risk"
+}
