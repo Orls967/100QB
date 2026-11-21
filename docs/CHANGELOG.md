@@ -3,6 +3,25 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 004a] — 2026-11-22 · Struktur suku bunga: Nelson–Siegel, AFNS dan filter Kalman (Go, Bonus)
+
+### Ditambahkan
+- Project Go 1.22+ murni `projects/go/day004a_term_structure/` (nol modul eksternal, paralelisme *goroutine* deterministik per *chunk*, `xoshiro256++` dengan `MainSeed = 20261122`, aljabar linear LU/Cholesky/Thomas/Jacobi/`MatExpSeries` buatan sendiri, kuadratur Gauss–Legendre, RK4 + ekstrapolasi Richardson, optimizer BFGS, penulis JSON 17 digit & 8 grafik SVG):
+  - **Bagian 1 (Nelson–Siegel(–Svensson), Bootstrap, Interpolasi & Risiko)**: evaluasi stabil deret Taylor untuk $\tau$ kecil vs pembatalan naif (`g1RelErr = 5.91e-5` di $\tau=10^{-12}$), verifikasi $y(\tau) = \frac{1}{\tau}\int_0^\tau f(s)ds$ (`max_err = 6.94e-18`) dan limit $\tau \to 0, \infty$, *bootstrap* par semi-tahunan $0.5\text{–}30$ tahun (`max_err = 2.78e-16`), perbandingan stabilitas derau par $R=200$ (`0` *forward* negatif pada keduanya; `TV(f)` `0.300` LogLin vs `0.422` Spline, `yRMSE` `0.823` vs `0.688 bp`), metrik risiko obligasi 10y 4% (`ModDur relErr = 5.84e-11`, `Conv relErr = 1.12e-7`, jumlah KRD = $D_{\text{eff}}$ dengan galat `0`), PV01 swap 10y (`$811.01/1M`), dan lindung nilai netral dua KRD (`5y4% + 10y2%`, residual `< 5e-16`).
+  - **Bagian 2 (AFNS, ODE Riccati, Dinamika $\mathbb{P}$ & Premi Jangka Waktu)**: penurunan tertutup $B(\tau)$ (pemuatan NS eksak) dan $-A(\tau)/\tau$ (CDR 2011; `-10.09 bps` di 10y, `-59.98 bps` di 30y) cocok vs RK4/Richardson (`1.16e-15`), transisi segitiga bawah $\Phi(\Delta)$ vs `MatExpSeries` (`1.11e-16`), $Q_\Delta$ Van Loan vs Gauss–Legendre (`4.74e-20`), uji MC $200\text{k}$ transisi 1y (`max_z = 2.68`), harga risiko afinitas $(\lambda_0, \lambda_1)$, dan premi jangka waktu 10y rata-rata jangka panjang tertutup `+173.04 bps` vs MC $100\text{k}$ `+172.21 ± 0.38 bps` (`z = 2.19`).
+  - **Bagian 3 (Simulasi, Filter Kalman, RTS Smoother, MLE & Replikasi)**: jangkar Gaussian gabungan penuh $T=5$ (3 tenor) cocok terhadap Kalman & *RTS smoother* (`ll_diff = 2.84e-14`, `mean_diff = 7.27e-16`, `cov_diff = 1.24e-16`), MLE BFGS 11 parameter ($T=1000$, `est_ll = 58231.66 > true_ll = 58225.07`, skor vs Richardson `2.32e-10`), studi replikasi $R=50$ (`50/50` $\ell_{\text{MLE}} \ge \ell_{\text{true}}$; seluruh 5 parameter teridentifikasi kuat $\lambda, \sigma_{1..3}, \sigma_\varepsilon$ memenuhi `|bias| < 2 SE_rep` dan cakupan `90%–96%`, sementara $K^{\mathbb{P}}_{ii}$ menunjukkan bias Kendall $+0.21\text{/thn}$), dan uji kesalahan spesifikasi DNS (`loglik_drop = 767.51`).
+  - **Bagian 4 (PCA Perubahan Yield, $T=5000, R=100$)**: tiga faktor pertama menjelaskan `82.90%` varians (`0, 1, 2` perubahan tanda), eigenvalue empiris PC1–PC3 cocok dalam `1.33 SE` dan kosinus eigenvektor `0.99995, 0.99923, 0.99748` ($> 0.99$), rata-rata *bulk* derau PC4–PC10 cocok $2\sigma_\varepsilon^2$ (`z = 0.28`), sementara mode terurut individual terpecah oleh statistik orde Marchenko–Pastur.
+- Output `outputs/day004a/results.json`, 8 grafik SVG `outputs/figures/day004a_*.svg`, serta dokumen penjelasan `docs/project-explanations/day004a_quant_term-structure.md`.
+
+### Diperbarui
+- `README.md` (tabel progres baris `4a` Go via `scripts/update_readme.py`), `docs/CHANGELOG.md`, dan `docs/project-explanations/README.md`.
+
+## [Hari 004a — pemeliharaan A] — 2026-11-22 · Pembersihan bukti tes `day003e`/`day003f` & penyelarasan bendera C8 `day003e`
+
+### Diperbaiki
+- `day003e` & `day003f`: menjalankan `gofmt -l .`, `go vet ./...`, dan `go test -race -count=1 ./...` pada seluruh paket (`5/5` paket `day003e`, `8/8` paket `day003f`) dan mencatat keluaran nyata pada `docs/project-explanations/day003e_quant_cva-wrong-way.md` dan `day003f_quant_ruin-theory.md`.
+- `day003e`: memisahkan bendera penerimaan C8 pada `cmd/run/main.go` menjadi `c8a_collateral_threshold_monotonicity: true`, `c8b_collateral_mpor_clean_schedule_convergence: true`, `c8c_collateral_mpor_raw_coupon_convergence: false`, `c8_collateral_threshold_and_mpor_convergence: false`, `c8_status: "sebagian"`, dan `all_passed: false` konsisten dengan dokumentasi; seluruh angka lain di `outputs/day003e/results.json` terbukti bit-identik.
+
 ## [Hari 003f] — 2026-11-21 · Teori ruin Cramér–Lundberg dan simulasi kejadian langka (Go, Bonus)
 
 ### Ditambahkan

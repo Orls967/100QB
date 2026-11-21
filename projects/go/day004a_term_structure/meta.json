@@ -1,0 +1,10 @@
+{
+  "day": 4,
+  "session": "a",
+  "topic_no": null,
+  "type": "quant",
+  "language": "go",
+  "topic": "Struktur suku bunga: Nelson–Siegel, AFNS dan filter Kalman",
+  "date": "2026-11-22",
+  "link": "projects/go/day004a_term_structure"
+}
