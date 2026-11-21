@@ -1,0 +1,11 @@
+[package]
+name = "day004f_energy_transition"
+version = "0.1.0"
+edition = "2021"
+description = "Full Rust port of day004a-day004e (AFNS term structure, inference, bias/interval calibration, power market & battery DP) plus AFNS-discounted battery project valuation"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+
+[dependencies]
