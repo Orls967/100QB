@@ -34,6 +34,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `4a` (`day004a`) | `bonus` | `quant` | `go` | [Struktur suku bunga: Nelson–Siegel, AFNS dan filter Kalman](day004a_quant_term-structure.md) |
 | `4b` (`day004b`) | `bonus` | `quant` | `go` | [AFNS: bias sampel terbatas, rentang kalender (long-span), dan frekuensi observasi (infill)](day004b_quant_afns-inference.md) |
 | `4c` (`day004c`) | `bonus` | `quant` | `go` | [AFNS: koreksi bias mean-reversion dan inferensi sampel terbatas (jackknife & bootstrap)](day004c_quant_afns-bias-correction.md) |
+| `4d` (`day004d`) | `bonus` | `quant` | `go` | [AFNS: kalibrasi interval bootstrap yang peka bias dan batas parameter](day004d_quant_afns-interval-calibration.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 

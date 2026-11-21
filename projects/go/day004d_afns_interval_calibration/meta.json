@@ -1,0 +1,10 @@
+{
+  "day": 4,
+  "session": "d",
+  "topic_no": null,
+  "type": "quant",
+  "language": "go",
+  "topic": "AFNS — interval bootstrap yang peka bias dan batas parameter",
+  "date": "2026-11-22",
+  "link": "projects/go/day004d_afns_interval_calibration"
+}

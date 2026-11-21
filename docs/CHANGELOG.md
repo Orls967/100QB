@@ -3,6 +3,19 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 004d] — 2026-11-22 · AFNS — interval bootstrap yang peka bias dan batas parameter (Go, Bonus)
+
+### Ditambahkan
+- Project Go 1.22+ mandiri `projects/go/day004d_afns_interval_calibration/` (`zero external modules`, `MainSeed = 2026112204`, `xoshiro256++` + `SplitMix64`, paralelisme goroutine deterministik per *chunk*, `FastLogLikelihood` *steady-state* Riccati, penulis JSON 17 digit & 4 grafik SVG):
+  - **Verifikasi Teknis (`c1..c5 = tercapai`, `369,51s` pada 8 worker)**: jangkar Gaussian gabungan $T=5$ (3 tenor) cocok terhadap Kalman + *RTS smoother* (`ll_diff = 5,68e-13`, `fast_ll_diff = 5,54e-13`, `mean_diff = 3,16e-16`, `cov_diff = 6,39e-17`), skor FD vs Richardson ($\le 3,38\cdot 10^{-7}$), determinisme bit-identik `1` vs `8` worker pada fixture cepat, serta `100/100` outer dan `10.000/10.000` refit bootstrap dalam bernilai *finite* (`0` interval invalid).
+  - **Perbandingan Berpasangan 5 Metode Interval 95% (`H=20y`, $R=100 \times B=100$ + Hessian $\widehat{\text{SE}}^*$)**:
+    - `kp11 (0.05)`: `Percentile` runtuh ke `14,0%` (`[8,5%, 22,1%]`); `Basic` mencapai `95,0%` (`[88,8%, 97,9%]`) tetapi `100/100 (100%)` berbatas bawah $\le 0$ (non-fisik); `Wald` `85,0%` (`79%` non-fisik); `Studentized` `86,0%` (`87%` non-fisik); `Log-Basic` menjamin `0%` non-fisik (`2%` OOB) namun cakupannya hanya `49,0%` (`[39,4%, 58,7%]`).
+    - `theta1 (0.045)`: `Studentized` (*bootstrap-t*) menaikkan cakupan dari `52,0%` (`Wald`), `46,0%` (`Percentile`), dan `47,0%` (`Basic`) menjadi **`72,0%`** (`[62,5%, 79,9%]`, median lebar naik $2\times$ menjadi `0,0462`), namun masih sensitif terhadap $\hat{\kappa}_1$ luar (`94,0%` bila $\hat{\kappa}_1 \le 0{,}2079$ vs `50,0%` bila $\hat{\kappa}_1 > 0{,}2079$) dan 2 outlier regularisasi Hessian (`mean_w = 19,12`).
+- Output `outputs/day004d/results.json`, 4 grafik SVG `outputs/figures/day004d_*.svg`, serta dokumen penjelasan [day004d_quant_afns-interval-calibration.md](project-explanations/day004d_quant_afns-interval-calibration.md).
+
+### Diperbarui
+- `README.md` (tabel progres baris `4d` Go via `scripts/update_readme.py`), `docs/CHANGELOG.md`, dan `docs/project-explanations/README.md`.
+
 ## [Hari 004c — pemeliharaan A] — 2026-11-22 · Diagnostik presisi pencarian garis `day004c`
 
 ### Diperbaiki
