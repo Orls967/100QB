@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="480" viewBox="0 0 940 480" style="background:#ffffff;font-family:system-ui,sans-serif">
+<text x="470.0" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#111">Fungsi Nilai Bellman DP-33 V(h=12, r, bin~45 EUR/MWh, SoC)</text>
+<rect x="84.0" y="56.0" width="826.0" height="350.0" fill="none" stroke="#333" stroke-width="1"/>
+<line x1="84.0" y1="56.0" x2="84.0" y2="406.0" stroke="#eee" stroke-width="1"/>
+<text x="84.0" y="424.0" text-anchor="middle" font-size="11" fill="#444">0</text>
+<line x1="84.0" y1="406.0" x2="910.0" y2="406.0" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="410.0" text-anchor="end" font-size="11" fill="#444">39.08</text>
+<line x1="249.2" y1="56.0" x2="249.2" y2="406.0" stroke="#eee" stroke-width="1"/>
+<text x="249.2" y="424.0" text-anchor="middle" font-size="11" fill="#444">0.8</text>
+<line x1="84.0" y1="336.0" x2="910.0" y2="336.0" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="340.0" text-anchor="end" font-size="11" fill="#444">141.4</text>
+<line x1="414.4" y1="56.0" x2="414.4" y2="406.0" stroke="#eee" stroke-width="1"/>
+<text x="414.4" y="424.0" text-anchor="middle" font-size="11" fill="#444">1.6</text>
+<line x1="84.0" y1="266.0" x2="910.0" y2="266.0" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="270.0" text-anchor="end" font-size="11" fill="#444">243.7</text>
+<line x1="579.6" y1="56.0" x2="579.6" y2="406.0" stroke="#eee" stroke-width="1"/>
+<text x="579.6" y="424.0" text-anchor="middle" font-size="11" fill="#444">2.4</text>
+<line x1="84.0" y1="196.0" x2="910.0" y2="196.0" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="200.0" text-anchor="end" font-size="11" fill="#444">346</text>
+<line x1="744.8" y1="56.0" x2="744.8" y2="406.0" stroke="#eee" stroke-width="1"/>
+<text x="744.8" y="424.0" text-anchor="middle" font-size="11" fill="#444">3.2</text>
+<line x1="84.0" y1="126.0" x2="910.0" y2="126.0" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="130.0" text-anchor="end" font-size="11" fill="#444">448.3</text>
+<line x1="910.0" y1="56.0" x2="910.0" y2="406.0" stroke="#eee" stroke-width="1"/>
+<text x="910.0" y="424.0" text-anchor="middle" font-size="11" fill="#444">4</text>
+<line x1="84.0" y1="56.0" x2="910.0" y2="56.0" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="60.0" text-anchor="end" font-size="11" fill="#444">550.6</text>
+<polyline fill="none" stroke="#1f77b4" stroke-width="2.30" points="84.00,381.86 104.65,375.60 125.30,368.20 145.95,363.19 166.60,353.62 187.25,359.47 207.90,359.22 228.55,358.14 249.20,356.63 269.85,354.23 290.50,343.44 311.15,336.05 331.80,331.03 352.45,321.47 373.10,326.83 393.75,327.07 414.40,325.32 435.05,324.32 455.70,322.00 476.35,319.48 497.00,303.89 517.65,298.88 538.30,289.31 558.95,294.67 579.60,294.91 600.25,293.16 620.90,292.16 641.55,289.85 662.20,287.32 682.85,284.60 703.50,266.87 724.15,257.58 744.80,262.52 765.45,262.81 786.10,261.00 806.75,260.01 827.40,257.69 848.05,255.16 868.70,252.47 889.35,249.72 910.00,225.59"/>
+<polyline fill="none" stroke="#d62728" stroke-width="2.30" points="84.00,286.27 104.65,272.01 125.30,245.78 145.95,239.49 166.60,219.72 187.25,239.54 207.90,241.72 228.55,244.56 249.20,244.52 269.85,242.97 290.50,239.85 311.15,213.62 331.80,200.89 352.45,182.86 373.10,197.02 393.75,202.23 414.40,202.93 435.05,204.47 455.70,203.14 476.35,201.24 497.00,181.47 517.65,168.73 538.30,144.45 558.95,164.86 579.60,170.08 600.25,170.77 620.90,172.31 641.55,170.99 662.20,169.08 682.85,166.63 703.50,136.58 724.15,112.30 744.80,128.93 765.45,137.92 786.10,138.62 806.75,140.15 827.40,138.83 848.05,136.92 868.70,134.47 889.35,131.83 910.00,80.14"/>
+<polyline fill="none" stroke="#2ca02c" stroke-width="2.30" stroke-dasharray="6,4" points="84.00,278.83 104.65,275.21 125.30,266.88 145.95,262.98 166.60,252.63 187.25,263.57 207.90,269.01 228.55,273.26 249.20,275.07 269.85,274.51 290.50,252.36 311.15,248.73 331.80,240.40 352.45,234.27 373.10,226.16 393.75,237.09 414.40,242.53 435.05,246.78 455.70,248.60 476.35,248.03 497.00,225.88 517.65,222.25 538.30,213.92 558.95,207.79 579.60,199.68 600.25,210.62 620.90,216.05 641.55,220.30 662.20,222.12 682.85,221.55 703.50,202.19 724.15,196.95 744.80,187.87 765.45,181.31 786.10,181.81 806.75,190.99 827.40,195.77 848.05,199.40 868.70,199.98 889.35,198.90 910.00,177.42"/>
+<rect x="96.0" y="66.0" width="285.0" height="66.0" fill="#ffffff" fill-opacity="0.92" stroke="#ccc" rx="4"/>
+<line x1="106.0" y1="78.0" x2="124.0" y2="78.0" stroke="#1f77b4" stroke-width="2.2"/>
+<text x="130.0" y="82.0" font-size="11" fill="#222">Rezim Normal</text>
+<line x1="106.0" y1="96.0" x2="124.0" y2="96.0" stroke="#d62728" stroke-width="2.2"/>
+<text x="130.0" y="100.0" font-size="11" fill="#222">Rezim Scarcity</text>
+<line x1="106.0" y1="114.0" x2="124.0" y2="114.0" stroke="#2ca02c" stroke-width="2.2" stroke-dasharray="4,2"/>
+<text x="130.0" y="118.0" font-size="11" fill="#222">Rezim Oversupply</text>
+<text x="497.0" y="464.0" text-anchor="middle" font-size="12" fill="#222">State of Charge SoC (MWh)</text>
+<text x="18" y="231.0" text-anchor="middle" font-size="12" fill="#222" transform="rotate(-90 18 231.0)">Nilai Harapan Total V (EUR, termasuk nilai terminal)</text>
+</svg>

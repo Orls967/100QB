@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="480" viewBox="0 0 940 480" style="background:#ffffff;font-family:system-ui,sans-serif">
+<text x="470.0" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#111">Distribusi Profit Arbitrase Harian Antar-Strategi (N=2.000 Hari CRN)</text>
+<rect x="84.0" y="56.0" width="826.0" height="350.0" fill="none" stroke="#333" stroke-width="1"/>
+<line x1="84.0" y1="56.0" x2="84.0" y2="406.0" stroke="#eee" stroke-width="1"/>
+<text x="84.0" y="424.0" text-anchor="middle" font-size="11" fill="#444">21.41</text>
+<line x1="84.0" y1="406.0" x2="910.0" y2="406.0" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="410.0" text-anchor="end" font-size="11" fill="#444">0</text>
+<line x1="249.2" y1="56.0" x2="249.2" y2="406.0" stroke="#eee" stroke-width="1"/>
+<text x="249.2" y="424.0" text-anchor="middle" font-size="11" fill="#444">286.9</text>
+<line x1="84.0" y1="336.0" x2="910.0" y2="336.0" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="340.0" text-anchor="end" font-size="11" fill="#444">7.474</text>
+<line x1="414.4" y1="56.0" x2="414.4" y2="406.0" stroke="#eee" stroke-width="1"/>
+<text x="414.4" y="424.0" text-anchor="middle" font-size="11" fill="#444">552.3</text>
+<line x1="84.0" y1="266.0" x2="910.0" y2="266.0" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="270.0" text-anchor="end" font-size="11" fill="#444">14.95</text>
+<line x1="579.6" y1="56.0" x2="579.6" y2="406.0" stroke="#eee" stroke-width="1"/>
+<text x="579.6" y="424.0" text-anchor="middle" font-size="11" fill="#444">817.8</text>
+<line x1="84.0" y1="196.0" x2="910.0" y2="196.0" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="200.0" text-anchor="end" font-size="11" fill="#444">22.42</text>
+<line x1="744.8" y1="56.0" x2="744.8" y2="406.0" stroke="#eee" stroke-width="1"/>
+<text x="744.8" y="424.0" text-anchor="middle" font-size="11" fill="#444">1083</text>
+<line x1="84.0" y1="126.0" x2="910.0" y2="126.0" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="130.0" text-anchor="end" font-size="11" fill="#444">29.89</text>
+<line x1="910.0" y1="56.0" x2="910.0" y2="406.0" stroke="#eee" stroke-width="1"/>
+<text x="910.0" y="424.0" text-anchor="middle" font-size="11" fill="#444">1349</text>
+<line x1="84.0" y1="56.0" x2="910.0" y2="56.0" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="60.0" text-anchor="end" font-size="11" fill="#444">37.37</text>
+<polyline fill="none" stroke="#1f77b4" stroke-width="2.20" points="84.00,338.56 110.65,317.96 137.29,286.11 163.94,278.15 190.58,271.13 217.23,292.20 243.87,327.79 270.52,353.55 297.16,375.09 323.81,385.86 350.45,386.33 377.10,394.29 403.74,393.36 430.39,400.38 457.03,399.44 483.68,397.10 510.32,399.91 536.97,402.25 563.61,402.25 590.26,401.32 616.90,404.13 643.55,403.19 670.19,405.06 696.84,405.06 723.48,404.60 750.13,403.66 776.77,405.53 803.42,404.13 830.06,405.53 856.71,404.60 883.35,405.53 910.00,401.32"/>
+<polyline fill="none" stroke="#9467bd" stroke-width="2.20" stroke-dasharray="6,4" points="84.00,326.39 110.65,316.55 137.29,287.98 163.94,281.90 190.58,269.25 217.23,296.41 243.87,329.66 270.52,354.95 297.16,377.90 323.81,384.46 350.45,385.39 377.10,393.36 403.74,395.23 430.39,400.85 457.03,400.38 483.68,396.63 510.32,400.85 536.97,402.25 563.61,402.25 590.26,399.91 616.90,404.60 643.55,403.66 670.19,404.13 696.84,405.53 723.48,404.60 750.13,402.72 776.77,405.06 803.42,405.06 830.06,406.00 856.71,404.60 883.35,405.06 910.00,401.79"/>
+<polyline fill="none" stroke="#ff7f0e" stroke-width="2.20" points="84.00,81.93 110.65,164.82 137.29,187.77 163.94,376.50 190.58,391.01 217.23,400.38 243.87,394.29 270.52,395.23 297.16,396.63 323.81,396.17 350.45,399.44 377.10,399.91 403.74,399.44 430.39,402.72 457.03,403.19 483.68,401.32 510.32,401.79 536.97,400.85 563.61,402.25 590.26,404.13 616.90,404.13 643.55,403.19 670.19,403.66 696.84,405.06 723.48,404.13 750.13,405.53 776.77,405.06 803.42,406.00 830.06,405.53 856.71,405.06 883.35,405.06 910.00,403.19"/>
+<polyline fill="none" stroke="#2ca02c" stroke-width="2.20" stroke-dasharray="6,4" points="84.00,406.00 110.65,406.00 137.29,403.19 163.94,394.76 190.58,377.43 217.23,340.90 243.87,297.35 270.52,288.45 297.16,295.48 323.81,302.50 350.45,330.60 377.10,343.71 403.74,364.32 430.39,371.34 457.03,390.08 483.68,389.61 510.32,393.36 536.97,396.63 563.61,390.55 590.26,394.76 616.90,396.17 643.55,399.91 670.19,398.51 696.84,400.85 723.48,398.51 750.13,402.25 776.77,399.44 803.42,403.19 830.06,398.04 856.71,402.72 883.35,403.66 910.00,375.09"/>
+<rect x="615.0" y="66.0" width="285.0" height="84.0" fill="#ffffff" fill-opacity="0.92" stroke="#ccc" rx="4"/>
+<line x1="625.0" y1="78.0" x2="643.0" y2="78.0" stroke="#1f77b4" stroke-width="2.2"/>
+<text x="649.0" y="82.0" font-size="11" fill="#222">DP-33 (Mean=236.1, VaR5=27.6)</text>
+<line x1="625.0" y1="96.0" x2="643.0" y2="96.0" stroke="#9467bd" stroke-width="2.2" stroke-dasharray="4,2"/>
+<text x="649.0" y="100.0" font-size="11" fill="#222">DP-17 (Mean=231.9, VaR5=22.5)</text>
+<line x1="625.0" y1="114.0" x2="643.0" y2="114.0" stroke="#ff7f0e" stroke-width="2.2"/>
+<text x="649.0" y="118.0" font-size="11" fill="#222">Threshold (Mean=116.0, VaR5=0.0)</text>
+<line x1="625.0" y1="132.0" x2="643.0" y2="132.0" stroke="#2ca02c" stroke-width="2.2" stroke-dasharray="4,2"/>
+<text x="649.0" y="136.0" font-size="11" fill="#222">Perfect Foresight (Mean=488.4)</text>
+<text x="497.0" y="464.0" text-anchor="middle" font-size="12" fill="#222">Profit Bersih Harian (EUR, net terhadap nilai terminal awal 81 EUR)</text>
+<text x="18" y="231.0" text-anchor="middle" font-size="12" fill="#222" transform="rotate(-90 18 231.0)">Persentase Hari per Bin (%)</text>
+</svg>

@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="620" viewBox="0 0 940 620" style="background:#ffffff;font-family:system-ui,sans-serif">
+<text x="470.0" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#111">Dispatch Baterai &amp; SoC pada Hari Contoh #12 (Aturan Pra-Run)</text>
+<rect x="82.0" y="48.0" width="828.0" height="150.0" fill="none" stroke="#333" stroke-width="1"/>
+<line x1="82.0" y1="198.0" x2="910.0" y2="198.0" stroke="#eee" stroke-width="1"/>
+<text x="75.0" y="202.0" text-anchor="end" font-size="10.5" fill="#444">-213.2</text>
+<line x1="82.0" y1="160.5" x2="910.0" y2="160.5" stroke="#eee" stroke-width="1"/>
+<text x="75.0" y="164.5" text-anchor="end" font-size="10.5" fill="#444">-82.86</text>
+<line x1="82.0" y1="123.0" x2="910.0" y2="123.0" stroke="#eee" stroke-width="1"/>
+<text x="75.0" y="127.0" text-anchor="end" font-size="10.5" fill="#444">47.48</text>
+<line x1="82.0" y1="85.5" x2="910.0" y2="85.5" stroke="#eee" stroke-width="1"/>
+<text x="75.0" y="89.5" text-anchor="end" font-size="10.5" fill="#444">177.8</text>
+<line x1="82.0" y1="48.0" x2="910.0" y2="48.0" stroke="#eee" stroke-width="1"/>
+<text x="75.0" y="52.0" text-anchor="end" font-size="10.5" fill="#444">308.2</text>
+<line x1="82.0" y1="48.0" x2="82.0" y2="198.0" stroke="#f0f0f0" stroke-width="1"/>
+<line x1="220.0" y1="48.0" x2="220.0" y2="198.0" stroke="#f0f0f0" stroke-width="1"/>
+<line x1="358.0" y1="48.0" x2="358.0" y2="198.0" stroke="#f0f0f0" stroke-width="1"/>
+<line x1="496.0" y1="48.0" x2="496.0" y2="198.0" stroke="#f0f0f0" stroke-width="1"/>
+<line x1="634.0" y1="48.0" x2="634.0" y2="198.0" stroke="#f0f0f0" stroke-width="1"/>
+<line x1="772.0" y1="48.0" x2="772.0" y2="198.0" stroke="#f0f0f0" stroke-width="1"/>
+<line x1="910.0" y1="48.0" x2="910.0" y2="198.0" stroke="#f0f0f0" stroke-width="1"/>
+<line x1="82.0" y1="136.7" x2="910.0" y2="136.7" stroke="#777" stroke-width="1.1" stroke-dasharray="4,3"/>
+<polyline fill="none" stroke="#111111" stroke-width="2.20" points="82.00,109.92 116.50,110.32 151.00,118.64 185.50,119.38 220.00,58.34 254.50,134.36 289.00,127.37 323.50,187.66 358.00,102.07 392.50,86.10 427.00,82.17 461.50,93.23 496.00,91.76 530.50,106.42 565.00,111.82 599.50,121.39 634.00,113.92 668.50,113.67 703.00,122.69 737.50,123.77 772.00,131.70 806.50,128.21 841.00,125.10 875.50,130.20"/>
+<rect x="92.0" y="56.0" width="240.0" height="27.0" fill="#ffffff" fill-opacity="0.90" stroke="#ccc" rx="4"/>
+<line x1="100.0" y1="67.0" x2="116.0" y2="67.0" stroke="#111111" stroke-width="2.2"/>
+<text x="121.0" y="71.0" font-size="10.5" fill="#222">Harga Spot P_h (EUR/MWh)</text>
+<text x="18" y="123.0" text-anchor="middle" font-size="11.5" fill="#222" transform="rotate(-90 18 123.0)">Harga (EUR/MWh)</text>
+<rect x="82.0" y="220.0" width="828.0" height="150.0" fill="none" stroke="#333" stroke-width="1"/>
+<line x1="82.0" y1="370.0" x2="910.0" y2="370.0" stroke="#eee" stroke-width="1"/>
+<text x="75.0" y="374.0" text-anchor="end" font-size="10.5" fill="#444">-2</text>
+<line x1="82.0" y1="332.5" x2="910.0" y2="332.5" stroke="#eee" stroke-width="1"/>
+<text x="75.0" y="336.5" text-anchor="end" font-size="10.5" fill="#444">-0.95</text>
+<line x1="82.0" y1="295.0" x2="910.0" y2="295.0" stroke="#eee" stroke-width="1"/>
+<text x="75.0" y="299.0" text-anchor="end" font-size="10.5" fill="#444">0.1</text>
+<line x1="82.0" y1="257.5" x2="910.0" y2="257.5" stroke="#eee" stroke-width="1"/>
+<text x="75.0" y="261.5" text-anchor="end" font-size="10.5" fill="#444">1.15</text>
+<line x1="82.0" y1="220.0" x2="910.0" y2="220.0" stroke="#eee" stroke-width="1"/>
+<text x="75.0" y="224.0" text-anchor="end" font-size="10.5" fill="#444">2.2</text>
+<line x1="82.0" y1="220.0" x2="82.0" y2="370.0" stroke="#f0f0f0" stroke-width="1"/>
+<line x1="220.0" y1="220.0" x2="220.0" y2="370.0" stroke="#f0f0f0" stroke-width="1"/>
+<line x1="358.0" y1="220.0" x2="358.0" y2="370.0" stroke="#f0f0f0" stroke-width="1"/>
+<line x1="496.0" y1="220.0" x2="496.0" y2="370.0" stroke="#f0f0f0" stroke-width="1"/>
+<line x1="634.0" y1="220.0" x2="634.0" y2="370.0" stroke="#f0f0f0" stroke-width="1"/>
+<line x1="772.0" y1="220.0" x2="772.0" y2="370.0" stroke="#f0f0f0" stroke-width="1"/>
+<line x1="910.0" y1="220.0" x2="910.0" y2="370.0" stroke="#f0f0f0" stroke-width="1"/>
+<line x1="82.0" y1="298.6" x2="910.0" y2="298.6" stroke="#777" stroke-width="1.1" stroke-dasharray="4,3"/>
+<polyline fill="none" stroke="#1f77b4" stroke-width="2.20" points="82.00,362.86 116.50,298.57 151.00,298.57 185.50,298.57 220.00,298.57 254.50,227.14 289.00,227.14 323.50,298.57 358.00,362.86 392.50,330.71 427.00,298.57 461.50,298.57 496.00,298.57 530.50,298.57 565.00,298.57 599.50,298.57 634.00,298.57 668.50,298.57 703.00,298.57 737.50,298.57 772.00,227.14 806.50,298.57 841.00,298.57 875.50,262.86"/>
+<polyline fill="none" stroke="#ff7f0e" stroke-width="2.00" stroke-dasharray="5,3" points="82.00,298.57 116.50,298.57 151.00,298.57 185.50,298.57 220.00,362.86 254.50,298.57 289.00,298.57 323.50,227.14 358.00,298.57 392.50,298.57 427.00,298.57 461.50,298.57 496.00,298.57 530.50,298.57 565.00,298.57 599.50,298.57 634.00,298.57 668.50,298.57 703.00,298.57 737.50,298.57 772.00,298.57 806.50,298.57 841.00,298.57 875.50,298.57"/>
+<polyline fill="none" stroke="#2ca02c" stroke-width="1.80" stroke-dasharray="5,3" points="82.00,298.57 116.50,298.57 151.00,298.57 185.50,298.57 220.00,362.86 254.50,227.14 289.00,298.57 323.50,227.14 358.00,298.57 392.50,330.71 427.00,362.86 461.50,298.57 496.00,298.57 530.50,298.57 565.00,298.57 599.50,227.14 634.00,298.57 668.50,362.86 703.00,298.57 737.50,298.57 772.00,227.14 806.50,298.57 841.00,298.57 875.50,227.14"/>
+<rect x="92.0" y="228.0" width="240.0" height="61.0" fill="#ffffff" fill-opacity="0.90" stroke="#ccc" rx="4"/>
+<line x1="100.0" y1="239.0" x2="116.0" y2="239.0" stroke="#1f77b4" stroke-width="2.2"/>
+<text x="121.0" y="243.0" font-size="10.5" fill="#222">DP-33 (Profit 434.0 EUR)</text>
+<line x1="100.0" y1="256.0" x2="116.0" y2="256.0" stroke="#ff7f0e" stroke-width="2.2"/>
+<text x="121.0" y="260.0" font-size="10.5" fill="#222">Threshold (Profit 828.8 EUR)</text>
+<line x1="100.0" y1="273.0" x2="116.0" y2="273.0" stroke="#2ca02c" stroke-width="2.2"/>
+<text x="121.0" y="277.0" font-size="10.5" fill="#222">Perfect Foresight (1334.3 EUR)</text>
+<text x="18" y="295.0" text-anchor="middle" font-size="11.5" fill="#222" transform="rotate(-90 18 295.0)">Daya Grid (MW)</text>
+<rect x="82.0" y="392.0" width="828.0" height="165.0" fill="none" stroke="#333" stroke-width="1"/>
+<line x1="82.0" y1="557.0" x2="910.0" y2="557.0" stroke="#eee" stroke-width="1"/>
+<text x="75.0" y="561.0" text-anchor="end" font-size="10.5" fill="#444">0</text>
+<line x1="82.0" y1="515.8" x2="910.0" y2="515.8" stroke="#eee" stroke-width="1"/>
+<text x="75.0" y="519.8" text-anchor="end" font-size="10.5" fill="#444">1.025</text>
+<line x1="82.0" y1="474.5" x2="910.0" y2="474.5" stroke="#eee" stroke-width="1"/>
+<text x="75.0" y="478.5" text-anchor="end" font-size="10.5" fill="#444">2.05</text>
+<line x1="82.0" y1="433.2" x2="910.0" y2="433.2" stroke="#eee" stroke-width="1"/>
+<text x="75.0" y="437.2" text-anchor="end" font-size="10.5" fill="#444">3.075</text>
+<line x1="82.0" y1="392.0" x2="910.0" y2="392.0" stroke="#eee" stroke-width="1"/>
+<text x="75.0" y="396.0" text-anchor="end" font-size="10.5" fill="#444">4.1</text>
+<line x1="82.0" y1="392.0" x2="82.0" y2="557.0" stroke="#f0f0f0" stroke-width="1"/>
+<text x="82.0" y="573.0" text-anchor="middle" font-size="10.5" fill="#444">0</text>
+<line x1="220.0" y1="392.0" x2="220.0" y2="557.0" stroke="#f0f0f0" stroke-width="1"/>
+<text x="220.0" y="573.0" text-anchor="middle" font-size="10.5" fill="#444">4</text>
+<line x1="358.0" y1="392.0" x2="358.0" y2="557.0" stroke="#f0f0f0" stroke-width="1"/>
+<text x="358.0" y="573.0" text-anchor="middle" font-size="10.5" fill="#444">8</text>
+<line x1="496.0" y1="392.0" x2="496.0" y2="557.0" stroke="#f0f0f0" stroke-width="1"/>
+<text x="496.0" y="573.0" text-anchor="middle" font-size="10.5" fill="#444">12</text>
+<line x1="634.0" y1="392.0" x2="634.0" y2="557.0" stroke="#f0f0f0" stroke-width="1"/>
+<text x="634.0" y="573.0" text-anchor="middle" font-size="10.5" fill="#444">16</text>
+<line x1="772.0" y1="392.0" x2="772.0" y2="557.0" stroke="#f0f0f0" stroke-width="1"/>
+<text x="772.0" y="573.0" text-anchor="middle" font-size="10.5" fill="#444">20</text>
+<line x1="910.0" y1="392.0" x2="910.0" y2="557.0" stroke="#f0f0f0" stroke-width="1"/>
+<text x="910.0" y="573.0" text-anchor="middle" font-size="10.5" fill="#444">24</text>
+<polyline fill="none" stroke="#1f77b4" stroke-width="2.20" points="82.00,476.51 116.50,557.00 151.00,557.00 185.50,557.00 220.00,557.00 254.50,557.00 289.00,484.56 323.50,412.12 358.00,412.12 392.50,492.61 427.00,532.85 461.50,532.85 496.00,532.85 530.50,532.85 565.00,532.85 599.50,532.85 634.00,532.85 668.50,532.85 703.00,532.85 737.50,532.85 772.00,532.85 806.50,460.41 841.00,460.41 875.50,460.41 910.00,424.20"/>
+<polyline fill="none" stroke="#ff7f0e" stroke-width="2.00" stroke-dasharray="5,3" points="82.00,476.51 116.50,476.51 151.00,476.51 185.50,476.51 220.00,476.51 254.50,557.00 289.00,557.00 323.50,557.00 358.00,484.56 392.50,484.56 427.00,484.56 461.50,484.56 496.00,484.56 530.50,484.56 565.00,484.56 599.50,484.56 634.00,484.56 668.50,484.56 703.00,484.56 737.50,484.56 772.00,484.56 806.50,484.56 841.00,484.56 875.50,484.56 910.00,484.56"/>
+<polyline fill="none" stroke="#2ca02c" stroke-width="1.80" stroke-dasharray="5,3" points="82.00,476.51 116.50,476.51 151.00,476.51 185.50,476.51 220.00,476.51 254.50,557.00 289.00,484.56 323.50,484.56 358.00,412.12 392.50,412.12 427.00,452.37 461.50,532.85 496.00,532.85 530.50,532.85 565.00,532.85 599.50,532.85 634.00,460.41 668.50,460.41 703.00,540.90 737.50,540.90 772.00,540.90 806.50,468.46 841.00,468.46 875.50,468.46 910.00,396.02"/>
+<rect x="92.0" y="400.0" width="240.0" height="61.0" fill="#ffffff" fill-opacity="0.90" stroke="#ccc" rx="4"/>
+<line x1="100.0" y1="411.0" x2="116.0" y2="411.0" stroke="#1f77b4" stroke-width="2.2"/>
+<text x="121.0" y="415.0" font-size="10.5" fill="#222">SoC DP-33 (MWh)</text>
+<line x1="100.0" y1="428.0" x2="116.0" y2="428.0" stroke="#ff7f0e" stroke-width="2.2"/>
+<text x="121.0" y="432.0" font-size="10.5" fill="#222">SoC Threshold (MWh)</text>
+<line x1="100.0" y1="445.0" x2="116.0" y2="445.0" stroke="#2ca02c" stroke-width="2.2"/>
+<text x="121.0" y="449.0" font-size="10.5" fill="#222">SoC Perfect Foresight (MWh)</text>
+<text x="18" y="474.5" text-anchor="middle" font-size="11.5" fill="#222" transform="rotate(-90 18 474.5)">SoC Baterai (MWh)</text>
+<text x="496.0" y="604.0" text-anchor="middle" font-size="12" fill="#222">Jam dalam Hari Evaluasi (h = 0..24)</text>
+</svg>
