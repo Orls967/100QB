@@ -31,11 +31,12 @@ Seluruh ringkasan tetap menyertakan ke-$50$ replikasi apa adanya (termasuk kasus
 
 ## 4. Ringkasan Temuan Utama
 
-### Validasi Metode & Jangkar Eksak (`c1..c4 = tercapai`, waktu total `41,93 detik`)
+### Validasi Metode & Jangkar Eksak (`c1..c4 = tercapai`, waktu total `54,76 detik`)
 - **Jangkar Gaussian gabungan ($T=5$, 3 tenor)**: selisih absolut log-likelihood Kalman penuh `3,41e-13`, `FastLogLikelihood` tunak Riccati `3,55e-13`, rata-rata smoother RTS `2,83e-16`, kovarians smoother `6,39e-17` (seluruhnya `< 1e-9`).
 - **Gradien beda hingga vs Richardson (koordinat terskala)**: galat relatif L2 maksimum sepanjang studi di titik awal `2,71e-9` dan di nilai benar `4,34e-7` (`< 1e-5`).
 - **Determinisme worker**: identik bit-demi-bit antara `1` dan `8` worker pada fixture deterministik (`T=100, R=4`).
 - **Baseline `1000w` vs `day004a`**: `11/11` parameter selisih biasnya berada dalam $3\text{ MCSE}$ gabungan (`max |z| = 2,82` pada `kp33`; `10/11` dalam $2\text{ MCSE}$).
+- **Diagnostik Optimizer**: konvergensi gradien ketat ($\|g\|_\infty \le 10^{-6}$, `gradient_tolerance`) tercapai pada `8/50` di *monthly* ($|\ell| \sim 1{,}35\times 10^4$), sedangkan pada *weekly*/*daily* ($|\ell| \sim 3\times 10^4\text{–}2{,}9\times 10^5$) mayoritas optimisasi berhenti via `line_search_failed` dengan gradien terskala tetap $\le 10^{-6}$ (`48–50/50`). Keempat kasus interior `max_iterations` (`baseline Rep 39`, `80y Rep 19 & 37`, `monthly Rep 35`) serta lima kasus `line_search_failed` ber-batas aktif tercatat per tahap (`stage1`/`stage2`).
 
 ### Long-Span (`10y -> 80y`): Peluruhan Bias $K^{\mathbb{P}}_{ii} \propto 1/H$
 | Parameter | Bias $10\text{y}$ | Bias $20\text{y}$ | Bias $40\text{y}$ | Bias $80\text{y}$ | Tren OLS vs $1/H$ ($\pm$ prefix MCSE) | Tren WLS vs $1/H$ ($\pm$ prefix MCSE) |
@@ -66,8 +67,8 @@ Jalankan dari direktori proyek:
 cd projects/go/day004b_afns_inference
 gofmt -l .
 go vet ./...
-go test -race -count=1 ./...
-go run ./cmd/run           # Runner penuh R=50 (~42s di 8 core) -> outputs/day004b/results.json & outputs/figures/
+go test -race -count=1 -v ./... # 9 paket, 15 tes utama, 4 subtes
+go run ./cmd/run              # Runner penuh R=50 (~55s di 8 core) -> outputs/day004b/results.json & outputs/figures/
 go run ./cmd/run -quick    # Mode cepat pengembangan (R=4, menulis hanya ke direktori sementara sistem)
 ```
 

@@ -113,17 +113,32 @@ func CentralDiffHessian(f func([]float64) float64, x, steps []float64) [][]float
 	return hess
 }
 
+const (
+	// TermGradientTol menandakan konvergensi ketat di titik interior karena norma gradien <= gradTol.
+	TermGradientTol = "gradient_tolerance"
+	// TermBoundaryStationary menandakan solusi berhenti pada batas kotak dengan gradien terproyeksi <= gradTol.
+	TermBoundaryStationary = "boundary_stationary"
+	// TermLineSearchFailed menandakan pencarian garis Armijo gagal menemukan langkah turun atau stagnan sebelum gradTol.
+	TermLineSearchFailed = "line_search_failed"
+	// TermMaxIterations menandakan penghentian karena mencapai batas iterasi sebelum gradTol terpenuhi.
+	TermMaxIterations = "max_iterations"
+	// TermInvalidObjective menandakan nilai objektif atau gradien non-finite atau melebihi penalti tidak valid.
+	TermInvalidObjective = "invalid_objective_or_gradient"
+)
+
 // BFGSResult merangkum keluaran minimisasi quasi-Newton BFGS dengan kendala kotak opsional.
 type BFGSResult struct {
-	X               []float64
-	Fun             float64
-	GradNorm        float64
-	ScaledGradNorm  float64
-	Iterations      int
-	FuncEvals       int
-	Converged       bool
-	HitBound        bool
-	HitBoundByParam []bool
+	X                 []float64
+	Fun               float64
+	RawGradNorm       float64
+	GradNorm          float64
+	ScaledGradNorm    float64
+	Iterations        int
+	FuncEvals         int
+	Converged         bool
+	HitBound          bool
+	HitBoundByParam   []bool
+	TerminationReason string
 }
 
 func clampVec(x, lo, hi []float64) {
@@ -138,9 +153,21 @@ func clampVec(x, lo, hi []float64) {
 	}
 }
 
+func isInvalidState(val float64, g []float64) bool {
+	if math.IsNaN(val) || math.IsInf(val, 0) || val >= 1e29 {
+		return true
+	}
+	for _, gi := range g {
+		if math.IsNaN(gi) || math.IsInf(gi, 0) {
+			return true
+		}
+	}
+	return false
+}
+
 // MinimizeBFGS meminimalkan fungsi f(x) memakai BFGS dengan backtracking Armijo
-// dan penjepit kotak [lo, hi] pengaman. Konvergensi memeriksa norma inf gradien tak-diskalakan
-// maupun gradien relatif terhadap |f(x)| untuk mengakomodasi skala log-likelihood sampel besar.
+// dan penjepit kotak [lo, hi] pengaman. Konvergensi ketat hanya tercapai bila
+// norma gradien memenuhi gradTol di titik interior; alasan penghentian lain dicatat eksplisit.
 func MinimizeBFGS(f func([]float64) float64, x0, lo, hi []float64, maxIter int, gradTol float64) BFGSResult {
 	n := len(x0)
 	x := make([]float64, n)
@@ -156,18 +183,39 @@ func MinimizeBFGS(f func([]float64) float64, x0, lo, hi []float64, maxIter int, 
 		return CentralDiffGrad(evalF, v, nil)
 	}
 
-	fx := evalF(x)
-	g := gradF(x)
+	rawInfNorm := func(v []float64) float64 {
+		m := 0.0
+		for _, a := range v {
+			if math.IsNaN(a) {
+				return math.NaN()
+			}
+			if math.Abs(a) > m {
+				m = math.Abs(a)
+			}
+		}
+		return m
+	}
 
-	hMat := make([][]float64, n)
-	for i := 0; i < n; i++ {
-		hMat[i] = make([]float64, n)
-		hMat[i][i] = 1.0
+	checkBounds := func(vec []float64) (bool, []bool) {
+		hit := false
+		byParam := make([]bool, n)
+		if len(lo) == n && len(hi) == n {
+			for i := 0; i < n; i++ {
+				if vec[i] <= lo[i]+1e-9 || vec[i] >= hi[i]-1e-9 {
+					hit = true
+					byParam[i] = true
+				}
+			}
+		}
+		return hit, byParam
 	}
 
 	infNorm := func(v []float64) float64 {
 		m := 0.0
 		for i, a := range v {
+			if math.IsNaN(a) {
+				return math.NaN()
+			}
 			// Abaikan komponen gradien yang mendorong ke luar batas aktif
 			if len(lo) == len(v) && len(hi) == len(v) {
 				if x[i] <= lo[i]+1e-12 && a > 0 {
@@ -184,7 +232,16 @@ func MinimizeBFGS(f func([]float64) float64, x0, lo, hi []float64, maxIter int, 
 		return m
 	}
 
-	converged := false
+	fx := evalF(x)
+	g := gradF(x)
+
+	hMat := make([][]float64, n)
+	for i := 0; i < n; i++ {
+		hMat[i] = make([]float64, n)
+		hMat[i][i] = 1.0
+	}
+
+	termReason := ""
 	iters := 0
 	xCand := make([]float64, n)
 	d := make([]float64, n)
@@ -192,10 +249,19 @@ func MinimizeBFGS(f func([]float64) float64, x0, lo, hi []float64, maxIter int, 
 	y := make([]float64, n)
 	hy := make([]float64, n)
 
-	for iter := 0; iter < maxIter; iter++ {
+	if isInvalidState(fx, g) {
+		termReason = TermInvalidObjective
+	}
+
+	for iter := 0; termReason == "" && iter < maxIter; iter++ {
 		gn := infNorm(g)
 		if gn <= gradTol {
-			converged = true
+			hb, _ := checkBounds(x)
+			if hb {
+				termReason = TermBoundaryStationary
+			} else {
+				termReason = TermGradientTol
+			}
 			break
 		}
 		iters = iter + 1
@@ -233,17 +299,14 @@ func MinimizeBFGS(f func([]float64) float64, x0, lo, hi []float64, maxIter int, 
 				dirDeriv += g[i] * (xCand[i] - x[i])
 			}
 			fCand = evalF(xCand)
-			if !math.IsNaN(fCand) && !math.IsInf(fCand, 0) && fCand <= fx+c1*dirDeriv {
+			if !math.IsNaN(fCand) && !math.IsInf(fCand, 0) && fCand < 1e29 && fCand <= fx+c1*dirDeriv {
 				accepted = true
 				break
 			}
 			alpha *= 0.5
 		}
 		if !accepted {
-			scaledGrad := infNorm(g) / math.Max(1.0, math.Abs(fx))
-			if scaledGrad <= 1e-6 || infNorm(g) <= math.Max(gradTol*100.0, 5e-4) {
-				converged = true
-			}
+			termReason = TermLineSearchFailed
 			break
 		}
 
@@ -257,6 +320,11 @@ func MinimizeBFGS(f func([]float64) float64, x0, lo, hi []float64, maxIter int, 
 		fPrev := fx
 		fx = fCand
 		gNew := gradF(x)
+		if isInvalidState(fx, gNew) {
+			g = gNew
+			termReason = TermInvalidObjective
+			break
+		}
 
 		sy := 0.0
 		sNormSq := 0.0
@@ -269,9 +337,17 @@ func MinimizeBFGS(f func([]float64) float64, x0, lo, hi []float64, maxIter int, 
 		}
 		g = gNew
 
-		scaledGrad := infNorm(g) / math.Max(1.0, math.Abs(fx))
 		if stepNorm < 1e-13 && math.Abs(fx-fPrev) < 1e-12*math.Max(1.0, math.Abs(fx)) {
-			converged = infNorm(g) <= math.Max(gradTol*100.0, 1e-4) || scaledGrad <= 1e-6
+			if infNorm(g) <= gradTol {
+				hb, _ := checkBounds(x)
+				if hb {
+					termReason = TermBoundaryStationary
+				} else {
+					termReason = TermGradientTol
+				}
+			} else {
+				termReason = TermLineSearchFailed
+			}
 			break
 		}
 
@@ -303,27 +379,32 @@ func MinimizeBFGS(f func([]float64) float64, x0, lo, hi []float64, maxIter int, 
 		}
 	}
 
-	hitBound := false
-	hitByParam := make([]bool, n)
-	if len(lo) == n && len(hi) == n {
-		for i := 0; i < n; i++ {
-			if x[i] <= lo[i]+1e-9 || x[i] >= hi[i]-1e-9 {
-				hitBound = true
-				hitByParam[i] = true
+	hitBound, hitByParam := checkBounds(x)
+	gnFinal := infNorm(g)
+	rawFinal := rawInfNorm(g)
+	if termReason == "" {
+		if gnFinal <= gradTol {
+			if hitBound {
+				termReason = TermBoundaryStationary
+			} else {
+				termReason = TermGradientTol
 			}
+		} else {
+			termReason = TermMaxIterations
 		}
 	}
-	gnFinal := infNorm(g)
 	scaledFinal := gnFinal / math.Max(1.0, math.Abs(fx))
 	return BFGSResult{
-		X:               x,
-		Fun:             fx,
-		GradNorm:        gnFinal,
-		ScaledGradNorm:  scaledFinal,
-		Iterations:      iters,
-		FuncEvals:       evals,
-		Converged:       converged || gnFinal <= 1e-4 || (scaledFinal <= 1e-6 && iters < maxIter),
-		HitBound:        hitBound,
-		HitBoundByParam: hitByParam,
+		X:                 x,
+		Fun:               fx,
+		RawGradNorm:       rawFinal,
+		GradNorm:          gnFinal,
+		ScaledGradNorm:    scaledFinal,
+		Iterations:        iters,
+		FuncEvals:         evals,
+		Converged:         termReason == TermGradientTol,
+		HitBound:          hitBound,
+		HitBoundByParam:   hitByParam,
+		TerminationReason: termReason,
 	}
 }

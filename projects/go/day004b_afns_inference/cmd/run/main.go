@@ -77,6 +77,21 @@ func paramSummaryToJSON(p kalman.ParamSummary) jsonout.Obj {
 	}
 }
 
+func stageDiagToJSON(s kalman.StageDiagnostic) jsonout.Obj {
+	return jsonout.Obj{
+		{Key: "stage", Val: s.Stage},
+		{Key: "iterations", Val: s.Iterations},
+		{Key: "func_evals", Val: s.FuncEvals},
+		{Key: "loglik", Val: s.LogLik},
+		{Key: "raw_grad_norm", Val: s.RawGradNorm},
+		{Key: "grad_norm", Val: s.GradNorm},
+		{Key: "scaled_grad_norm", Val: s.ScaledGradNorm},
+		{Key: "converged", Val: s.Converged},
+		{Key: "hit_bound", Val: s.HitBound},
+		{Key: "termination_reason", Val: s.TerminationReason},
+	}
+}
+
 func mleResultToJSON(repIdx int, r kalman.MLEResult) jsonout.Obj {
 	hb := make([]bool, 11)
 	for i := 0; i < 11; i++ {
@@ -92,15 +107,22 @@ func mleResultToJSON(repIdx int, r kalman.MLEResult) jsonout.Obj {
 		{Key: "grad_rel_err_init", Val: r.GradRelErrInit},
 		{Key: "grad_rel_err_true", Val: r.GradRelErrTrue},
 		{Key: "grad_abs_diff_opt", Val: r.GradAbsDiffOpt},
+		{Key: "raw_grad_norm_opt", Val: r.RawGradNormOpt},
 		{Key: "grad_norm_opt", Val: r.GradNormOpt},
 		{Key: "scaled_grad_norm_opt", Val: r.ScaledGradNormOpt},
 		{Key: "hessian_se", Val: r.HessianSE[:]},
 		{Key: "hessian_min_eig", Val: r.HessianMinEig},
 		{Key: "hessian_regularized", Val: r.HessianRegularized},
 		{Key: "iterations", Val: r.Iterations},
+		{Key: "iterations_best_stage", Val: r.BestStageIterations},
+		{Key: "iterations_cumulative", Val: r.CumulativeIterations},
+		{Key: "best_stage", Val: r.BestStage},
 		{Key: "converged", Val: r.Converged},
+		{Key: "termination_reason", Val: r.TerminationReason},
 		{Key: "hit_bound", Val: r.HitBound},
 		{Key: "hit_bound_by_param", Val: hb},
+		{Key: "stage1", Val: stageDiagToJSON(r.Stage1)},
+		{Key: "stage2", Val: stageDiagToJSON(r.Stage2)},
 	}
 }
 
@@ -119,6 +141,19 @@ func studyResultToJSON(s kalman.StudyConfigResult) jsonout.Obj {
 		{Key: "elapsed_seconds", Val: s.ElapsedSeconds},
 		{Key: "converged_count", Val: s.ConvergedCount},
 		{Key: "converged_pct", Val: s.ConvergedPct},
+		{Key: "termination_reason_counts", Val: jsonout.Obj{
+			{Key: "gradient_tolerance", Val: s.GradTolCount},
+			{Key: "boundary_stationary", Val: s.BoundaryStationaryCount},
+			{Key: "line_search_failed", Val: s.LineSearchFailedCount},
+			{Key: "max_iterations", Val: s.MaxIterCount},
+			{Key: "invalid_objective_or_gradient", Val: s.InvalidObjCount},
+		}},
+		{Key: "best_stage_counts", Val: jsonout.Obj{
+			{Key: "stage1", Val: s.BestStage1Count},
+			{Key: "stage2", Val: s.BestStage2Count},
+		}},
+		{Key: "scaled_grad_le_1e6_count", Val: s.ScaledGradLe1e6Count},
+		{Key: "scaled_grad_le_1e6_pct", Val: s.ScaledGradLe1e6Pct},
 		{Key: "ll_ge_true_count", Val: s.LLGeTrueCount},
 		{Key: "ll_ge_true_pct", Val: s.LLGeTruePct},
 		{Key: "bound_hit_count", Val: s.BoundHitCount},
@@ -323,31 +358,31 @@ func buildFigures(
 		return err
 	}
 
-	// Grafik 5 (diagnostik pelengkap): Tingkat Konvergensi dan Solusi Menyentuh Batas per Konfigurasi
+	// Grafik 5 (diagnostik pelengkap): Diagnostik Penghentian Optimizer & Batas Aktif (%) per Konfigurasi
 	cfgLabels := make([]string, len(allDistinct))
 	convPcts := make([]float64, len(allDistinct))
+	sgradPcts := make([]float64, len(allDistinct))
 	hitPcts := make([]float64, len(allDistinct))
-	kp11HitPcts := make([]float64, len(allDistinct))
 	for i, st := range allDistinct {
 		short := strings.TrimPrefix(st.Spec.Name, "longspan_")
 		short = strings.TrimPrefix(short, "infill_")
 		cfgLabels[i] = short
 		convPcts[i] = st.ConvergedPct
+		sgradPcts[i] = st.ScaledGradLe1e6Pct
 		hitPcts[i] = st.BoundHitPct
-		kp11HitPcts[i] = st.Params[1].BoundHitPct
 	}
 	yB0, yB1 := 0.0, 108.0
 	if err := svg.WriteGroupedBarChart(filepath.Join(figDir, "day004b_convergence-and-bound-hits.svg"), svg.ChartOptions{
-		Title:        "Diagnostik Konvergensi Optimisasi & Solusi Menyentuh Batas (%) per Studi",
+		Title:        "Diagnostik Penghentian Optimizer & Solusi Batas Aktif (%) per Studi",
 		XLabel:       "Konfigurasi Eksperimen",
 		YLabel:       "Persentase dari R Replikasi (%)",
 		YMinOverride: &yB0,
 		YMaxOverride: &yB1,
 		LegendBottom: true,
 	}, cfgLabels, []svg.BarSeries{
-		{Label: "Konvergen (%)", Values: convPcts, Color: svg.Palette[2]},
+		{Label: "Konvergen Ketat grad<=1e-6 (%)", Values: convPcts, Color: svg.Palette[2]},
+		{Label: "ScaledGrad <= 1e-6 (%)", Values: sgradPcts, Color: svg.Palette[0]},
 		{Label: "Batas Aktif Total (%)", Values: hitPcts, Color: svg.Palette[1]},
-		{Label: "Batas Aktif kp11 (%)", Values: kp11HitPcts, Color: svg.Palette[4]},
 	}); err != nil {
 		return err
 	}

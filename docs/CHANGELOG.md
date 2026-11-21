@@ -3,6 +3,13 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 004b — pemeliharaan A] — 2026-11-22 · Diagnostik penghentian optimizer & audit jumlah tes `day004b`
+
+### Diperbaiki
+- `projects/go/day004b_afns_inference`: menambahkan alasan penghentian BFGS eksplisit (`gradient_tolerance`, `boundary_stationary`, `line_search_failed`, `max_iterations`, `invalid_objective_or_gradient`) beserta diagnostik `stage1`, `stage2`, `best_stage`, `iterations_best_stage`, `iterations_cumulative`, dan `raw_grad_norm_opt` pada `optim.go`, `kalman.go`, `study.go`, dan `cmd/run/main.go`.
+- Menghapus reklasifikasi otomatis `line_search_failed` sebagai `converged = true` dan membatasi pemilihan tahap-2 ke perbaikan ketat `res2.Fun < res1.Fun` (`est_loglik` tetap identik bit-demi-bit pada `max_ll_diff = 0`, sambil mengeliminasi pergeseran koordinat datar $\le 1{,}61\times 10^{-8}$ pada 71 replikasi seri serta membuktikan 4 kasus sebelumnya non-konvergen interior sebenarnya mencapai `max_iterations` 150 di tahap 2).
+- Memperbarui [day004b_quant_afns-inference.md](project-explanations/day004b_quant_afns-inference.md) dan [projects/go/day004b_afns_inference/README.md](../projects/go/day004b_afns_inference/README.md) sesuai hasil audit tes terkini (`9` paket, `15` tes utama, `4` subtes, `54,76s`).
+
 ## [Hari 004b] — 2026-11-22 · AFNS — bias sampel terbatas, rentang kalender (long-span), dan frekuensi observasi (infill) (Go, Bonus)
 
 ### Ditambahkan

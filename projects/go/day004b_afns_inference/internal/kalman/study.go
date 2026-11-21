@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/Orls967/100QB/go/day004b_afns_inference/internal/afns"
+	"github.com/Orls967/100QB/go/day004b_afns_inference/internal/optim"
 	"github.com/Orls967/100QB/go/day004b_afns_inference/internal/parallel"
 	"github.com/Orls967/100QB/go/day004b_afns_inference/internal/rng"
 	"github.com/Orls967/100QB/go/day004b_afns_inference/internal/stats"
@@ -50,18 +51,27 @@ type ParamSummary struct {
 
 // StudyConfigResult menyimpan ringkasan agregat dan seluruh hasil per replikasi satu konfigurasi.
 type StudyConfigResult struct {
-	Spec            ConfigSpec
-	NumWorkers      int
-	ElapsedSeconds  float64
-	ConvergedCount  int
-	ConvergedPct    float64
-	LLGeTrueCount   int
-	LLGeTruePct     float64
-	BoundHitCount   int
-	BoundHitPct     float64
-	HessianRegCount int
-	Params          [11]ParamSummary
-	Replications    []MLEResult
+	Spec                    ConfigSpec
+	NumWorkers              int
+	ElapsedSeconds          float64
+	ConvergedCount          int
+	ConvergedPct            float64
+	GradTolCount            int
+	BoundaryStationaryCount int
+	LineSearchFailedCount   int
+	MaxIterCount            int
+	InvalidObjCount         int
+	BestStage1Count         int
+	BestStage2Count         int
+	ScaledGradLe1e6Count    int
+	ScaledGradLe1e6Pct      float64
+	LLGeTrueCount           int
+	LLGeTruePct             float64
+	BoundHitCount           int
+	BoundHitPct             float64
+	HessianRegCount         int
+	Params                  [11]ParamSummary
+	Replications            []MLEResult
 }
 
 // summarizeReplications menghitung statistik ringkasan seluruh replikasi tanpa eksklusi apa pun.
@@ -69,6 +79,8 @@ func summarizeReplications(trueSpec ModelSpec, cfg ConfigSpec, nWorkers int, ela
 	trueV := SpecToVec(trueSpec)
 	nRep := len(reps)
 	convCnt, llGeCnt, hitCnt, regCnt := 0, 0, 0, 0
+	gradTolCnt, bndStatCnt, lsFailCnt, maxIterCnt, invObjCnt := 0, 0, 0, 0, 0
+	stage1Cnt, stage2Cnt, sgradCnt := 0, 0, 0
 	var estCols [11][]float64
 	var hessCols [11][]float64
 	var covCnts [11]int
@@ -81,6 +93,26 @@ func summarizeReplications(trueSpec ModelSpec, cfg ConfigSpec, nWorkers int, ela
 	for r, res := range reps {
 		if res.Converged {
 			convCnt++
+		}
+		switch res.TerminationReason {
+		case optim.TermGradientTol:
+			gradTolCnt++
+		case optim.TermBoundaryStationary:
+			bndStatCnt++
+		case optim.TermLineSearchFailed:
+			lsFailCnt++
+		case optim.TermMaxIterations:
+			maxIterCnt++
+		case optim.TermInvalidObjective:
+			invObjCnt++
+		}
+		if res.BestStage == 1 {
+			stage1Cnt++
+		} else if res.BestStage == 2 {
+			stage2Cnt++
+		}
+		if res.ScaledGradNormOpt <= 1e-6 {
+			sgradCnt++
 		}
 		if res.EstLogLik >= res.TrueLogLik-1e-8 {
 			llGeCnt++
@@ -149,18 +181,27 @@ func summarizeReplications(trueSpec ModelSpec, cfg ConfigSpec, nWorkers int, ela
 	}
 
 	return StudyConfigResult{
-		Spec:            cfg,
-		NumWorkers:      nWorkers,
-		ElapsedSeconds:  elapsed,
-		ConvergedCount:  convCnt,
-		ConvergedPct:    100.0 * float64(convCnt) / math.Max(fRep, 1.0),
-		LLGeTrueCount:   llGeCnt,
-		LLGeTruePct:     100.0 * float64(llGeCnt) / math.Max(fRep, 1.0),
-		BoundHitCount:   hitCnt,
-		BoundHitPct:     100.0 * float64(hitCnt) / math.Max(fRep, 1.0),
-		HessianRegCount: regCnt,
-		Params:          pSum,
-		Replications:    reps,
+		Spec:                    cfg,
+		NumWorkers:              nWorkers,
+		ElapsedSeconds:          elapsed,
+		ConvergedCount:          convCnt,
+		ConvergedPct:            100.0 * float64(convCnt) / math.Max(fRep, 1.0),
+		GradTolCount:            gradTolCnt,
+		BoundaryStationaryCount: bndStatCnt,
+		LineSearchFailedCount:   lsFailCnt,
+		MaxIterCount:            maxIterCnt,
+		InvalidObjCount:         invObjCnt,
+		BestStage1Count:         stage1Cnt,
+		BestStage2Count:         stage2Cnt,
+		ScaledGradLe1e6Count:    sgradCnt,
+		ScaledGradLe1e6Pct:      100.0 * float64(sgradCnt) / math.Max(fRep, 1.0),
+		LLGeTrueCount:           llGeCnt,
+		LLGeTruePct:             100.0 * float64(llGeCnt) / math.Max(fRep, 1.0),
+		BoundHitCount:           hitCnt,
+		BoundHitPct:             100.0 * float64(hitCnt) / math.Max(fRep, 1.0),
+		HessianRegCount:         regCnt,
+		Params:                  pSum,
+		Replications:            reps,
 	}
 }
 
