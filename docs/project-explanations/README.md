@@ -30,6 +30,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `3c` (`day003c`) | `bonus` | `quant` | `go` | [Risiko sistemik jaringan: kliring Eisenberg–Noe, kaskade Watts & biaya kebangkrutan](day003c_quant_systemic-risk.md) |
 | `3d` (`day003d`) | `bonus` | `quant` | `typescript` | [Risiko ekor: GARCH–EVT, VaR/ES & backtesting](day003d_quant_tail-risk.md) |
 | `3e` (`day003e`) | `bonus` | `quant` | `go` | [CVA swap suku bunga: Hull–White, intensitas CIR dan wrong-way risk](day003e_quant_cva-wrong-way.md) |
+| `3f` (`day003f`) | `bonus` | `quant` | `go` | [Teori ruin Cramér–Lundberg dan simulasi kejadian langka](day003f_quant_ruin-theory.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 

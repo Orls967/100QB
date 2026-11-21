@@ -154,7 +154,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [docs/ROADMAP.md](docs/ROADMAP.md) · Riwayat: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 24/100 topik (24%)** · quant: 23 · sim: 1
+**Progres: 25/100 topik (25%)** · quant: 24 · sim: 1
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -182,6 +182,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 3c | bonus | `quant` | `go` | Risiko sistemik jaringan: kliring Eisenberg–Noe, kaskade Watts & biaya kebangkrutan | 2026-11-21 | [day003c_systemic_risk](projects/go/day003c_systemic_risk) |
 | 3d | bonus | `quant` | `typescript` | Risiko ekor: GARCH–EVT, VaR/ES dan backtesting | 2026-11-21 | [day003d_tail_risk](projects/typescript/day003d_tail_risk) |
 | 3e | bonus | `quant` | `go` | CVA swap suku bunga: Hull–White, intensitas CIR dan wrong-way risk | 2026-11-21 | [day003e_cva_wrong_way](projects/go/day003e_cva_wrong_way) |
+| 3f | bonus | `quant` | `go` | Teori ruin Cramér–Lundberg dan simulasi kejadian langka | 2026-11-21 | [day003f_ruin_theory](projects/go/day003f_ruin_theory) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi

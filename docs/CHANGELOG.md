@@ -3,6 +3,20 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 003f] — 2026-11-21 · Teori ruin Cramér–Lundberg dan simulasi kejadian langka (Go, Bonus)
+
+### Ditambahkan
+- Project Go 1.22+ murni `projects/go/day003f_ruin_theory/` (nol modul eksternal, paralelisme *goroutine* deterministik per *chunk*, `xoshiro256++`, sampler Gamma/Erlang/Pareto/Weibull/Lognormal/Poisson buatan sendiri, Brent, Golden Section, LU pivoting parsial, uji KS nol simulasi $O(n)$, penulis JSON 17 digit & 7 grafik SVG):
+  - **Bagian 1 (Bentuk Tertutup, Momen & Defisit)**: akar Lundberg Brent & transformasi Laplace rasional LU untuk (A) Eksponensial (`R = 1/6`, `err = 4.16e-16`), (B) Erlang(2) (`R1 = 0.226765`, `err = 1.61e-15`), dan (C) Hipereksponensial-2 ($p_1 = p_2 = 0.5, \beta_1 = 2/3, \beta_2 = 2$, `CV = 1.2247 > 1`, `R1 = 0.130502`, `err = 5.83e-16`); verifikasi momen `200k` di $t=10$ (beserta audit jujur varians sampel Pareto karena $E[X^4] = \infty$) dan defisit Eksponensial(1) lolos uji KS ($p = 0.394, 0.985$).
+  - **Bagian 2 (Rekursi Panjer / Beekman)**: pengapitan eksak `psi_low <= psi_exact <= psi_high` pada semua $h \in \{0.1, 0.05, 0.02, 0.01\}$ dan $u \in \{0..50\}$ ber-orde `0.997–0.999`, rasio Cramér–Lundberg $\to 1$, batas Lundberg berlaku, serta evaluasi ekor berat stabil hingga $u = 200$ (`Weibull ratio_vs_asym = 217.02`).
+  - **Bagian 3 (MC Biasa & IS Eksponensial)**: MC `1.000.000` cocok `<= 1.47 SE` dan monoton dalam $T$; IS eksponensial menaksir peluang sampai `1.209e-10` ($u=100$) ber-SE relatif `0.045%–0.062%` (VRF waktu `4.82e6x–1.42e11x`); *tilting* salah ($0.7R, 1.3R$) tetap tak-bias bervariansi `3.25x–10.11x` lebih tinggi.
+  - **Bagian 4 (Ekor Berat & Asmussen–Kroese)**: pembuktian divergensi $M_X(0.1)$ hingga $x_{\max}=500$ (`1.36e14` Pareto, `4.53e7` Weibull); estimator AK berbobot-ukuran (`200k`) cocok dengan batas Panjer $h=0.01$ sampai $u = 200$ (`relSE = 0.092%` Pareto, VRF waktu hingga `3.49e5x`) vs MC biasa & asimtotik subeksponensial.
+  - **Bagian 5 (Reinsurans & Modal)**: kelebihan rugi $\min(X, M)$ ($\xi = 0.4$) dengan solusi tertutup (A), optimisasi retensi $M^*_A = 1.529$ & $M^*_C = 1.760$, serta penghematan modal awal $u^*(\varepsilon)$ `25.0%–33.1%` pada $\varepsilon \in \{10^{-2}, 10^{-3}, 10^{-4}\}$.
+- Output `outputs/day003f/results.json`, 7 grafik SVG `outputs/figures/day003f_*.svg`, serta dokumen penjelasan `docs/project-explanations/day003f_quant_ruin-theory.md`.
+
+### Diperbarui
+- `README.md` (tabel progres baris `3f` Go via `scripts/update_readme.py`), `docs/CHANGELOG.md`, dan `docs/project-explanations/README.md`.
+
 ## [Hari 003e] — 2026-11-21 · CVA swap suku bunga: Hull–White, intensitas CIR dan wrong-way risk (Go, Bonus)
 
 ### Ditambahkan
