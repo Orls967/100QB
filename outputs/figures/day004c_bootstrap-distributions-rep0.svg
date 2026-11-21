@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="470" viewBox="0 0 960 470" style="background:#ffffff;font-family:system-ui,sans-serif">
+<text x="480.0" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#111">Distribusi Bootstrap Parametrik 20y (B=100) pada Replikasi Pra-Run rep_idx=0</text>
+<text x="263.0" y="54" text-anchor="middle" font-size="13" font-weight="bold" fill="#222">kp11 (Outer rep 0, 100/100 finite)</text>
+<rect x="124.49" y="72.00" width="258.49" height="324.00" fill="#1f77b4" fill-opacity="0.11"/>
+<rect x="64.0" y="72.0" width="398.0" height="324.0" fill="none" stroke="#333" stroke-width="1"/>
+<text x="64.0" y="413.0" text-anchor="middle" font-size="10.5" fill="#444">-0.02401</text>
+<line x1="64.0" y1="396.0" x2="462.0" y2="396.0" stroke="#eee" stroke-width="1"/>
+<text x="58.0" y="400.0" text-anchor="end" font-size="10.5" fill="#444">0</text>
+<text x="163.5" y="413.0" text-anchor="middle" font-size="10.5" fill="#444">0.3214</text>
+<line x1="64.0" y1="315.0" x2="462.0" y2="315.0" stroke="#eee" stroke-width="1"/>
+<text x="58.0" y="319.0" text-anchor="end" font-size="10.5" fill="#444">7</text>
+<text x="263.0" y="413.0" text-anchor="middle" font-size="10.5" fill="#444">0.6667</text>
+<line x1="64.0" y1="234.0" x2="462.0" y2="234.0" stroke="#eee" stroke-width="1"/>
+<text x="58.0" y="238.0" text-anchor="end" font-size="10.5" fill="#444">14</text>
+<text x="362.5" y="413.0" text-anchor="middle" font-size="10.5" fill="#444">1.012</text>
+<line x1="64.0" y1="153.0" x2="462.0" y2="153.0" stroke="#eee" stroke-width="1"/>
+<text x="58.0" y="157.0" text-anchor="end" font-size="10.5" fill="#444">20</text>
+<text x="462.0" y="413.0" text-anchor="middle" font-size="10.5" fill="#444">1.357</text>
+<line x1="64.0" y1="72.0" x2="462.0" y2="72.0" stroke="#eee" stroke-width="1"/>
+<text x="58.0" y="76.0" text-anchor="end" font-size="10.5" fill="#444">27</text>
+<rect x="92.43" y="372.12" width="28.43" height="23.88" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<rect x="120.86" y="264.68" width="28.43" height="131.32" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<rect x="149.29" y="252.74" width="28.43" height="143.26" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<rect x="177.71" y="121.42" width="28.43" height="274.58" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<rect x="206.14" y="204.99" width="28.43" height="191.01" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<rect x="234.57" y="240.80" width="28.43" height="155.20" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<rect x="263.00" y="288.56" width="28.43" height="107.44" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<rect x="291.43" y="348.25" width="28.43" height="47.75" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<rect x="319.86" y="336.31" width="28.43" height="59.69" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<rect x="348.29" y="384.06" width="28.43" height="11.94" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<rect x="376.71" y="360.19" width="28.43" height="35.81" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<rect x="433.57" y="384.06" width="28.43" height="11.94" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<line x1="85.32" y1="72.00" x2="85.32" y2="396.00" stroke="#2ca02c" stroke-width="2.0" stroke-dasharray="5,3"/>
+<line x1="72.0" y1="83.0" x2="88.0" y2="83.0" stroke="#2ca02c" stroke-width="2.2" stroke-dasharray="5,3"/>
+<text x="92.0" y="86.0" font-size="10" fill="#222">True=0.0500</text>
+<line x1="170.53" y1="72.00" x2="170.53" y2="396.00" stroke="#d62728" stroke-width="2.0"/>
+<line x1="72.0" y1="98.0" x2="88.0" y2="98.0" stroke="#d62728" stroke-width="2.2"/>
+<text x="92.0" y="101.0" font-size="10" fill="#222">OuterMLE=0.3458</text>
+<line x1="120.15" y1="72.00" x2="120.15" y2="396.00" stroke="#9467bd" stroke-width="2.0" stroke-dasharray="5,3"/>
+<line x1="72.0" y1="113.0" x2="88.0" y2="113.0" stroke="#9467bd" stroke-width="2.2" stroke-dasharray="5,3"/>
+<text x="92.0" y="116.0" font-size="10" fill="#222">BootCorr=0.1709</text>
+<text x="263.0" y="450.0" text-anchor="middle" font-size="11.5" fill="#222">kp11 | Persentil CI95=[0.1860, 1.0832]</text>
+<text x="26.0" y="234.0" text-anchor="middle" font-size="11" fill="#222" transform="rotate(-90 26.0 234.0)">Frekuensi Bootstrap</text>
+<text x="731.0" y="54" text-anchor="middle" font-size="13" font-weight="bold" fill="#222">theta1 (Outer rep 0, 100/100 finite)</text>
+<rect x="674.88" y="72.00" width="226.62" height="324.00" fill="#1f77b4" fill-opacity="0.11"/>
+<rect x="532.0" y="72.0" width="398.0" height="324.0" fill="none" stroke="#333" stroke-width="1"/>
+<text x="532.0" y="413.0" text-anchor="middle" font-size="10.5" fill="#444">0.04373</text>
+<line x1="532.0" y1="396.0" x2="930.0" y2="396.0" stroke="#eee" stroke-width="1"/>
+<text x="526.0" y="400.0" text-anchor="end" font-size="10.5" fill="#444">0</text>
+<text x="631.5" y="413.0" text-anchor="middle" font-size="10.5" fill="#444">0.04966</text>
+<line x1="532.0" y1="315.0" x2="930.0" y2="315.0" stroke="#eee" stroke-width="1"/>
+<text x="526.0" y="319.0" text-anchor="end" font-size="10.5" fill="#444">6</text>
+<text x="731.0" y="413.0" text-anchor="middle" font-size="10.5" fill="#444">0.0556</text>
+<line x1="532.0" y1="234.0" x2="930.0" y2="234.0" stroke="#eee" stroke-width="1"/>
+<text x="526.0" y="238.0" text-anchor="end" font-size="10.5" fill="#444">12</text>
+<text x="830.5" y="413.0" text-anchor="middle" font-size="10.5" fill="#444">0.06154</text>
+<line x1="532.0" y1="153.0" x2="930.0" y2="153.0" stroke="#eee" stroke-width="1"/>
+<text x="526.0" y="157.0" text-anchor="end" font-size="10.5" fill="#444">19</text>
+<text x="930.0" y="413.0" text-anchor="middle" font-size="10.5" fill="#444">0.06747</text>
+<line x1="532.0" y1="72.0" x2="930.0" y2="72.0" stroke="#eee" stroke-width="1"/>
+<text x="526.0" y="76.0" text-anchor="end" font-size="10.5" fill="#444">25</text>
+<rect x="617.29" y="382.92" width="28.43" height="13.08" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<rect x="645.71" y="382.92" width="28.43" height="13.08" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<rect x="674.14" y="278.32" width="28.43" height="117.68" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<rect x="702.57" y="330.62" width="28.43" height="65.38" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<rect x="731.00" y="226.02" width="28.43" height="169.98" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<rect x="759.43" y="134.50" width="28.43" height="261.50" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<rect x="787.86" y="121.42" width="28.43" height="274.58" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<rect x="816.29" y="212.95" width="28.43" height="183.05" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<rect x="844.71" y="278.32" width="28.43" height="117.68" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<rect x="873.14" y="343.70" width="28.43" height="52.30" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<rect x="901.57" y="356.77" width="28.43" height="39.23" fill="#1f77b4" fill-opacity="0.68" stroke="#ffffff" stroke-width="0.8"/>
+<line x1="553.32" y1="72.00" x2="553.32" y2="396.00" stroke="#2ca02c" stroke-width="2.0" stroke-dasharray="5,3"/>
+<line x1="540.0" y1="83.0" x2="556.0" y2="83.0" stroke="#2ca02c" stroke-width="2.2" stroke-dasharray="5,3"/>
+<text x="560.0" y="86.0" font-size="10" fill="#222">True=0.0450</text>
+<line x1="778.45" y1="72.00" x2="778.45" y2="396.00" stroke="#d62728" stroke-width="2.0"/>
+<line x1="540.0" y1="98.0" x2="556.0" y2="98.0" stroke="#d62728" stroke-width="2.2"/>
+<text x="560.0" y="101.0" font-size="10" fill="#222">OuterMLE=0.0584</text>
+<line x1="768.66" y1="72.00" x2="768.66" y2="396.00" stroke="#9467bd" stroke-width="2.0" stroke-dasharray="5,3"/>
+<line x1="540.0" y1="113.0" x2="556.0" y2="113.0" stroke="#9467bd" stroke-width="2.2" stroke-dasharray="5,3"/>
+<text x="560.0" y="116.0" font-size="10" fill="#222">BootCorr=0.0578</text>
+<text x="731.0" y="450.0" text-anchor="middle" font-size="11.5" fill="#222">theta1 | Persentil CI95=[0.0523, 0.0658]</text>
+<text x="494.0" y="234.0" text-anchor="middle" font-size="11" fill="#222" transform="rotate(-90 494.0 234.0)">Frekuensi Bootstrap</text>
+</svg>
