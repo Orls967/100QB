@@ -154,7 +154,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [docs/ROADMAP.md](docs/ROADMAP.md) · Riwayat: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 26/100 topik (26%)** · quant: 25 · sim: 1
+**Progres: 27/100 topik (27%)** · quant: 26 · sim: 1
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -184,6 +184,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 3e | bonus | `quant` | `go` | CVA swap suku bunga: Hull–White, intensitas CIR dan wrong-way risk | 2026-11-21 | [day003e_cva_wrong_way](projects/go/day003e_cva_wrong_way) |
 | 3f | bonus | `quant` | `go` | Teori ruin Cramér–Lundberg dan simulasi kejadian langka | 2026-11-21 | [day003f_ruin_theory](projects/go/day003f_ruin_theory) |
 | 4a | bonus | `quant` | `go` | Struktur suku bunga: Nelson–Siegel, AFNS dan filter Kalman | 2026-11-22 | [day004a_term_structure](projects/go/day004a_term_structure) |
+| 4b | bonus | `quant` | `go` | AFNS — bias sampel terbatas, rentang kalender (long-span), dan frekuensi observasi (infill) | 2026-11-22 | [day004b_afns_inference](projects/go/day004b_afns_inference) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi

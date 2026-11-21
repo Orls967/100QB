@@ -3,6 +3,25 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 004b] — 2026-11-22 · AFNS — bias sampel terbatas, rentang kalender (long-span), dan frekuensi observasi (infill) (Go, Bonus)
+
+### Ditambahkan
+- Project Go 1.22+ mandiri `projects/go/day004b_afns_inference/` (`zero external modules`, `MainSeed = 2026112202`, `xoshiro256++`, paralelisme deterministik per replikasi, optimisasi *steady-state* Riccati pada `FastLogLikelihood`, penulis JSON 17 digit & 5 grafik SVG):
+  - **Bagian 1 (Jangkar Eksak, Verifikasi Skor & Determinisme)**: jangkar Gaussian gabungan penuh $T=5$ (3 tenor) cocok terhadap Kalman + *RTS smoother* (`ll_diff = 3,41e-13`, `fast_ll_diff = 3,55e-13`, `mean_diff = 2,83e-16`, `cov_diff = 6,39e-17`); skor FD vs Richardson sepanjang studi ($\le 4{,}34\cdot 10^{-7}$); determinisme bit-identik `1` vs `8` worker pada fixture cepat.
+  - **Bagian 2a (Replikasi Baseline `1000w`, $R=50$)**: terpisah dari konfigurasi tepat $20$ tahun (`T=1040`), seluruh $11$ parameter konsisten dengan acuan `day004a` dalam $3\text{ MCSE}$ gabungan (`max |z| = 2,82` pada `kp33`, `10/11` dalam $2\text{ MCSE}$).
+  - **Bagian 2b (Long-Span Mingguan $\{10, 20, 40, 80\}$ tahun, $R=50$, prefiks 80y bersama)**: bias $K^{\mathbb{P}}_{ii}$ meluruh konsisten $\propto 1/H$ (`kp11`: $+0{,}4657 \to +0{,}2241 \to +0{,}0983 \to +0{,}0451$, OLS slope $+4{,}84 \pm 0{,}94$; `kp22`: $+0{,}4254 \to +0{,}1998 \to +0{,}1007 \to +0{,}0731$, OLS $+4{,}12 \pm 0{,}84$; `kp33`: $+0{,}3590 \to +0{,}2026 \to +0{,}0981 \to +0{,}0452$, OLS $+3{,}56 \pm 0{,}88$), dengan produk $\text{bias} \times H \approx 3{,}6\text{–}5{,}8$.
+  - **Bagian 2c (Infill 20 tahun $\Delta \in \{1/12, 1/52, 1/252\}$, $R=50$, memakai ulang `longspan_20y_weekly`)**: peningkatan frekuensi hingga harian ($T=5{,}040$) gagal menurunkan RMSE/bias *drift* (`daily/monthly RMSE`: `kp11 = 0,980`, `kp22 = 1,181`, `kp33 = 0,936`), sementara parameter penampang dan difusi menyusut tajam (`lambda = 0,012`, `sigma_eps = 0,003`, `sigma1 = 0,217`, `sigma2 = 0,100`, `sigma3 = 0,128`).
+  - **Ringkasan Utuh & Diagnostik Hessian**: seluruh $50/50$ replikasi dipertahankan tanpa eksklusi kasus gagal konvergen atau batas aktif (`1/50` batas aktif di `1000w`, `10y`, `40y`, `80y`, `20y monthly`; `0/50` di `20y weekly` & `daily`), cakupan Wald + interval binomial Wilson 95% dilaporkan per parameter (`theta1` `34%–48%` di $10\text{–}40\text{y}$, naik ke `72%` di $80\text{y}$).
+- Output `outputs/day004b/results.json` (`41,93s` total pada 8 worker), 5 grafik SVG `outputs/figures/day004b_*.svg`, serta dokumen `docs/project-explanations/day004b_quant_afns-inference.md`.
+
+### Diperbarui
+- `README.md` (tabel progres baris `4b` Go via `scripts/update_readme.py`), `docs/CHANGELOG.md`, dan `docs/project-explanations/README.md`.
+
+## [Hari 004a — pemeliharaan B] — 2026-11-22 · Kriteria penerimaan subruang derau PCA `day004a`
+
+### Diperbaiki
+- `projects/go/day004a_term_structure`: mengubah penghitungan penerimaan PCA pada `internal/pca/pca.go` dan `cmd/run/main.go` sehingga `c9c_pca_all10_sorted_eigenvalues_within_3se` tetap dicatat sebagai diagnostik efek statistik urutan Marchenko–Pastur pada 7 mode derau identik (`false`), sedangkan status agregat `c9_pca_eigenvalues_cosine_and_signs` (`true`, `"tercapai"`) bertumpu pada PC1–PC3 dalam 3 SE, rata-rata *noise bulk* PC4–PC10 dalam 3 SE, kosinus 3 eigenvektor $> 0{,}99$, dan pola tanda `[0, 1, 2]`. `all_passed` tetap `false` karena status MLE Bagian 3 masih `sebagian`. Memperbarui tes unit serta dokumentasi `day004a`.
+
 ## [Hari 004a] — 2026-11-22 · Struktur suku bunga: Nelson–Siegel, AFNS dan filter Kalman (Go, Bonus)
 
 ### Ditambahkan

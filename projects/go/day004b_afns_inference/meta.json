@@ -1,0 +1,10 @@
+{
+  "day": 4,
+  "session": "b",
+  "topic_no": null,
+  "type": "quant",
+  "language": "go",
+  "topic": "AFNS — bias sampel terbatas, rentang kalender (long-span), dan frekuensi observasi (infill)",
+  "date": "2026-11-22",
+  "link": "projects/go/day004b_afns_inference"
+}

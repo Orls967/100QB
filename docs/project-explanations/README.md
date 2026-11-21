@@ -32,6 +32,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `3e` (`day003e`) | `bonus` | `quant` | `go` | [CVA swap suku bunga: Hull–White, intensitas CIR dan wrong-way risk](day003e_quant_cva-wrong-way.md) |
 | `3f` (`day003f`) | `bonus` | `quant` | `go` | [Teori ruin Cramér–Lundberg dan simulasi kejadian langka](day003f_quant_ruin-theory.md) |
 | `4a` (`day004a`) | `bonus` | `quant` | `go` | [Struktur suku bunga: Nelson–Siegel, AFNS dan filter Kalman](day004a_quant_term-structure.md) |
+| `4b` (`day004b`) | `bonus` | `quant` | `go` | [AFNS: bias sampel terbatas, rentang kalender (long-span), dan frekuensi observasi (infill)](day004b_quant_afns-inference.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 
