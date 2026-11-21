@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="460" viewBox="0 0 820 460" style="background:#ffffff;font-family:system-ui,sans-serif">
+<text x="410.0" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#111">Scree Plot PCA Perubahan Yield Mingguan (Teoretis vs T=5000, R=100)</text>
+<rect x="86.0" y="52.0" width="704.0" height="346.0" fill="none" stroke="#333" stroke-width="1"/>
+<line x1="86.0" y1="52.0" x2="86.0" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="86.0" y="416.0" text-anchor="middle" font-size="11" fill="#444">0.73</text>
+<line x1="86.0" y1="398.0" x2="790.0" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="402.0" text-anchor="end" font-size="11" fill="#444">39</text>
+<line x1="226.8" y1="52.0" x2="226.8" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="226.8" y="416.0" text-anchor="middle" font-size="11" fill="#444">2.638</text>
+<line x1="86.0" y1="328.8" x2="790.0" y2="328.8" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="332.8" text-anchor="end" font-size="11" fill="#444">85</text>
+<line x1="367.6" y1="52.0" x2="367.6" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="367.6" y="416.0" text-anchor="middle" font-size="11" fill="#444">4.546</text>
+<line x1="86.0" y1="259.6" x2="790.0" y2="259.6" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="263.6" text-anchor="end" font-size="11" fill="#444">1.9e+02</text>
+<line x1="508.4" y1="52.0" x2="508.4" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="508.4" y="416.0" text-anchor="middle" font-size="11" fill="#444">6.454</text>
+<line x1="86.0" y1="190.4" x2="790.0" y2="190.4" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="194.4" text-anchor="end" font-size="11" fill="#444">4.1e+02</text>
+<line x1="649.2" y1="52.0" x2="649.2" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="649.2" y="416.0" text-anchor="middle" font-size="11" fill="#444">8.362</text>
+<line x1="86.0" y1="121.2" x2="790.0" y2="121.2" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="125.2" text-anchor="end" font-size="11" fill="#444">9e+02</text>
+<line x1="790.0" y1="52.0" x2="790.0" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="790.0" y="416.0" text-anchor="middle" font-size="11" fill="#444">10.27</text>
+<line x1="86.0" y1="52.0" x2="790.0" y2="52.0" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="56.0" text-anchor="end" font-size="11" fill="#444">2e+03</text>
+<text x="438.0" y="446.0" text-anchor="middle" font-size="12" fill="#222">Komponen Utama ke-k</text>
+<text x="18" y="225.0" text-anchor="middle" font-size="12" fill="#222" transform="rotate(-90 18 225.0)">Nilai Eigen (bps^2, Skala Log)</text>
+<polyline fill="none" stroke="#1f77b4" stroke-width="2.2" points="105.92,80.24 179.72,264.13 253.51,322.96 327.31,375.43 401.10,375.43 474.90,375.43 548.69,375.43 622.49,375.43 696.28,375.43 770.08,375.43 "/>
+<circle cx="105.92" cy="80.24" r="3.4" fill="#1f77b4"/>
+<circle cx="179.72" cy="264.13" r="3.4" fill="#1f77b4"/>
+<circle cx="253.51" cy="322.96" r="3.4" fill="#1f77b4"/>
+<circle cx="327.31" cy="375.43" r="3.4" fill="#1f77b4"/>
+<circle cx="401.10" cy="375.43" r="3.4" fill="#1f77b4"/>
+<circle cx="474.90" cy="375.43" r="3.4" fill="#1f77b4"/>
+<circle cx="548.69" cy="375.43" r="3.4" fill="#1f77b4"/>
+<circle cx="622.49" cy="375.43" r="3.4" fill="#1f77b4"/>
+<circle cx="696.28" cy="375.43" r="3.4" fill="#1f77b4"/>
+<circle cx="770.08" cy="375.43" r="3.4" fill="#1f77b4"/>
+<line x1="105.92" y1="83.51" x2="105.92" y2="76.64" stroke="#d62728" stroke-width="1.5"/>
+<line x1="101.92" y1="83.51" x2="109.92" y2="83.51" stroke="#d62728" stroke-width="1.5"/>
+<line x1="101.92" y1="76.64" x2="109.92" y2="76.64" stroke="#d62728" stroke-width="1.5"/>
+<line x1="179.72" y1="268.47" x2="179.72" y2="260.28" stroke="#d62728" stroke-width="1.5"/>
+<line x1="175.72" y1="268.47" x2="183.72" y2="268.47" stroke="#d62728" stroke-width="1.5"/>
+<line x1="175.72" y1="260.28" x2="183.72" y2="260.28" stroke="#d62728" stroke-width="1.5"/>
+<line x1="253.51" y1="326.40" x2="253.51" y2="319.42" stroke="#d62728" stroke-width="1.5"/>
+<line x1="249.51" y1="326.40" x2="257.51" y2="326.40" stroke="#d62728" stroke-width="1.5"/>
+<line x1="249.51" y1="319.42" x2="257.51" y2="319.42" stroke="#d62728" stroke-width="1.5"/>
+<line x1="327.31" y1="372.32" x2="327.31" y2="366.33" stroke="#d62728" stroke-width="1.5"/>
+<line x1="323.31" y1="372.32" x2="331.31" y2="372.32" stroke="#d62728" stroke-width="1.5"/>
+<line x1="323.31" y1="366.33" x2="331.31" y2="366.33" stroke="#d62728" stroke-width="1.5"/>
+<line x1="401.10" y1="374.34" x2="401.10" y2="368.86" stroke="#d62728" stroke-width="1.5"/>
+<line x1="397.10" y1="374.34" x2="405.10" y2="374.34" stroke="#d62728" stroke-width="1.5"/>
+<line x1="397.10" y1="368.86" x2="405.10" y2="368.86" stroke="#d62728" stroke-width="1.5"/>
+<line x1="474.90" y1="375.74" x2="474.90" y2="371.49" stroke="#d62728" stroke-width="1.5"/>
+<line x1="470.90" y1="375.74" x2="478.90" y2="375.74" stroke="#d62728" stroke-width="1.5"/>
+<line x1="470.90" y1="371.49" x2="478.90" y2="371.49" stroke="#d62728" stroke-width="1.5"/>
+<line x1="548.69" y1="377.81" x2="548.69" y2="373.36" stroke="#d62728" stroke-width="1.5"/>
+<line x1="544.69" y1="377.81" x2="552.69" y2="377.81" stroke="#d62728" stroke-width="1.5"/>
+<line x1="544.69" y1="373.36" x2="552.69" y2="373.36" stroke="#d62728" stroke-width="1.5"/>
+<line x1="622.49" y1="379.71" x2="622.49" y2="375.11" stroke="#d62728" stroke-width="1.5"/>
+<line x1="618.49" y1="379.71" x2="626.49" y2="379.71" stroke="#d62728" stroke-width="1.5"/>
+<line x1="618.49" y1="375.11" x2="626.49" y2="375.11" stroke="#d62728" stroke-width="1.5"/>
+<line x1="696.28" y1="381.72" x2="696.28" y2="377.04" stroke="#d62728" stroke-width="1.5"/>
+<line x1="692.28" y1="381.72" x2="700.28" y2="381.72" stroke="#d62728" stroke-width="1.5"/>
+<line x1="692.28" y1="377.04" x2="700.28" y2="377.04" stroke="#d62728" stroke-width="1.5"/>
+<line x1="770.08" y1="384.69" x2="770.08" y2="379.03" stroke="#d62728" stroke-width="1.5"/>
+<line x1="766.08" y1="384.69" x2="774.08" y2="384.69" stroke="#d62728" stroke-width="1.5"/>
+<line x1="766.08" y1="379.03" x2="774.08" y2="379.03" stroke="#d62728" stroke-width="1.5"/>
+<polyline fill="none" stroke="#d62728" stroke-width="2.2" stroke-dasharray="6,4" points="105.92,80.01 179.72,264.28 253.51,322.84 327.31,369.28 401.10,371.56 474.90,373.59 548.69,375.56 622.49,377.38 696.28,379.35 770.08,381.81 "/>
+<circle cx="105.92" cy="80.01" r="3.4" fill="#d62728"/>
+<circle cx="179.72" cy="264.28" r="3.4" fill="#d62728"/>
+<circle cx="253.51" cy="322.84" r="3.4" fill="#d62728"/>
+<circle cx="327.31" cy="369.28" r="3.4" fill="#d62728"/>
+<circle cx="401.10" cy="371.56" r="3.4" fill="#d62728"/>
+<circle cx="474.90" cy="373.59" r="3.4" fill="#d62728"/>
+<circle cx="548.69" cy="375.56" r="3.4" fill="#d62728"/>
+<circle cx="622.49" cy="377.38" r="3.4" fill="#d62728"/>
+<circle cx="696.28" cy="379.35" r="3.4" fill="#d62728"/>
+<circle cx="770.08" cy="381.81" r="3.4" fill="#d62728"/>
+<rect x="512.0" y="62.0" width="268.0" height="48.0" fill="#ffffff" fill-opacity="0.92" stroke="#ccc" rx="4"/>
+<line x1="522.0" y1="77.0" x2="544.0" y2="77.0" stroke="#1f77b4" stroke-width="2.4"/>
+<text x="550.0" y="81.0" font-size="11" fill="#222">Teoretis Jacobi</text>
+<line x1="522.0" y1="95.0" x2="544.0" y2="95.0" stroke="#d62728" stroke-width="2.4" stroke-dasharray="5,3"/>
+<text x="550.0" y="99.0" font-size="11" fill="#222">Empiris Mean R=100 (±1.96 SD)</text>
+</svg>

@@ -174,6 +174,10 @@ type PCAReplicationSummary struct {
 	ZScoreSampleMean   []float64 // |EmpMean - Theo| / EmpMeanSE
 	SingleRunEigenvals []float64 // replikasi pertama sebagai contoh 1 lintasan T
 	SingleRunZScores   []float64 // |SingleRun - Theo| / EmpSDEigenvalues
+	NoiseBulkTheoMean  float64
+	NoiseBulkEmpMean   float64
+	NoiseBulkMeanSE    float64
+	NoiseBulkZScore    float64
 	SingleRunTop3Cos   [3]float64
 	EmpMeanTop3Cos     [3]float64
 	EmpMinTop3Cos      [3]float64
@@ -267,6 +271,24 @@ func RunPCAStudy(spec kalman.ModelSpec, taus []float64, dt float64, tSteps, nRep
 		zSingle[k] = math.Abs(all[0].vals[k]-theoVals[k]) / math.Max(empSDVals[k], 1e-30)
 	}
 
+	// Hitung rata-rata bulk noise PC4..m per replikasi (invarian rotasi tanpa bias pengurutan)
+	noiseBulkTheo := 0.0
+	for k := 3; k < m; k++ {
+		noiseBulkTheo += theoVals[k]
+	}
+	noiseBulkTheo /= float64(m - 3)
+	noiseBulkSeries := make([]float64, nRep)
+	for r := 0; r < nRep; r++ {
+		s := 0.0
+		for k := 3; k < m; k++ {
+			s += all[r].vals[k]
+		}
+		noiseBulkSeries[r] = s / float64(m-3)
+	}
+	noiseBulkEmp := stats.Mean(noiseBulkSeries)
+	noiseBulkSE := stats.SE(noiseBulkSeries)
+	noiseBulkZ := math.Abs(noiseBulkEmp-noiseBulkTheo) / math.Max(noiseBulkSE, 1e-30)
+
 	empMeanTotal := 0.0
 	for _, ev := range empMeanVals {
 		empMeanTotal += ev
@@ -319,6 +341,10 @@ func RunPCAStudy(spec kalman.ModelSpec, taus []float64, dt float64, tSteps, nRep
 		ZScoreSampleMean:   zMean,
 		SingleRunEigenvals: all[0].vals,
 		SingleRunZScores:   zSingle,
+		NoiseBulkTheoMean:  noiseBulkTheo,
+		NoiseBulkEmpMean:   noiseBulkEmp,
+		NoiseBulkMeanSE:    noiseBulkSE,
+		NoiseBulkZScore:    noiseBulkZ,
 		SingleRunTop3Cos:   all[0].cos,
 		EmpMeanTop3Cos:     empMeanCos,
 		EmpMinTop3Cos:      empMinCos,

@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="460" viewBox="0 0 820 460" style="background:#ffffff;font-family:system-ui,sans-serif">
+<text x="410.0" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#111">Studi Replikasi MLE (R=50, T=1000): Rasio Estimasi/Benar (±1.96 SD)</text>
+<rect x="86.0" y="52.0" width="704.0" height="346.0" fill="none" stroke="#333" stroke-width="1"/>
+<line x1="86.0" y1="52.0" x2="86.0" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="86.0" y="416.0" text-anchor="middle" font-size="11" fill="#444">0.7</text>
+<line x1="86.0" y1="398.0" x2="790.0" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="402.0" text-anchor="end" font-size="11" fill="#444">-3.195</text>
+<line x1="226.8" y1="52.0" x2="226.8" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="226.8" y="416.0" text-anchor="middle" font-size="11" fill="#444">2.82</text>
+<line x1="86.0" y1="328.8" x2="790.0" y2="328.8" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="332.8" text-anchor="end" font-size="11" fill="#444">0.3064</text>
+<line x1="367.6" y1="52.0" x2="367.6" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="367.6" y="416.0" text-anchor="middle" font-size="11" fill="#444">4.94</text>
+<line x1="86.0" y1="259.6" x2="790.0" y2="259.6" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="263.6" text-anchor="end" font-size="11" fill="#444">3.807</text>
+<line x1="508.4" y1="52.0" x2="508.4" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="508.4" y="416.0" text-anchor="middle" font-size="11" fill="#444">7.06</text>
+<line x1="86.0" y1="190.4" x2="790.0" y2="190.4" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="194.4" text-anchor="end" font-size="11" fill="#444">7.308</text>
+<line x1="649.2" y1="52.0" x2="649.2" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="649.2" y="416.0" text-anchor="middle" font-size="11" fill="#444">9.18</text>
+<line x1="86.0" y1="121.2" x2="790.0" y2="121.2" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="125.2" text-anchor="end" font-size="11" fill="#444">10.81</text>
+<line x1="790.0" y1="52.0" x2="790.0" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="790.0" y="416.0" text-anchor="middle" font-size="11" fill="#444">11.3</text>
+<line x1="86.0" y1="52.0" x2="790.0" y2="52.0" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="56.0" text-anchor="end" font-size="11" fill="#444">14.31</text>
+<text x="438.0" y="446.0" text-anchor="middle" font-size="12" fill="#222">Indeks Parameter (1=lam, 2..4=KP, 5..7=thetaP, 8..10=sigma, 11=sig_eps)</text>
+<text x="18" y="225.0" text-anchor="middle" font-size="12" fill="#222" transform="rotate(-90 18 225.0)">Rasio terhadap Nilai Benar (1.0 = Eksak)</text>
+<line x1="105.92" y1="315.28" x2="105.92" y2="314.89" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="101.92" y1="315.28" x2="109.92" y2="315.28" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="101.92" y1="314.89" x2="109.92" y2="314.89" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="172.34" y1="384.69" x2="172.34" y2="76.64" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="168.34" y1="384.69" x2="176.34" y2="384.69" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="168.34" y1="76.64" x2="176.34" y2="76.64" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="238.75" y1="330.15" x2="238.75" y2="283.74" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="234.75" y1="330.15" x2="242.75" y2="330.15" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="234.75" y1="283.74" x2="242.75" y2="283.74" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="305.17" y1="330.37" x2="305.17" y2="273.06" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="301.17" y1="330.37" x2="309.17" y2="330.37" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="301.17" y1="273.06" x2="309.17" y2="273.06" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="371.58" y1="330.31" x2="371.58" y2="300.30" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="367.58" y1="330.31" x2="375.58" y2="330.31" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="367.58" y1="300.30" x2="375.58" y2="300.30" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="438.00" y1="323.91" x2="438.00" y2="308.28" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="434.00" y1="323.91" x2="442.00" y2="323.91" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="434.00" y1="308.28" x2="442.00" y2="308.28" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="504.42" y1="352.83" x2="504.42" y2="283.91" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="500.42" y1="352.83" x2="508.42" y2="352.83" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="500.42" y1="283.91" x2="508.42" y2="283.91" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="570.83" y1="315.21" x2="570.83" y2="314.95" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="566.83" y1="315.21" x2="574.83" y2="315.21" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="566.83" y1="314.95" x2="574.83" y2="314.95" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="637.25" y1="316.14" x2="637.25" y2="313.96" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="633.25" y1="316.14" x2="641.25" y2="316.14" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="633.25" y1="313.96" x2="641.25" y2="313.96" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="703.66" y1="316.36" x2="703.66" y2="313.46" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="699.66" y1="316.36" x2="707.66" y2="316.36" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="699.66" y1="313.46" x2="707.66" y2="313.46" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="770.08" y1="315.41" x2="770.08" y2="314.70" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="766.08" y1="315.41" x2="774.08" y2="315.41" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="766.08" y1="314.70" x2="774.08" y2="314.70" stroke="#1f77b4" stroke-width="1.5"/>
+<polyline fill="none" stroke="#1f77b4" stroke-width="2.2" points="105.92,315.09 172.34,230.67 238.75,306.94 305.17,301.71 371.58,315.31 438.00,316.09 504.42,318.37 570.83,315.08 637.25,315.05 703.66,314.91 770.08,315.06 "/>
+<circle cx="105.92" cy="315.09" r="3.4" fill="#1f77b4"/>
+<circle cx="172.34" cy="230.67" r="3.4" fill="#1f77b4"/>
+<circle cx="238.75" cy="306.94" r="3.4" fill="#1f77b4"/>
+<circle cx="305.17" cy="301.71" r="3.4" fill="#1f77b4"/>
+<circle cx="371.58" cy="315.31" r="3.4" fill="#1f77b4"/>
+<circle cx="438.00" cy="316.09" r="3.4" fill="#1f77b4"/>
+<circle cx="504.42" cy="318.37" r="3.4" fill="#1f77b4"/>
+<circle cx="570.83" cy="315.08" r="3.4" fill="#1f77b4"/>
+<circle cx="637.25" cy="315.05" r="3.4" fill="#1f77b4"/>
+<circle cx="703.66" cy="314.91" r="3.4" fill="#1f77b4"/>
+<circle cx="770.08" cy="315.06" r="3.4" fill="#1f77b4"/>
+<polyline fill="none" stroke="#d62728" stroke-width="2.2" stroke-dasharray="6,4" points="105.92,315.07 172.34,282.87 238.75,278.29 305.17,290.13 371.58,319.24 438.00,312.75 504.42,301.33 570.83,315.13 637.25,314.35 703.66,315.12 770.08,315.19 "/>
+<circle cx="105.92" cy="315.07" r="3.4" fill="#d62728"/>
+<circle cx="172.34" cy="282.87" r="3.4" fill="#d62728"/>
+<circle cx="238.75" cy="278.29" r="3.4" fill="#d62728"/>
+<circle cx="305.17" cy="290.13" r="3.4" fill="#d62728"/>
+<circle cx="371.58" cy="319.24" r="3.4" fill="#d62728"/>
+<circle cx="438.00" cy="312.75" r="3.4" fill="#d62728"/>
+<circle cx="504.42" cy="301.33" r="3.4" fill="#d62728"/>
+<circle cx="570.83" cy="315.13" r="3.4" fill="#d62728"/>
+<circle cx="637.25" cy="314.35" r="3.4" fill="#d62728"/>
+<circle cx="703.66" cy="315.12" r="3.4" fill="#d62728"/>
+<circle cx="770.08" cy="315.19" r="3.4" fill="#d62728"/>
+<polyline fill="none" stroke="#2ca02c" stroke-width="2.2" stroke-dasharray="6,4" points="105.92,315.09 172.34,315.09 238.75,315.09 305.17,315.09 371.58,315.09 438.00,315.09 504.42,315.09 570.83,315.09 637.25,315.09 703.66,315.09 770.08,315.09 "/>
+<circle cx="105.92" cy="315.09" r="3.4" fill="#2ca02c"/>
+<circle cx="172.34" cy="315.09" r="3.4" fill="#2ca02c"/>
+<circle cx="238.75" cy="315.09" r="3.4" fill="#2ca02c"/>
+<circle cx="305.17" cy="315.09" r="3.4" fill="#2ca02c"/>
+<circle cx="371.58" cy="315.09" r="3.4" fill="#2ca02c"/>
+<circle cx="438.00" cy="315.09" r="3.4" fill="#2ca02c"/>
+<circle cx="504.42" cy="315.09" r="3.4" fill="#2ca02c"/>
+<circle cx="570.83" cy="315.09" r="3.4" fill="#2ca02c"/>
+<circle cx="637.25" cy="315.09" r="3.4" fill="#2ca02c"/>
+<circle cx="703.66" cy="315.09" r="3.4" fill="#2ca02c"/>
+<circle cx="770.08" cy="315.09" r="3.4" fill="#2ca02c"/>
+<rect x="98.0" y="62.0" width="268.0" height="66.0" fill="#ffffff" fill-opacity="0.92" stroke="#ccc" rx="4"/>
+<line x1="108.0" y1="77.0" x2="130.0" y2="77.0" stroke="#1f77b4" stroke-width="2.4"/>
+<text x="136.0" y="81.0" font-size="11" fill="#222">Mean R=50 (±1.96 SD Empiris)</text>
+<line x1="108.0" y1="95.0" x2="130.0" y2="95.0" stroke="#d62728" stroke-width="2.4" stroke-dasharray="5,3"/>
+<text x="136.0" y="99.0" font-size="11" fill="#222">Single MLE T=1000</text>
+<line x1="108.0" y1="113.0" x2="130.0" y2="113.0" stroke="#2ca02c" stroke-width="2.4" stroke-dasharray="5,3"/>
+<text x="136.0" y="117.0" font-size="11" fill="#222">Referensi Nilai Benar (1.0)</text>
+</svg>

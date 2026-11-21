@@ -38,7 +38,10 @@ func TestPCAEigenvaluesCosineSignPatternsAndWorkers(t *testing.T) {
 			t.Fatalf("factor %d eigenvalue mean z-score %.2f > 3.0", k+1, res1.ZScoreSampleMean[k])
 		}
 	}
-	t.Logf("PCA top3 var=%.2f%% | signChanges=%v | cos=[%.5f, %.5f, %.5f]",
+	if res1.NoiseBulkZScore > 3.0 {
+		t.Fatalf("noise bulk mean z-score %.2f > 3.0 (emp=%g vs theo=%g)", res1.NoiseBulkZScore, res1.NoiseBulkEmpMean, res1.NoiseBulkTheoMean)
+	}
+	t.Logf("PCA top3 var=%.2f%% | signChanges=%v | cos=[%.5f, %.5f, %.5f] | bulkZ=%.2f",
 		res1.TheoTop3CumVar*100.0, res1.TheoSignChanges,
-		res1.EmpMeanTop3Cos[0], res1.EmpMeanTop3Cos[1], res1.EmpMeanTop3Cos[2])
+		res1.EmpMeanTop3Cos[0], res1.EmpMeanTop3Cos[1], res1.EmpMeanTop3Cos[2], res1.NoiseBulkZScore)
 }

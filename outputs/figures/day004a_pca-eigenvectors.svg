@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="460" viewBox="0 0 820 460" style="background:#ffffff;font-family:system-ui,sans-serif">
+<text x="410.0" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#111">Tiga Eigenvektor Pertama PCA Perubahan Yield (Level, Slope, Kurvatur)</text>
+<rect x="86.0" y="52.0" width="704.0" height="346.0" fill="none" stroke="#333" stroke-width="1"/>
+<line x1="86.0" y1="52.0" x2="86.0" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="86.0" y="416.0" text-anchor="middle" font-size="11" fill="#444">0.73</text>
+<line x1="86.0" y1="398.0" x2="790.0" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="402.0" text-anchor="end" font-size="11" fill="#444">-0.5725</text>
+<line x1="226.8" y1="52.0" x2="226.8" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="226.8" y="416.0" text-anchor="middle" font-size="11" fill="#444">2.638</text>
+<line x1="86.0" y1="328.8" x2="790.0" y2="328.8" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="332.8" text-anchor="end" font-size="11" fill="#444">-0.3312</text>
+<line x1="367.6" y1="52.0" x2="367.6" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="367.6" y="416.0" text-anchor="middle" font-size="11" fill="#444">4.546</text>
+<line x1="86.0" y1="259.6" x2="790.0" y2="259.6" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="263.6" text-anchor="end" font-size="11" fill="#444">-0.08988</text>
+<line x1="508.4" y1="52.0" x2="508.4" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="508.4" y="416.0" text-anchor="middle" font-size="11" fill="#444">6.454</text>
+<line x1="86.0" y1="190.4" x2="790.0" y2="190.4" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="194.4" text-anchor="end" font-size="11" fill="#444">0.1514</text>
+<line x1="649.2" y1="52.0" x2="649.2" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="649.2" y="416.0" text-anchor="middle" font-size="11" fill="#444">8.362</text>
+<line x1="86.0" y1="121.2" x2="790.0" y2="121.2" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="125.2" text-anchor="end" font-size="11" fill="#444">0.3928</text>
+<line x1="790.0" y1="52.0" x2="790.0" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="790.0" y="416.0" text-anchor="middle" font-size="11" fill="#444">10.27</text>
+<line x1="86.0" y1="52.0" x2="790.0" y2="52.0" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="56.0" text-anchor="end" font-size="11" fill="#444">0.6341</text>
+<line x1="86.0" y1="233.8" x2="790.0" y2="233.8" stroke="#999" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="438.0" y="446.0" text-anchor="middle" font-size="12" fill="#222">Indeks Tenor (1=0.25y, 2=0.5y, 3=1y, 4=2y, 5=3y, 6=5y, 7=7y, 8=10y, 9=20y, 10=30y)</text>
+<text x="18" y="225.0" text-anchor="middle" font-size="12" fill="#222" transform="rotate(-90 18 225.0)">Pemuatan Eigenvektor Satuan</text>
+<polyline fill="none" stroke="#1f77b4" stroke-width="2.2" points="105.92,125.08 179.72,124.14 253.51,123.92 327.31,127.51 401.10,133.39 474.90,145.48 548.69,154.95 622.49,164.29 696.28,176.79 770.08,181.05 "/>
+<circle cx="105.92" cy="125.08" r="3.4" fill="#1f77b4"/>
+<circle cx="179.72" cy="124.14" r="3.4" fill="#1f77b4"/>
+<circle cx="253.51" cy="123.92" r="3.4" fill="#1f77b4"/>
+<circle cx="327.31" cy="127.51" r="3.4" fill="#1f77b4"/>
+<circle cx="401.10" cy="133.39" r="3.4" fill="#1f77b4"/>
+<circle cx="474.90" cy="145.48" r="3.4" fill="#1f77b4"/>
+<circle cx="548.69" cy="154.95" r="3.4" fill="#1f77b4"/>
+<circle cx="622.49" cy="164.29" r="3.4" fill="#1f77b4"/>
+<circle cx="696.28" cy="176.79" r="3.4" fill="#1f77b4"/>
+<circle cx="770.08" cy="181.05" r="3.4" fill="#1f77b4"/>
+<polyline fill="none" stroke="#1f77b4" stroke-width="2.2" stroke-dasharray="6,4" points="105.92,125.24 179.72,124.02 253.51,123.96 327.31,127.44 401.10,133.49 474.90,145.47 548.69,154.95 622.49,164.17 696.28,176.83 770.08,180.95 "/>
+<circle cx="105.92" cy="125.24" r="3.4" fill="#1f77b4"/>
+<circle cx="179.72" cy="124.02" r="3.4" fill="#1f77b4"/>
+<circle cx="253.51" cy="123.96" r="3.4" fill="#1f77b4"/>
+<circle cx="327.31" cy="127.44" r="3.4" fill="#1f77b4"/>
+<circle cx="401.10" cy="133.49" r="3.4" fill="#1f77b4"/>
+<circle cx="474.90" cy="145.47" r="3.4" fill="#1f77b4"/>
+<circle cx="548.69" cy="154.95" r="3.4" fill="#1f77b4"/>
+<circle cx="622.49" cy="164.17" r="3.4" fill="#1f77b4"/>
+<circle cx="696.28" cy="176.83" r="3.4" fill="#1f77b4"/>
+<circle cx="770.08" cy="180.95" r="3.4" fill="#1f77b4"/>
+<polyline fill="none" stroke="#d62728" stroke-width="2.2" points="105.92,384.69 179.72,350.63 253.51,296.10 327.31,225.85 401.10,187.37 474.90,154.80 548.69,145.09 622.49,141.72 696.28,141.25 770.08,141.33 "/>
+<circle cx="105.92" cy="384.69" r="3.4" fill="#d62728"/>
+<circle cx="179.72" cy="350.63" r="3.4" fill="#d62728"/>
+<circle cx="253.51" cy="296.10" r="3.4" fill="#d62728"/>
+<circle cx="327.31" cy="225.85" r="3.4" fill="#d62728"/>
+<circle cx="401.10" cy="187.37" r="3.4" fill="#d62728"/>
+<circle cx="474.90" cy="154.80" r="3.4" fill="#d62728"/>
+<circle cx="548.69" cy="145.09" r="3.4" fill="#d62728"/>
+<circle cx="622.49" cy="141.72" r="3.4" fill="#d62728"/>
+<circle cx="696.28" cy="141.25" r="3.4" fill="#d62728"/>
+<circle cx="770.08" cy="141.33" r="3.4" fill="#d62728"/>
+<polyline fill="none" stroke="#d62728" stroke-width="2.2" stroke-dasharray="6,4" points="105.92,384.29 179.72,351.11 253.51,295.98 327.31,226.05 401.10,187.49 474.90,154.81 548.69,145.22 622.49,142.09 696.28,140.94 770.08,140.93 "/>
+<circle cx="105.92" cy="384.29" r="3.4" fill="#d62728"/>
+<circle cx="179.72" cy="351.11" r="3.4" fill="#d62728"/>
+<circle cx="253.51" cy="295.98" r="3.4" fill="#d62728"/>
+<circle cx="327.31" cy="226.05" r="3.4" fill="#d62728"/>
+<circle cx="401.10" cy="187.49" r="3.4" fill="#d62728"/>
+<circle cx="474.90" cy="154.81" r="3.4" fill="#d62728"/>
+<circle cx="548.69" cy="145.22" r="3.4" fill="#d62728"/>
+<circle cx="622.49" cy="142.09" r="3.4" fill="#d62728"/>
+<circle cx="696.28" cy="140.94" r="3.4" fill="#d62728"/>
+<circle cx="770.08" cy="140.93" r="3.4" fill="#d62728"/>
+<polyline fill="none" stroke="#2ca02c" stroke-width="2.2" points="105.92,140.34 179.72,192.15 253.51,266.20 327.31,334.77 401.10,345.21 474.90,304.88 548.69,252.29 622.49,192.13 696.28,106.24 770.08,76.64 "/>
+<circle cx="105.92" cy="140.34" r="3.4" fill="#2ca02c"/>
+<circle cx="179.72" cy="192.15" r="3.4" fill="#2ca02c"/>
+<circle cx="253.51" cy="266.20" r="3.4" fill="#2ca02c"/>
+<circle cx="327.31" cy="334.77" r="3.4" fill="#2ca02c"/>
+<circle cx="401.10" cy="345.21" r="3.4" fill="#2ca02c"/>
+<circle cx="474.90" cy="304.88" r="3.4" fill="#2ca02c"/>
+<circle cx="548.69" cy="252.29" r="3.4" fill="#2ca02c"/>
+<circle cx="622.49" cy="192.13" r="3.4" fill="#2ca02c"/>
+<circle cx="696.28" cy="106.24" r="3.4" fill="#2ca02c"/>
+<circle cx="770.08" cy="76.64" r="3.4" fill="#2ca02c"/>
+<polyline fill="none" stroke="#2ca02c" stroke-width="2.2" stroke-dasharray="6,4" points="105.92,139.74 179.72,192.17 253.51,267.06 327.31,333.73 401.10,344.77 474.90,306.23 548.69,252.57 622.49,191.68 696.28,106.64 770.08,76.65 "/>
+<circle cx="105.92" cy="139.74" r="3.4" fill="#2ca02c"/>
+<circle cx="179.72" cy="192.17" r="3.4" fill="#2ca02c"/>
+<circle cx="253.51" cy="267.06" r="3.4" fill="#2ca02c"/>
+<circle cx="327.31" cy="333.73" r="3.4" fill="#2ca02c"/>
+<circle cx="401.10" cy="344.77" r="3.4" fill="#2ca02c"/>
+<circle cx="474.90" cy="306.23" r="3.4" fill="#2ca02c"/>
+<circle cx="548.69" cy="252.57" r="3.4" fill="#2ca02c"/>
+<circle cx="622.49" cy="191.68" r="3.4" fill="#2ca02c"/>
+<circle cx="696.28" cy="106.64" r="3.4" fill="#2ca02c"/>
+<circle cx="770.08" cy="76.65" r="3.4" fill="#2ca02c"/>
+<rect x="98.0" y="62.0" width="268.0" height="120.0" fill="#ffffff" fill-opacity="0.92" stroke="#ccc" rx="4"/>
+<line x1="108.0" y1="77.0" x2="130.0" y2="77.0" stroke="#1f77b4" stroke-width="2.4"/>
+<text x="136.0" y="81.0" font-size="11" fill="#222">PC1 Level (Teoretis, 0 flip)</text>
+<line x1="108.0" y1="95.0" x2="130.0" y2="95.0" stroke="#1f77b4" stroke-width="2.4" stroke-dasharray="5,3"/>
+<text x="136.0" y="99.0" font-size="11" fill="#222">PC1 Level (Empiris R=100)</text>
+<line x1="108.0" y1="113.0" x2="130.0" y2="113.0" stroke="#d62728" stroke-width="2.4"/>
+<text x="136.0" y="117.0" font-size="11" fill="#222">PC2 Slope (Teoretis, 1 flip)</text>
+<line x1="108.0" y1="131.0" x2="130.0" y2="131.0" stroke="#d62728" stroke-width="2.4" stroke-dasharray="5,3"/>
+<text x="136.0" y="135.0" font-size="11" fill="#222">PC2 Slope (Empiris R=100)</text>
+<line x1="108.0" y1="149.0" x2="130.0" y2="149.0" stroke="#2ca02c" stroke-width="2.4"/>
+<text x="136.0" y="153.0" font-size="11" fill="#222">PC3 Kurvatur (Teoretis, 2 flip)</text>
+<line x1="108.0" y1="167.0" x2="130.0" y2="167.0" stroke="#2ca02c" stroke-width="2.4" stroke-dasharray="5,3"/>
+<text x="136.0" y="171.0" font-size="11" fill="#222">PC3 Kurvatur (Empiris R=100)</text>
+</svg>

@@ -246,6 +246,10 @@ func MinimizeBFGS(f func([]float64) float64, x0, lo, hi []float64, maxIter int, 
 			alpha *= 0.5
 		}
 		if !accepted {
+			scaledGrad := infNorm(g) / math.Max(1.0, math.Abs(fx))
+			if scaledGrad <= 1e-6 || infNorm(g) <= math.Max(gradTol*100.0, 5e-4) {
+				converged = true
+			}
 			break
 		}
 
@@ -271,8 +275,9 @@ func MinimizeBFGS(f func([]float64) float64, x0, lo, hi []float64, maxIter int, 
 		}
 		g = gNew
 
+		scaledGrad := infNorm(g) / math.Max(1.0, math.Abs(fx))
 		if stepNorm < 1e-13 && math.Abs(fx-fPrev) < 1e-12*math.Max(1.0, math.Abs(fx)) {
-			converged = infNorm(g) <= math.Max(gradTol*100.0, 1e-4)
+			converged = infNorm(g) <= math.Max(gradTol*100.0, 1e-4) || scaledGrad <= 1e-6
 			break
 		}
 
@@ -320,7 +325,7 @@ func MinimizeBFGS(f func([]float64) float64, x0, lo, hi []float64, maxIter int, 
 		GradNorm:   infNorm(g),
 		Iterations: iters,
 		FuncEvals:  evals,
-		Converged:  converged || infNorm(g) <= 1e-4,
+		Converged:  converged || infNorm(g) <= 1e-4 || (infNorm(g)/math.Max(1.0, math.Abs(fx)) <= 1e-6 && iters < maxIter),
 		HitBound:   hitBound,
 	}
 }
