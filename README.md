@@ -154,7 +154,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [docs/ROADMAP.md](docs/ROADMAP.md) · Riwayat: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 29/100 topik (29%)** · quant: 28 · sim: 1
+**Progres: 30/100 topik (30%)** · quant: 29 · sim: 1
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -187,6 +187,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 4b | bonus | `quant` | `go` | AFNS — bias sampel terbatas, rentang kalender (long-span), dan frekuensi observasi (infill) | 2026-11-22 | [day004b_afns_inference](projects/go/day004b_afns_inference) |
 | 4c | bonus | `quant` | `go` | AFNS — koreksi bias mean-reversion dan inferensi sampel terbatas dengan jackknife serta bootstrap parametrik | 2026-11-22 | [day004c_afns_bias_correction](projects/go/day004c_afns_bias_correction) |
 | 4d | bonus | `quant` | `go` | AFNS — interval bootstrap yang peka bias dan batas parameter | 2026-11-22 | [day004d_afns_interval_calibration](projects/go/day004d_afns_interval_calibration) |
+| 4e | bonus | `quant` | `go` | Harga listrik negatif dan arbitrase baterai (DP stokastik) | 2026-11-22 | [day004e_power_storage](projects/go/day004e_power_storage) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi

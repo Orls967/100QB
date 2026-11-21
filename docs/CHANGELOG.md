@@ -3,6 +3,28 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 004e] — 2026-11-22 · Harga listrik negatif dan arbitrase baterai (Go, Bonus)
+
+### Ditambahkan
+- Project Go 1.22+ mandiri `projects/go/day004e_power_storage/` (*standard library* saja, tanpa impor `day004d`, `MainSeed = 2026112205`, `KernelSeed = 2026112215`, `EvalSeed = 2026112225`, `VerifySeed = 2026112235`, `xoshiro256++`, paralelisme deterministik per chunk, JSON 17-digit, dan 5 grafik SVG):
+  - **Verifikasi Teknis (`c1..c8 = tercapai`, `0,70s` pada 8 worker)**: distribusi stasioner eksak 3-rezim (`residual = 1,04e-17`), momen *compound Poisson* & transisi satu langkah cocok terhadap MC `200k` dalam `4 MCSE`, Bellman 4 jam cocok terhadap enumerasi *brute force* `625` lintasan (`diff = 1,14e-13`), residual Bellman nol pada grid 17 & 33 bin, nol pelanggaran SoC/daya, nol pelanggaran dominasi *perfect foresight*, dan determinisme bit-identik `1` vs `8` worker.
+  - **Model Pasar Listrik Sintetis (`N = 2.000` hari evaluasi, *burn-in* `60` hari = `48.000` jam)**: `5.608` jam harga negatif (`11,68%` di `1.240/2.000` hari), `2.061` jam `scarcity`, `1.029` jam `oversupply`, `204` jump non-nol (`8` jam multi-jump $N>1$), rentang harga `[-354,69, 1041,92] EUR/MWh`.
+  - **Evaluasi Berpasangan CRN 5 Strategi (`4 MWh` baterai, degradasi `2 EUR/MWh`, nilai terminal `45 * 0.9 * soc`)**:
+    - `stochastic_dp_33bin`: mean `236,09 ± 4,73 EUR/hari` (median `192,98`, VaR 5% `27,59`, ES 5% `+4,87`, EFC `0,932`, regret `252,30 ± 4,56`).
+    - `stochastic_dp_17bin`: mean `231,90 ± 4,75 EUR/hari` (median `189,54`, VaR 5% `22,55`, ES 5% `-1,85`, EFC `1,020`, regret `256,49 ± 4,60`).
+    - `threshold_policy` (`P <= 0` charge, `P >= 200` discharge): mean `116,01 ± 4,41 EUR/hari` (median `77,55`, VaR/ES 5% `0,00`, EFC `0,175`, regret `372,38 ± 4,40`).
+    - `perfect_foresight_dp` (batas atas bersyarat): mean `488,39 ± 7,16 EUR/hari` (EFC `2,505`); `no_battery` (`0,00 EUR/hari`).
+    - Selisih berpasangan 95%: `DP-33 - Threshold = +120,08 ± 3,47` (`[113,29, 126,88]`), `DP-17 - Threshold = +115,89 ± 3,49` (`[109,06, 122,73]`), dan `DP-33 - DP-17 = +4,19 ± 1,26 EUR/hari` (`[1,72, 6,66]`).
+- Output `outputs/day004e/results.json`, 5 grafik SVG `outputs/figures/day004e_*.svg`, serta dokumen penjelasan [day004e_quant_power-storage.md](project-explanations/day004e_quant_power-storage.md).
+
+### Diperbarui
+- `README.md` (tabel progres baris `4e` Go via `scripts/update_readme.py`), `docs/CHANGELOG.md`, dan `docs/project-explanations/README.md`.
+
+## [Hari 004d — pemeliharaan A] — 2026-11-22 · Audit penyajian interval & ringkasan robust `day004d`
+
+### Diperbaiki
+- `projects/go/day004d_afns_interval_calibration`: menambahkan `physically_valid_covered_count` (memisahkan interval `kp11` yang mencakup nilai benar tetapi berbatas bawah non-positif: `Basic 0/100`, `Studentized 4/100`, `Wald 6/100`), ringkasan lebar robust (`q25_width`, `q75_width`, `iqr_width`, `p95_width`, `max_width`), median lebar per strata `kp11_hat`, `technical_scope_note` pada `acceptance_criteria`, uji unit `TestSummarizeMethodRobustAndPhysicalCounts`, serta klarifikasi pada README dan dokumen penjelasan (mempertahankan seluruh hasil simulasi mentah & cakupan identik bit-demi-bit).
+
 ## [Hari 004d] — 2026-11-22 · AFNS — interval bootstrap yang peka bias dan batas parameter (Go, Bonus)
 
 ### Ditambahkan

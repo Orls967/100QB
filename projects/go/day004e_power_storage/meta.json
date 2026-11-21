@@ -1,0 +1,10 @@
+{
+  "day": 4,
+  "session": "e",
+  "topic_no": null,
+  "type": "quant",
+  "language": "go",
+  "topic": "Harga listrik negatif dan arbitrase baterai (DP stokastik)",
+  "date": "2026-11-22",
+  "link": "projects/go/day004e_power_storage"
+}
