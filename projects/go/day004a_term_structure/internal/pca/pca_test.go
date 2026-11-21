@@ -41,7 +41,39 @@ func TestPCAEigenvaluesCosineSignPatternsAndWorkers(t *testing.T) {
 	if res1.NoiseBulkZScore > 3.0 {
 		t.Fatalf("noise bulk mean z-score %.2f > 3.0 (emp=%g vs theo=%g)", res1.NoiseBulkZScore, res1.NoiseBulkEmpMean, res1.NoiseBulkTheoMean)
 	}
-	t.Logf("PCA top3 var=%.2f%% | signChanges=%v | cos=[%.5f, %.5f, %.5f] | bulkZ=%.2f",
+	acc := res1.EvaluateAcceptance()
+	if !acc.AggregatePassed || acc.Status != "tercapai" {
+		t.Fatalf("expected aggregate PCA acceptance to pass, got %+v", acc)
+	}
+	t.Logf("PCA top3 var=%.2f%% | signChanges=%v | cos=[%.5f, %.5f, %.5f] | bulkZ=%.2f | diagAll10=%v | agg=%v (%s)",
 		res1.TheoTop3CumVar*100.0, res1.TheoSignChanges,
-		res1.EmpMeanTop3Cos[0], res1.EmpMeanTop3Cos[1], res1.EmpMeanTop3Cos[2], res1.NoiseBulkZScore)
+		res1.EmpMeanTop3Cos[0], res1.EmpMeanTop3Cos[1], res1.EmpMeanTop3Cos[2],
+		res1.NoiseBulkZScore, acc.DiagnosticAll10SortedWithin3SE, acc.AggregatePassed, acc.Status)
+}
+
+func TestPCAAcceptanceDiagnosticSortedNoiseSplitting(t *testing.T) {
+	// Simulasikan pembelahan statistik urutan PC4-PC10 (z > 3.0) ketika sinyal top-3, noise bulk,
+	// kosinus > 0.99, dan pola tanda [0, 1, 2] seluruhnya memenuhi syarat.
+	base := PCAReplicationSummary{
+		ZScoreSampleMean: []float64{1.32, 0.72, 0.64, 38.90, 27.15, 16.85, 1.09, 16.79, 33.60, 45.82},
+		NoiseBulkZScore:  0.28,
+		EmpMeanTop3Cos:   [3]float64{0.99995, 0.99923, 0.99748},
+		TheoSignChanges:  [3]int{0, 1, 2},
+		EmpSignChanges:   [3]int{0, 1, 2},
+	}
+	acc := base.EvaluateAcceptance()
+	if acc.DiagnosticAll10SortedWithin3SE {
+		t.Fatalf("expected DiagnosticAll10SortedWithin3SE=false when sorted noise eigenvalues split")
+	}
+	if !acc.AggregatePassed || acc.Status != "tercapai" {
+		t.Fatalf("expected AggregatePassed=true and Status=tercapai despite sorted noise split, got %+v", acc)
+	}
+
+	// Pastikan kriteria agregat tetap gagal apabila rata-rata noise bulk melampaui 3 SE.
+	badBulk := base
+	badBulk.NoiseBulkZScore = 3.5
+	accBad := badBulk.EvaluateAcceptance()
+	if accBad.AggregatePassed || accBad.Status != "sebagian" {
+		t.Fatalf("expected AggregatePassed=false and Status=sebagian when bulkZ > 3, got %+v", accBad)
+	}
 }

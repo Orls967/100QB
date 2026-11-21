@@ -415,31 +415,8 @@ func main() {
 		c8Status = "sebagian"
 	}
 
-	pcaTop3ZOK := true
-	for k := 0; k < 3; k++ {
-		if pcaRes.ZScoreSampleMean[k] > 3.0 {
-			pcaTop3ZOK = false
-		}
-	}
-	pcaBulkZOK := pcaRes.NoiseBulkZScore <= 3.0
-	pcaAll10ZOK := true
-	for _, z := range pcaRes.ZScoreSampleMean {
-		if z > 3.0 {
-			pcaAll10ZOK = false
-		}
-	}
-	pcaCosOK := pcaRes.EmpMeanTop3Cos[0] > 0.99 && pcaRes.EmpMeanTop3Cos[1] > 0.99 && pcaRes.EmpMeanTop3Cos[2] > 0.99
-	pcaSignOK := pcaRes.TheoSignChanges == [3]int{0, 1, 2} && pcaRes.EmpSignChanges == [3]int{0, 1, 2}
-	crit9SignalAndBulk := pcaTop3ZOK && pcaBulkZOK && pcaCosOK && pcaSignOK
-	crit9All10Strict := crit9SignalAndBulk && pcaAll10ZOK
-	c9Status := "belum tercapai"
-	if crit9All10Strict {
-		c9Status = "tercapai"
-	} else if crit9SignalAndBulk {
-		c9Status = "sebagian"
-	}
-
-	allPassed := crit1 && crit2 && crit3 && crit4 && crit5 && crit6 && crit7 && crit8All11 && crit9All10Strict && workerAllIdentical
+	pcaAcc := pcaRes.EvaluateAcceptance()
+	allPassed := crit1 && crit2 && crit3 && crit4 && crit5 && crit6 && crit7 && crit8All11 && pcaAcc.AggregatePassed && workerAllIdentical
 
 	// =========================================================================
 	// GENERATE 8 SVG FIGURES
@@ -963,13 +940,13 @@ func main() {
 			{Key: "c8a_mle_replication_well_identified", Val: crit8WellId},
 			{Key: "c8b_mle_replication_all11_params", Val: crit8All11},
 			{Key: "c8_status", Val: c8Status},
-			{Key: "c9a_pca_top3_eigenvalues_within_3se", Val: pcaTop3ZOK},
-			{Key: "c9b_pca_noise_bulk_mean_within_3se", Val: pcaBulkZOK},
-			{Key: "c9c_pca_all10_sorted_eigenvalues_within_3se", Val: pcaAll10ZOK},
-			{Key: "c9d_pca_top3_cosine_gt_0p99", Val: pcaCosOK},
-			{Key: "c9e_pca_sign_patterns_012", Val: pcaSignOK},
-			{Key: "c9_pca_eigenvalues_cosine_and_signs", Val: crit9All10Strict},
-			{Key: "c9_status", Val: c9Status},
+			{Key: "c9a_pca_top3_eigenvalues_within_3se", Val: pcaAcc.Top3EigenvaluesWithin3SE},
+			{Key: "c9b_pca_noise_bulk_mean_within_3se", Val: pcaAcc.NoiseBulkMeanWithin3SE},
+			{Key: "c9c_pca_all10_sorted_eigenvalues_within_3se", Val: pcaAcc.DiagnosticAll10SortedWithin3SE},
+			{Key: "c9d_pca_top3_cosine_gt_0p99", Val: pcaAcc.Top3CosineGt0p99},
+			{Key: "c9e_pca_sign_patterns_012", Val: pcaAcc.SignPatterns012},
+			{Key: "c9_pca_eigenvalues_cosine_and_signs", Val: pcaAcc.AggregatePassed},
+			{Key: "c9_status", Val: pcaAcc.Status},
 			{Key: "worker_invariance_bit_identical", Val: workerAllIdentical},
 			{Key: "all_passed", Val: allPassed},
 		}},

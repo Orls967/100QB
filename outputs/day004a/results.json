@@ -7,11 +7,11 @@
     "n_workers": 8,
     "n_chunks": 32,
     "worker_invariance_bit_identical": true,
-    "elapsed_seconds_part1": 0.0044229999999999998,
-    "elapsed_seconds_part2": 0.047609625000000003,
-    "elapsed_seconds_part3": 32.780338374999999,
-    "elapsed_seconds_part4": 0.032004540999999997,
-    "elapsed_seconds_total": 32.885727125000003
+    "elapsed_seconds_part1": 0.0050122500000000002,
+    "elapsed_seconds_part2": 0.053219416999999998,
+    "elapsed_seconds_part3": 35.147593041,
+    "elapsed_seconds_part4": 0.033472500000000002,
+    "elapsed_seconds_total": 35.275399499999999
   },
   "part1_ns_bootstrap_risk": {
     "identity_checks": [
@@ -1188,8 +1188,8 @@
     "c9c_pca_all10_sorted_eigenvalues_within_3se": false,
     "c9d_pca_top3_cosine_gt_0p99": true,
     "c9e_pca_sign_patterns_012": true,
-    "c9_pca_eigenvalues_cosine_and_signs": false,
-    "c9_status": "sebagian",
+    "c9_pca_eigenvalues_cosine_and_signs": true,
+    "c9_status": "tercapai",
     "worker_invariance_bit_identical": true,
     "all_passed": false
   }

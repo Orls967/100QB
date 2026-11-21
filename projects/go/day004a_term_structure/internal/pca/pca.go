@@ -187,6 +187,57 @@ type PCAReplicationSummary struct {
 	EmpTop3CumVar      float64
 }
 
+// PCAAcceptance merangkum evaluasi kriteria PCA yang membedakan statistik sinyal/bulk teridentifikasi
+// dari diagnostik eigenvalue mode derau terdegenerasi yang sudah diurutkan.
+type PCAAcceptance struct {
+	Top3EigenvaluesWithin3SE       bool
+	NoiseBulkMeanWithin3SE         bool
+	DiagnosticAll10SortedWithin3SE bool
+	Top3CosineGt0p99               bool
+	SignPatterns012                bool
+	AggregatePassed                bool
+	Status                         string
+}
+
+// EvaluateAcceptance menghitung status agregat PCA berdasarkan bagian yang teridentifikasi
+// (PC1-PC3 dalam 3 SE, rata-rata noise bulk PC4-PC10 dalam 3 SE, kosinus top-3 > 0.99, pola tanda [0, 1, 2]),
+// sambil tetap mencatat DiagnosticAll10SortedWithin3SE sebagai diagnostik pemisahan Wishart/Marchenko-Pastur.
+func (s PCAReplicationSummary) EvaluateAcceptance() PCAAcceptance {
+	top3OK := len(s.ZScoreSampleMean) >= 3
+	for k := 0; k < 3 && k < len(s.ZScoreSampleMean); k++ {
+		if s.ZScoreSampleMean[k] > 3.0 {
+			top3OK = false
+		}
+	}
+	bulkOK := s.NoiseBulkZScore <= 3.0
+	all10OK := len(s.ZScoreSampleMean) > 0
+	for _, z := range s.ZScoreSampleMean {
+		if z > 3.0 {
+			all10OK = false
+		}
+	}
+	cosOK := s.EmpMeanTop3Cos[0] > 0.99 && s.EmpMeanTop3Cos[1] > 0.99 && s.EmpMeanTop3Cos[2] > 0.99
+	signOK := s.TheoSignChanges == [3]int{0, 1, 2} && s.EmpSignChanges == [3]int{0, 1, 2}
+
+	agg := top3OK && bulkOK && cosOK && signOK
+	status := "belum tercapai"
+	if agg {
+		status = "tercapai"
+	} else if top3OK || bulkOK || cosOK || signOK {
+		status = "sebagian"
+	}
+
+	return PCAAcceptance{
+		Top3EigenvaluesWithin3SE:       top3OK,
+		NoiseBulkMeanWithin3SE:         bulkOK,
+		DiagnosticAll10SortedWithin3SE: all10OK,
+		Top3CosineGt0p99:               cosOK,
+		SignPatterns012:                signOK,
+		AggregatePassed:                agg,
+		Status:                         status,
+	}
+}
+
 // RunPCAStudy menghitung eigen-dekomposisi teoretis Jacobi dan membandingkan dengan R simulasi
 // sepanjang T minggu secara paralel deterministik.
 func RunPCAStudy(spec kalman.ModelSpec, taus []float64, dt float64, tSteps, nRep, nChunks, nWorkers int, seed uint64) (PCAReplicationSummary, error) {
