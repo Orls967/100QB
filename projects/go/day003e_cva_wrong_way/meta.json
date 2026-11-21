@@ -1,0 +1,10 @@
+{
+  "day": 3,
+  "session": "e",
+  "topic_no": null,
+  "type": "quant",
+  "language": "go",
+  "topic": "CVA swap suku bunga: Hull–White, intensitas CIR dan wrong-way risk",
+  "date": "2026-11-21",
+  "link": "projects/go/day003e_cva_wrong_way"
+}
