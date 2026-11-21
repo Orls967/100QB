@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="480" viewBox="0 0 900 480" style="background:#ffffff;font-family:system-ui,sans-serif">
+<text x="450.0" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#111">Lebar Interval 95% theta1 Antar-Metode (Median &amp; IQR [Q25, Q75])</text>
+<rect x="84.0" y="54.0" width="784.0" height="348.0" fill="none" stroke="#333" stroke-width="1"/>
+<line x1="84.0" y1="402.0" x2="868.0" y2="402.0" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="406.0" text-anchor="end" font-size="11" fill="#444">-0.004737</text>
+<line x1="84.0" y1="332.4" x2="868.0" y2="332.4" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="336.4" text-anchor="end" font-size="11" fill="#444">0.04874</text>
+<line x1="84.0" y1="262.8" x2="868.0" y2="262.8" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="266.8" text-anchor="end" font-size="11" fill="#444">0.1022</text>
+<line x1="84.0" y1="193.2" x2="868.0" y2="193.2" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="197.2" text-anchor="end" font-size="11" fill="#444">0.1557</text>
+<line x1="84.0" y1="123.6" x2="868.0" y2="123.6" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="127.6" text-anchor="end" font-size="11" fill="#444">0.2092</text>
+<line x1="84.0" y1="54.0" x2="868.0" y2="54.0" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="58.0" text-anchor="end" font-size="11" fill="#444">0.2626</text>
+<line x1="84.0" y1="78.0" x2="868.0" y2="78.0" stroke="#111111" stroke-width="1.4" stroke-dasharray="5,4"/>
+<text x="92.0" y="73.0" font-size="10.5" fill="#111111">2 * 1.96 * EmpSD = 0.2442</text>
+<text x="476.0" y="464.0" text-anchor="middle" font-size="12" fill="#222">Metode Interval (H=20y, R=100, B=100)</text>
+<text x="18" y="228.0" text-anchor="middle" font-size="12" fill="#222" transform="rotate(-90 18 228.0)">Lebar Interval theta1</text>
+<text x="182.0" y="422.0" text-anchor="middle" font-size="10.5" fill="#333">Wald</text>
+<line x1="182.00" y1="376.12" x2="182.00" y2="355.23" stroke="#1f77b4" stroke-width="1.6"/>
+<line x1="178.50" y1="376.12" x2="185.50" y2="376.12" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="178.50" y1="355.23" x2="185.50" y2="355.23" stroke="#1f77b4" stroke-width="1.5"/>
+<circle cx="182.00" cy="367.88" r="3.8" fill="#1f77b4"/>
+<line x1="280.0" y1="54.0" x2="280.0" y2="402.0" stroke="#f0f0f0" stroke-width="1"/>
+<text x="378.0" y="422.0" text-anchor="middle" font-size="10.5" fill="#333">Percentile</text>
+<line x1="378.00" y1="378.00" x2="378.00" y2="359.05" stroke="#1f77b4" stroke-width="1.6"/>
+<line x1="374.50" y1="378.00" x2="381.50" y2="378.00" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="374.50" y1="359.05" x2="381.50" y2="359.05" stroke="#1f77b4" stroke-width="1.5"/>
+<circle cx="378.00" cy="369.53" r="3.8" fill="#1f77b4"/>
+<line x1="476.0" y1="54.0" x2="476.0" y2="402.0" stroke="#f0f0f0" stroke-width="1"/>
+<text x="574.0" y="422.0" text-anchor="middle" font-size="10.5" fill="#333">Basic</text>
+<line x1="574.00" y1="378.00" x2="574.00" y2="359.05" stroke="#1f77b4" stroke-width="1.6"/>
+<line x1="570.50" y1="378.00" x2="577.50" y2="378.00" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="570.50" y1="359.05" x2="577.50" y2="359.05" stroke="#1f77b4" stroke-width="1.5"/>
+<circle cx="574.00" cy="369.53" r="3.8" fill="#1f77b4"/>
+<line x1="672.0" y1="54.0" x2="672.0" y2="402.0" stroke="#f0f0f0" stroke-width="1"/>
+<text x="770.0" y="422.0" text-anchor="middle" font-size="10.5" fill="#333">Studentized</text>
+<line x1="770.00" y1="362.58" x2="770.00" y2="280.69" stroke="#1f77b4" stroke-width="1.6"/>
+<line x1="766.50" y1="362.58" x2="773.50" y2="362.58" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="766.50" y1="280.69" x2="773.50" y2="280.69" stroke="#1f77b4" stroke-width="1.5"/>
+<circle cx="770.00" cy="335.71" r="3.8" fill="#1f77b4"/>
+<rect x="598.0" y="64.0" width="260.0" height="30.0" fill="#ffffff" fill-opacity="0.93" stroke="#ccc" rx="4"/>
+<circle cx="616.0" cy="79.0" r="4" fill="#1f77b4"/>
+<text x="628.0" y="83.0" font-size="11" fill="#222">Median &amp; IQR [Q25, Q75]</text>
+</svg>

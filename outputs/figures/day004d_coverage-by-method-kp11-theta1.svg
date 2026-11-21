@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="480" viewBox="0 0 900 480" style="background:#ffffff;font-family:system-ui,sans-serif">
+<text x="450.0" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#111">Cakupan Interval 95% Antar-Metode Bootstrap pada kp11 &amp; theta1 (+ Wilson 95% CI)</text>
+<rect x="84.0" y="54.0" width="784.0" height="348.0" fill="none" stroke="#333" stroke-width="1"/>
+<line x1="84.0" y1="402.0" x2="868.0" y2="402.0" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="406.0" text-anchor="end" font-size="11" fill="#444">0</text>
+<line x1="84.0" y1="332.4" x2="868.0" y2="332.4" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="336.4" text-anchor="end" font-size="11" fill="#444">0.21</text>
+<line x1="84.0" y1="262.8" x2="868.0" y2="262.8" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="266.8" text-anchor="end" font-size="11" fill="#444">0.42</text>
+<line x1="84.0" y1="193.2" x2="868.0" y2="193.2" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="197.2" text-anchor="end" font-size="11" fill="#444">0.63</text>
+<line x1="84.0" y1="123.6" x2="868.0" y2="123.6" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="127.6" text-anchor="end" font-size="11" fill="#444">0.84</text>
+<line x1="84.0" y1="54.0" x2="868.0" y2="54.0" stroke="#eee" stroke-width="1"/>
+<text x="76.0" y="58.0" text-anchor="end" font-size="11" fill="#444">1.05</text>
+<line x1="84.0" y1="87.1" x2="868.0" y2="87.1" stroke="#111111" stroke-width="1.4" stroke-dasharray="5,4"/>
+<text x="92.0" y="82.1" font-size="10.5" fill="#111111">Nominal 95%</text>
+<text x="476.0" y="464.0" text-anchor="middle" font-size="12" fill="#222">Parameter Sasaran (R=100 Replikasi Luar, B=100 Refit)</text>
+<text x="18" y="228.0" text-anchor="middle" font-size="12" fill="#222" transform="rotate(-90 18 228.0)">Proporsi Cakupan 95% (+/- Wilson 95% CI)</text>
+<text x="280.0" y="422.0" text-anchor="middle" font-size="10.5" fill="#333">kp11 (true=0.05)</text>
+<line x1="167.10" y1="147.74" x2="167.10" y2="101.41" stroke="#1f77b4" stroke-width="1.6"/>
+<line x1="163.60" y1="147.74" x2="170.60" y2="147.74" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="163.60" y1="101.41" x2="170.60" y2="101.41" stroke="#1f77b4" stroke-width="1.5"/>
+<circle cx="167.10" cy="120.29" r="3.8" fill="#1f77b4"/>
+<line x1="223.55" y1="373.74" x2="223.55" y2="328.63" stroke="#d62728" stroke-width="1.6"/>
+<line x1="220.05" y1="373.74" x2="227.05" y2="373.74" stroke="#d62728" stroke-width="1.5"/>
+<line x1="220.05" y1="328.63" x2="227.05" y2="328.63" stroke="#d62728" stroke-width="1.5"/>
+<circle cx="223.55" cy="355.60" r="3.8" fill="#d62728"/>
+<line x1="280.00" y1="107.61" x2="280.00" y2="77.71" stroke="#2ca02c" stroke-width="1.6"/>
+<line x1="276.50" y1="107.61" x2="283.50" y2="107.61" stroke="#2ca02c" stroke-width="1.5"/>
+<line x1="276.50" y1="77.71" x2="283.50" y2="77.71" stroke="#2ca02c" stroke-width="1.5"/>
+<circle cx="280.00" cy="87.14" r="3.8" fill="#2ca02c"/>
+<line x1="336.45" y1="143.94" x2="336.45" y2="98.83" stroke="#9467bd" stroke-width="1.6"/>
+<line x1="332.95" y1="143.94" x2="339.95" y2="143.94" stroke="#9467bd" stroke-width="1.5"/>
+<line x1="332.95" y1="98.83" x2="339.95" y2="98.83" stroke="#9467bd" stroke-width="1.5"/>
+<circle cx="336.45" cy="116.97" r="3.8" fill="#9467bd"/>
+<line x1="392.90" y1="271.34" x2="392.90" y2="207.61" stroke="#ff7f0e" stroke-width="1.6"/>
+<line x1="389.40" y1="271.34" x2="396.40" y2="271.34" stroke="#ff7f0e" stroke-width="1.5"/>
+<line x1="389.40" y1="207.61" x2="396.40" y2="207.61" stroke="#ff7f0e" stroke-width="1.5"/>
+<circle cx="392.90" cy="239.60" r="3.8" fill="#ff7f0e"/>
+<line x1="476.0" y1="54.0" x2="476.0" y2="402.0" stroke="#f0f0f0" stroke-width="1"/>
+<text x="672.0" y="422.0" text-anchor="middle" font-size="10.5" fill="#333">theta1 (true=0.045)</text>
+<line x1="559.10" y1="261.75" x2="559.10" y2="198.05" stroke="#1f77b4" stroke-width="1.6"/>
+<line x1="555.60" y1="261.75" x2="562.60" y2="261.75" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="555.60" y1="198.05" x2="562.60" y2="198.05" stroke="#1f77b4" stroke-width="1.5"/>
+<circle cx="559.10" cy="229.66" r="3.8" fill="#1f77b4"/>
+<line x1="615.55" y1="280.83" x2="615.55" y2="217.28" stroke="#d62728" stroke-width="1.6"/>
+<line x1="612.05" y1="280.83" x2="619.05" y2="280.83" stroke="#d62728" stroke-width="1.5"/>
+<line x1="612.05" y1="217.28" x2="619.05" y2="217.28" stroke="#d62728" stroke-width="1.5"/>
+<circle cx="615.55" cy="249.54" r="3.8" fill="#d62728"/>
+<line x1="672.00" y1="277.68" x2="672.00" y2="214.04" stroke="#2ca02c" stroke-width="1.6"/>
+<line x1="668.50" y1="277.68" x2="675.50" y2="277.68" stroke="#2ca02c" stroke-width="1.5"/>
+<line x1="668.50" y1="214.04" x2="675.50" y2="214.04" stroke="#2ca02c" stroke-width="1.5"/>
+<circle cx="672.00" cy="246.23" r="3.8" fill="#2ca02c"/>
+<line x1="728.45" y1="194.82" x2="728.45" y2="137.32" stroke="#9467bd" stroke-width="1.6"/>
+<line x1="724.95" y1="194.82" x2="731.95" y2="194.82" stroke="#9467bd" stroke-width="1.5"/>
+<line x1="724.95" y1="137.32" x2="731.95" y2="137.32" stroke="#9467bd" stroke-width="1.5"/>
+<circle cx="728.45" cy="163.37" r="3.8" fill="#9467bd"/>
+<rect x="598.0" y="290.0" width="260.0" height="102.0" fill="#ffffff" fill-opacity="0.93" stroke="#ccc" rx="4"/>
+<circle cx="616.0" cy="305.0" r="4" fill="#1f77b4"/>
+<text x="628.0" y="309.0" font-size="11" fill="#222">Wald Hessian</text>
+<circle cx="616.0" cy="323.0" r="4" fill="#d62728"/>
+<text x="628.0" y="327.0" font-size="11" fill="#222">Percentile (Raw)</text>
+<circle cx="616.0" cy="341.0" r="4" fill="#2ca02c"/>
+<text x="628.0" y="345.0" font-size="11" fill="#222">Basic / Reversed</text>
+<circle cx="616.0" cy="359.0" r="4" fill="#9467bd"/>
+<text x="628.0" y="363.0" font-size="11" fill="#222">Studentized (Boot-t)</text>
+<circle cx="616.0" cy="377.0" r="4" fill="#ff7f0e"/>
+<text x="628.0" y="381.0" font-size="11" fill="#222">Log-Basic (kp11&gt;0)</text>
+</svg>
