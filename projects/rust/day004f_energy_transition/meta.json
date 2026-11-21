@@ -1,0 +1,10 @@
+{
+  "day": 4,
+  "session": "f",
+  "topic_no": null,
+  "type": "quant",
+  "language": "rust",
+  "topic": "Port lengkap AFNS term structure, kalibrasi interval, harga listrik negatif, dan valuasi proyek baterai terpadu",
+  "date": "2026-11-22",
+  "link": "projects/rust/day004f_energy_transition"
+}

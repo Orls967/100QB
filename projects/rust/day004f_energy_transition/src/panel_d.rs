@@ -4,8 +4,8 @@
 use crate::afns::simulate_stationary_path;
 use crate::interval::{self, IntervalResult};
 use crate::kalman::{
-    estimate_mle, perturb_initial_guess, MleResult, ModelSpec, DEFAULT_SIGMA_EPS,
-    IS_POSITIVE_PARAM, PARAM_NAMES, STANDARD_TENORS, WEEKLY_DT,
+    estimate_mle, estimate_mle_opts, perturb_initial_guess, MleResult, ModelSpec,
+    DEFAULT_SIGMA_EPS, IS_POSITIVE_PARAM, PARAM_NAMES, STANDARD_TENORS, WEEKLY_DT,
 };
 use crate::optim;
 use crate::panel_c::perturb_bootstrap_guess;
@@ -254,13 +254,14 @@ pub fn run_panel_d(n_workers: usize, quick: bool) -> PanelDResult {
             &mut rg,
         );
         let init_boot = perturb_bootstrap_guess(outer_spec, &mut rg);
-        estimate_mle(
+        estimate_mle_opts(
             init_boot,
             outer_spec,
             &STANDARD_TENORS,
             WEEKLY_DT,
             &y_boot,
             true,
+            false,
         )
     });
 

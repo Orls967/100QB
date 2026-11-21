@@ -198,7 +198,7 @@ pub fn fast_log_likelihood(
     let mut total_ll = 0.0;
     let const_half_m = m as f64 * LOG_2PI;
     let mut log_det = 0.0;
-    let mut steady = false;
+    let steady = false;
 
     for t in 0..t_steps {
         if t > 0 {
@@ -366,7 +366,59 @@ pub fn fast_log_likelihood(
                     }
                 }
                 if max_diff <= 1e-15 * max_scale.max(1e-18) {
-                    steady = true;
+                    for i in 0..3 {
+                        let mut upd = 0.0;
+                        for j in 0..m {
+                            upd += w_mat[j][i] * v[j];
+                        }
+                        x_filt[i] = x_pred[i] + upd;
+                    }
+                    let rem_const = -0.5 * (const_half_m + log_det);
+                    let mut k_row = [[0.0; 16]; 3];
+                    for i in 0..3 {
+                        for j in 0..m {
+                            k_row[i][j] = w_mat[j][i];
+                        }
+                    }
+                    for yt_s in &yields[(t + 1)..] {
+                        let dx0 = x_filt[0] - theta[0];
+                        let dx1 = x_filt[1] - theta[1];
+                        let dx2 = x_filt[2] - theta[2];
+                        for i in 0..3 {
+                            x_pred[i] =
+                                theta[i] + phi[i][0] * dx0 + phi[i][1] * dx1 + phi[i][2] * dx2;
+                        }
+                        for j in 0..m {
+                            let val = yt_s[j];
+                            if val.is_nan() || val.is_infinite() {
+                                return Err("non-finite observation in steady loop".into());
+                            }
+                            v[j] = val
+                                - (a_vec[j]
+                                    + h_mat[j][0] * x_pred[0]
+                                    + h_mat[j][1] * x_pred[1]
+                                    + h_mat[j][2] * x_pred[2]);
+                        }
+                        let mut q_s = 0.0;
+                        for i in 0..m {
+                            let mut sum = v[i];
+                            for j in 0..i {
+                                sum -= l_mat[i][j] * z[j];
+                            }
+                            let zi = sum * inv_diag_l[i];
+                            z[i] = zi;
+                            q_s += zi * zi;
+                        }
+                        total_ll += rem_const - 0.5 * q_s;
+                        for i in 0..3 {
+                            let mut upd = 0.0;
+                            for j in 0..m {
+                                upd += k_row[i][j] * v[j];
+                            }
+                            x_filt[i] = x_pred[i] + upd;
+                        }
+                    }
+                    break;
                 }
             }
         }
@@ -861,6 +913,26 @@ pub fn estimate_mle(
     yields: &[Vec<f64>],
     compute_hessian: bool,
 ) -> MleResult {
+    estimate_mle_opts(
+        init_spec,
+        true_spec,
+        taus,
+        dt,
+        yields,
+        compute_hessian,
+        compute_hessian,
+    )
+}
+
+pub fn estimate_mle_opts(
+    init_spec: ModelSpec,
+    true_spec: ModelSpec,
+    taus: &[f64],
+    dt: f64,
+    yields: &[Vec<f64>],
+    compute_hessian: bool,
+    compute_grad_diag: bool,
+) -> MleResult {
     let use_afns = init_spec.use_afns_adj;
     let mut neg_ll = |u: &[f64]| -> f64 {
         let v = unpack_unconstrained(u);
@@ -876,7 +948,7 @@ pub fn estimate_mle(
     let (lo, hi) = u_bounds();
 
     let (mut grad_err_init, mut grad_err_true) = (0.0, 0.0);
-    if compute_hessian {
+    if compute_grad_diag {
         grad_err_init = optim::verify_grad_vs_richardson(&mut neg_ll, &u_init, None).2;
         grad_err_true = optim::verify_grad_vs_richardson(&mut neg_ll, &u_true, None).2;
     }
@@ -907,13 +979,16 @@ pub fn estimate_mle(
     let mut reg = false;
 
     if finite && compute_hessian {
-        let (cd_opt, rich_opt, _) = optim::verify_grad_vs_richardson(&mut neg_ll, &best.x, None);
-        grad_abs_diff_opt = cd_opt
-            .iter()
-            .zip(rich_opt.iter())
-            .map(|(a, b)| (a - b) * (a - b))
-            .sum::<f64>()
-            .sqrt();
+        if compute_grad_diag {
+            let (cd_opt, rich_opt, _) =
+                optim::verify_grad_vs_richardson(&mut neg_ll, &best.x, None);
+            grad_abs_diff_opt = cd_opt
+                .iter()
+                .zip(rich_opt.iter())
+                .map(|(a, b)| (a - b) * (a - b))
+                .sum::<f64>()
+                .sqrt();
+        }
 
         let hess_u = optim::central_diff_hessian(&mut neg_ll, &best.x, None);
         if let Ok((vals, vecs, _)) = linalg::symmetric_eigen_jacobi(&hess_u, 80, 1e-13) {

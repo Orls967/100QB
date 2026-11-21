@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="480" viewBox="0 0 900 480">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="450" y="30" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="bold" fill="#222">Panel F: Profil KRD Proyek Baterai 10y (NPV Pre-CAPEX = 734425 EUR, Dur = 5.14y)</text>
+<rect x="80" y="55" width="790" height="345" fill="none" stroke="#444" stroke-width="1.2"/>
+<line x1="80" y1="400.0" x2="870" y2="400.0" stroke="#666" stroke-width="1"/>
+<rect x="99.8" y="377.4" width="59.2" height="22.6" fill="##9467bd" opacity="0.85"/>
+<text x="129.4" y="418" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#333">1y</text>
+<text x="129.4" y="373.4" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#222">0.12</text>
+<rect x="198.5" y="356.5" width="59.2" height="43.5" fill="##9467bd" opacity="0.85"/>
+<text x="228.1" y="418" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#333">2y</text>
+<text x="228.1" y="352.5" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#222">0.23</text>
+<rect x="297.2" y="297.7" width="59.2" height="102.3" fill="##9467bd" opacity="0.85"/>
+<text x="326.9" y="418" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#333">3y</text>
+<text x="326.9" y="293.7" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#222">0.54</text>
+<rect x="396.0" y="210.3" width="59.2" height="189.7" fill="##9467bd" opacity="0.85"/>
+<text x="425.6" y="418" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#333">5y</text>
+<text x="425.6" y="206.3" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#222">1.01</text>
+<rect x="494.8" y="86.4" width="59.2" height="313.6" fill="##9467bd" opacity="0.85"/>
+<text x="524.4" y="418" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#333">7y</text>
+<text x="524.4" y="82.4" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#222">1.67</text>
+<rect x="593.5" y="106.5" width="59.2" height="293.5" fill="##9467bd" opacity="0.85"/>
+<text x="623.1" y="418" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#333">10y</text>
+<text x="623.1" y="102.5" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#222">1.56</text>
+<rect x="692.2" y="400.0" width="59.2" height="1.0" fill="##9467bd" opacity="0.85"/>
+<text x="721.9" y="418" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#333">20y</text>
+<text x="721.9" y="396.0" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#222">0.00</text>
+<rect x="791.0" y="400.0" width="59.2" height="1.0" fill="##9467bd" opacity="0.85"/>
+<text x="820.6" y="418" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#333">30y</text>
+<text x="820.6" y="396.0" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#222">0.00</text>
+<text x="18" y="227.5" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#333" transform="rotate(-90 18 227.5)">Key-Rate Duration (Tahun)</text>
+</svg>

@@ -3,6 +3,16 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 004f] — 2026-11-22 · Audit tail day004e + port lengkap day004a–4e & valuasi proyek baterai AFNS (Rust, Bonus)
+
+### Diperbaiki (Bagian A)
+- `projects/go/day004e_power_storage`: menambahkan audit *expanded-tail* `[-1000, 5000] EUR/MWh` (`expanded_tail_38`) dengan *common random numbers* kondisional pada bin interior `fine_33`, uji unit overflow/representasi tail/CRN/determinisme worker, serta menjaga seluruh hasil asli `17/33` bin tidak berubah. Massa tail atas turun dari `1,400%` menjadi `0,000%` dan bawah dari `0,431%` menjadi `0,00616%`, dengan kesepakatan aksi evaluasi `100%` (`48.000/48.000`) terhadap `DP-33` (`selisih = 0,00 EUR/hari`).
+
+### Ditambahkan (Bagian C)
+- Project Rust stable mandiri `projects/rust/day004f_energy_transition/` (*zero external crates*, `xoshiro256++`, `std::thread::scope`, JSON 17-digit, dan 7 grafik SVG) yang memport penuh `day004a`–`day004e` serta menambahkan **Panel F** (valuasi proyek baterai 10 tahun didiskontokan kurva AFNS, sensitivitas fit `4b/4c/4d`, durasi, konveksitas, KRD, PV01, dan *hedge* dua obligasi).
+- Seluruh runner penuh selesai dalam `587,02s` pada `8` worker dengan `all_technical_passed = true` (`NPV_base = 734.424,80 EUR`, durasi `5,14y`).
+- Output `outputs/day004f/results.json`, 7 grafik SVG `outputs/figures/day004f_*.svg`, `projects/rust/day004f_energy_transition/README.md`, serta [day004f_rust-afns-energy-storage.md](project-explanations/day004f_rust-afns-energy-storage.md).
+
 ## [Hari 004e] — 2026-11-22 · Harga listrik negatif dan arbitrase baterai (Go, Bonus)
 
 ### Ditambahkan
