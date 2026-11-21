@@ -95,8 +95,10 @@ func TestWWRNettingAndCollateralMonotonicity(t *testing.T) {
 	var prevMPOR float64
 	for idx, d := range []float64{0.04, 0.01, 0.0025} {
 		rows := ComputeCollateralCVA(hwP, cirP, swap10Pay, tGrid, d, []float64{0}, []float64{0}, 40, 20000, 8, 4, rng.MainSeed)
-		if idx > 0 && rows[0].CVA >= prevMPOR {
-			t.Fatalf("MPOR convergence failed: delta=%v cva=%v >= prev=%v", d, rows[0].CVA, prevMPOR)
+		t.Logf("MPOR delta=%.4f clean: CVA=%.6f EPE=%.6f | rawCoupon: CVA=%.6f EPE=%.6f",
+			d, rows[0].CVA, rows[0].EPE, rows[0].CVARawCoupon, rows[0].EPERawCoupon)
+		if idx > 0 && rows[0].CVA >= 0.6*prevMPOR {
+			t.Fatalf("MPOR clean convergence too slow (expected ~sqrt(delta) 0.5x per 4x step): delta=%v cva=%v vs prev=%v", d, rows[0].CVA, prevMPOR)
 		}
 		prevMPOR = rows[0].CVA
 	}

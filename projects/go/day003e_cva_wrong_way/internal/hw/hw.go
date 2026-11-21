@@ -278,24 +278,30 @@ func (p Params) NewAnnualSwap(maturityYears int, strikeK float64, isPayer bool) 
 	}
 }
 
-// Value menghitung nilai mark-to-market swap berjalan pada waktu t dan faktor x_t:
-// V_payer(t) = 1 - P(t, T_n) - K sum_{T_i > t} tau_i P(t, T_i),
-// dengan konvensi eksak V(T_n) = 0 pada jatuh tempo.
-func (s SwapSpec) Value(p Params, t, xt float64) float64 {
-	if t >= s.Maturity-1e-12 {
+// ValueWithScheduleAfter menghitung nilai swap pada waktu evalT dengan hanya memasukkan
+// tanggal kupon setelah cutoffT (mencegah diskontinuitas kupon tetap terisolasi di t = T_m).
+func (s SwapSpec) ValueWithScheduleAfter(p Params, evalT, xt, cutoffT float64) float64 {
+	if evalT >= s.Maturity-1e-12 || cutoffT >= s.Maturity-1e-12 {
 		return 0
 	}
 	pvFixed := 0.0
 	for i, payDate := range s.PayDates {
-		if payDate > t+1e-12 {
-			pvFixed += s.Tau[i] * p.BondPrice(t, payDate, xt)
+		if payDate > cutoffT+1e-12 {
+			pvFixed += s.Tau[i] * p.BondPrice(evalT, payDate, xt)
 		}
 	}
-	vPayer := 1.0 - p.BondPrice(t, s.Maturity, xt) - s.StrikeK*pvFixed
+	vPayer := 1.0 - p.BondPrice(evalT, s.Maturity, xt) - s.StrikeK*pvFixed
 	if s.IsPayer {
 		return vPayer
 	}
 	return -vPayer
+}
+
+// Value menghitung nilai mark-to-market swap berjalan pada waktu t dan faktor x_t:
+// V_payer(t) = 1 - P(t, T_n) - K sum_{T_i > t} tau_i P(t, T_i),
+// dengan konvensi eksak V(T_n) = 0 pada jatuh tempo.
+func (s SwapSpec) Value(p Params, t, xt float64) float64 {
+	return s.ValueWithScheduleAfter(p, t, xt, t)
 }
 
 // PositiveBoundaryX mencari akar unik x^* di mana V_payer(t, x^*) = 0.
@@ -717,7 +723,7 @@ type CollateralCurvePoint struct {
 }
 
 // ComputeCollateralExposureProfile menghitung EE terkolateralisasi dengan MPOR delta dan daftar threshold H
-// memakai simulasi eksak dua-waktu (0 -> t_j - delta -> t_j).
+// memakai simulasi eksak dua-waktu (0 -> t_j - delta -> t_j) menggunakan jadwal bersih konsisten (cutoffT = t_j).
 func (p Params) ComputeCollateralExposureProfile(swap SwapSpec, tGrid []float64, delta float64, thresholds []float64, nPaths, nChunks, nWorkers int, seed uint64) (eeByH map[float64][]float64, eeDiscByH map[float64][]float64, epeByH map[float64]float64) {
 	nT := len(tGrid)
 	nH := len(thresholds)
@@ -784,12 +790,12 @@ func (p Params) ComputeCollateralExposureProfile(swap SwapSpec, tGrid []float64,
 				var xt, it, vLag float64
 				if !pairs[j].needLag {
 					xt, it = pairs[j].spFull.Advance(0, 0, z1, z2)
-					vLag = swap.Value(p, 0, 0)
+					vLag = swap.ValueWithScheduleAfter(p, 0, 0, t)
 				} else {
 					z3 := rg.NormFloat64()
 					z4 := rg.NormFloat64()
 					xLag, iLag := pairs[j].sp1.Advance(0, 0, z1, z2)
-					vLag = swap.Value(p, t-delta, xLag)
+					vLag = swap.ValueWithScheduleAfter(p, t-delta, xLag, t)
 					xt, it = pairs[j].sp2.Advance(xLag, iLag, z3, z4)
 				}
 				vt := swap.Value(p, t, xt)

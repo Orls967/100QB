@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="460" viewBox="0 0 820 460" style="background:#ffffff;font-family:system-ui,sans-serif">
+<text x="410.0" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#111">Wrong-Way Risk: CVA terhadap Korelasi Suku Bunga-Kredit (rho)</text>
+<rect x="86.0" y="52.0" width="704.0" height="346.0" fill="none" stroke="#333" stroke-width="1"/>
+<line x1="86.0" y1="52.0" x2="86.0" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="86.0" y="416.0" text-anchor="middle" font-size="11" fill="#444">-0.848</text>
+<line x1="86.0" y1="398.0" x2="790.0" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="402.0" text-anchor="end" font-size="11" fill="#444">0</text>
+<line x1="226.8" y1="52.0" x2="226.8" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="226.8" y="416.0" text-anchor="middle" font-size="11" fill="#444">-0.5088</text>
+<line x1="86.0" y1="328.8" x2="790.0" y2="328.8" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="332.8" text-anchor="end" font-size="11" fill="#444">0.000663</text>
+<line x1="367.6" y1="52.0" x2="367.6" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="367.6" y="416.0" text-anchor="middle" font-size="11" fill="#444">-0.1696</text>
+<line x1="86.0" y1="259.6" x2="790.0" y2="259.6" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="263.6" text-anchor="end" font-size="11" fill="#444">0.001326</text>
+<line x1="508.4" y1="52.0" x2="508.4" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="508.4" y="416.0" text-anchor="middle" font-size="11" fill="#444">0.1696</text>
+<line x1="86.0" y1="190.4" x2="790.0" y2="190.4" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="194.4" text-anchor="end" font-size="11" fill="#444">0.001989</text>
+<line x1="649.2" y1="52.0" x2="649.2" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="649.2" y="416.0" text-anchor="middle" font-size="11" fill="#444">0.5088</text>
+<line x1="86.0" y1="121.2" x2="790.0" y2="121.2" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="125.2" text-anchor="end" font-size="11" fill="#444">0.002652</text>
+<line x1="790.0" y1="52.0" x2="790.0" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="790.0" y="416.0" text-anchor="middle" font-size="11" fill="#444">0.848</text>
+<line x1="86.0" y1="52.0" x2="790.0" y2="52.0" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="56.0" text-anchor="end" font-size="11" fill="#444">0.003315</text>
+<text x="438.0" y="446.0" text-anchor="middle" font-size="12" fill="#222">Korelasi rho = Corr(dW^r, dW^lambda)</text>
+<text x="18" y="225.0" text-anchor="middle" font-size="12" fill="#222" transform="rotate(-90 18 225.0)">CVA (per 1 nosional)</text>
+<line x1="105.92" y1="286.01" x2="105.92" y2="284.45" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="101.92" y1="286.01" x2="109.92" y2="286.01" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="101.92" y1="284.45" x2="109.92" y2="284.45" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="271.96" y1="245.82" x2="271.96" y2="243.52" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="267.96" y1="245.82" x2="275.96" y2="245.82" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="267.96" y1="243.52" x2="275.96" y2="243.52" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="438.00" y1="199.92" x2="438.00" y2="196.77" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="434.00" y1="199.92" x2="442.00" y2="199.92" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="434.00" y1="196.77" x2="442.00" y2="196.77" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="604.04" y1="148.43" x2="604.04" y2="144.37" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="600.04" y1="148.43" x2="608.04" y2="148.43" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="600.04" y1="144.37" x2="608.04" y2="144.37" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="770.08" y1="91.33" x2="770.08" y2="86.28" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="766.08" y1="91.33" x2="774.08" y2="91.33" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="766.08" y1="86.28" x2="774.08" y2="86.28" stroke="#1f77b4" stroke-width="1.5"/>
+<polyline fill="none" stroke="#1f77b4" stroke-width="2.2" points="105.92,285.23 271.96,244.67 438.00,198.35 604.04,146.40 770.08,88.80 "/>
+<circle cx="105.92" cy="285.23" r="3.4" fill="#1f77b4"/>
+<circle cx="271.96" cy="244.67" r="3.4" fill="#1f77b4"/>
+<circle cx="438.00" cy="198.35" r="3.4" fill="#1f77b4"/>
+<circle cx="604.04" cy="146.40" r="3.4" fill="#1f77b4"/>
+<circle cx="770.08" cy="88.80" r="3.4" fill="#1f77b4"/>
+<line x1="105.92" y1="287.78" x2="105.92" y2="280.27" stroke="#d62728" stroke-width="1.5"/>
+<line x1="101.92" y1="287.78" x2="109.92" y2="287.78" stroke="#d62728" stroke-width="1.5"/>
+<line x1="101.92" y1="280.27" x2="109.92" y2="280.27" stroke="#d62728" stroke-width="1.5"/>
+<line x1="271.96" y1="248.44" x2="271.96" y2="239.40" stroke="#d62728" stroke-width="1.5"/>
+<line x1="267.96" y1="248.44" x2="275.96" y2="248.44" stroke="#d62728" stroke-width="1.5"/>
+<line x1="267.96" y1="239.40" x2="275.96" y2="239.40" stroke="#d62728" stroke-width="1.5"/>
+<line x1="438.00" y1="201.39" x2="438.00" y2="190.68" stroke="#d62728" stroke-width="1.5"/>
+<line x1="434.00" y1="201.39" x2="442.00" y2="201.39" stroke="#d62728" stroke-width="1.5"/>
+<line x1="434.00" y1="190.68" x2="442.00" y2="190.68" stroke="#d62728" stroke-width="1.5"/>
+<line x1="604.04" y1="151.25" x2="604.04" y2="138.97" stroke="#d62728" stroke-width="1.5"/>
+<line x1="600.04" y1="151.25" x2="608.04" y2="151.25" stroke="#d62728" stroke-width="1.5"/>
+<line x1="600.04" y1="138.97" x2="608.04" y2="138.97" stroke="#d62728" stroke-width="1.5"/>
+<line x1="770.08" y1="91.58" x2="770.08" y2="77.63" stroke="#d62728" stroke-width="1.5"/>
+<line x1="766.08" y1="91.58" x2="774.08" y2="91.58" stroke="#d62728" stroke-width="1.5"/>
+<line x1="766.08" y1="77.63" x2="774.08" y2="77.63" stroke="#d62728" stroke-width="1.5"/>
+<polyline fill="none" stroke="#d62728" stroke-width="2.2" stroke-dasharray="6,4" points="105.92,284.03 271.96,243.92 438.00,196.03 604.04,145.11 770.08,84.60 "/>
+<circle cx="105.92" cy="284.03" r="3.4" fill="#d62728"/>
+<circle cx="271.96" cy="243.92" r="3.4" fill="#d62728"/>
+<circle cx="438.00" cy="196.03" r="3.4" fill="#d62728"/>
+<circle cx="604.04" cy="145.11" r="3.4" fill="#d62728"/>
+<circle cx="770.08" cy="84.60" r="3.4" fill="#d62728"/>
+<polyline fill="none" stroke="#2ca02c" stroke-width="2.2" stroke-dasharray="6,4" points="105.92,198.10 271.96,198.10 438.00,198.10 604.04,198.10 770.08,198.10 "/>
+<circle cx="105.92" cy="198.10" r="3.4" fill="#2ca02c"/>
+<circle cx="271.96" cy="198.10" r="3.4" fill="#2ca02c"/>
+<circle cx="438.00" cy="198.10" r="3.4" fill="#2ca02c"/>
+<circle cx="604.04" cy="198.10" r="3.4" fill="#2ca02c"/>
+<circle cx="770.08" cy="198.10" r="3.4" fill="#2ca02c"/>
+<rect x="98.0" y="62.0" width="245" height="66.0" fill="#ffffff" fill-opacity="0.9" stroke="#ccc" rx="4"/>
+<line x1="108.0" y1="77.0" x2="130.0" y2="77.0" stroke="#1f77b4" stroke-width="2.4"/>
+<text x="136.0" y="81.0" font-size="11" fill="#222">CVA Rao-Blackwell (±1.96 SE)</text>
+<line x1="108.0" y1="95.0" x2="130.0" y2="95.0" stroke="#d62728" stroke-width="2.4" stroke-dasharray="5,3"/>
+<text x="136.0" y="99.0" font-size="11" fill="#222">CVA Tau Eksplisit u~Exp(1)</text>
+<line x1="108.0" y1="113.0" x2="130.0" y2="113.0" stroke="#2ca02c" stroke-width="2.4" stroke-dasharray="5,3"/>
+<text x="136.0" y="117.0" font-size="11" fill="#222">CVA Analitik Independen</text>
+</svg>

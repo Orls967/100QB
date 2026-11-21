@@ -31,12 +31,13 @@ type Series struct {
 
 // ChartOptions mengonfigurasi judul, label sumbu, skala log, dan posisi legenda.
 type ChartOptions struct {
-	Title    string
-	XLabel   string
-	YLabel   string
-	LogX     bool
-	LogY     bool
-	ZeroLine bool
+	Title         string
+	XLabel        string
+	YLabel        string
+	LogX          bool
+	LogY          bool
+	ZeroLine      bool
+	LegendTopLeft bool
 }
 
 func esc(s string) string {
@@ -186,11 +187,14 @@ func WriteLineChart(path string, opts ChartOptions, series []Series) error {
 		}
 	}
 
-	// Kotak legenda semi-transparan di kanan atas area grafik.
-	legX := ml + pw - 245.0
+	// Kotak legenda semi-transparan di kanan atas atau kiri atas area grafik.
+	legX := ml + pw - 255.0
+	if opts.LegendTopLeft {
+		legX = ml + 12.0
+	}
 	legY := mt + 10.0
 	legH := float64(len(series))*18.0 + 12.0
-	fmt.Fprintf(&sb, `<rect x="%.1f" y="%.1f" width="235" height="%.1f" fill="#ffffff" fill-opacity="0.88" stroke="#ccc" rx="4"/>`+"\n", legX, legY, legH)
+	fmt.Fprintf(&sb, `<rect x="%.1f" y="%.1f" width="245" height="%.1f" fill="#ffffff" fill-opacity="0.9" stroke="#ccc" rx="4"/>`+"\n", legX, legY, legH)
 	for i, s := range series {
 		col := s.Color
 		if col == "" {

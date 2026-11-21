@@ -758,14 +758,18 @@ func ComputeNetting(hwP hw.Params, cirP cir.Params, s1, s2, s10Rec hw.SwapSpec, 
 	}
 }
 
-// CollateralCVARow menyimpan CVA terkolateralisasi untuk kombinasi (delta, H, rho).
+// CollateralCVARow menyimpan CVA terkolateralisasi untuk kombinasi (delta, H, rho)
+// baik untuk definisi jadwal bersih konsisten maupun definisi formula kupon-melompat mentah.
 type CollateralCVARow struct {
-	Delta     float64
-	Threshold float64
-	Rho       float64
-	CVA       float64
-	SE        float64
-	EPE       float64
+	Delta        float64
+	Threshold    float64
+	Rho          float64
+	CVA          float64
+	SE           float64
+	EPE          float64
+	CVARawCoupon float64
+	SERawCoupon  float64
+	EPERawCoupon float64
 }
 
 type eventNode struct {
@@ -859,9 +863,10 @@ func ComputeCollateralCVA(hwP hw.Params, cirP cir.Params, swap hw.SwapSpec, tGri
 	}
 
 	type chunkColCVA struct {
-		sumCVA, sumSqCVA [][]float64 // [nRho][nH]
-		sumEE            [][]float64 // [nH][nQ+1] (independen terhadap rho karena CRN suku bunga bersama)
-		count            int
+		sumCVA, sumSqCVA       [][]float64 // [nRho][nH] jadwal konsisten
+		sumRawCVA, sumSqRawCVA [][]float64 // [nRho][nH] formula kupon mentah
+		sumEE, sumRawEE        [][]float64 // [nH][nQ+1]
+		count                  int
 	}
 	perChunk := nPaths / nChunks
 	rem := nPaths % nChunks
@@ -871,17 +876,23 @@ func ComputeCollateralCVA(hwP hw.Params, cirP cir.Params, swap hw.SwapSpec, tGri
 			cnt++
 		}
 		cc := chunkColCVA{
-			sumCVA:   make([][]float64, nRho),
-			sumSqCVA: make([][]float64, nRho),
-			sumEE:    make([][]float64, nH),
-			count:    cnt,
+			sumCVA:      make([][]float64, nRho),
+			sumSqCVA:    make([][]float64, nRho),
+			sumRawCVA:   make([][]float64, nRho),
+			sumSqRawCVA: make([][]float64, nRho),
+			sumEE:       make([][]float64, nH),
+			sumRawEE:    make([][]float64, nH),
+			count:       cnt,
 		}
 		for ir := 0; ir < nRho; ir++ {
 			cc.sumCVA[ir] = make([]float64, nH)
 			cc.sumSqCVA[ir] = make([]float64, nH)
+			cc.sumRawCVA[ir] = make([]float64, nH)
+			cc.sumSqRawCVA[ir] = make([]float64, nH)
 		}
 		for ih := 0; ih < nH; ih++ {
 			cc.sumEE[ih] = make([]float64, nQ+1)
+			cc.sumRawEE[ih] = make([]float64, nQ+1)
 		}
 
 		// Garam chunk diikat pada salt tetap 0xA01 (plus kuantisasi delta agar tidak bentrok) untuk stabilitas CRN.
@@ -891,15 +902,19 @@ func ComputeCollateralCVA(hwP hw.Params, cirP cir.Params, swap hw.SwapSpec, tGri
 		intLam := make([]float64, nRho)
 		sPrev := make([]float64, nRho)
 		loss := make([][]float64, nRho)
+		lossRaw := make([][]float64, nRho)
 		for ir := 0; ir < nRho; ir++ {
 			loss[ir] = make([]float64, nH)
+			lossRaw[ir] = make([]float64, nH)
 		}
-		vLagByQ := make([]float64, nQ+1)
+		vLagCleanByQ := make([]float64, nQ+1)
+		vLagRawByQ := make([]float64, nQ+1)
 
 		for k := 0; k < cnt; k++ {
 			xt, it := 0.0, 0.0
 			for q := 0; q <= nQ; q++ {
-				vLagByQ[q] = 0
+				vLagCleanByQ[q] = 0
+				vLagRawByQ[q] = 0
 			}
 			for ir := 0; ir < nRho; ir++ {
 				lam[ir] = cirP.Lambda0
@@ -907,6 +922,7 @@ func ComputeCollateralCVA(hwP hw.Params, cirP cir.Params, swap hw.SwapSpec, tGri
 				sPrev[ir] = 1.0
 				for ih := 0; ih < nH; ih++ {
 					loss[ir][ih] = 0
+					lossRaw[ir][ih] = 0
 				}
 			}
 
@@ -917,7 +933,9 @@ func ComputeCollateralCVA(hwP hw.Params, cirP cir.Params, swap hw.SwapSpec, tGri
 				xt, it = ev.sp.Advance(xt, it, z1, z2)
 
 				if ev.isLagMark {
-					vLagByQ[ev.lagForQIdx] = swap.Value(hwP, ev.t, xt)
+					tQ := tGrid[ev.lagForQIdx]
+					vLagCleanByQ[ev.lagForQIdx] = swap.ValueWithScheduleAfter(hwP, ev.t, xt, tQ)
+					vLagRawByQ[ev.lagForQIdx] = swap.Value(hwP, ev.t, xt)
 				}
 
 				for ir, rho := range rhos {
@@ -931,31 +949,39 @@ func ComputeCollateralCVA(hwP hw.Params, cirP cir.Params, swap hw.SwapSpec, tGri
 					qIdx := ev.quarterIdx
 					vt := swap.Value(hwP, ev.t, xt)
 					df := hwP.DiscountFactor(ev.t, it)
-					vLag := vLagByQ[qIdx]
+					vLagC := vLagCleanByQ[qIdx]
+					vLagR := vLagRawByQ[qIdx]
 
 					for ir := 0; ir < nRho; ir++ {
 						sCurr := math.Exp(-intLam[ir])
 						dpd := sPrev[ir] - sCurr
 						sPrev[ir] = sCurr
 						for ih, h := range thresholds {
-							cAmt := 0.0
+							cClean, cRaw := 0.0, 0.0
 							if !math.IsInf(h, 1) {
-								cAmt = math.Max(vLag-h, 0)
+								cClean = math.Max(vLagC-h, 0)
+								cRaw = math.Max(vLagR-h, 0)
 							}
-							exp := math.Max(vt-cAmt, 0)
+							expC := math.Max(vt-cClean, 0)
+							expR := math.Max(vt-cRaw, 0)
 							if ir == 0 {
-								cc.sumEE[ih][qIdx] += exp
+								cc.sumEE[ih][qIdx] += expC
+								cc.sumRawEE[ih][qIdx] += expR
 							}
-							loss[ir][ih] += lgd * df * exp * dpd
+							loss[ir][ih] += lgd * df * expC * dpd
+							lossRaw[ir][ih] += lgd * df * expR * dpd
 						}
 					}
 				}
 			}
 			for ir := 0; ir < nRho; ir++ {
 				for ih := 0; ih < nH; ih++ {
-					l := loss[ir][ih]
-					cc.sumCVA[ir][ih] += l
-					cc.sumSqCVA[ir][ih] += l * l
+					lc := loss[ir][ih]
+					cc.sumCVA[ir][ih] += lc
+					cc.sumSqCVA[ir][ih] += lc * lc
+					lr := lossRaw[ir][ih]
+					cc.sumRawCVA[ir][ih] += lr
+					cc.sumSqRawCVA[ir][ih] += lr * lr
 				}
 			}
 		}
@@ -963,41 +989,54 @@ func ComputeCollateralCVA(hwP hw.Params, cirP cir.Params, swap hw.SwapSpec, tGri
 	})
 
 	epeByH := make([]float64, nH)
+	epeRawByH := make([]float64, nH)
 	totalT := tGrid[nQ] - tGrid[0]
 	for ih := 0; ih < nH; ih++ {
 		eeCurve := make([]float64, nQ+1)
+		eeRawCurve := make([]float64, nQ+1)
 		for q := 0; q <= nQ; q++ {
-			s := 0.0
+			s, sr := 0.0, 0.0
 			for _, r := range res {
 				s += r.sumEE[ih][q]
+				sr += r.sumRawEE[ih][q]
 			}
 			eeCurve[q] = s / float64(nPaths)
+			eeRawCurve[q] = sr / float64(nPaths)
 		}
-		area := 0.0
+		area, areaR := 0.0, 0.0
 		for q := 1; q <= nQ; q++ {
-			area += 0.5 * (eeCurve[q-1] + eeCurve[q]) * (tGrid[q] - tGrid[q-1])
+			dt := tGrid[q] - tGrid[q-1]
+			area += 0.5 * (eeCurve[q-1] + eeCurve[q]) * dt
+			areaR += 0.5 * (eeRawCurve[q-1] + eeRawCurve[q]) * dt
 		}
 		if totalT > 0 {
 			epeByH[ih] = area / totalT
+			epeRawByH[ih] = areaR / totalT
 		}
 	}
 
 	out := make([]CollateralCVARow, 0, nRho*nH)
 	for ir, rho := range rhos {
 		for ih, h := range thresholds {
-			s, sq := 0.0, 0.0
+			s, sq, sr, sqr := 0.0, 0.0, 0.0, 0.0
 			for _, r := range res {
 				s += r.sumCVA[ir][ih]
 				sq += r.sumSqCVA[ir][ih]
+				sr += r.sumRawCVA[ir][ih]
+				sqr += r.sumSqRawCVA[ir][ih]
 			}
 			m, se := stats.SummaryMoments(s, sq, nPaths)
+			mr, ser := stats.SummaryMoments(sr, sqr, nPaths)
 			out = append(out, CollateralCVARow{
-				Delta:     delta,
-				Threshold: h,
-				Rho:       rho,
-				CVA:       m,
-				SE:        se,
-				EPE:       epeByH[ih],
+				Delta:        delta,
+				Threshold:    h,
+				Rho:          rho,
+				CVA:          m,
+				SE:           se,
+				EPE:          epeByH[ih],
+				CVARawCoupon: mr,
+				SERawCoupon:  ser,
+				EPERawCoupon: epeRawByH[ih],
 			})
 		}
 	}
