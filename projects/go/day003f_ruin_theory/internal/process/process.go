@@ -2,6 +2,7 @@ package process
 
 import (
 	"math"
+	"time"
 
 	"github.com/Orls967/100QB/go/day003f_ruin_theory/internal/claims"
 	"github.com/Orls967/100QB/go/day003f_ruin_theory/internal/closedform"
@@ -246,6 +247,7 @@ func SimulateCrudeMC(dists []claims.Dist, uList []float64, nPaths, nChunks, nWor
 		}
 	}
 	for di, d := range dists {
+		tDist := time.Now()
 		cf, errCF := closedform.Derive(d)
 		hasCF := errCF == nil
 		safetyBuffer := 150.0
@@ -323,6 +325,7 @@ func SimulateCrudeMC(dists []claims.Dist, uList []float64, nPaths, nChunks, nWor
 			}
 			return cm
 		})
+		elapsedDist := time.Since(tDist).Seconds()
 
 		for ui, u := range uList {
 			c50, c200, cInf := 0, 0, 0
@@ -358,6 +361,7 @@ func SimulateCrudeMC(dists []claims.Dist, uList []float64, nPaths, nChunks, nWor
 				PsiInfSE: seInf,
 				ZScore:   z,
 				RelSE:    relSE,
+				ElapsedS: elapsedDist,
 			})
 		}
 	}

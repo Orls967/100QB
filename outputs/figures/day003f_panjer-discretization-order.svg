@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="460" viewBox="0 0 820 460" style="background:#ffffff;font-family:system-ui,sans-serif">
+<text x="410.0" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#111">Konvergensi Lebar Interval Panjer vs Langkah h (u=10, Log-Log)</text>
+<rect x="86.0" y="52.0" width="704.0" height="346.0" fill="none" stroke="#333" stroke-width="1"/>
+<line x1="86.0" y1="52.0" x2="86.0" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="86.0" y="416.0" text-anchor="middle" font-size="11" fill="#444">0.0093</text>
+<line x1="86.0" y1="398.0" x2="790.0" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="402.0" text-anchor="end" font-size="11" fill="#444">0.00091</text>
+<line x1="226.8" y1="52.0" x2="226.8" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="226.8" y="416.0" text-anchor="middle" font-size="11" fill="#444">0.015</text>
+<line x1="86.0" y1="328.8" x2="790.0" y2="328.8" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="332.8" text-anchor="end" font-size="11" fill="#444">0.0018</text>
+<line x1="367.6" y1="52.0" x2="367.6" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="367.6" y="416.0" text-anchor="middle" font-size="11" fill="#444">0.025</text>
+<line x1="86.0" y1="259.6" x2="790.0" y2="259.6" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="263.6" text-anchor="end" font-size="11" fill="#444">0.0038</text>
+<line x1="508.4" y1="52.0" x2="508.4" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="508.4" y="416.0" text-anchor="middle" font-size="11" fill="#444">0.04</text>
+<line x1="86.0" y1="190.4" x2="790.0" y2="190.4" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="194.4" text-anchor="end" font-size="11" fill="#444">0.0076</text>
+<line x1="649.2" y1="52.0" x2="649.2" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="649.2" y="416.0" text-anchor="middle" font-size="11" fill="#444">0.066</text>
+<line x1="86.0" y1="121.2" x2="790.0" y2="121.2" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="125.2" text-anchor="end" font-size="11" fill="#444">0.016</text>
+<line x1="790.0" y1="52.0" x2="790.0" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="790.0" y="416.0" text-anchor="middle" font-size="11" fill="#444">0.11</text>
+<line x1="86.0" y1="52.0" x2="790.0" y2="52.0" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="56.0" text-anchor="end" font-size="11" fill="#444">0.032</text>
+<text x="438.0" y="446.0" text-anchor="middle" font-size="12" fill="#222">Langkah Diskretisasi h</text>
+<text x="18" y="225.0" text-anchor="middle" font-size="12" fill="#222" transform="rotate(-90 18 225.0)">psi_high(10) - psi_low(10)</text>
+<polyline fill="none" stroke="#1f77b4" stroke-width="2.2" points="770.08,77.19 570.15,144.55 305.85,233.77 105.92,301.33 "/>
+<circle cx="770.08" cy="77.19" r="3.4" fill="#1f77b4"/>
+<circle cx="570.15" cy="144.55" r="3.4" fill="#1f77b4"/>
+<circle cx="305.85" cy="233.77" r="3.4" fill="#1f77b4"/>
+<circle cx="105.92" cy="301.33" r="3.4" fill="#1f77b4"/>
+<polyline fill="none" stroke="#d62728" stroke-width="2.2" points="770.08,76.64 570.15,143.83 305.85,232.97 105.92,300.49 "/>
+<circle cx="770.08" cy="76.64" r="3.4" fill="#d62728"/>
+<circle cx="570.15" cy="143.83" r="3.4" fill="#d62728"/>
+<circle cx="305.85" cy="232.97" r="3.4" fill="#d62728"/>
+<circle cx="105.92" cy="300.49" r="3.4" fill="#d62728"/>
+<polyline fill="none" stroke="#2ca02c" stroke-width="2.2" points="770.08,87.60 570.15,155.05 305.85,244.33 105.92,311.90 "/>
+<circle cx="770.08" cy="87.60" r="3.4" fill="#2ca02c"/>
+<circle cx="570.15" cy="155.05" r="3.4" fill="#2ca02c"/>
+<circle cx="305.85" cy="244.33" r="3.4" fill="#2ca02c"/>
+<circle cx="105.92" cy="311.90" r="3.4" fill="#2ca02c"/>
+<polyline fill="none" stroke="#9467bd" stroke-width="2.2" stroke-dasharray="6,4" points="770.08,135.72 570.15,203.22 305.85,292.52 105.92,360.10 "/>
+<circle cx="770.08" cy="135.72" r="3.4" fill="#9467bd"/>
+<circle cx="570.15" cy="203.22" r="3.4" fill="#9467bd"/>
+<circle cx="305.85" cy="292.52" r="3.4" fill="#9467bd"/>
+<circle cx="105.92" cy="360.10" r="3.4" fill="#9467bd"/>
+<polyline fill="none" stroke="#ff7f0e" stroke-width="2.2" stroke-dasharray="6,4" points="770.08,160.17 570.15,227.75 305.85,317.10 105.92,384.69 "/>
+<circle cx="770.08" cy="160.17" r="3.4" fill="#ff7f0e"/>
+<circle cx="570.15" cy="227.75" r="3.4" fill="#ff7f0e"/>
+<circle cx="305.85" cy="317.10" r="3.4" fill="#ff7f0e"/>
+<circle cx="105.92" cy="384.69" r="3.4" fill="#ff7f0e"/>
+<rect x="98.0" y="62.0" width="255" height="102.0" fill="#ffffff" fill-opacity="0.9" stroke="#ccc" rx="4"/>
+<line x1="108.0" y1="77.0" x2="130.0" y2="77.0" stroke="#1f77b4" stroke-width="2.4"/>
+<text x="136.0" y="81.0" font-size="11" fill="#222">A (slope=0.998)</text>
+<line x1="108.0" y1="95.0" x2="130.0" y2="95.0" stroke="#d62728" stroke-width="2.4"/>
+<text x="136.0" y="99.0" font-size="11" fill="#222">B (slope=0.997)</text>
+<line x1="108.0" y1="113.0" x2="130.0" y2="113.0" stroke="#2ca02c" stroke-width="2.4"/>
+<text x="136.0" y="117.0" font-size="11" fill="#222">C (slope=0.999)</text>
+<line x1="108.0" y1="131.0" x2="130.0" y2="131.0" stroke="#9467bd" stroke-width="2.4" stroke-dasharray="5,3"/>
+<text x="136.0" y="135.0" font-size="11" fill="#222">D (slope=0.999)</text>
+<line x1="108.0" y1="149.0" x2="130.0" y2="149.0" stroke="#ff7f0e" stroke-width="2.4" stroke-dasharray="5,3"/>
+<text x="136.0" y="153.0" font-size="11" fill="#222">E (slope=1.000)</text>
+</svg>

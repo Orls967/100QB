@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="460" viewBox="0 0 820 460" style="background:#ffffff;font-family:system-ui,sans-serif">
+<text x="410.0" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#111">Konvergensi Asimtotik Cramer-Lundberg: psi(u) / (C exp(-Ru))</text>
+<rect x="86.0" y="52.0" width="704.0" height="346.0" fill="none" stroke="#333" stroke-width="1"/>
+<line x1="86.0" y1="52.0" x2="86.0" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="86.0" y="416.0" text-anchor="middle" font-size="11" fill="#444">-3</text>
+<line x1="86.0" y1="398.0" x2="790.0" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="402.0" text-anchor="end" font-size="11" fill="#444">0</text>
+<line x1="226.8" y1="52.0" x2="226.8" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="226.8" y="416.0" text-anchor="middle" font-size="11" fill="#444">18.2</text>
+<line x1="86.0" y1="328.8" x2="790.0" y2="328.8" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="332.8" text-anchor="end" font-size="11" fill="#444">0.2211</text>
+<line x1="367.6" y1="52.0" x2="367.6" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="367.6" y="416.0" text-anchor="middle" font-size="11" fill="#444">39.4</text>
+<line x1="86.0" y1="259.6" x2="790.0" y2="259.6" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="263.6" text-anchor="end" font-size="11" fill="#444">0.4422</text>
+<line x1="508.4" y1="52.0" x2="508.4" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="508.4" y="416.0" text-anchor="middle" font-size="11" fill="#444">60.6</text>
+<line x1="86.0" y1="190.4" x2="790.0" y2="190.4" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="194.4" text-anchor="end" font-size="11" fill="#444">0.6633</text>
+<line x1="649.2" y1="52.0" x2="649.2" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="649.2" y="416.0" text-anchor="middle" font-size="11" fill="#444">81.8</text>
+<line x1="86.0" y1="121.2" x2="790.0" y2="121.2" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="125.2" text-anchor="end" font-size="11" fill="#444">0.8843</text>
+<line x1="790.0" y1="52.0" x2="790.0" y2="398.0" stroke="#eee" stroke-width="1"/>
+<text x="790.0" y="416.0" text-anchor="middle" font-size="11" fill="#444">103</text>
+<line x1="86.0" y1="52.0" x2="790.0" y2="52.0" stroke="#eee" stroke-width="1"/>
+<text x="78.0" y="56.0" text-anchor="end" font-size="11" fill="#444">1.105</text>
+<text x="438.0" y="446.0" text-anchor="middle" font-size="12" fill="#222">Modal Awal u</text>
+<text x="18" y="225.0" text-anchor="middle" font-size="12" fill="#222" transform="rotate(-90 18 225.0)">Rasio psi(u) / (C exp(-Ru))</text>
+<polyline fill="none" stroke="#1f77b4" stroke-width="2.2" points="105.92,85.00 112.57,85.00 139.13,85.00 172.34,85.00 238.75,85.00 438.00,85.00 770.08,85.00 "/>
+<circle cx="105.92" cy="85.00" r="3.4" fill="#1f77b4"/>
+<circle cx="112.57" cy="85.00" r="3.4" fill="#1f77b4"/>
+<circle cx="139.13" cy="85.00" r="3.4" fill="#1f77b4"/>
+<circle cx="172.34" cy="85.00" r="3.4" fill="#1f77b4"/>
+<circle cx="238.75" cy="85.00" r="3.4" fill="#1f77b4"/>
+<circle cx="438.00" cy="85.00" r="3.4" fill="#1f77b4"/>
+<circle cx="770.08" cy="85.00" r="3.4" fill="#1f77b4"/>
+<polyline fill="none" stroke="#d62728" stroke-width="2.2" points="105.92,91.78 112.57,85.45 139.13,85.00 172.34,85.00 238.75,85.00 438.00,85.00 770.08,85.00 "/>
+<circle cx="105.92" cy="91.78" r="3.4" fill="#d62728"/>
+<circle cx="112.57" cy="85.45" r="3.4" fill="#d62728"/>
+<circle cx="139.13" cy="85.00" r="3.4" fill="#d62728"/>
+<circle cx="172.34" cy="85.00" r="3.4" fill="#d62728"/>
+<circle cx="238.75" cy="85.00" r="3.4" fill="#d62728"/>
+<circle cx="438.00" cy="85.00" r="3.4" fill="#d62728"/>
+<circle cx="770.08" cy="85.00" r="3.4" fill="#d62728"/>
+<polyline fill="none" stroke="#2ca02c" stroke-width="2.2" points="105.92,77.63 112.57,83.47 139.13,85.00 172.34,85.00 238.75,85.00 438.00,85.00 770.08,85.00 "/>
+<circle cx="105.92" cy="77.63" r="3.4" fill="#2ca02c"/>
+<circle cx="112.57" cy="83.47" r="3.4" fill="#2ca02c"/>
+<circle cx="139.13" cy="85.00" r="3.4" fill="#2ca02c"/>
+<circle cx="172.34" cy="85.00" r="3.4" fill="#2ca02c"/>
+<circle cx="238.75" cy="85.00" r="3.4" fill="#2ca02c"/>
+<circle cx="438.00" cy="85.00" r="3.4" fill="#2ca02c"/>
+<circle cx="770.08" cy="85.00" r="3.4" fill="#2ca02c"/>
+<rect x="525.0" y="62.0" width="255" height="66.0" fill="#ffffff" fill-opacity="0.9" stroke="#ccc" rx="4"/>
+<line x1="535.0" y1="77.0" x2="557.0" y2="77.0" stroke="#1f77b4" stroke-width="2.4"/>
+<text x="563.0" y="81.0" font-size="11" fill="#222">A (C=0.8333, R=0.1667)</text>
+<line x1="535.0" y1="95.0" x2="557.0" y2="95.0" stroke="#d62728" stroke-width="2.4"/>
+<text x="563.0" y="99.0" font-size="11" fill="#222">B (C=0.8518, R=0.2268)</text>
+<line x1="535.0" y1="113.0" x2="557.0" y2="113.0" stroke="#2ca02c" stroke-width="2.4"/>
+<text x="563.0" y="117.0" font-size="11" fill="#222">C (C=0.8142, R=0.1305)</text>
+</svg>
