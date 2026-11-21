@@ -154,7 +154,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [docs/ROADMAP.md](docs/ROADMAP.md) · Riwayat: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 27/100 topik (27%)** · quant: 26 · sim: 1
+**Progres: 28/100 topik (28%)** · quant: 27 · sim: 1
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -185,6 +185,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 3f | bonus | `quant` | `go` | Teori ruin Cramér–Lundberg dan simulasi kejadian langka | 2026-11-21 | [day003f_ruin_theory](projects/go/day003f_ruin_theory) |
 | 4a | bonus | `quant` | `go` | Struktur suku bunga: Nelson–Siegel, AFNS dan filter Kalman | 2026-11-22 | [day004a_term_structure](projects/go/day004a_term_structure) |
 | 4b | bonus | `quant` | `go` | AFNS — bias sampel terbatas, rentang kalender (long-span), dan frekuensi observasi (infill) | 2026-11-22 | [day004b_afns_inference](projects/go/day004b_afns_inference) |
+| 4c | bonus | `quant` | `go` | AFNS — koreksi bias mean-reversion dan inferensi sampel terbatas dengan jackknife serta bootstrap parametrik | 2026-11-22 | [day004c_afns_bias_correction](projects/go/day004c_afns_bias_correction) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi

@@ -3,6 +3,19 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 004c] — 2026-11-22 · AFNS — koreksi bias mean-reversion dan inferensi sampel terbatas dengan jackknife serta bootstrap parametrik (Go, Bonus)
+
+### Ditambahkan
+- Project Go 1.22+ mandiri `projects/go/day004c_afns_bias_correction/` (`zero external modules`, `MainSeed = 2026112203`, `xoshiro256++` + `SplitMix64`, paralelisme goroutine deterministik per *chunk*, `FastLogLikelihood` *steady-state* Riccati, penulis JSON 17 digit & 4 grafik SVG):
+  - **Jangkar Eksak & Verifikasi Teknis (`c1..c5 = tercapai`)**: Gaussian gabungan $T=5$ (3 tenor) cocok terhadap Kalman + *RTS smoother* (`ll_diff = 5,68e-14`, `fast_ll_diff = 5,68e-14`, `mean_diff = 5,55e-16`, `cov_diff = 6,39e-17`), skor FD vs Richardson ($\le 2,75\cdot 10^{-7}$), uji aljabar pembatalan $c/H$ jackknife (`1,39e-17`), dan determinisme bit-identik `1` vs `8` worker pada fixture cepat.
+  - **Bagian 1 (Jackknife Temporal Berpasangan $H \in \{20, 80\}$ tahun mingguan, $R=50$, prefiks 80y bersama, tanpa *clamping*)**: pada `20y`, bias `kp11` turun $+0{,}3170 \to +0{,}0994$ (`RMSE` `0,4299 -> 0,3546`), `kp22` $+0{,}2130 \to +0{,}0463$ (`RMSE` `0,4046 -> 0,4165`), `kp33` $+0{,}1821 \to -0{,}0715$ (`RMSE` `0,3059 -> 0,3730`), namun memunculkan `40%` estimasi $\hat{\kappa}_1 \le 0$ (`32%` di `80y`), serta kegagalan batas paruh-sampel pada `20y half1 Rep 28` dan `80y half1/half2 Rep 30` (yang melonjakkan `RMSE` jackknife `theta1` di `80y` menjadi `6,28x`).
+  - **Bagian 2 (Bootstrap Parametrik `20y` mingguan, $R=50 \times B=100 = 5{,}000$ refit penuh)**: `5.000/5.000` refit bernilai *finite* (`50/50` interval luar valid memenuhi ambang $\ge 95/100$), memangkas bias sekaligus RMSE seluruh ketiga $K^{\mathbb{P}}_{ii}$ (`kp11`: bias `+0,3170 -> +0,1014`, `RMSE 0,4299 -> 0,3172` dengan `38%` $\le 0$; `kp22`: `+0,2130 -> +0,0034`, `RMSE 0,4046 -> 0,3446`; `kp33`: `+0,1821 -> -0,0282`, `RMSE 0,3059 -> 0,2476`).
+  - **Cakupan Interval 95% (Wald Hessian vs Bootstrap Persentil + Wilson 95% CI, denominator $R=50$)**: interval persentil bootstrap naif untuk `kp11` runtuh ke `2,0%` (`1/50`, Wilson `[0,35%, 10,5%]`) dibanding Wald `76,0%` karena bias ke atas ganda pada simulasi bootstrap, dan untuk `theta1` tetap rendah di `42,0%` (`21/50`, Wilson `[29,4%, 55,8%]`) dibanding Wald `46,0%`.
+- Output `outputs/day004c/results.json` (`180,13s` pada 8 worker), 4 grafik SVG `outputs/figures/day004c_*.svg`, serta dokumen penjelasan [day004c_quant_afns-bias-correction.md](project-explanations/day004c_quant_afns-bias-correction.md).
+
+### Diperbarui
+- `README.md` (tabel progres baris `4c` Go via `scripts/update_readme.py`), `docs/CHANGELOG.md`, dan `docs/project-explanations/README.md`.
+
 ## [Hari 004b — pemeliharaan A] — 2026-11-22 · Diagnostik penghentian optimizer & audit jumlah tes `day004b`
 
 ### Diperbaiki

@@ -1,0 +1,10 @@
+{
+  "day": 4,
+  "session": "c",
+  "topic_no": null,
+  "type": "quant",
+  "language": "go",
+  "topic": "AFNS — koreksi bias mean-reversion dan inferensi sampel terbatas dengan jackknife serta bootstrap parametrik",
+  "date": "2026-11-22",
+  "link": "projects/go/day004c_afns_bias_correction"
+}
