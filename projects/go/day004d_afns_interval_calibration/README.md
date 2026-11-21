@@ -30,7 +30,7 @@ Seluruh metode dievaluasi pada 100 fit luar dan $10{,}000$ *draw* bootstrap yang
 4. **Bootstrap-t / Studentized (`studentized`)**: menggunakan pivot $t^*_b = (\psi^*_b - \hat{\psi}) / \widehat{\text{SE}}^*_b$ dengan selang $[\hat{\psi} - q_{0{,}975}(t^*)\,\widehat{\text{SE}},\; \hat{\psi} - q_{0{,}025}(t^*)\,\widehat{\text{SE}}]$. Draw dengan $\psi^*$ non-finite atau $\widehat{\text{SE}}^* \le 0$ dikeluarkan; bila draw valid $< 95$ atau $\widehat{\text{SE}} \le 0$, interval ditandai *invalid* namun tetap masuk denominator $R = 100$.
 5. **Log-Scale Basic (`log_basic`)**: diterapkan pada parameter positif ($\lambda, K^{\mathbb{P}}_{ii}, \sigma_i, \sigma_\varepsilon$) melalui $\eta = \ln\psi$, membangun interval dasar di ruang log, lalu mengeksponensialkan kembali $[\exp(2\hat{\eta} - q_{0{,}975}(\eta^*)),\; \exp(2\hat{\eta} - q_{0{,}025}(\eta^*))]$.
 
-## 4. Ringkasan Hasil Utama (`outputs/day004d/results.json`, `369,51s` pada `8` worker)
+## 4. Ringkasan Hasil Utama (`outputs/day004d/results.json`, `403,36s` pada `8` worker)
 
 ### Verifikasi Teknis & Diagnostik Optimizer (`c1..c5 = tercapai`)
 - **Jangkar Gaussian gabungan ($T=5$, 3 tenor)**: selisih log-likelihood Kalman `5,68e-13`, `FastLogLikelihood` `5,54e-13`, smoother RTS `3,16e-16` (mean) & `6,39e-17` (kovarians).
@@ -47,9 +47,9 @@ Seluruh metode dievaluasi pada 100 fit luar dan $10{,}000$ *draw* bootstrap yang
 |---|---|---|---:|---:|---:|
 | `kp11 (0.05)` | Wald | `85,0%` `[76,7%, 90,7%]` | `0,5466 / 0,5094` | `79/100 (79%)` | `79%` |
 | `kp11 (0.05)` | Percentile | `14,0%` `[8,5%, 22,1%]` | `0,8896 / 0,8819` | `0/100 (0%)` | `0%` |
-| `kp11 (0.05)` | Basic | `95,0%` `[88,8%, 97,9%]` | `0,8896 / 0,8819` | `100/100 (100%)` | `100%` |
+| `kp11 (0.05)` | Basic | `95,0%` `[88,8%, 97,8%]` | `0,8896 / 0,8819` | `100/100 (100%)` | `100%` |
 | `kp11 (0.05)` | Studentized | `86,0%` `[77,9%, 91,5%]` | `0,4856 / 0,4405` | `87/100 (87%)` | `87%` |
-| `kp11 (0.05)` | Log-Basic | `49,0%` `[39,4%, 58,7%]` | `0,3635 / 0,3178` | `0/100 (0%)` | `2%` |
+| `kp11 (0.05)` | Log-Basic | `49,0%` `[39,4%, 58,7%]` | `0,3634 / 0,3178` | `0/100 (0%)` | `2%` |
 | `kp22 (0.50)` | Wald / Pct / Basic / Stud / LogBasic | `90% / 67% / 92% / 87% / 86%` | med `0,99 / 1,22 / 1,22 / 0,97 / 0,83` | `12% / 0% / 90% / 36% / 0%` | `12%..90%` |
 | `kp33 (0.40)` | Wald / Pct / Basic / Stud / LogBasic | `95% / 62% / 91% / 94% / 80%` | med `0,90 / 1,10 / 1,10 / 0,79 / 0,67` | `20% / 0% / 93% / 47% / 0%` | `20%..93%` |
 | `theta1 (0.045)` | Wald | `52,0%` `[42,3%, 61,5%]` | `1,5871 / 0,0215` | `0%` | `2%` |
@@ -58,8 +58,9 @@ Seluruh metode dievaluasi pada 100 fit luar dan $10{,}000$ *draw* bootstrap yang
 | `theta1 (0.045)` | Studentized | `72,0%` `[62,5%, 79,9%]` | `19,1171 / 0,0462` | `0%` | `3%` |
 
 **Kesimpulan Utama & Keterbatasan**:
-- **Trade-off `kp11` skala asli vs log**: `Basic` mencapai cakupan `95%` namun `100%` intervalnya berbatas bawah negatif (non-fisik). `Log-Basic` menjamin batas positif (`0%` non-fisik), tetapi cakupan `kp11` turun ke `49%` karena transformasi rasio log mengoreksi kurang kuat saat bias aditif besar relatif terhadap nilai benar `0,05`.
-- **Peningkatan parsial `theta1` lewat *studentization***: `Studentized` menaikkan cakupan `theta1` secara signifikan dari `46%–52%` menjadi `72,0%` (median lebar naik lebih dari $2\times$ menjadi `0,0462`), namun tetap di bawah `95%` dan sensitif terhadap nilai $\hat{\kappa}_1$ luar (`94,0%` bila $\hat{\kappa}_1 \le 0{,}208$ vs `50,0%` bila $\hat{\kappa}_1 > 0{,}208$) serta dua outlier batas aktif yang meledakkan rata-rata lebar menjadi `19,12`.
+- **Trade-off `kp11` skala asli vs log**: `Basic` mencapai cakupan `95,0%` (`95/100`), namun `100/100 (100%)` batas bawahnya bernilai non-positif (`0/100` interval fisik yang valid dan tercakup), sehingga tidak dapat dianggap sebagai interval fisik yang berhasil. `Log-Basic` menjamin batas positif (`0/100` non-fisik), tetapi cakupan `kp11` turun ke `49,0%` karena transformasi rasio log mengoreksi kurang kuat saat bias aditif besar relatif terhadap nilai benar `0,05`.
+- **Peningkatan parsial `theta1` lewat *studentization* & ringkasan robust lebar**: `Studentized` menaikkan cakupan `theta1` dari `46%–52%` menjadi `72,0%`, tetapi tetap *undercovered* relatif terhadap nominal `95%` dan sangat sensitif terhadap $\hat{\kappa}_1$ luar (`94,0%` bila $\hat{\kappa}_1 \le 0{,}2079$ vs `50,0%` bila $\hat{\kappa}_1 > 0{,}2079$). Ringkasan robust lebar `Studentized` `theta1` adalah **median `0,0462` (`IQR [0,0255, 0,0885]`, `p95 0,3681`)**, sedangkan **rerata `19,1171`** (`max 1773,8710` di rep `80` dan `129,6019` di rep `44`) terdistorsi oleh dua outlier regularisasi Hessian & batas aktif (`Wald`: median `0,0215`, `IQR [0,0151, 0,0312]`, rerata `1,5871`, `max 78,0966`).
+- **Cakupan `all_technical_passed`**: bendera `all_technical_passed = true` hanya menyatakan lima kriteria teknis `c1..c5` terpenuhi (akurasi jangkar, kelengkapan denominator $R=100$, identitas aljabar, determinisme worker, dan runtime), **bukan** berarti semua metode inferensi terkalibrasi secara statistik pada 95%.
 
 ## 5. Cara Build, Run, dan Test
 
@@ -67,8 +68,8 @@ Seluruh metode dievaluasi pada 100 fit luar dan $10{,}000$ *draw* bootstrap yang
 cd projects/go/day004d_afns_interval_calibration
 gofmt -l .
 go vet ./...
-go test -race -count=1 -v ./...  # 11 paket, 14 tes utama
-go run ./cmd/run               # Runner penuh R=100, B=100 (~370s pada 8 worker)
+go test -race -count=1 -v ./...  # 11 paket, 15 tes utama
+go run ./cmd/run               # Runner penuh R=100, B=100 (~403s pada 8 worker)
 go run ./cmd/run -quick        # Mode cepat pengembangan (R=4, B=6 ke temp dir)
 ```
 

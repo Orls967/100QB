@@ -126,27 +126,33 @@ type OptAggregateDiag struct {
 
 // MethodSummary merangkum kalibrasi satu metode interval pada satu parameter sepanjang R replikasi luar.
 type MethodSummary struct {
-	Method               string
-	Applicable           bool
-	TotalOuterReps       int
-	ValidCount           int
-	InvalidCount         int
-	CoveredCount         int
-	Coverage95           float64
-	WilsonLower          float64
-	WilsonUpper          float64
-	MeanWidth            float64
-	MedianWidth          float64
-	NonPhysicalCount     int
-	NonPhysicalPct       float64
-	OutOfBoundsCount     int
-	OutOfBoundsPct       float64
-	InvalidOuterNonFin   int
-	InvalidOuterSENonPos int
-	InvalidOuterNonPosLg int
-	InvalidInsuffFinite  int
-	InvalidInsuffValidSE int
-	InvalidInsuffPos     int
+	Method                      string
+	Applicable                  bool
+	TotalOuterReps              int
+	ValidCount                  int
+	InvalidCount                int
+	CoveredCount                int
+	PhysicallyValidCoveredCount int
+	Coverage95                  float64
+	WilsonLower                 float64
+	WilsonUpper                 float64
+	MeanWidth                   float64
+	MedianWidth                 float64
+	Q25Width                    float64
+	Q75Width                    float64
+	IQRWidth                    float64
+	P95Width                    float64
+	MaxWidth                    float64
+	NonPhysicalCount            int
+	NonPhysicalPct              float64
+	OutOfBoundsCount            int
+	OutOfBoundsPct              float64
+	InvalidOuterNonFin          int
+	InvalidOuterSENonPos        int
+	InvalidOuterNonPosLg        int
+	InvalidInsuffFinite         int
+	InvalidInsuffValidSE        int
+	InvalidInsuffPos            int
 }
 
 // OuterRepCalibration menyimpan seluruh hasil interval dan ringkasan bootstrap pada satu dataset luar r.
@@ -195,20 +201,24 @@ type ParamCalibrationSummary struct {
 
 // StratificationSummary mengukur sensitivitas lebar dan cakupan theta1 terhadap kp11 luar.
 type StratificationSummary struct {
-	MedianOuterKP11       float64
-	LowKP11Count          int
-	HighKP11Count         int
-	BoundHitOuterCount    int
-	LowKP11Theta1WaldCov  float64
-	HighKP11Theta1WaldCov float64
-	LowKP11Theta1StudCov  float64
-	HighKP11Theta1StudCov float64
-	LowKP11Theta1StudW    float64
-	HighKP11Theta1StudW   float64
-	LowKP11Theta1WaldW    float64
-	HighKP11Theta1WaldW   float64
-	CorrKP11WithWaldW     float64
-	CorrKP11WithStudW     float64
+	MedianOuterKP11        float64
+	LowKP11Count           int
+	HighKP11Count          int
+	BoundHitOuterCount     int
+	LowKP11Theta1WaldCov   float64
+	HighKP11Theta1WaldCov  float64
+	LowKP11Theta1StudCov   float64
+	HighKP11Theta1StudCov  float64
+	LowKP11Theta1StudW     float64
+	HighKP11Theta1StudW    float64
+	LowKP11Theta1WaldW     float64
+	HighKP11Theta1WaldW    float64
+	LowKP11Theta1WaldMedW  float64
+	HighKP11Theta1WaldMedW float64
+	LowKP11Theta1StudMedW  float64
+	HighKP11Theta1StudMedW float64
+	CorrKP11WithWaldW      float64
+	CorrKP11WithStudW      float64
 }
 
 // CalibrationStudyResult menyimpan seluruh hasil studi kalibrasi interval R x B.
@@ -271,6 +281,8 @@ func summarizeMethod(method string, applicable bool, results []interval.Interval
 			widths = append(widths, ir.Width)
 			if ir.NonPhysical {
 				ms.NonPhysicalCount++
+			} else if ir.Covered {
+				ms.PhysicallyValidCoveredCount++
 			}
 			if ir.OutOfBounds {
 				ms.OutOfBoundsCount++
@@ -301,7 +313,12 @@ func summarizeMethod(method string, applicable bool, results []interval.Interval
 	ms.WilsonUpper = wHi
 	ms.MeanWidth = stats.Mean(widths)
 	if len(widths) > 0 {
+		ms.Q25Width = stats.Quantile(widths, 0.25)
 		ms.MedianWidth = stats.Quantile(widths, 0.5)
+		ms.Q75Width = stats.Quantile(widths, 0.75)
+		ms.IQRWidth = ms.Q75Width - ms.Q25Width
+		ms.P95Width = stats.Quantile(widths, 0.95)
+		ms.MaxWidth = stats.Quantile(widths, 1.0)
 	}
 	ft := math.Max(float64(tot), 1.0)
 	ms.NonPhysicalPct = 100.0 * float64(ms.NonPhysicalCount) / ft
@@ -637,6 +654,18 @@ func RunCalibrationStudy(
 	strat.HighKP11Theta1WaldW = stats.Mean(hiWW)
 	strat.LowKP11Theta1StudW = stats.Mean(loSW)
 	strat.HighKP11Theta1StudW = stats.Mean(hiSW)
+	if len(loWW) > 0 {
+		strat.LowKP11Theta1WaldMedW = stats.Quantile(loWW, 0.5)
+	}
+	if len(hiWW) > 0 {
+		strat.HighKP11Theta1WaldMedW = stats.Quantile(hiWW, 0.5)
+	}
+	if len(loSW) > 0 {
+		strat.LowKP11Theta1StudMedW = stats.Quantile(loSW, 0.5)
+	}
+	if len(hiSW) > 0 {
+		strat.HighKP11Theta1StudMedW = stats.Quantile(hiSW, 0.5)
+	}
 	strat.CorrKP11WithWaldW = pearsonCorr(xKP, yWW)
 	strat.CorrKP11WithStudW = pearsonCorr(xKP, ySW)
 

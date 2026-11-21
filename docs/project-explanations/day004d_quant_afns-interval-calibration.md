@@ -17,7 +17,7 @@ Pada [day004c](day004c_quant_afns-bias-correction.md), bootstrap parametrik pers
 - **Batas ruang lingkup**: Spesifikasi AFNS identik dengan `day004c` ($K^{\mathbb{P}}$ diagonal, $\sigma_\varepsilon = 5\text{ bp}$ i.i.d., kondisi awal stasioner $\mathbb{P}$). Seluruh interval dibangun dari data luar dan *draw* bootstrap yang sama tanpa pemangkasan (*no clamping*) batas interval skala asli.
 
 ## 3. Apa yang Dikerjakan Proyek
-Runner CLI [cmd/run/main.go](../../projects/go/day004d_afns_interval_calibration/cmd/run/main.go) mengeksekusi pipeline deterministik (`MainSeed = 2026112204`, `8` worker goroutine, total waktu `369,51 detik`) menuju [outputs/day004d/results.json](../../outputs/day004d/results.json) (`12 MB`) dan 4 grafik SVG di [outputs/figures/](../../outputs/figures/):
+Runner CLI [cmd/run/main.go](../../projects/go/day004d_afns_interval_calibration/cmd/run/main.go) mengeksekusi pipeline deterministik (`MainSeed = 2026112204`, `8` worker goroutine, total waktu `403,36 detik`) menuju [outputs/day004d/results.json](../../outputs/day004d/results.json) (`12 MB`) dan 4 grafik SVG di [outputs/figures/](../../outputs/figures/):
 1. **Verifikasi Jangkar & Determinisme (`part1_exact_anchors_and_verification`)**: kecocokan Gaussian gabungan $T=5$ (3 tenor), pemeriksaan skor FD vs Richardson, dan invariansi bit `1` vs `8` worker pada fixture cepat (`T=80, R=2, B=4`).
 2. **Fit Luar $R=100$ (`outer_fits`, `6,85s`)**: membangkitkan 100 lintasan stasioner 20y ($T=1{,}040$) dan mengestimasi MLE 11-parameter beserta Hessian SE dan diagnostik pencarian garis.
 3. **Bootstrap Parametrik + Kalibrasi 5 Metode Interval (`361,92s`)**: mensimulasikan dan me-refit penuh $10{,}000$ dataset bootstrap lengkap dengan evaluasi `CentralDiffHessian` untuk $\widehat{\text{SE}}^*$, menghitung kelima metode interval secara berpasangan, serta melakukan stratifikasi sensitivitas `kp11_hat` vs lebar/cakupan `theta1`.
@@ -59,13 +59,13 @@ Lima kriteria teknis ditetapkan pra-run (tanpa mensyaratkan cakupan mencapai 95%
 
 ## 7. Status Pencapaian
 
-| Kriteria Teknis Pra-Spesifikasi | Status | Bukti Nyata Terukur (`outputs/day004d/results.json`, `369,51s`) |
+| Kriteria Teknis Pra-Spesifikasi | Status | Bukti Nyata Terukur (`outputs/day004d/results.json`, `403,36s`) |
 |---|---|---|
 | C1: Anchor eksak & skor FD | `tercapai` | `loglik_abs_diff = 5,68e-13`, `fast_ll_diff = 5,54e-13`, `mean_diff = 3,16e-16`, `cov_diff = 6,39e-17` (`< 1e-9`); max score err `1,54e-9` (init) & `3,38e-7` (true) (`< 1e-5`) |
 | C2: Kelengkapan $R=100, B=100$ | `tercapai` | `100/100` fit luar *finite*, `10.000/10.000` refit bootstrap *finite*, `100/100` interval valid pada semua 5 metode (`0` invalid) tanpa penyaringan |
 | C3: Verifikasi aljabar ringkasan | `tercapai` | Seluruh identitas bias, rasio RMSE, dan proporsi cakupan terverifikasi hingga `< 1e-11` (`checkAlgebra = true`) |
 | C4: Determinisme seed & worker | `tercapai` | `bit_identical_1_vs_n = true` pada `TestCalibrationStudyWorkerDeterminism` dan fixture runner penuh (`1` vs `8` worker) |
-| C5: Waktu eksekusi penuh `< 600s` | `tercapai` | Total `369,51s` pada `8` worker (`Part1 = 0,73s`, `Outer = 6,85s`, `Inner+Intervals = 361,92s`, `SVG = 0,002s`) |
+| C5: Waktu eksekusi penuh `< 600s` | `tercapai` | Total `403,36s` pada `8` worker (`Part1 = 0,78s`, `Outer = 7,26s`, `Inner+Intervals = 395,32s`, `SVG = 0,002s`) |
 
 ### Ringkasan Hasil Riset Empiris (`HASIL PERINTAH` dari `outputs/day004d/results.json`)
 
@@ -73,9 +73,9 @@ Lima kriteria teknis ditetapkan pra-run (tanpa mensyaratkan cakupan mencapai 95%
 |---|---|---:|---|---:|---:|---:|
 | `kp11` (0.05) | Wald | 85,0% (85/100) | [76,7%, 90,7%] | 0,5466 / 0,5094 | 79% | 79% |
 | `kp11` (0.05) | Percentile | 14,0% (14/100) | [8,5%, 22,1%] | 0,8896 / 0,8819 | 0% | 0% |
-| `kp11` (0.05) | Basic | 95,0% (95/100) | [88,8%, 97,9%] | 0,8896 / 0,8819 | 100% | 100% |
+| `kp11` (0.05) | Basic | 95,0% (95/100) | [88,8%, 97,8%] | 0,8896 / 0,8819 | 100% | 100% |
 | `kp11` (0.05) | Studentized | 86,0% (86/100) | [77,9%, 91,5%] | 0,4856 / 0,4405 | 87% | 87% |
-| `kp11` (0.05) | Log-Basic | 49,0% (49/100) | [39,4%, 58,7%] | 0,3635 / 0,3178 | 0% | 2% |
+| `kp11` (0.05) | Log-Basic | 49,0% (49/100) | [39,4%, 58,7%] | 0,3634 / 0,3178 | 0% | 2% |
 | `kp22` (0.50) | Wald / Pct / Basic / Stud / LogBasic | 90 / 67 / 92 / 87 / 86% | [82,6..95,9%] (kec. Pct) | med 0,99..1,22 (Log 0,83) | 12 / 0 / 90 / 36 / 0% | 12..90% |
 | `kp33` (0.40) | Wald / Pct / Basic / Stud / LogBasic | 95 / 62 / 91 / 94 / 80% | [83,8..97,9%] (kec. Pct/Log) | med 0,90..1,10 (Log 0,67) | 20 / 0 / 93 / 47 / 0% | 20..93% |
 | `theta1` (0.045) | Wald | 52,0% (52/100) | [42,3%, 61,5%] | 1,5871 / 0,0215 | 0% | 2% |
@@ -90,8 +90,9 @@ Lima kriteria teknis ditetapkan pra-run (tanpa mensyaratkan cakupan mencapai 95%
 ## 8. Pemisahan Fakta, Hasil Perintah, dan Hipotesis
 - **FAKTA (diamati di kode dan `outputs/day004d/results.json`)**:
   - **Diagnostik optimizer**: pada `100` fit luar, `100/100` *finite*, `97/100` `scaled_grad <= 1e-6`, `99` `line_search_failed` (`86` `step_underflow_plateau`, `13` `armijo_not_met`, `52` berobjektif identik bit-demi-bit), `1` `max_iterations`, `2/100` `bound_hit` (`lambda`, `kp11`, `kp22`), dan `2/100` `hessian_regularized` (`gradient_tolerance = 0`). Pada `10.000` refit bootstrap dalam, `10.000/10.000` *finite*, `9.875` (`98,75%`) `scaled_grad <= 1e-6`, `9.997` `line_search_failed` (`9.118` `step_underflow_plateau`, `879` `armijo_not_met`, `5.564` berobjektif identik bit-demi-bit), `3` `max_iterations`, `171` (`1,71%`) `bound_hit`, dan `169` (`1,69%`) `hessian_regularized`.
-  - **Validitas interval**: seluruh `100/100` interval luar valid (`0` invalid) di semua 5 metode dan 11 parameter.
-  - **Batas negatif & outlier**: `Basic` untuk `kp11` mencatat `100/100 (100%)` batas bawah $\le 0$, `Studentized` `87/100 (87%)`, dan `Wald` `79/100 (79%)`, sedangkan `Log-Basic` `0/100 (0%)`. Pada `theta1`, `mean_width` `Wald` (`1,587`) dan `Studentized` (`19,117`) jauh melampaui mediannya (`0,0215` dan `0,0462`) akibat 2 fit luar dengan regularisasi Hessian / batas aktif.
+  - **Validitas interval & cakupan fisik**: seluruh `100/100` interval luar valid (`0` invalid) di semua 5 metode dan 11 parameter dengan denominator yang sama ($R=100$). Namun untuk `kp11`, `Basic` mencatat `100/100 (100%)` batas bawah $\le 0$ sehingga `physically_valid_covered_count = 0/100` (bukan interval fisik yang berhasil meskipun cakupan nominalnya `95/100`), `Studentized` mencatat `87/100` batas bawah $\le 0$ (`4/100` valid fisik & tercakup), dan `Wald` mencatat `79/100` batas bawah $\le 0$ (`6/100` valid fisik & tercakup), sedangkan `Log-Basic` `0/100 (0%)` non-fisik (`49/100` valid fisik & tercakup) dan `Percentile` `0/100 (0%)` non-fisik (`14/100` valid fisik & tercakup).
+  - **Ringkasan robust lebar & outlier Hessian `theta1`**: pada `theta1`, `Studentized` memiliki **median lebar `0,0462`** (`IQR [0,0255, 0,0885]`, `p95 = 0,3681`), tetapi **rerata lebar melonjak ke `19,1171`** karena 2 outlier regularisasi Hessian & batas aktif (`rep 80` lebar `1773,8710`, `rep 44` lebar `129,6019`), sementara `Wald` memiliki **median `0,0215`** (`IQR [0,0151, 0,0312]`, `p95 = 0,0650`) vs **rerata `1,5871`** (`rep 44` lebar `78,0966`, `rep 80` lebar `78,0522`). Pada stratifikasi `kp11_hat <= 0,2079`, median lebar `Studentized` `theta1` adalah `0,0891` (vs rerata `38,2089` akibat dua outlier tersebut; `Wald` median `0,0314` vs rerata `3,1603`) dan pada paruh `kp11_hat > 0,2079` mediannya `0,0255` (rerata `0,0253`; `Wald` median `0,0151` vs rerata `0,0139`).
+  - **Makna `all_technical_passed`**: bendera `all_technical_passed = true` di `results.json` hanya menyatakan kriteria teknis C1–C5 terpenuhi dan **tidak** menyiratkan semua metode inferensi terkalibrasi secara statistik pada 95%.
 - **HASIL PERINTAH (terukur)**: seluruh angka tabel Bagian 7, interval Wilson 95% yang jelas memisahkan antar-metode pada $R=100$, dan peningkatan cakupan `theta1` dari `46%–52%` menjadi `72,0%` melalui *studentization*.
 - **HIPOTESIS (penjelasan teoretis atas temuan empiris)**:
   - **Mengapa `Basic` memberi `95%` di `kp11` dengan `100%` batas bawah negatif (Q1)?** *Hipotesis*: karena `Basic` mengurangkan bias positif bootstrap secara linier ke kiri (`2*psi_hat - q_0.975`), ketika `psi_hat ~ 0,26` dan `q_0.975 ~ 1,10`, batas bawah menjadi sekitar `-0,58 < 0`. Ini secara mekanis menempatkan `0,05` di dalam `[negatif, upper]`, namun menghasilkan batas bawah yang tidak valid secara fisik ($K^{\mathbb{P}}_{11} \le 0$ berarti proses non-stasioner).
@@ -101,7 +102,7 @@ Lima kriteria teknis ditetapkan pra-run (tanpa mensyaratkan cakupan mencapai 95%
 ## 9. Landasan Teori (Minimal 10 Poin Terhubung ke Kode)
 1. **Model Ruang-Keadaan AFNS Bebas-Arbitrase**: kurva *yield* $y_t(\tau) = -A(\tau)/\tau + H(\tau)X_t + \varepsilon_t$ dengan stabilisasi deret Taylor `G1`/`G2` dan konveksitas CDR 2011 di `YieldAdjustmentComponents` ([internal/afns/afns.go](../../projects/go/day004d_afns_interval_calibration/internal/afns/afns.go)).
 2. **Dinamika Ornstein–Uhlenbeck Eksak dan Persamaan Lyapunov**: transisi eksak `TransitionMatrixClosed`, `TransitionCovClosed`, dan inisialisasi stasioner $X_0 \sim \mathcal{N}(\theta^{\mathbb{P}}, Q_\infty)$ lewat `StationaryCov` ([internal/afns/afns.go](../../projects/go/day004d_afns_interval_calibration/internal/afns/afns.go)).
-3. **Filter Kalman Joseph dan Akselerasi Riccati Steady-State**: verifikasi `VerifyJointGaussianAnchor` ($5{,}68\times 10^{-13}$) dan pembekuan kovarians stasioner `FastLogLikelihood` di [internal/kalman/kalman.go](../../projects/go/day004d_afns_interval_calibration/internal/kalman/kalman.go) agar $10{,}100$ MLE + Hessian selesai dalam `369,51s`.
+3. **Filter Kalman Joseph dan Akselerasi Riccati Steady-State**: verifikasi `VerifyJointGaussianAnchor` ($5{,}68\times 10^{-13}$) dan pembekuan kovarians stasioner `FastLogLikelihood` di [internal/kalman/kalman.go](../../projects/go/day004d_afns_interval_calibration/internal/kalman/kalman.go) agar $10{,}100$ MLE + Hessian selesai dalam `403,36s`.
 4. **Interval Wald Asimtotik dan Invers Hessian Terregularisasi**: selang $\hat{\psi} \pm z_{0{,}975}\widehat{\text{SE}}$ melalui metode delta di `EvalWald` ([internal/interval/interval.go](../../projects/go/day004d_afns_interval_calibration/internal/interval/interval.go)) dan dekomposisi Jacobi dengan lantai eigenvalue `1e-6` di `EstimateMLEWithOptions`.
 5. **Interval Persentil Bootstrap Naif dan Kegagalan Pergeseran Bias**: kuantil empiris $[q_{0{,}025}(\psi^*), q_{0{,}975}(\psi^*)]$ di `EvalPercentile` ([internal/interval/interval.go](../../projects/go/day004d_afns_interval_calibration/internal/interval/interval.go)) mengasumsikan simetri tak-berbias; bias ke atas ganda menjatuhkan cakupan `kp11` ke `14%`.
 6. **Interval Basic / Reversed Percentile (Pivotal Aditif)**: konstruksi $[2\hat{\psi} - q_{0{,}975}, 2\hat{\psi} - q_{0{,}025}]$ di `EvalBasic` membalik arah bias menggunakan aproksimasi distribusi $\hat{\psi} - \psi \approx \psi^* - \hat{\psi}$ (Davison & Hinkley 1997), menaikkan cakupan `kp11` ke `95%` dengan konsekuensi `100%` batas bawah negatif.
@@ -127,4 +128,4 @@ Lima kriteria teknis ditetapkan pra-run (tanpa mensyaratkan cakupan mencapai 95%
   - Modul Go: [projects/go/day004d_afns_interval_calibration/](../../projects/go/day004d_afns_interval_calibration/README.md)
   - Data Lengkap (`12 MB`, seluruh `100` replikasi luar & `10.000` refit bootstrap + Hessian $\widehat{\text{SE}}^*$): [outputs/day004d/results.json](../../outputs/day004d/results.json)
   - Grafik SVG: [coverage-by-method-kp11-theta1.svg](../../outputs/figures/day004d_coverage-by-method-kp11-theta1.svg), [kp11-endpoints-raw-vs-log.svg](../../outputs/figures/day004d_kp11-endpoints-raw-vs-log.svg), [theta1-interval-widths.svg](../../outputs/figures/day004d_theta1-interval-widths.svg), [kp11-vs-theta1-width-coverage.svg](../../outputs/figures/day004d_kp11-vs-theta1-width-coverage.svg)
-- **Jejak Bukti Eksekusi**: seluruh `11` paket Go dengan `14` tes utama lulus `go test -race -count=1 -v ./...`, `gofmt -l .` kosong, `go vet ./...` bersih, dan runner penuh `go run ./cmd/run` selesai `369,51s` pada `workers = 8` dengan `c1..c5 = true` (`all_technical_passed = true`).
+- **Jejak Bukti Eksekusi**: seluruh `11` paket Go dengan `15` tes utama lulus `go test -race -count=1 -v ./...`, `gofmt -l .` kosong, `go vet ./...` bersih, dan runner penuh `go run ./cmd/run` selesai `403,36s` pada `workers = 8` dengan `c1..c5 = true` (`all_technical_passed = true`, lihat `technical_scope_note`).
