@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="470" viewBox="0 0 880 470" style="background:#ffffff;font-family:system-ui,sans-serif">
+<text x="440.0" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#111">Rasio Median Hessian SE terhadap SD Empiris Antar-Replikasi</text>
+<rect x="88.0" y="54.0" width="760.0" height="342.0" fill="none" stroke="#333" stroke-width="1"/>
+<line x1="88.0" y1="396.0" x2="848.0" y2="396.0" stroke="#eee" stroke-width="1"/>
+<text x="80.0" y="400.0" text-anchor="end" font-size="11" fill="#444">0</text>
+<line x1="88.0" y1="327.6" x2="848.0" y2="327.6" stroke="#eee" stroke-width="1"/>
+<text x="80.0" y="331.6" text-anchor="end" font-size="11" fill="#444">0.2731</text>
+<line x1="88.0" y1="259.2" x2="848.0" y2="259.2" stroke="#eee" stroke-width="1"/>
+<text x="80.0" y="263.2" text-anchor="end" font-size="11" fill="#444">0.5462</text>
+<line x1="88.0" y1="190.8" x2="848.0" y2="190.8" stroke="#eee" stroke-width="1"/>
+<text x="80.0" y="194.8" text-anchor="end" font-size="11" fill="#444">0.8192</text>
+<line x1="88.0" y1="122.4" x2="848.0" y2="122.4" stroke="#eee" stroke-width="1"/>
+<text x="80.0" y="126.4" text-anchor="end" font-size="11" fill="#444">1.092</text>
+<line x1="88.0" y1="54.0" x2="848.0" y2="54.0" stroke="#eee" stroke-width="1"/>
+<text x="80.0" y="58.0" text-anchor="end" font-size="11" fill="#444">1.365</text>
+<line x1="88.0" y1="396.0" x2="848.0" y2="396.0" stroke="#666" stroke-width="1"/>
+<line x1="88.0" y1="145.5" x2="848.0" y2="145.5" stroke="#111111" stroke-width="1.4" stroke-dasharray="5,4"/>
+<text x="94.0" y="140.5" font-size="10.5" fill="#111111">Kalibrasi Ideal = 1.0</text>
+<text x="468.0" y="454.0" text-anchor="middle" font-size="12" fill="#222">Parameter Model AFNS</text>
+<text x="18" y="225.0" text-anchor="middle" font-size="12" fill="#222" transform="rotate(-90 18 225.0)">Median Hessian SE / Empirical SD</text>
+<text x="122.5" y="416.0" text-anchor="middle" font-size="10.5" fill="#333">lambda</text>
+<rect x="97.67" y="388.37" width="10.94" height="7.63" fill="#1f77b4" fill-opacity="0.88"/>
+<rect x="110.11" y="376.66" width="10.94" height="19.34" fill="#d62728" fill-opacity="0.88"/>
+<rect x="122.55" y="395.51" width="10.94" height="0.49" fill="#2ca02c" fill-opacity="0.88"/>
+<rect x="134.98" y="85.09" width="10.94" height="310.91" fill="#9467bd" fill-opacity="0.88"/>
+<text x="191.6" y="416.0" text-anchor="middle" font-size="10.5" fill="#333">kp11</text>
+<rect x="166.76" y="200.48" width="10.94" height="195.52" fill="#1f77b4" fill-opacity="0.88"/>
+<rect x="179.20" y="279.02" width="10.94" height="116.98" fill="#d62728" fill-opacity="0.88"/>
+<rect x="191.64" y="202.14" width="10.94" height="193.86" fill="#2ca02c" fill-opacity="0.88"/>
+<rect x="204.07" y="269.50" width="10.94" height="126.50" fill="#9467bd" fill-opacity="0.88"/>
+<text x="260.7" y="416.0" text-anchor="middle" font-size="10.5" fill="#333">kp22</text>
+<rect x="235.85" y="305.22" width="10.94" height="90.78" fill="#1f77b4" fill-opacity="0.88"/>
+<rect x="248.29" y="194.42" width="10.94" height="201.58" fill="#d62728" fill-opacity="0.88"/>
+<rect x="260.73" y="216.23" width="10.94" height="179.77" fill="#2ca02c" fill-opacity="0.88"/>
+<rect x="273.16" y="225.09" width="10.94" height="170.91" fill="#9467bd" fill-opacity="0.88"/>
+<text x="329.8" y="416.0" text-anchor="middle" font-size="10.5" fill="#333">kp33</text>
+<rect x="304.95" y="181.69" width="10.94" height="214.31" fill="#1f77b4" fill-opacity="0.88"/>
+<rect x="317.38" y="230.70" width="10.94" height="165.30" fill="#d62728" fill-opacity="0.88"/>
+<rect x="329.82" y="191.63" width="10.94" height="204.37" fill="#2ca02c" fill-opacity="0.88"/>
+<rect x="342.25" y="202.10" width="10.94" height="193.90" fill="#9467bd" fill-opacity="0.88"/>
+<text x="398.9" y="416.0" text-anchor="middle" font-size="10.5" fill="#333">theta1</text>
+<rect x="374.04" y="364.01" width="10.94" height="31.99" fill="#1f77b4" fill-opacity="0.88"/>
+<rect x="386.47" y="380.80" width="10.94" height="15.20" fill="#d62728" fill-opacity="0.88"/>
+<rect x="398.91" y="369.71" width="10.94" height="26.29" fill="#2ca02c" fill-opacity="0.88"/>
+<rect x="411.35" y="298.90" width="10.94" height="97.10" fill="#9467bd" fill-opacity="0.88"/>
+<text x="468.0" y="416.0" text-anchor="middle" font-size="10.5" fill="#333">theta2</text>
+<rect x="443.13" y="375.27" width="10.94" height="20.73" fill="#1f77b4" fill-opacity="0.88"/>
+<rect x="455.56" y="367.79" width="10.94" height="28.21" fill="#d62728" fill-opacity="0.88"/>
+<rect x="468.00" y="389.40" width="10.94" height="6.60" fill="#2ca02c" fill-opacity="0.88"/>
+<rect x="480.44" y="172.01" width="10.94" height="223.99" fill="#9467bd" fill-opacity="0.88"/>
+<text x="537.1" y="416.0" text-anchor="middle" font-size="10.5" fill="#333">theta3</text>
+<rect x="512.22" y="364.49" width="10.94" height="31.51" fill="#1f77b4" fill-opacity="0.88"/>
+<rect x="524.65" y="213.10" width="10.94" height="182.90" fill="#d62728" fill-opacity="0.88"/>
+<rect x="537.09" y="349.68" width="10.94" height="46.32" fill="#2ca02c" fill-opacity="0.88"/>
+<rect x="549.53" y="195.85" width="10.94" height="200.15" fill="#9467bd" fill-opacity="0.88"/>
+<text x="606.2" y="416.0" text-anchor="middle" font-size="10.5" fill="#333">sigma1</text>
+<rect x="581.31" y="388.17" width="10.94" height="7.83" fill="#1f77b4" fill-opacity="0.88"/>
+<rect x="593.75" y="368.72" width="10.94" height="27.28" fill="#d62728" fill-opacity="0.88"/>
+<rect x="606.18" y="394.93" width="10.94" height="1.07" fill="#2ca02c" fill-opacity="0.88"/>
+<rect x="618.62" y="181.78" width="10.94" height="214.22" fill="#9467bd" fill-opacity="0.88"/>
+<text x="675.3" y="416.0" text-anchor="middle" font-size="10.5" fill="#333">sigma2</text>
+<rect x="650.40" y="348.42" width="10.94" height="47.58" fill="#1f77b4" fill-opacity="0.88"/>
+<rect x="662.84" y="392.46" width="10.94" height="3.54" fill="#d62728" fill-opacity="0.88"/>
+<rect x="675.27" y="372.41" width="10.94" height="23.59" fill="#2ca02c" fill-opacity="0.88"/>
+<rect x="687.71" y="112.33" width="10.94" height="283.67" fill="#9467bd" fill-opacity="0.88"/>
+<text x="744.4" y="416.0" text-anchor="middle" font-size="10.5" fill="#333">sigma3</text>
+<rect x="719.49" y="338.24" width="10.94" height="57.76" fill="#1f77b4" fill-opacity="0.88"/>
+<rect x="731.93" y="381.72" width="10.94" height="14.28" fill="#d62728" fill-opacity="0.88"/>
+<rect x="744.36" y="392.79" width="10.94" height="3.21" fill="#2ca02c" fill-opacity="0.88"/>
+<rect x="756.80" y="105.27" width="10.94" height="290.73" fill="#9467bd" fill-opacity="0.88"/>
+<text x="813.5" y="416.0" text-anchor="middle" font-size="10.5" fill="#333">sigma_eps</text>
+<rect x="788.58" y="394.40" width="10.94" height="1.60" fill="#1f77b4" fill-opacity="0.88"/>
+<rect x="801.02" y="380.77" width="10.94" height="15.23" fill="#d62728" fill-opacity="0.88"/>
+<rect x="813.45" y="395.85" width="10.94" height="0.15" fill="#2ca02c" fill-opacity="0.88"/>
+<rect x="825.89" y="88.89" width="10.94" height="307.11" fill="#9467bd" fill-opacity="0.88"/>
+<rect x="100.0" y="64.0" width="268.0" height="84.0" fill="#ffffff" fill-opacity="0.92" stroke="#ccc" rx="4"/>
+<rect x="110.0" y="72.0" width="14" height="10" fill="#1f77b4"/>
+<text x="130.0" y="81.0" font-size="11" fill="#222">Baseline 1000w (19.2y)</text>
+<rect x="110.0" y="90.0" width="14" height="10" fill="#d62728"/>
+<text x="130.0" y="99.0" font-size="11" fill="#222">Long-span 10y (520w)</text>
+<rect x="110.0" y="108.0" width="14" height="10" fill="#2ca02c"/>
+<text x="130.0" y="117.0" font-size="11" fill="#222">Long-span 80y (4160w)</text>
+<rect x="110.0" y="126.0" width="14" height="10" fill="#9467bd"/>
+<text x="130.0" y="135.0" font-size="11" fill="#222">Infill 20y Daily (5040d)</text>
+</svg>
