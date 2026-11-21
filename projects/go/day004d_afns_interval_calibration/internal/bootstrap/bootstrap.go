@@ -151,18 +151,18 @@ type MethodSummary struct {
 
 // OuterRepCalibration menyimpan seluruh hasil interval dan ringkasan bootstrap pada satu dataset luar r.
 type OuterRepCalibration struct {
-	OuterRepIdx        int
-	OuterMLE           kalman.MLEResult
-	FiniteDrawsCount   int
-	InvalidDrawsCount  int
-	BootBias           [11]float64
-	BootCorrected      [11]float64
-	WaldIntervals      [11]interval.IntervalResult
-	PctIntervals       [11]interval.IntervalResult
-	BasicIntervals     [11]interval.IntervalResult
-	StudIntervals      [11]interval.IntervalResult
-	LogBasicIntervals  [11]interval.IntervalResult
-	InnerDraws         []InnerBootDraw
+	OuterRepIdx       int
+	OuterMLE          kalman.MLEResult
+	FiniteDrawsCount  int
+	InvalidDrawsCount int
+	BootBias          [11]float64
+	BootCorrected     [11]float64
+	WaldIntervals     [11]interval.IntervalResult
+	PctIntervals      [11]interval.IntervalResult
+	BasicIntervals    [11]interval.IntervalResult
+	StudIntervals     [11]interval.IntervalResult
+	LogBasicIntervals [11]interval.IntervalResult
+	InnerDraws        []InnerBootDraw
 }
 
 // ParamCalibrationSummary merangkum bias dan perbandingan kelima metode interval untuk satu parameter.
