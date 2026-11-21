@@ -154,7 +154,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [docs/ROADMAP.md](docs/ROADMAP.md) · Riwayat: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 22/100 topik (22%)** · quant: 21 · sim: 1
+**Progres: 23/100 topik (23%)** · quant: 22 · sim: 1
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -180,6 +180,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 3a | bonus | `quant` | `python` | Volatilitas lokal Dupire dari permukaan SSVI | 2026-11-21 | [day003a_quant_volatilitas-lokal-dupire-ssvi.ipynb](days/day003a_quant_volatilitas-lokal-dupire-ssvi.ipynb) |
 | 3b | bonus | `quant` | `rust` | Eksekusi optimal: Almgren–Chriss, dampak transien, likuiditas stokastik | 2026-11-21 | [day003b_optimal_execution](projects/rust/day003b_optimal_execution) |
 | 3c | bonus | `quant` | `go` | Risiko sistemik jaringan: kliring Eisenberg–Noe, kaskade Watts & biaya kebangkrutan | 2026-11-21 | [day003c_systemic_risk](projects/go/day003c_systemic_risk) |
+| 3d | bonus | `quant` | `typescript` | Risiko ekor: GARCH–EVT, VaR/ES dan backtesting | 2026-11-21 | [day003d_tail_risk](projects/typescript/day003d_tail_risk) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi

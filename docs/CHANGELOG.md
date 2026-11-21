@@ -3,6 +3,19 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 003d] — 2026-11-21 · Risiko ekor: GARCH–EVT, VaR/ES dan backtesting (TypeScript, Bonus)
+
+### Ditambahkan
+- Project TypeScript murni `projects/typescript/day003d_tail_risk/` (`"strict": true`, nol dependensi runtime, paralelisme `worker_threads` deterministik, `xoshiro256++` 64-bit limb 32-bit, penulis JSON 17 digit & 7 grafik SVG):
+  - **Bagian 1 (Distribusi eksak & EVT)**: Student-$t$ (`regularizedIncompleteBeta`, Newton+bisection, rumus tertutup ES baku vs kuadratur `<= 3.38e-14`), GPD (`<= 1.78e-15`), Pickands–Balkema–de Haan & Hill pada `N = 2.000.000` sampel inversi $t_{\text{std}}(5)$ ($\hat{\xi}_{\text{POT}}$ `0.1031 -> 0.1785` menuju `0.2`).
+  - **Bagian 2 (GARCH-t)**: simulasi, rekonstruksi $\sigma_t^2$ (`2.71e-20`), skor analitik vs FD (`2.02e-6`), BFGS vs Nelder–Mead (`1.29e-14`), studi replikasi `R = 200` (`200/200` konvergen, `0` batas aktif, t-MLE unggul `1.53x–2.92x` MSE atas QMLE Gaussian), serta pembuktian aljabar $E[\varepsilon_t^4] = \infty$ ($D=-0.0116$) plus jangkar bermomen-4 berhingga ($t(12), D=0.1625$).
+  - **Bagian 3 (Filtered EVT VaR/ES)**: evaluasi 4 metode di `R = 200` ($n=2500$) pada konvensi kerugian $L_t = -r_t$ (`Gaussian VaR 99.9%` bias `-32.41%`, `EVT RMSE 0.1024 < FHS 0.1304` dengan $z=6.21$, plus sensitivitas ambang $q \in \{0.85, 0.90, 0.95\}$).
+  - **Bagian 4 (Backtesting)**: ukuran Kupiec (`100k` seri), daya klaster Markov Christoffersen (`20k`: `99.7%` / `81.2%`), distribusi nol simulasian sendiri Acerbi–Székely $Z_2$ (`30k`+`10k`), *rolling backtest* $40 \times 6000$ hari (`true_control rate99 = 1.009% ± 0.025%`, `gaussian_garch` ditolak `97.5%` Kupiec & `100%` $Z_2$), dan perbandingan deteksi perubahan rezim hari ke-3000 (`rolling` adapt $\hat{\alpha}_t \to 0.141$, pulih ke `1.042%` vs `fixed` `0.862%` ditolak `27.5%`).
+- Output `outputs/day003d/results.json`, 7 grafik SVG `outputs/figures/day003d_*.svg`, serta dokumen penjelasan `docs/project-explanations/day003d_quant_tail-risk.md`.
+
+### Diperbarui
+- `README.md` (tabel progres baris `3d` TypeScript via `scripts/update_readme.py`), `docs/CHANGELOG.md`, dan `docs/project-explanations/README.md`.
+
 ## [Pemeliharaan] — 2026-11-21 · Rename sesi pertama harian (`1` → `1a`, `3` → `3a`) & sinkronisasi skrip
 
 ### Diubah

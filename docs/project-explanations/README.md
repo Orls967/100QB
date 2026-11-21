@@ -28,6 +28,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `3a` (`day003a`) | `bonus` | `quant` | `python` | [Volatilitas lokal Dupire dari permukaan SSVI](day003a_quant_volatilitas-lokal-dupire-ssvi.md) |
 | `3b` (`day003b`) | `bonus` | `quant` | `rust` | [Eksekusi optimal: Almgren–Chriss, dampak transien, likuiditas stokastik](day003b_quant_optimal-execution.md) |
 | `3c` (`day003c`) | `bonus` | `quant` | `go` | [Risiko sistemik jaringan: kliring Eisenberg–Noe, kaskade Watts & biaya kebangkrutan](day003c_quant_systemic-risk.md) |
+| `3d` (`day003d`) | `bonus` | `quant` | `typescript` | [Risiko ekor: GARCH–EVT, VaR/ES & backtesting](day003d_quant_tail-risk.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 
