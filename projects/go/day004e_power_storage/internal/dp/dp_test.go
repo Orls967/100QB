@@ -187,3 +187,88 @@ func TestPerfectForesightDominanceAndWorkerDeterminism(t *testing.T) {
 		}
 	}
 }
+
+func TestExpandedTailGridOverflowAndRepresentation(t *testing.T) {
+	g33 := NewFineGrid33()
+	gExp := NewExpandedTailGrid()
+	if gExp.LowerTailAt > -1000.0 || gExp.UpperTailAt < 5000.0 {
+		t.Fatalf("expanded grid does not cover [-1000, 5000]: [%.1f, %.1f]", gExp.LowerTailAt, gExp.UpperTailAt)
+	}
+	edgeSet := make(map[float64]bool, len(gExp.Edges))
+	for _, e := range gExp.Edges {
+		edgeSet[e] = true
+	}
+	for _, e := range g33.Edges {
+		if !edgeSet[e] {
+			t.Fatalf("fine_33 edge %.1f missing from expanded_tail_38", e)
+		}
+	}
+	// Overflow dan batas ekstrem
+	cases := []struct {
+		p   float64
+		bin int
+	}{
+		{-1e6, 0},
+		{-1000.01, 0},
+		{-1000.0, 1},
+		{-500.0, 3},
+		{1999.99, 33},
+		{2000.0, 34},
+		{4999.99, 36},
+		{5000.0, 37},
+		{1e6, 37},
+	}
+	for _, tc := range cases {
+		if got := gExp.BinIndex(tc.p); got != tc.bin {
+			t.Fatalf("BinIndex(%.4f) = %d, want %d", tc.p, got, tc.bin)
+		}
+	}
+}
+
+func TestConditionalSeedCRNAndWorkerInvarianceExpanded(t *testing.T) {
+	spec := prices.DefaultSpec()
+	g33 := NewFineGrid33()
+	gExp := NewExpandedTailGrid()
+
+	crnMapper := func(h, r, b int) (uint64, int) {
+		if b >= 3 && b <= 33 {
+			return 0x4E33, b - 2
+		}
+		return 0x4E38, b
+	}
+	k33 := BuildKernel(spec, g33, 200, 2, rng.KernelSeed, 0x4E33)
+	kExp1 := BuildKernelWithSeedMapper(spec, gExp, 200, 1, rng.KernelSeed, 0x4E38, crnMapper)
+	kExp4 := BuildKernelWithSeedMapper(spec, gExp, 200, 4, rng.KernelSeed, 0x4E38, crnMapper)
+
+	for i := range kExp1.Probs {
+		if math.Float64bits(kExp1.Probs[i]) != math.Float64bits(kExp4.Probs[i]) {
+			t.Fatalf("expanded kernel prob %d diverged across 1 vs 4 workers", i)
+		}
+	}
+	// Verifikasi bahwa jumlah probabilitas setiap state tepat 1.0 (massa tail tidak dibuang)
+	for st := 0; st < kExp1.NumStates; st++ {
+		sum := 0.0
+		row := kExp1.Probs[st*kExp1.TargetStride : (st+1)*kExp1.TargetStride]
+		for _, p := range row {
+			sum += p
+		}
+		if math.Abs(sum-1.0) > 1e-12 {
+			t.Fatalf("state %d kernel prob sum = %.15f != 1.0", st, sum)
+		}
+	}
+	// Pada bin interior bersama (mis. b33=15 <-> bExp=17, harga 45), cek bahwa jumlah probabilitas masuk ke interior g33 cocok
+	if math.Abs(g33.RepPrices[15]-gExp.RepPrices[17]) > 1e-12 {
+		t.Fatalf("rep price mismatch: %.3f vs %.3f", g33.RepPrices[15], gExp.RepPrices[17])
+	}
+	for r := 0; r < regime.NumRegimes; r++ {
+		st33 := k33.StateIndex(12, r, 15)
+		stExp := kExp1.StateIndex(12, r, 17)
+		for b33 := 1; b33 < g33.NumBins-1; b33++ {
+			p33 := k33.Probs[st33*k33.TargetStride+r*g33.NumBins+b33]
+			pExp := kExp1.Probs[stExp*kExp1.TargetStride+r*gExp.NumBins+(b33+2)]
+			if math.Abs(p33-pExp) > 1e-12 {
+				t.Fatalf("CRN interior prob mismatch at r=%d b33=%d: %.12f vs %.12f", r, b33, p33, pExp)
+			}
+		}
+	}
+}

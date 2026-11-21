@@ -686,8 +686,20 @@ func main() {
 	k33 := dp.BuildKernel(spec, g33, nDraws, nWorkers, rng.KernelSeed, 0x4E33)
 	pol33 := dp.SolveStochasticDP(k33, bat)
 
+	// Audit sensitivitas tail diperluas [-1000, 5000] dengan CRN kondisional pada bin interior yang sama
+	gExp := dp.NewExpandedTailGrid()
+	crnMapper := func(h, r, b int) (uint64, int) {
+		if b >= 3 && b <= 33 {
+			return 0x4E33, b - 2
+		}
+		return 0x4E38, b
+	}
+	kExp := dp.BuildKernelWithSeedMapper(spec, gExp, nDraws, nWorkers, rng.KernelSeed, 0x4E38, crnMapper)
+	polExp := dp.SolveStochasticDP(kExp, bat)
+
 	c4BellmanOK := bfDiff < 1e-11 && pol17.MaxBellmanResidual < 1e-11 && pol33.MaxBellmanResidual < 1e-11 &&
-		pol17.TerminalMaxError < 1e-12 && pol33.TerminalMaxError < 1e-12
+		polExp.MaxBellmanResidual < 1e-11 && pol17.TerminalMaxError < 1e-12 && pol33.TerminalMaxError < 1e-12 &&
+		polExp.TerminalMaxError < 1e-12
 
 	// 4. Simulasi N hari evaluasi independen (CRN untuk semua strategi)
 	tEval0 := time.Now()
@@ -697,6 +709,7 @@ func main() {
 
 	res17 := dp.EvalStochasticDP(dp.StrategyDP17, evalDays, pol17, bat)
 	res33 := dp.EvalStochasticDP(dp.StrategyDP33, evalDays, pol33, bat)
+	resExp := dp.EvalStochasticDP("stochastic_dp_expanded_38bin", evalDays, polExp, bat)
 	resThresh := dp.EvalThresholdPolicy(evalDays, bat)
 	resPF := dp.EvalPerfectForesightDP(evalDays, bat)
 	resNoBat := dp.EvalNoBattery(evalDays)
@@ -704,6 +717,7 @@ func main() {
 	const domTol = 1e-9
 	dp.ComputeRegretVsPF(&res17, resPF, domTol)
 	dp.ComputeRegretVsPF(&res33, resPF, domTol)
+	dp.ComputeRegretVsPF(&resExp, resPF, domTol)
 	dp.ComputeRegretVsPF(&resThresh, resPF, domTol)
 	dp.ComputeRegretVsPF(&resNoBat, resPF, domTol)
 	evalSeconds := time.Since(tEval0).Seconds()
@@ -711,6 +725,9 @@ func main() {
 	diff17VsThresh := stats.PairedDiffCI(res17.DailyProfits, resThresh.DailyProfits)
 	diff33VsThresh := stats.PairedDiffCI(res33.DailyProfits, resThresh.DailyProfits)
 	diff33Vs17 := stats.PairedDiffCI(res33.DailyProfits, res17.DailyProfits)
+	diffExpVs33 := stats.PairedDiffCI(resExp.DailyProfits, res33.DailyProfits)
+	diffExpVs17 := stats.PairedDiffCI(resExp.DailyProfits, res17.DailyProfits)
+	evalStepAgree, interiorStateAgree, evalDiffSteps, evalTotSteps, intAgreeCnt, intTotStates := dp.PolicyActionAgreement(evalDays, pol33, polExp, bat)
 
 	// 5. Pilih hari contoh pra-run dan buat 5 grafik SVG
 	tSvg0 := time.Now()
@@ -726,10 +743,12 @@ func main() {
 	// 6. Evaluasi 8 kriteria teknis pra-run
 	c3BoundsOK := res17.SoCViolationCount == 0 && res17.PowerViolationCount == 0 &&
 		res33.SoCViolationCount == 0 && res33.PowerViolationCount == 0 &&
+		resExp.SoCViolationCount == 0 && resExp.PowerViolationCount == 0 &&
 		resThresh.SoCViolationCount == 0 && resThresh.PowerViolationCount == 0 &&
 		resPF.SoCViolationCount == 0 && resPF.PowerViolationCount == 0
 	c5PFDomOK := res17.PerfectForesightDomViolations == 0 &&
 		res33.PerfectForesightDomViolations == 0 &&
+		resExp.PerfectForesightDomViolations == 0 &&
 		resThresh.PerfectForesightDomViolations == 0 &&
 		resNoBat.PerfectForesightDomViolations == 0
 	c6DetOK := workerDetOK
@@ -870,6 +889,21 @@ func main() {
 		{Key: "dp_kernels_and_policies", Val: jsonout.Obj{
 			{Key: "coarse_17bin", Val: kernelToJSON(k17, pol17)},
 			{Key: "fine_33bin", Val: kernelToJSON(k33, pol33)},
+		}},
+		{Key: "expanded_tail_sensitivity_audit", Val: jsonout.Obj{
+			{Key: "description", Val: "Audit perluasan domain harga menjadi [-1000, 5000] EUR/MWh (38 bin) dengan CRN kondisional pada bin interior fine_33 yang sama"},
+			{Key: "kernel_and_policy", Val: kernelToJSON(kExp, polExp)},
+			{Key: "strategy_summary", Val: strategyToJSON(resExp, false)},
+			{Key: "paired_vs_dp33", Val: pairedDiffToJSON("expanded38_minus_dp33", diffExpVs33)},
+			{Key: "paired_vs_dp17", Val: pairedDiffToJSON("expanded38_minus_dp17", diffExpVs17)},
+			{Key: "policy_agreement_vs_dp33", Val: jsonout.Obj{
+				{Key: "eval_steps_agree_fraction", Val: evalStepAgree},
+				{Key: "eval_steps_diff_count", Val: evalDiffSteps},
+				{Key: "eval_steps_total", Val: evalTotSteps},
+				{Key: "interior_states_agree_fraction", Val: interiorStateAgree},
+				{Key: "interior_states_agree_count", Val: intAgreeCnt},
+				{Key: "interior_states_total", Val: intTotStates},
+			}},
 		}},
 		{Key: "paired_comparisons", Val: []jsonout.Obj{
 			pairedDiffToJSON("dp17_minus_threshold", diff17VsThresh),

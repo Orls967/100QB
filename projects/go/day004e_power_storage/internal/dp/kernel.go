@@ -50,6 +50,18 @@ func (k TransitionKernel) TargetIndex(rNext, bNext int) int {
 // BuildKernel mengestimasi kernel transisi satu jam via simulasi kondisional Monte Carlo independen
 // per state (h, r, b) dengan seed turunan deterministik tetap.
 func BuildKernel(spec prices.ModelSpec, grid PriceGrid, drawsPerState, nWorkers int, kernelSeed, salt uint64) TransitionKernel {
+	return BuildKernelWithSeedMapper(spec, grid, drawsPerState, nWorkers, kernelSeed, salt, nil)
+}
+
+// BuildKernelWithSeedMapper membangun kernel transisi dengan pemetaan seed opsional per bin
+// agar draw kondisional common random numbers (CRN) dapat disejajarkan pada bin interior yang sama.
+func BuildKernelWithSeedMapper(
+	spec prices.ModelSpec,
+	grid PriceGrid,
+	drawsPerState, nWorkers int,
+	kernelSeed, defaultSalt uint64,
+	seedMapper func(h, r, b int) (salt uint64, origBin int),
+) TransitionKernel {
 	t0 := time.Now()
 	nBins := grid.NumBins
 	nStates := prices.HoursPerDay * regime.NumRegimes * nBins
@@ -61,7 +73,12 @@ func BuildKernel(spec prices.ModelSpec, grid PriceGrid, drawsPerState, nWorkers 
 		r := rem / nBins
 		b := rem % nBins
 
-		rg := rng.New(rng.DeriveStateSeed(kernelSeed, salt, uint64(h), uint64(r), uint64(b)))
+		useSalt := defaultSalt
+		useBin := b
+		if seedMapper != nil {
+			useSalt, useBin = seedMapper(h, r, b)
+		}
+		rg := rng.New(rng.DeriveStateSeed(kernelSeed, useSalt, uint64(h), uint64(r), uint64(useBin)))
 		pNow := grid.RepPrices[b]
 		counts := make([]int, stride)
 		var loCnt, hiCnt int64

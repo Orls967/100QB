@@ -48,6 +48,7 @@ Kebijakan *threshold* statis sederhana (`charge` jika $P \le 0$, `discharge` jik
 - **Determinisme worker**: kernel dan lintasan evaluasi identik bit-demi-bit pada `1` vs `8` worker.
 - **Realisasi lintasan evaluasi (`N = 2.000` hari = `48.000` jam)**: `5.608` jam harga negatif (`11,68%`, di `1.240/2.000` hari), `2.061` jam `scarcity`, `1.029` jam `oversupply`, `204` jump non-nol (`151` *scarcity*, `53` *oversupply*, `8` jam multi-jump $N>1$), rentang harga `[-354,69, 1041,92] EUR/MWh` (`q01 = -68,73`, `q50 = 45,51`, `q99 = 215,34`).
 - **Massa probabilitas *tail bin***: pada grid `17` bin (`12,24M` draw), tail bawah `< -500` sebesar `0,829%` (mean `-517,88`) dan tail atas `>= 2000` sebesar `2,720%` (mean `2058,27`); pada grid `33` bin (`23,76M` draw), tail bawah `0,431%` (`-518,05`) dan tail atas `1,400%` (`2058,18`).
+- **Audit tail diperluas (`expanded_tail_38`, domain `[-1000, 5000]` EUR/MWh, CRN pada bin interior `fine_33`)**: massa tail `< -1000` turun menjadi `0,00616%` (`1.685/27,36M`, mean `-1053,15`) dan `>= 5000` menjadi `0,000%` (`0/27,36M`). Kebijakan `polExp` identik pada `91.511/91.512` state interior (`99,9989%`) dan `48.000/48.000` langkah evaluasi (`100%`), sehingga selisih profit dan regret terhadap `DP-33` tepat `0,00 EUR/hari` (selisih `DP-33` vs `DP-17` murni berasal dari resolusi interior, bukan representasi tail).
 
 ### Perbandingan Ekonomi Antar-Strategi (`N = 2.000` hari *Common Random Numbers*)
 

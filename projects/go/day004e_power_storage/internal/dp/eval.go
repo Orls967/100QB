@@ -184,6 +184,60 @@ func EvalStochasticDP(name string, days []prices.DayPath, policy DPPolicy, bat b
 	})
 }
 
+// PolicyActionAgreement mengukur kesepakatan aksi antara dua kebijakan DP pada lintasan evaluasi
+// (seluruh langkah jam) serta pada state interior yang memiliki harga representatif identik.
+func PolicyActionAgreement(days []prices.DayPath, polRef, polOther DPPolicy, bat battery.Spec) (evalStepAgreeFrac, interiorStateAgreeFrac float64, evalDiffCount, evalTotalSteps, interiorAgreeCount, interiorTotalStates int) {
+	for _, day := range days {
+		socRef := bat.InitialSoCIdx
+		socOth := bat.InitialSoCIdx
+		for h := 0; h < prices.HoursPerDay; h++ {
+			bRef := polRef.Grid.BinIndex(day.Prices[h])
+			bOth := polOther.Grid.BinIndex(day.Prices[h])
+			aRef := polRef.ActionAt(h, day.Regimes[h], bRef, socRef)
+			aOth := polOther.ActionAt(h, day.Regimes[h], bOth, socOth)
+			if aRef == aOth {
+				evalAgree := true
+				_ = evalAgree
+			} else {
+				evalDiffCount++
+			}
+			evalTotalSteps++
+			if sn, ok := bat.NextSoCIdx(socRef, battery.Actions[aRef]); ok {
+				socRef = sn
+			}
+			if sn, ok := bat.NextSoCIdx(socOth, battery.Actions[aOth]); ok {
+				socOth = sn
+			}
+		}
+	}
+	if evalTotalSteps > 0 {
+		evalStepAgreeFrac = float64(evalTotalSteps-evalDiffCount) / float64(evalTotalSteps)
+	}
+
+	// Cocokkan bin interior polRef [1..NumBins-2] terhadap polOther dengan RepPrices identik.
+	for bRef := 1; bRef < polRef.NumBins-1; bRef++ {
+		rep := polRef.Grid.RepPrices[bRef]
+		bOth := polOther.Grid.BinIndex(rep)
+		if math.Abs(polOther.Grid.RepPrices[bOth]-rep) > 1e-12 {
+			continue
+		}
+		for h := 0; h < prices.HoursPerDay; h++ {
+			for r := 0; r < regime.NumRegimes; r++ {
+				for s := 0; s < bat.NumSoCStates; s++ {
+					interiorTotalStates++
+					if polRef.ActionAt(h, r, bRef, s) == polOther.ActionAt(h, r, bOth, s) {
+						interiorAgreeCount++
+					}
+				}
+			}
+		}
+	}
+	if interiorTotalStates > 0 {
+		interiorStateAgreeFrac = float64(interiorAgreeCount) / float64(interiorTotalStates)
+	}
+	return
+}
+
 // ThresholdAction menentukan tindakan kebijakan aturan tetap pra-run dengan pembatas SoC:
 // charge penuh saat harga <= 0, discharge penuh saat harga >= 200, idle selain itu.
 func ThresholdAction(price float64, socIdx int, bat battery.Spec) battery.ActionID {

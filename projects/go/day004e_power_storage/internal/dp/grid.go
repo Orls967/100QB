@@ -53,6 +53,21 @@ func NewFineGrid33() PriceGrid {
 	return buildGrid("fine_33", edges, -600.0, 2500.0)
 }
 
+// NewExpandedTailGrid membangun grid perluasan 38 bin yang mempertahankan seluruh batas
+// interior fine_33 dan memperluas domain menjadi [-1000, 5000] EUR/MWh dengan tail bin eksplisit
+// < -1000 dan >= 5000 EUR/MWh.
+func NewExpandedTailGrid() PriceGrid {
+	edges := []float64{
+		-1000, -750,
+		-500, -350, -200, -150, -100, -75, -50, -35, -20, -10,
+		0, 10, 20, 30, 40, 50, 60, 70, 80, 100,
+		120, 140, 160, 200, 275, 350, 475, 600, 800, 1000,
+		1500, 2000,
+		2500, 3500, 5000,
+	}
+	return buildGrid("expanded_tail_38", edges, -1150.0, 5500.0)
+}
+
 // BinIndex memetakan harga kontinu ke indeks bin [0..NumBins-1] tanpa membuang ekor ekstrem.
 func (g PriceGrid) BinIndex(price float64) int {
 	if price < g.Edges[0] {
