@@ -4,6 +4,9 @@ import (
 	"math"
 	"testing"
 
+	"github.com/Orls967/100QB/go/day004c_afns_bias_correction/internal/afns"
+	"github.com/Orls967/100QB/go/day004c_afns_bias_correction/internal/kalman"
+	"github.com/Orls967/100QB/go/day004c_afns_bias_correction/internal/rng"
 	"github.com/Orls967/100QB/go/day004c_afns_bias_correction/internal/stats"
 )
 
@@ -46,5 +49,32 @@ func TestEvalParamBootstrapBiasQuantilesAndInvalidHandling(t *testing.T) {
 	)
 	if invCnt != 1 || covCnt != 1 || tot != 3 || math.Abs(rate-1.0/3.0) > 1e-12 {
 		t.Fatalf("unexpected coverage denominator with invalid outer rep: inv=%d cov=%d tot=%d rate=%v", invCnt, covCnt, tot, rate)
+	}
+}
+
+func TestBootstrapStudyWorkerDeterminism(t *testing.T) {
+	spec := kalman.DefaultSpec()
+	var outerFits [2]kalman.MLEResult
+	for r := 0; r < 2; r++ {
+		rg := rng.New(rng.DeriveSeed(rng.MainSeed, 0xBEEF, uint64(r)))
+		_, y := afns.SimulateStationaryPath(spec.AFNS, kalman.StandardTenors, 80, kalman.WeeklyDt, spec.SigmaEps, rg)
+		init := kalman.PerturbInitialGuess(spec, rg)
+		outerFits[r] = kalman.EstimateMLE(init, spec, kalman.StandardTenors, kalman.WeeklyDt, y)
+	}
+
+	b1 := RunParametricBootstrapStudy(spec, kalman.StandardTenors, 80.0*kalman.WeeklyDt, kalman.WeeklyDt, 80, outerFits[:], 3, 1, rng.MainSeed, 0xB100)
+	b4 := RunParametricBootstrapStudy(spec, kalman.StandardTenors, 80.0*kalman.WeeklyDt, kalman.WeeklyDt, 80, outerFits[:], 3, 4, rng.MainSeed, 0xB100)
+
+	for i := 0; i < 11; i++ {
+		if math.Float64bits(b1.Params[i].BootCorrectedMean) != math.Float64bits(b4.Params[i].BootCorrectedMean) {
+			t.Fatalf("param %d BootCorrectedMean diverged across 1 vs 4 workers", i)
+		}
+	}
+	for r := 0; r < 2; r++ {
+		for b := 0; b < 3; b++ {
+			if math.Float64bits(b1.OuterReplications[r].InnerDraws[b].EstLogLik) != math.Float64bits(b4.OuterReplications[r].InnerDraws[b].EstLogLik) {
+				t.Fatalf("outer %d boot %d EstLogLik diverged across 1 vs 4 workers", r, b)
+			}
+		}
 	}
 }

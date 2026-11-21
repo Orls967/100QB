@@ -3,6 +3,9 @@ package jackknife
 import (
 	"math"
 	"testing"
+
+	"github.com/Orls967/100QB/go/day004c_afns_bias_correction/internal/kalman"
+	"github.com/Orls967/100QB/go/day004c_afns_bias_correction/internal/rng"
 )
 
 func TestJackknifeAlgebraicFirstOrderBiasCancellation(t *testing.T) {
@@ -40,5 +43,25 @@ func TestJackknifeAlgebraicFirstOrderBiasCancellation(t *testing.T) {
 	res := CombineVec(full, h1, h2) // kp11 = 2*0.02 - 0.10 = -0.06
 	if math.Abs(res.EstParams[1]-(-0.06)) > 1e-12 || !res.OutOfBoundsByParam[1] || !res.NonPhysicalByParam[1] {
 		t.Fatalf("expected unclamped negative kp11 flagged out-of-bounds & non-physical, got %+v", res)
+	}
+}
+
+func TestJackknifeStudyWorkerDeterminism(t *testing.T) {
+	spec := kalman.DefaultSpec()
+	paths1 := GenerateSharedPrefixOuterPaths(spec, kalman.StandardTenors, 80, kalman.WeeklyDt, 2, 1, rng.MainSeed, 0xFACE)
+	paths4 := GenerateSharedPrefixOuterPaths(spec, kalman.StandardTenors, 80, kalman.WeeklyDt, 2, 4, rng.MainSeed, 0xFACE)
+
+	jk1 := RunJackknifeHorizonStudy("fast_jk_fixture", spec, kalman.StandardTenors, paths1, 80.0*kalman.WeeklyDt, kalman.WeeklyDt, 80, 1)
+	jk4 := RunJackknifeHorizonStudy("fast_jk_fixture", spec, kalman.StandardTenors, paths4, 80.0*kalman.WeeklyDt, kalman.WeeklyDt, 80, 4)
+
+	for r := 0; r < 2; r++ {
+		if math.Float64bits(jk1.Replications[r].Full.EstLogLik) != math.Float64bits(jk4.Replications[r].Full.EstLogLik) {
+			t.Fatalf("rep %d full EstLogLik diverged across 1 vs 4 workers", r)
+		}
+		for i := 0; i < 11; i++ {
+			if math.Float64bits(jk1.Replications[r].JackknifeEst[i]) != math.Float64bits(jk4.Replications[r].JackknifeEst[i]) {
+				t.Fatalf("rep %d jackknife param %d diverged across 1 vs 4 workers", r, i)
+			}
+		}
 	}
 }
