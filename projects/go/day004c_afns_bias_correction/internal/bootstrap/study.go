@@ -12,22 +12,30 @@ import (
 	"github.com/Orls967/100QB/go/day004c_afns_bias_correction/internal/stats"
 )
 
-// InnerBootDraw mencatat hasil penuh beserta diagnostik penghentian satu refit bootstrap dalam.
+// InnerBootDraw mencatat hasil penuh beserta diagnostik penghentian dan pencarian garis satu refit bootstrap dalam.
 type InnerBootDraw struct {
-	OuterRepIdx       int
-	BootIdx           int
-	Finite            bool
-	Converged         bool
-	TerminationReason string
-	HitBound          bool
-	HitBoundByParam   [11]bool
-	BestStage         int
-	IterationsBest    int
-	IterationsCum     int
-	GradNormOpt       float64
-	ScaledGradNormOpt float64
-	EstLogLik         float64
-	EstParams         [11]float64
+	OuterRepIdx            int
+	BootIdx                int
+	Finite                 bool
+	Converged              bool
+	TerminationReason      string
+	HitBound               bool
+	HitBoundByParam        [11]bool
+	BestStage              int
+	IterationsBest         int
+	IterationsCum          int
+	Stage1Iterations       int
+	Stage2Iterations       int
+	GradNormOpt            float64
+	ScaledGradNormOpt      float64
+	EstLogLik              float64
+	EstParams              [11]float64
+	MinAlphaTested         float64
+	LastStepNorm           float64
+	CandidateBitIdentical  bool
+	LastObjChange          float64
+	ObjBitIdentical        bool
+	LineSearchFailureCause string
 }
 
 // OuterRepBootstrapResult merangkum distribusi bootstrap (B refit) pada satu dataset luar r.
@@ -114,6 +122,11 @@ type ParametricBootstrapStudyResult struct {
 	TotalLineSearchFailedRefits  int
 	TotalMaxIterRefits           int
 	TotalInvalidObjRefits        int
+	TotalLSObjBitIdentical       int
+	TotalLSCandBitIdentical      int
+	TotalLSArmijoNotMet          int
+	TotalLSStepUnderflow         int
+	TotalLSInvalidObj            int
 	ValidOuterIntervals          int
 	InvalidOuterIntervals        int
 	Params                       [11]BootParamSummary
@@ -165,20 +178,28 @@ func RunParametricBootstrapStudy(
 
 		res := kalman.EstimateMLEWithOptions(bootInit, fitSpec, taus, dt, bootYields, false)
 		return InnerBootDraw{
-			OuterRepIdx:       r,
-			BootIdx:           b,
-			Finite:            res.Finite,
-			Converged:         res.Converged,
-			TerminationReason: res.TerminationReason,
-			HitBound:          res.HitBound,
-			HitBoundByParam:   res.HitBoundByParam,
-			BestStage:         res.BestStage,
-			IterationsBest:    res.BestStageIterations,
-			IterationsCum:     res.CumulativeIterations,
-			GradNormOpt:       res.GradNormOpt,
-			ScaledGradNormOpt: res.ScaledGradNormOpt,
-			EstLogLik:         res.EstLogLik,
-			EstParams:         res.EstParams,
+			OuterRepIdx:            r,
+			BootIdx:                b,
+			Finite:                 res.Finite,
+			Converged:              res.Converged,
+			TerminationReason:      res.TerminationReason,
+			HitBound:               res.HitBound,
+			HitBoundByParam:        res.HitBoundByParam,
+			BestStage:              res.BestStage,
+			IterationsBest:         res.BestStageIterations,
+			IterationsCum:          res.CumulativeIterations,
+			Stage1Iterations:       res.Stage1.Iterations,
+			Stage2Iterations:       res.Stage2.Iterations,
+			GradNormOpt:            res.GradNormOpt,
+			ScaledGradNormOpt:      res.ScaledGradNormOpt,
+			EstLogLik:              res.EstLogLik,
+			EstParams:              res.EstParams,
+			MinAlphaTested:         res.MinAlphaTested,
+			LastStepNorm:           res.LastStepNorm,
+			CandidateBitIdentical:  res.CandidateBitIdentical,
+			LastObjChange:          res.LastObjChange,
+			ObjBitIdentical:        res.ObjBitIdentical,
+			LineSearchFailureCause: res.LineSearchFailureCause,
 		}
 	})
 
@@ -238,6 +259,20 @@ func RunParametricBootstrapStudy(
 			case optim.TermLineSearchFailed:
 				rep.LineSearchFailedCount++
 				resOut.TotalLineSearchFailedRefits++
+				if d.ObjBitIdentical {
+					resOut.TotalLSObjBitIdentical++
+				}
+				if d.CandidateBitIdentical {
+					resOut.TotalLSCandBitIdentical++
+				}
+				switch d.LineSearchFailureCause {
+				case optim.LSCauseArmijoNotMet:
+					resOut.TotalLSArmijoNotMet++
+				case optim.LSCauseStepUnderflow:
+					resOut.TotalLSStepUnderflow++
+				case optim.LSCauseInvalidObjective:
+					resOut.TotalLSInvalidObj++
+				}
 			case optim.TermMaxIterations:
 				rep.MaxIterCount++
 				resOut.TotalMaxIterRefits++

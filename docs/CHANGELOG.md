@@ -3,6 +3,12 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 004c — pemeliharaan A] — 2026-11-22 · Diagnostik presisi pencarian garis `day004c`
+
+### Diperbaiki
+- `projects/go/day004c_afns_bias_correction`: menambahkan diagnostik penghentian pencarian garis per fit (`min_alpha_tested`, `last_step_norm`, `candidate_bit_identical`, `last_obj_change`, `obj_bit_identical`, `line_search_failure_cause` serta agregasi `step_underflow_plateau` vs `armijo_not_met` vs `invalid_objective_or_gradient`) di `optim.go`, `kalman.go`, `jackknife/study.go`, `bootstrap/study.go`, dan `cmd/run/main.go`, plus uji unit plateau vs gagal Armijo non-plateau di `optim_test.go`.
+- Memverifikasi kesetaraan penuh terhadap `results.json` awal (`206,14s`, seluruh parameter, log-likelihood, sampel, dan status identik bit-demi-bit) serta membuktikan seluruh `5.000/5.000` refit bootstrap berhenti pada lantai presisi `float64` (`4.628` `step_underflow_plateau`, `372` `armijo_not_met` di $\alpha = 2^{-34}$ dengan perubahan $\sim 1\text{–}4\text{ ULP}$, `2.840` berobjektif identik bit-demi-bit, `0` tak-valid).
+
 ## [Hari 004c] — 2026-11-22 · AFNS — koreksi bias mean-reversion dan inferensi sampel terbatas dengan jackknife serta bootstrap parametrik (Go, Bonus)
 
 ### Ditambahkan

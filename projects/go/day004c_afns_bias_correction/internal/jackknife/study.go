@@ -49,6 +49,11 @@ type SegmentDiagnostics struct {
 	InvalidObjCount         int
 	BestStage1Count         int
 	BestStage2Count         int
+	LSObjBitIdenticalCount  int
+	LSCandBitIdenticalCount int
+	LSArmijoNotMetCount     int
+	LSStepUnderflowCount    int
+	LSInvalidObjCount       int
 }
 
 func summarizeSegment(name string, reps []kalman.MLEResult) SegmentDiagnostics {
@@ -85,6 +90,20 @@ func summarizeSegment(name string, reps []kalman.MLEResult) SegmentDiagnostics {
 			d.BoundaryStationaryCount++
 		case optim.TermLineSearchFailed:
 			d.LineSearchFailedCount++
+			if r.ObjBitIdentical {
+				d.LSObjBitIdenticalCount++
+			}
+			if r.CandidateBitIdentical {
+				d.LSCandBitIdenticalCount++
+			}
+			switch r.LineSearchFailureCause {
+			case optim.LSCauseArmijoNotMet:
+				d.LSArmijoNotMetCount++
+			case optim.LSCauseStepUnderflow:
+				d.LSStepUnderflowCount++
+			case optim.LSCauseInvalidObjective:
+				d.LSInvalidObjCount++
+			}
 		case optim.TermMaxIterations:
 			d.MaxIterCount++
 		case optim.TermInvalidObjective:

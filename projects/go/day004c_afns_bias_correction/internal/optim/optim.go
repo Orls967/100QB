@@ -115,21 +115,32 @@ const (
 	TermLineSearchFailed   = "line_search_failed"
 	TermMaxIterations      = "max_iterations"
 	TermInvalidObjective   = "invalid_objective_or_gradient"
+
+	LSCauseNone             = "none"
+	LSCauseArmijoNotMet     = "armijo_not_met"
+	LSCauseStepUnderflow    = "step_underflow_plateau"
+	LSCauseInvalidObjective = "invalid_objective_or_gradient"
 )
 
-// BFGSResult merangkum keluaran optimisasi BFGS beserta alasan penghentian eksplisit.
+// BFGSResult merangkum keluaran optimisasi BFGS beserta alasan penghentian dan diagnostik pencarian garis.
 type BFGSResult struct {
-	X                 []float64
-	Fun               float64
-	RawGradNorm       float64
-	GradNorm          float64
-	ScaledGradNorm    float64
-	Iterations        int
-	FuncEvals         int
-	Converged         bool
-	HitBound          bool
-	HitBoundByParam   []bool
-	TerminationReason string
+	X                      []float64
+	Fun                    float64
+	RawGradNorm            float64
+	GradNorm               float64
+	ScaledGradNorm         float64
+	Iterations             int
+	FuncEvals              int
+	Converged              bool
+	HitBound               bool
+	HitBoundByParam        []bool
+	TerminationReason      string
+	MinAlphaTested         float64
+	LastStepNorm           float64
+	CandidateBitIdentical  bool
+	LastObjChange          float64
+	ObjBitIdentical        bool
+	LineSearchFailureCause string
 }
 
 func clampVec(x, lo, hi []float64) {
@@ -231,6 +242,12 @@ func MinimizeBFGS(f func([]float64) float64, x0, lo, hi []float64, maxIter int, 
 	}
 
 	termReason := ""
+	lsCause := LSCauseNone
+	minAlphaTested := 0.0
+	lastStepNorm := 0.0
+	candBitIdent := false
+	lastObjChange := 0.0
+	objBitIdent := false
 	iters := 0
 	xCand := make([]float64, n)
 	d := make([]float64, n)
@@ -240,6 +257,7 @@ func MinimizeBFGS(f func([]float64) float64, x0, lo, hi []float64, maxIter int, 
 
 	if isInvalidState(fx, g) {
 		termReason = TermInvalidObjective
+		lsCause = LSCauseInvalidObjective
 	}
 
 	for iter := 0; termReason == "" && iter < maxIter; iter++ {
@@ -277,8 +295,11 @@ func MinimizeBFGS(f func([]float64) float64, x0, lo, hi []float64, maxIter int, 
 		alpha := 1.0
 		accepted := false
 		fCand := fx
+		alphaLast := 1.0
+		anyFiniteCand := false
 		const c1 = 1e-4
 		for ls := 0; ls < 35; ls++ {
+			alphaLast = alpha
 			for i := 0; i < n; i++ {
 				xCand[i] = x[i] + alpha*d[i]
 			}
@@ -288,30 +309,63 @@ func MinimizeBFGS(f func([]float64) float64, x0, lo, hi []float64, maxIter int, 
 				dirDeriv += g[i] * (xCand[i] - x[i])
 			}
 			fCand = evalF(xCand)
-			if !math.IsNaN(fCand) && !math.IsInf(fCand, 0) && fCand < 1e29 && fCand <= fx+c1*dirDeriv {
-				accepted = true
-				break
+			if !math.IsNaN(fCand) && !math.IsInf(fCand, 0) && fCand < 1e29 {
+				anyFiniteCand = true
+				if fCand <= fx+c1*dirDeriv {
+					accepted = true
+					break
+				}
 			}
 			alpha *= 0.5
 		}
+		minAlphaTested = alphaLast
 		if !accepted {
 			termReason = TermLineSearchFailed
+			stepSq := 0.0
+			bitEq := true
+			for i := 0; i < n; i++ {
+				diff := xCand[i] - x[i]
+				stepSq += diff * diff
+				if math.Float64bits(xCand[i]) != math.Float64bits(x[i]) {
+					bitEq = false
+				}
+			}
+			lastStepNorm = math.Sqrt(stepSq)
+			candBitIdent = bitEq
+			if !anyFiniteCand || math.IsNaN(fCand) || math.IsInf(fCand, 0) || fCand >= 1e29 {
+				lastObjChange = 0.0
+				objBitIdent = false
+				lsCause = LSCauseInvalidObjective
+			} else {
+				lastObjChange = fCand - fx
+				objBitIdent = math.Float64bits(fCand) == math.Float64bits(fx)
+				lsCause = LSCauseArmijoNotMet
+			}
 			break
 		}
 
 		stepNorm := 0.0
+		bitEq := true
 		for i := 0; i < n; i++ {
 			s[i] = xCand[i] - x[i]
+			if math.Float64bits(xCand[i]) != math.Float64bits(x[i]) {
+				bitEq = false
+			}
 			x[i] = xCand[i]
 			stepNorm += s[i] * s[i]
 		}
 		stepNorm = math.Sqrt(stepNorm)
+		lastStepNorm = stepNorm
+		candBitIdent = bitEq
 		fPrev := fx
 		fx = fCand
+		lastObjChange = fx - fPrev
+		objBitIdent = math.Float64bits(fx) == math.Float64bits(fPrev)
 		gNew := gradF(x)
 		if isInvalidState(fx, gNew) {
 			g = gNew
 			termReason = TermInvalidObjective
+			lsCause = LSCauseInvalidObjective
 			break
 		}
 
@@ -336,6 +390,7 @@ func MinimizeBFGS(f func([]float64) float64, x0, lo, hi []float64, maxIter int, 
 				}
 			} else {
 				termReason = TermLineSearchFailed
+				lsCause = LSCauseStepUnderflow
 			}
 			break
 		}
@@ -384,16 +439,22 @@ func MinimizeBFGS(f func([]float64) float64, x0, lo, hi []float64, maxIter int, 
 	}
 	scaledFinal := gnFinal / math.Max(1.0, math.Abs(fx))
 	return BFGSResult{
-		X:                 x,
-		Fun:               fx,
-		RawGradNorm:       rawFinal,
-		GradNorm:          gnFinal,
-		ScaledGradNorm:    scaledFinal,
-		Iterations:        iters,
-		FuncEvals:         evals,
-		Converged:         termReason == TermGradientTol,
-		HitBound:          hitBound,
-		HitBoundByParam:   hitByParam,
-		TerminationReason: termReason,
+		X:                      x,
+		Fun:                    fx,
+		RawGradNorm:            rawFinal,
+		GradNorm:               gnFinal,
+		ScaledGradNorm:         scaledFinal,
+		Iterations:             iters,
+		FuncEvals:              evals,
+		Converged:              termReason == TermGradientTol,
+		HitBound:               hitBound,
+		HitBoundByParam:        hitByParam,
+		TerminationReason:      termReason,
+		MinAlphaTested:         minAlphaTested,
+		LastStepNorm:           lastStepNorm,
+		CandidateBitIdentical:  candBitIdent,
+		LastObjChange:          lastObjChange,
+		ObjBitIdentical:        objBitIdent,
+		LineSearchFailureCause: lsCause,
 	}
 }

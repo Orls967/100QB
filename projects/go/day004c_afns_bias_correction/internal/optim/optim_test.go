@@ -33,22 +33,44 @@ func TestBFGSTerminationReasonsAndRichardson(t *testing.T) {
 
 	stepDisc := func(x []float64) float64 {
 		if x[0] >= 1e-6 {
-			return 1.0 + x[0]
+			return 1.0 + 2.0*x[0]
+		}
+		if x[0] < 0 {
+			return 1.0 - x[0]
 		}
 		return 1.0
 	}
 	rLS := MinimizeBFGS(stepDisc, []float64{0.0}, nil, nil, 50, 1e-8)
-	if rLS.Converged || rLS.TerminationReason != TermLineSearchFailed {
-		t.Fatalf("expected line_search_failed, got %s", rLS.TerminationReason)
+	if rLS.Converged || rLS.TerminationReason != TermLineSearchFailed || rLS.LineSearchFailureCause != LSCauseArmijoNotMet || rLS.ObjBitIdentical {
+		t.Fatalf("expected non-plateau armijo_not_met line_search_failed, got %+v", rLS)
+	}
+	if rLS.MinAlphaTested <= 0 || rLS.MinAlphaTested > 1e-9 || rLS.LastStepNorm <= 0 {
+		t.Fatalf("expected small MinAlphaTested and positive LastStepNorm, got alpha=%g step=%g", rLS.MinAlphaTested, rLS.LastStepNorm)
+	}
+
+	// Plateau numerik: nilai objektif identik bit-demi-bit di sekitar skala besar (~1e5) meski gradien beda hingga bernilai non-nol
+	plateau := func(x []float64) float64 {
+		v := x[0] - 0.5
+		if v >= 5e-6 {
+			return -1.0e5 + 1e3*v
+		}
+		return -1.0e5
+	}
+	rPlat := MinimizeBFGS(plateau, []float64{0.5}, nil, nil, 50, 1e-8)
+	if rPlat.Converged || rPlat.TerminationReason != TermLineSearchFailed {
+		t.Fatalf("expected plateau line_search_failed, got %+v", rPlat)
+	}
+	if !rPlat.ObjBitIdentical || rPlat.LastObjChange != 0.0 || rPlat.LineSearchFailureCause != LSCauseArmijoNotMet {
+		t.Fatalf("expected bit-identical plateau objective, got objIdent=%v dObj=%g cause=%s", rPlat.ObjBitIdentical, rPlat.LastObjChange, rPlat.LineSearchFailureCause)
 	}
 
 	rMax := MinimizeBFGS(rosen, []float64{-1.2, 1.0}, nil, nil, 2, 1e-8)
-	if rMax.Converged || rMax.TerminationReason != TermMaxIterations {
-		t.Fatalf("expected max_iterations, got %s", rMax.TerminationReason)
+	if rMax.Converged || rMax.TerminationReason != TermMaxIterations || rMax.LineSearchFailureCause != LSCauseNone {
+		t.Fatalf("expected max_iterations with LSCauseNone, got %+v", rMax)
 	}
 
 	rInv := MinimizeBFGS(func(x []float64) float64 { return math.NaN() }, []float64{0.5}, nil, nil, 10, 1e-6)
-	if rInv.Converged || rInv.TerminationReason != TermInvalidObjective {
-		t.Fatalf("expected invalid_objective_or_gradient, got %s", rInv.TerminationReason)
+	if rInv.Converged || rInv.TerminationReason != TermInvalidObjective || rInv.LineSearchFailureCause != LSCauseInvalidObjective {
+		t.Fatalf("expected invalid_objective_or_gradient, got %+v", rInv)
 	}
 }

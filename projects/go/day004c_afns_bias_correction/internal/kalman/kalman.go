@@ -725,62 +725,80 @@ func PerturbInitialGuess(trueSpec ModelSpec, rg *rng.RNG) ModelSpec {
 	return VecToSpec(initV, trueSpec.UseAFNSAdj)
 }
 
-// StageDiagnostic menyimpan diagnostik penghentian dan gradien untuk satu tahap BFGS.
+// StageDiagnostic menyimpan diagnostik penghentian dan pencarian garis untuk satu tahap BFGS.
 type StageDiagnostic struct {
-	Stage             int
-	Iterations        int
-	FuncEvals         int
-	LogLik            float64
-	RawGradNorm       float64
-	GradNorm          float64
-	ScaledGradNorm    float64
-	Converged         bool
-	HitBound          bool
-	TerminationReason string
+	Stage                  int
+	Iterations             int
+	FuncEvals              int
+	LogLik                 float64
+	RawGradNorm            float64
+	GradNorm               float64
+	ScaledGradNorm         float64
+	Converged              bool
+	HitBound               bool
+	TerminationReason      string
+	MinAlphaTested         float64
+	LastStepNorm           float64
+	CandidateBitIdentical  bool
+	LastObjChange          float64
+	ObjBitIdentical        bool
+	LineSearchFailureCause string
 }
 
 // MLEResult menyimpan hasil estimasi MLE 11 parameter beserta status finite dan diagnostik penghentian.
 type MLEResult struct {
-	Finite               bool
-	InitParams           [11]float64
-	EstParams            [11]float64
-	TrueParams           [11]float64
-	InitLogLik           float64
-	TrueLogLik           float64
-	EstLogLik            float64
-	GradRelErrInit       float64
-	GradRelErrTrue       float64
-	GradAbsDiffOpt       float64
-	RawGradNormOpt       float64
-	GradNormOpt          float64
-	ScaledGradNormOpt    float64
-	HessianSE            [11]float64
-	HessianMinEig        float64
-	HessianRegularized   bool
-	Iterations           int
-	BestStageIterations  int
-	CumulativeIterations int
-	BestStage            int
-	Stage1               StageDiagnostic
-	Stage2               StageDiagnostic
-	Converged            bool
-	TerminationReason    string
-	HitBound             bool
-	HitBoundByParam      [11]bool
+	Finite                 bool
+	InitParams             [11]float64
+	EstParams              [11]float64
+	TrueParams             [11]float64
+	InitLogLik             float64
+	TrueLogLik             float64
+	EstLogLik              float64
+	GradRelErrInit         float64
+	GradRelErrTrue         float64
+	GradAbsDiffOpt         float64
+	RawGradNormOpt         float64
+	GradNormOpt            float64
+	ScaledGradNormOpt      float64
+	HessianSE              [11]float64
+	HessianMinEig          float64
+	HessianRegularized     bool
+	Iterations             int
+	BestStageIterations    int
+	CumulativeIterations   int
+	BestStage              int
+	Stage1                 StageDiagnostic
+	Stage2                 StageDiagnostic
+	Converged              bool
+	TerminationReason      string
+	HitBound               bool
+	HitBoundByParam        [11]bool
+	MinAlphaTested         float64
+	LastStepNorm           float64
+	CandidateBitIdentical  bool
+	LastObjChange          float64
+	ObjBitIdentical        bool
+	LineSearchFailureCause string
 }
 
 func makeStageDiag(stage int, res optim.BFGSResult) StageDiagnostic {
 	return StageDiagnostic{
-		Stage:             stage,
-		Iterations:        res.Iterations,
-		FuncEvals:         res.FuncEvals,
-		LogLik:            -res.Fun,
-		RawGradNorm:       res.RawGradNorm,
-		GradNorm:          res.GradNorm,
-		ScaledGradNorm:    res.ScaledGradNorm,
-		Converged:         res.Converged,
-		HitBound:          res.HitBound,
-		TerminationReason: res.TerminationReason,
+		Stage:                  stage,
+		Iterations:             res.Iterations,
+		FuncEvals:              res.FuncEvals,
+		LogLik:                 -res.Fun,
+		RawGradNorm:            res.RawGradNorm,
+		GradNorm:               res.GradNorm,
+		ScaledGradNorm:         res.ScaledGradNorm,
+		Converged:              res.Converged,
+		HitBound:               res.HitBound,
+		TerminationReason:      res.TerminationReason,
+		MinAlphaTested:         res.MinAlphaTested,
+		LastStepNorm:           res.LastStepNorm,
+		CandidateBitIdentical:  res.CandidateBitIdentical,
+		LastObjChange:          res.LastObjChange,
+		ObjBitIdentical:        res.ObjBitIdentical,
+		LineSearchFailureCause: res.LineSearchFailureCause,
 	}
 }
 
@@ -896,31 +914,37 @@ func EstimateMLEWithOptions(initSpec, trueSpec ModelSpec, taus []float64, dt flo
 	}
 
 	return MLEResult{
-		Finite:               finite,
-		InitParams:           SpecToVec(initSpec),
-		EstParams:            estV,
-		TrueParams:           SpecToVec(trueSpec),
-		InitLogLik:           initLL,
-		TrueLogLik:           trueLL,
-		EstLogLik:            estLL,
-		GradRelErrInit:       gradErrInit,
-		GradRelErrTrue:       gradErrTrue,
-		GradAbsDiffOpt:       gradAbsDiffOpt,
-		RawGradNormOpt:       best.RawGradNorm,
-		GradNormOpt:          best.GradNorm,
-		ScaledGradNormOpt:    best.ScaledGradNorm,
-		HessianSE:            ses,
-		HessianMinEig:        minEig,
-		HessianRegularized:   reg,
-		Iterations:           bestStageIters,
-		BestStageIterations:  bestStageIters,
-		CumulativeIterations: cumulativeIters,
-		BestStage:            bestStage,
-		Stage1:               makeStageDiag(1, res1),
-		Stage2:               makeStageDiag(2, res2),
-		Converged:            best.Converged,
-		TerminationReason:    best.TerminationReason,
-		HitBound:             best.HitBound,
-		HitBoundByParam:      hitByParam,
+		Finite:                 finite,
+		InitParams:             SpecToVec(initSpec),
+		EstParams:              estV,
+		TrueParams:             SpecToVec(trueSpec),
+		InitLogLik:             initLL,
+		TrueLogLik:             trueLL,
+		EstLogLik:              estLL,
+		GradRelErrInit:         gradErrInit,
+		GradRelErrTrue:         gradErrTrue,
+		GradAbsDiffOpt:         gradAbsDiffOpt,
+		RawGradNormOpt:         best.RawGradNorm,
+		GradNormOpt:            best.GradNorm,
+		ScaledGradNormOpt:      best.ScaledGradNorm,
+		HessianSE:              ses,
+		HessianMinEig:          minEig,
+		HessianRegularized:     reg,
+		Iterations:             bestStageIters,
+		BestStageIterations:    bestStageIters,
+		CumulativeIterations:   cumulativeIters,
+		BestStage:              bestStage,
+		Stage1:                 makeStageDiag(1, res1),
+		Stage2:                 makeStageDiag(2, res2),
+		Converged:              best.Converged,
+		TerminationReason:      best.TerminationReason,
+		HitBound:               best.HitBound,
+		HitBoundByParam:        hitByParam,
+		MinAlphaTested:         best.MinAlphaTested,
+		LastStepNorm:           best.LastStepNorm,
+		CandidateBitIdentical:  best.CandidateBitIdentical,
+		LastObjChange:          best.LastObjChange,
+		ObjBitIdentical:        best.ObjBitIdentical,
+		LineSearchFailureCause: best.LineSearchFailureCause,
 	}
 }
