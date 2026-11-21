@@ -3,6 +3,19 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 003e] — 2026-11-21 · CVA swap suku bunga: Hull–White, intensitas CIR dan wrong-way risk (Go, Bonus)
+
+### Ditambahkan
+- Project Go 1.22+ murni `projects/go/day003e_cva_wrong_way/` (nol dependensi eksternal, paralelisme *goroutine* deterministik per *chunk*, `xoshiro256++`, Gamma/Poisson eksak Ahrens–Dieter, kuadratur Golub–Welsch Gauss–Hermite & Gauss–Legendre, penulis JSON 17 digit & 7 grafik SVG):
+  - **Bagian 1 (Hull–White 1-Faktor & Eksposur)**: simulasi bersama eksak $(x_t, I_t)$ dengan stabilisasi deret Taylor untuk $\Delta$ kecil; uji martingale (`max_gh_abs_err = 8.88e-16`, `mc_z <= 0.578`); *swaption* `2y × 8y` Jamshidian (`ITM=0.071464`, `ATM=0.026532`, `OTM=0.005768`, selisih vs kuadratur bebas-*kink* `<= 1.11e-16`, `mc_z <= 0.953`); profil eksposur kuartalan `200k` lintasan (`EPE = 0.017726` / `$17,726.10/1M`, puncak `EE = 0.031838` di $t=4$, `max_z = 2.010` di 41 tanggal).
+  - **Bagian 2 (Intensitas CIR & Par CDS)**: verifikasi Feller ($2\kappa\theta = 0.025 \ge \xi^2 = 0.01$), kurva survival afin vs ODE Riccati RK4 (`max_err = 1.33e-15`), sampling eksak Poisson–Gamma vs Euler *full-truncation* (`Q(10) = 0.789127`), serta par CDS `1/3/5/10Y` (`126.68–141.75 bps`, `pv_prot_z <= 1.10`).
+  - **Bagian 3 (CVA Independen & Sensitivitas)**: `CVA_anal = 0.00191515` (`$1,915.15/1M`), turunan analitik $\partial\text{CVA}/\partial\lambda_0$ vs FD pusat (`abs_err = 8.08e-14`), CS01 (`$1.60 / $5.69 / $7.28` per `$1M`), CVA MC waktu gagal eksplisit $\tau$ & Rao–Blackwellized (`z <= 0.57` di $m \in \{20, 40, 80\}$), dan konvergensi *paired* terhadap $m = 320$ (`9.67e-7 -> 3.81e-7 -> 1.57e-7`, *slope* `-1.31`).
+  - **Bagian 4 (*Wrong-Way Risk*, *Netting* & Kolateral)**: kurva CRN $\text{CVA}(\rho)$ naik monoton `$1,080.34 -> $2,962.22/1M` ($\rho: -0.8 \to +0.8$); *netting* `5y payer + 10y receiver` hemat `36.88%` ($\rho=0$) dan identitas berlawanan arah nol eksak; kolateral MPOR $\delta=0.04$ lintas threshold $H \in \{0, 0.01, 0.05, \infty\}$ (`$112.77 -> $1,912.87/1M` di $\rho=0$) serta analisis MPOR $\delta \to 0$ (jadwal bersih $O(\sqrt{\delta})$ *slope* `0.454` vs lantai kupon mentah `$325/1M`).
+- Output `outputs/day003e/results.json`, 7 grafik SVG `outputs/figures/day003e_*.svg`, serta dokumen penjelasan `docs/project-explanations/day003e_quant_cva-wrong-way.md`.
+
+### Diperbarui
+- `README.md` (tabel progres baris `3e` Go via `scripts/update_readme.py`), `docs/CHANGELOG.md`, dan `docs/project-explanations/README.md`.
+
 ## [Hari 003d] — 2026-11-21 · Risiko ekor: GARCH–EVT, VaR/ES dan backtesting (TypeScript, Bonus)
 
 ### Ditambahkan
