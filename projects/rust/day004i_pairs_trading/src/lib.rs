@@ -1,4 +1,6 @@
+pub mod backtest;
 pub mod fpt;
+pub mod johansen;
 pub mod jsonout;
 pub mod linalg;
 pub mod ou;
@@ -8,3 +10,4 @@ pub mod special;
 pub mod stats;
 pub mod strategy;
 pub mod svg;
+pub mod unitroot;
