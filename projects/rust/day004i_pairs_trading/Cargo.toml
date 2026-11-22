@@ -1,0 +1,11 @@
+[package]
+name = "day004i_pairs_trading"
+version = "0.1.0"
+edition = "2021"
+description = "Cointegration dan trading OU optimal: Dickey-Fuller, Engle-Granger, Johansen, Bertram FPT dan backtest (Rust murni)"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+
+[dependencies]
