@@ -3,6 +3,23 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 005a] — 2026-11-23 · Perbaikan day004h/day004j/day004k + Model SABR (Rust, Bonus)
+
+### Diperbaiki (Bagian A — `day004h`, `day004j`, `day004k`)
+- `projects/rust/day004k_amm_lvr`: mengganti `c6` dengan *anchor* kuantitatif LVR lompatan Merton $(\lambda/2)(e^{m+s^2/2}-2e^{m/2+s^2/8}+1) = 0{,}007061$ (`z = 0,22`), memperketat `c4` dengan $\Delta \in \{0{,}25\text{s}; 0{,}5\text{s}\}$ dan ekstrapolasi Richardson ($p_{\mathrm{OLS}} = 0{,}464$, `0,07992 ± 0,00021` vs `0,07988`, `z = 0,21`), serta uji sapuan $\varphi \in \{0{,}0005; 0{,}003; 0{,}01\}$.
+- `projects/rust/day004j_deep_hedging`: mengimplementasikan *persistent worker pool* + penyimpanan `StepCache` (`1,47x` lebih cepat pada 20 iterasi dan bit-identik), melatih cabang entropik & biaya hingga `10.000` iterasi, menguji hipotesis aktivasi `tanh` vs `ReLU`/`Softplus` dan fitur $(\delta_{t-1} - \delta_{\mathrm{BS}})$ di `run_extras`, serta menyelaraskan ambang `c10_runtime_under_600s` ke `600s`.
+- `projects/rust/day004h_rough_bergomi`: memindahkan eksperimen tambahan ke `run_extras` (`run` kembali `123,25s < 300s`, `c9 = tercapai`), menganalisis 10 *seed* `true_rmse_grid` (median vs IQR), menghitung indeks ekor Hill ($\hat{\alpha}_{S_T} \approx 17$, $\hat{\alpha}_{\mathrm{payoff}^2} \approx 2{,}2..3{,}2$), dan menguji kalibrasi estimator BS bersyarat ($|\mathrm{bias}_H| = 0{,}0108$ dan $0{,}0228 < 0{,}03$).
+
+### Ditambahkan (Bagian C — `day005a`)
+- Project Rust stable mandiri `projects/rust/day005a_sabr/` (*zero external crates*, `xoshiro256++`, `std::thread::scope` deterministik blok tetap `64`, JSON 17-digit, 7 grafik SVG) pada data sintetis:
+  - **Bagian 1**: CEV $\nu=0$ tiga cara (rumus tertutup $\chi'^2$ non-sentral, PDE Crank–Nicolson 1D, MC transisi eksak & Euler) cocok (`max_pde_rel_err = 1,67e-8`, `max_z <= 1,78`), serta verifikasi massa absorpsi $T=10$ (`0,000514` vs `0,000475`) dan martingal.
+  - **Bagian 2**: Ekspansi Hagan (2002) dengan Taylor stabil $z/x(z)$ dan *anchor* $\nu \to 0$ vs CEV eksak (`0,001..1,90 bps`).
+  - **Bagian 3**: Referensi $\rho = 0$ kondisional CEV MC ($R = 10^6$), konvergensi Euler *Absorbing* vs *FullTruncation* ($n \in \{100, 200, 400, 800\}$, $R = 2\times 10^6$), *smile* referensi $\rho = -0{,}3$ ($T=1$: `max_abs = 7,00 bps` pada strike likuid), dan peta galat $(\nu, \rho, \beta)$.
+  - **Bagian 4**: Kepadatan implisit Hagan Breeden–Litzenberger negatif pada sayap bawah ($T=5$: massa negatif `0,00156`; $T=10$: `0,10195`, `min_q = -88,59`) dan dampaknya pada digital/*butterfly* *floor* `0,5%`.
+  - **Bagian 5**: Kalibrasi Nelder–Mead + korelasi Hessian numerik, non-identifiabilitas $\beta \in \{0, 0{,}5, 1\}$, lindung nilai harian CRN ($R = 20.000$) dengan delta Bartlett (`SD = 6,318 bps`) vs naif (`6,598 bps`, `var_diff = -3,62 ± 0,18 bps²`) vs Black ATM vs CEV, serta salah spesifikasi $\beta \in \{0{,}3; 0{,}5; 0{,}8\}$.
+- Runner utama `day005a` selesai dalam `222,91s` pada `8` worker (`c1..c5, c7, c8 = tercapai`, `c6 = belum tercapai` pada $T=5$).
+- Output `outputs/day005a/results.json`, `outputs/day005a/extras.json`, 7 grafik SVG `outputs/figures/day005a_*.svg`, `projects/rust/day005a_sabr/README.md`, serta [day005a_quant_sabr.md](project-explanations/day005a_quant_sabr.md).
+
 ## [Hari 004k] — 2026-11-22 · Perbaikan day004h/day004i/day004j + AMM, LVR & Likuiditas Terkonsentrasi (Rust, Bonus)
 
 ### Diperbaiki (Bagian A — `day004h`, `day004i`, `day004j`)

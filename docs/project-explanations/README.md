@@ -42,6 +42,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `4i` (`day004i`) | `bonus` | `quant` | `rust` | [Cointegration & trading OU optimal: Dickey–Fuller, Engle–Granger, Johansen & ambang Bertram (Rust)](day004i_quant_pairs-trading.md) |
 | `4j` (`day004j`) | `bonus` | `quant` | `rust` | [Deep hedging dari nol: jaringan saraf, risiko entropik, biaya transaksi & pasar tak lengkap (Rust)](day004j_quant_deep-hedging.md) |
 | `4k` (`day004k`) | `bonus` | `quant` | `rust` | [AMM: impermanent loss, LVR, biaya & likuiditas terkonsentrasi (Rust)](day004k_quant_amm-lvr.md) |
+| `5a` (`day005a`) | `bonus` | `quant` | `rust` | [Model SABR: CEV eksak, ekspansi Hagan, kepadatan negatif, kalibrasi & delta Bartlett (Rust)](day005a_quant_sabr.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 
