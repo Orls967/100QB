@@ -3,6 +3,20 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 004h] — 2026-11-22 · Perbaikan day004g + Volatilitas kasar: model rough Bergomi (Rust, Bonus)
+
+### Diperbaiki (Bagian A — `day004g`)
+- `projects/rust/day004g_market_making`: memperbaiki orde ekstrapolasi Richardson di `c4` menggunakan orde empiris $p = 1{,}017$ dengan propagasi SE CRN (`CE_Rich = 66,2684 ± 0,0295`, $z = 0{,}23$); menambahkan simulator waktu-kontinu *Lewis–Shedler thinning* bebas-$\Delta t$ (`CE_cont = 66,2763`, cocok dengan Forward Kolmogorov pada $\mathbb{E}[\mathrm{exec}]$ $z=0{,}59$ dan $\operatorname{Var}(q_T)$ $z=0{,}60$, `c5 = tercapai`) serta audit $\Delta t \in \{10^{-3}; 5\times 10^{-4}; 2{,}5\times 10^{-4}; 1{,}25\times 10^{-4}\}$; memperbaiki `exact_as_hjb` agar memakai tabel penuh $(t, q)$ sehingga reduksi $\varepsilon = 0$ pulih (`66,3191` vs `66,3191`); dan menyelaraskan `c1`–`c9` antara `results.json` dan dokumen penjelasan.
+
+### Ditambahkan (Bagian C — `day004h`)
+- Project Rust stable mandiri `projects/rust/day004h_rough_bergomi/` (*zero external crates*, `xoshiro256++`, `std::thread::scope` berurutan blok tetap, JSON 17-digit, dan 7 grafik SVG) yang mengimplementasikan:
+  - **Bagian 1**: Kovarians Volterra eksak (${}_2F_1$ vs Gauss–Legendre bebas singularitas, `max_rel_err = 2,12e-10`), referensi Cholesky $2n\times 2n$ ($n=50, R=200.000$), dan bias skema hybrid $\kappa = 1$ titik kanan ($n \in \{50, 100, 250, 500\}$, $H=0{,}1$ dan $H=0{,}5$).
+  - **Bagian 2**: Uji martingal variansi/harga & *variance swap* ($T \in \{0{,}25; 0{,}5; 1\}$), serta pembanding MC log-Euler vs estimator bersyarat Black–Scholes (`VRF = 2,16..308,4`, paritas put-call `2,45e-14`).
+  - **Bagian 3**: *Smile* $13 \times 5$ ($R=100.000, n=250$), regresi *skew* ATM $\ln\psi(T)$ vs $\ln T$ (`slope(H=0,1) = -0,3850 ± 0,0128`; `slope(H=0,5) = -0,0404 ± 0,0253`), dan pembanding Markov $H=0{,}5$ di $T=0{,}1$.
+  - **Bagian 4**: Pasar sintetis ($R=200.000, n=500$), kalibrasi Nelder–Mead CRN ($\hat{H} = 0{,}1629$), profil $H$, korelasi Hessian $H$–$\eta$ (`0,7915`), 30 replikasi (`bias_H = +0,0652`), serta salah spesifikasi horizon ($T \ge 0{,}5$ vs $T \le 0{,}1$).
+- Seluruh runner penuh selesai dalam `104,42s` pada `8` worker (`c1, c2, c5, c7, c9 = tercapai`; `c3, c4, c6, c8 = belum tercapai` akibat bias variansi $+3{,}2\%$–$+4{,}9\%$ skema hybrid titik kanan).
+- Output `outputs/day004h/results.json`, 7 grafik SVG `outputs/figures/day004h_*.svg`, `projects/rust/day004h_rough_bergomi/README.md`, serta [day004h_quant_rough-bergomi.md](project-explanations/day004h_quant_rough-bergomi.md).
+
 ## [Hari 004g] — 2026-11-22 · Market making optimal: Guéant–Lehalle–Tapia, HJB, dan salah spesifikasi (Rust, Bonus)
 
 ### Ditambahkan

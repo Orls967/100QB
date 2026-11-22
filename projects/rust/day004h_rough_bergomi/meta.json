@@ -1,0 +1,10 @@
+{
+  "day": 4,
+  "session": "h",
+  "topic_no": null,
+  "type": "quant",
+  "language": "rust",
+  "topic": "Volatilitas kasar: rough Bergomi, skema hybrid, skew ATM dan identifiabilitas Hurst",
+  "date": "2026-11-22",
+  "link": "projects/rust/day004h_rough_bergomi"
+}

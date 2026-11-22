@@ -154,7 +154,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [docs/ROADMAP.md](docs/ROADMAP.md) · Riwayat: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 32/100 topik (32%)** · quant: 31 · sim: 1
+**Progres: 33/100 topik (33%)** · quant: 32 · sim: 1
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -190,6 +190,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 4e | bonus | `quant` | `go` | Harga listrik negatif dan arbitrase baterai (DP stokastik) | 2026-11-22 | [day004e_power_storage](projects/go/day004e_power_storage) |
 | 4f | bonus | `quant` | `rust` | Port lengkap AFNS term structure, kalibrasi interval, harga listrik negatif, dan valuasi proyek baterai terpadu | 2026-11-22 | [day004f_energy_transition](projects/rust/day004f_energy_transition) |
 | 4g | bonus | `quant` | `rust` | Market making optimal: Guéant–Lehalle–Tapia, HJB dan salah spesifikasi | 2026-11-22 | [day004g_market_making](projects/rust/day004g_market_making) |
+| 4h | bonus | `quant` | `rust` | Volatilitas kasar: rough Bergomi, skema hybrid, skew ATM dan identifiabilitas Hurst | 2026-11-22 | [day004h_rough_bergomi](projects/rust/day004h_rough_bergomi) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi
