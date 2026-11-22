@@ -1,7 +1,12 @@
 pub mod bs;
+pub mod calib;
+pub mod jsonout;
 pub mod linalg;
 pub mod parallel;
 pub mod quad;
+pub mod rbergomi;
 pub mod rng;
+pub mod smile;
 pub mod stats;
+pub mod svg;
 pub mod volterra;
