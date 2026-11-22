@@ -6,11 +6,11 @@
     "workers_used": 8,
     "main_seed": 20261122,
     "elapsed_seconds": {
-      "part1_closed_form": 0.98209045900000003,
-      "part2_blocks_reflect": 79.93420479200000273,
-      "part3_conc_strategies": 1.84774683299999998,
-      "part4_misspec_svg": 3.81290899999999988,
-      "total": 86.57698166699999831
+      "part1_closed_form": 0.27406425000000001,
+      "part2_blocks_reflect": 226.65487658399999304,
+      "part3_conc_strategies": 0.47005391699999999,
+      "part4_misspec_svg": 1.01379829199999993,
+      "total": 228.41285912500001132
     }
   },
   "part1_closed_form": {
@@ -236,27 +236,81 @@
     "reflect_band_delta_phi003": 0.00300450902029872,
     "reflect_vol_rate_limit_phi003": 26.62664663660952868,
     "reflect_fee_rate_limit_phi003": 0.07987993990982858,
+    "reflect_conv_rate_ols": 0.46391897909294244,
+    "reflect_fee_extrap_phi003": 0.07992398952229830,
+    "reflect_fee_extrap_se_phi003": 0.00021210504178001,
     "reflect_delta_convergence": [
       {
+        "delta_sec": 0.25000000000000000,
+        "net_lvr_ann": 0.00108950054752141,
+        "se_net_lvr": 0.00000066625430960,
+        "fee_rate_ann": 0.07875999700434855,
+        "se_fee_rate": 0.00004713058448069,
+        "arb_vol_ann": 26.25333233478302830
+      },
+      {
+        "delta_sec": 0.50000000000000000,
+        "net_lvr_ann": 0.00153197781252611,
+        "se_net_lvr": 0.00000095669895103,
+        "fee_rate_ann": 0.07831851389484040,
+        "se_fee_rate": 0.00004739233513052,
+        "arb_vol_ann": 26.10617129828024119
+      },
+      {
         "delta_sec": 1.00000000000000000,
-        "net_lvr_ann": 0.00214709732189864,
-        "se": 0.00000137446317654,
-        "fee_rate_ann": 0.07761057957352586,
-        "arb_vol_ann": 25.87019319117528937
+        "net_lvr_ann": 0.00215227960332727,
+        "se_net_lvr": 0.00000136548379095,
+        "fee_rate_ann": 0.07777763651785223,
+        "se_fee_rate": 0.00004734554430365,
+        "arb_vol_ann": 25.92587883928385040
       },
       {
         "delta_sec": 12.00000000000000000,
-        "net_lvr_ann": 0.00698797284319749,
-        "se": 0.00000255226627452,
-        "fee_rate_ann": 0.07290312621029352,
-        "arb_vol_ann": 24.30104207009783579
+        "net_lvr_ann": 0.00698844073595875,
+        "se_net_lvr": 0.00000258063919367,
+        "fee_rate_ann": 0.07291299922505738,
+        "se_fee_rate": 0.00002401286767561,
+        "arb_vol_ann": 24.30433307501927942
       },
       {
         "delta_sec": 60.00000000000000000,
-        "net_lvr_ann": 0.01410974675480502,
-        "se": 0.00000407463832214,
-        "fee_rate_ann": 0.06581844833059745,
-        "arb_vol_ann": 21.93948277686581960
+        "net_lvr_ann": 0.01411636476647302,
+        "se_net_lvr": 0.00000407902488335,
+        "fee_rate_ann": 0.06584453689175096,
+        "se_fee_rate": 0.00001633861268409,
+        "arb_vol_ann": 21.94817896391729661
+      }
+    ],
+    "reflect_phi_sweep": [
+      {
+        "phi": 0.00050000000000000,
+        "delta_band": 0.00050012504168224,
+        "fee_rate_limit": 0.07997999833292535,
+        "fee_025s_mc": 0.07387183385009062,
+        "se_025s_mc": 0.00001004184111409,
+        "fee_extrap": 0.07992666895106330,
+        "se_extrap": 0.00004496549658410,
+        "z_extrap_vs_limit": 1.18600673657196443
+      },
+      {
+        "phi": 0.00300000000000000,
+        "delta_band": 0.00300450902029872,
+        "fee_rate_limit": 0.07987993990982858,
+        "fee_025s_mc": 0.07875999700434855,
+        "se_025s_mc": 0.00004713058448069,
+        "fee_extrap": 0.07992398952229830,
+        "se_extrap": 0.00021210504178001,
+        "z_extrap_vs_limit": 0.20767829043595229
+      },
+      {
+        "phi": 0.01000000000000000,
+        "delta_band": 0.01005033585350145,
+        "fee_rate_limit": 0.07959932997873768,
+        "fee_025s_mc": 0.07812321912871655,
+        "se_025s_mc": 0.00015400640134162,
+        "fee_extrap": 0.07807453680789286,
+        "se_extrap": 0.00069643929376314,
+        "z_extrap_vs_limit": 2.18941289571090669
       }
     ],
     "breakeven_daily_vol_tvl_phi003": 0.07305936073059362,
@@ -404,8 +458,11 @@
   "part4_misspecification": {
     "merton_lvr_realized_ann": 0.08677916162202419,
     "merton_lvr_diffusion_ann": 0.07972965413618581,
+    "merton_jump_lvr_rate_analytic": 0.00706142408721688,
+    "merton_lvr_total_pred_ann": 0.08676721538846970,
     "merton_jump_contribution": 0.00704950748583838,
     "merton_se": 0.00005426430299313,
+    "merton_z_diff": 0.22014902791630300,
     "stoch_vol_lvr_realized_ann": 0.07968106038673635,
     "stoch_vol_lvr_expected_v_over_8": 0.07967544363082124,
     "stoch_vol_se": 0.00008144546570869,
@@ -433,10 +490,13 @@
       "status": "tercapai",
       "max_z": 1.64880991956101908
     },
-    "c4_reflected_limit_matches_1s_block": {
+    "c4_reflected_limit_extrapolated_3se": {
       "status": "tercapai",
       "fee_limit": 0.07987993990982858,
-      "fee_1s_mc": 0.07761057957352586
+      "fee_extrap": 0.07992398952229830,
+      "se_extrap": 0.00021210504178001,
+      "conv_rate_ols": 0.46391897909294244,
+      "z_diff": 0.20767829043595229
     },
     "c5_concentrated_lvr_scales_with_ce": {
       "status": "tercapai",
@@ -444,10 +504,14 @@
       "lvr_10pct": 1.63508712693721070,
       "lvr_full": 0.08000000000000002
     },
-    "c6_merton_jumps_increase_lvr": {
+    "c6_merton_lvr_matches_analytic_3se": {
       "status": "tercapai",
-      "lvr_jumps": 0.08677916162202419,
-      "lvr_diffusion": 0.07972965413618581
+      "lvr_jumps_realized": 0.08677916162202419,
+      "lvr_diffusion": 0.07972965413618581,
+      "lvr_total_pred": 0.08676721538846970,
+      "jump_rate_analytic": 0.00706142408721688,
+      "se": 0.00005426430299313,
+      "z_diff": 0.22014902791630300
     },
     "c7_stoch_vol_lvr_matches_ev_over_8": {
       "status": "tercapai",
@@ -461,7 +525,7 @@
     },
     "c9_runtime_under_480s": {
       "status": "tercapai",
-      "total_seconds": 86.57698166699999831
+      "total_seconds": 228.41285912500001132
     }
   }
 }

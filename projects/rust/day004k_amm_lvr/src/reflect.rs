@@ -1,6 +1,7 @@
 use crate::blocks::block_arb_outcome;
-use crate::parallel::reduce_tuple4_fixed_blocks;
+use crate::parallel::{reduce_tuple4_fixed_blocks, run_chunks};
 use crate::rng::{derive_seed, Rng};
+use crate::stats;
 
 /// Theoretical continuous-time reflected Brownian motion limit (Delta -> 0, phi > 0):
 /// - half-width delta = -ln(1 - phi) approx phi
@@ -20,7 +21,7 @@ pub fn reflected_limit_rates(sigma: f64, phi: f64) -> (f64, f64, f64) {
 }
 
 /// Multi-step discrete-block simulation on `[0, t_horizon]` with step `dt_sec` seconds
-/// to observe convergence of `(arb_profit_rate, lp_fee_rate, arb_vol_rate)` as `Delta -> 0`.
+/// to observe convergence of `(arb_profit_rate, se_profit, lp_fee_rate, se_fee, arb_vol_rate)` as `Delta -> 0`.
 pub fn mc_reflected_block_sim(
     sigma: f64,
     phi: f64,
@@ -29,7 +30,7 @@ pub fn mc_reflected_block_sim(
     n_paths: usize,
     n_workers: usize,
     seed: u64,
-) -> (f64, f64, f64, f64) {
+) -> (f64, f64, f64, f64, f64) {
     let sec_yr = 365.0 * 86_400.0;
     let dt = dt_sec / sec_yr;
     let t_yr = t_horizon_days / 365.0;
@@ -37,9 +38,10 @@ pub fn mc_reflected_block_sim(
     let mean_z = -0.5 * sigma * sigma * dt;
     let sd_z = sigma * dt.sqrt();
     let l = 0.5_f64;
+    let tag = 0x3001_u64 ^ dt_sec.to_bits() ^ phi.to_bits().rotate_left(17);
 
-    let sums = reduce_tuple4_fixed_blocks(n_paths, n_workers, |r| {
-        let mut rg = Rng::new(derive_seed(seed, 0x3001 ^ (dt_sec as u64), r as u64));
+    let rows = run_chunks(n_paths, n_workers, |r| {
+        let mut rg = Rng::new(derive_seed(seed, tag, r as u64));
         let mut p_ext = 1.0_f64;
         let mut p_pool = 1.0_f64;
         let mut tot_prof = 0.0_f64;
@@ -55,15 +57,35 @@ pub fn mc_reflected_block_sim(
             tot_vol += vo;
         }
         let ann = 1.0 / (n_steps as f64 * dt);
-        let p_a = tot_prof * ann;
-        [p_a, tot_fee * ann, tot_vol * ann, p_a * p_a]
+        (tot_prof * ann, tot_fee * ann, tot_vol * ann)
     });
-    let nf = n_paths as f64;
-    let m_pr = sums[0] / nf;
-    let m_fe = sums[1] / nf;
-    let m_vo = sums[2] / nf;
-    let se_pr = ((sums[3] / nf - m_pr * m_pr).max(0.0) / nf).sqrt();
-    (m_pr, se_pr, m_fe, m_vo)
+    let prs: Vec<f64> = rows.iter().map(|x| x.0).collect();
+    let fes: Vec<f64> = rows.iter().map(|x| x.1).collect();
+    let vos: Vec<f64> = rows.iter().map(|x| x.2).collect();
+    (
+        stats::mean(&prs),
+        stats::se(&prs),
+        stats::mean(&fes),
+        stats::se(&fes),
+        stats::mean(&vos),
+    )
+}
+
+/// Richardson extrapolation to `Delta -> 0` assuming `f(Delta) = f_0 + c * Delta^rate`,
+/// returning `(f_extrap, se_extrap)` from two independent estimates `(f1, se1)` at `d1` and `(f2, se2)` at `d2` (`d2 > d1`).
+pub fn extrapolate_reflected_fee(
+    f1: f64,
+    se1: f64,
+    d1: f64,
+    f2: f64,
+    se2: f64,
+    d2: f64,
+    rate: f64,
+) -> (f64, f64) {
+    let r = (d2 / d1).powf(rate);
+    let f_extrap = (r * f1 - f2) / (r - 1.0);
+    let se_extrap = ((r * se1).powi(2) + se2.powi(2)).sqrt() / (r - 1.0);
+    (f_extrap, se_extrap)
 }
 
 /// Simulates Poisson noise-trader flow with daily volume/TVL `daily_vol_tvl` over `t_days`

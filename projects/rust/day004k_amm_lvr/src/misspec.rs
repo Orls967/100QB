@@ -5,8 +5,20 @@ use crate::parallel::run_chunks;
 use crate::rng::{derive_seed, Rng};
 use crate::stats;
 
+/// Closed-form jump LVR rate per unit pool value for Merton log-normal jumps
+/// `Y ~ N(mu_j, sigma_j^2)` with Poisson intensity `lambda_j`:
+/// loss per jump = `(V/2)(e^{Y/2} - 1)^2`, so
+/// `LVR_jump / V = (lambda_j / 2) * (exp(mu_j + sigma_j^2 / 2) - 2 * exp(mu_j / 2 + sigma_j^2 / 8) + 1)`.
+#[inline]
+pub fn merton_jump_lvr_rate(lambda_j: f64, mu_j: f64, sigma_j: f64) -> f64 {
+    let e_exp_y = (mu_j + 0.5 * sigma_j * sigma_j).exp();
+    let e_exp_half_y = (0.5 * mu_j + 0.125 * sigma_j * sigma_j).exp();
+    0.5 * lambda_j * (e_exp_y - 2.0 * e_exp_half_y + 1.0)
+}
+
 /// Merton jump-diffusion (`lambda_j = 20/yr, mu_j = -0.02, sigma_j = 0.05`,
-/// diffusion `sigma = 0.8`). Returns `(lvr_realized_ann, lvr_diffusion_only_ann, se_realized)`.
+/// diffusion `sigma = 0.8`). Returns
+/// `(lvr_realized_ann, lvr_diffusion_only_ann, lvr_total_pred_ann, se_realized)`.
 pub fn misspec_merton_jumps(
     sigma: f64,
     lambda_j: f64,
@@ -17,22 +29,25 @@ pub fn misspec_merton_jumps(
     n_paths: usize,
     n_workers: usize,
     seed: u64,
-) -> (f64, f64, f64) {
+) -> (f64, f64, f64, f64) {
     let dt = t_yr / n_steps as f64;
     let kappa_j = (mu_j + 0.5 * sigma_j * sigma_j).exp() - 1.0;
     let drift = (-0.5 * sigma * sigma - lambda_j * kappa_j) * dt;
     let vol_dt = sigma * dt.sqrt();
     let l = 0.5_f64;
+    let jump_rate = merton_jump_lvr_rate(lambda_j, mu_j, sigma_j);
 
     let rows = run_chunks(n_paths, n_workers, |r| {
         let mut rg = Rng::new(derive_seed(seed, 0x6001, r as u64));
         let mut p = 1.0_f64;
         let mut v_rebal = 1.0_f64;
         let mut lvr_diff_int = 0.0_f64;
+        let mut lvr_jump_int = 0.0_f64;
         for _ in 0..n_steps {
             let v_t = pool_value(l, p);
             let d_t = pool_delta(l, p);
             lvr_diff_int += lvr_rate_analytic(v_t, sigma) * dt;
+            lvr_jump_int += jump_rate * v_t * dt;
 
             let nj = rg.poisson(lambda_j * dt);
             let mut jump = 0.0_f64;
@@ -45,12 +60,19 @@ pub fn misspec_merton_jumps(
         }
         let lvr_real = (v_rebal - pool_value(l, p)) / t_yr;
         let lvr_diff = lvr_diff_int / t_yr;
-        (lvr_real, lvr_diff)
+        let lvr_pred = (lvr_diff_int + lvr_jump_int) / t_yr;
+        (lvr_real, lvr_diff, lvr_pred)
     });
 
     let reals: Vec<f64> = rows.iter().map(|x| x.0).collect();
     let diffs: Vec<f64> = rows.iter().map(|x| x.1).collect();
-    (stats::mean(&reals), stats::mean(&diffs), stats::se(&reals))
+    let preds: Vec<f64> = rows.iter().map(|x| x.2).collect();
+    (
+        stats::mean(&reals),
+        stats::mean(&diffs),
+        stats::mean(&preds),
+        stats::se(&reals),
+    )
 }
 
 /// Stochastic volatility (CIR/Heston with `E[v] = theta = sigma^2 = 0.64, kappa = 3, xi = 1`).

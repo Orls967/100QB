@@ -76,9 +76,9 @@ Pada skenario salah spesifikasi, `misspec.rs` menguji empat pelanggaran asumsi d
 1. `c1_gbm_pool_moments_3se`: $\mathbb{E}[V(P_T)]$ MC ($R = 10^6$) cocok dengan $V_0 e^{-\sigma^2 T/8}$ dalam $3\,\mathrm{SE}$ pada seluruh 4 horizon.
 2. `c2_pathwise_lvr_ito_matches`: Selisih LVR replikasi diskret vs integral Itô 30 hari `< 2e-4`.
 3. `c3_block_gl_matches_mc_3se`: Integral Gauss–Legendre per blok cocok dengan MC pada seluruh 12 kombinasi $(\Delta, \varphi)$ dalam $3\,\mathrm{SE}$.
-4. `c4_reflected_limit_matches_1s_block`: Laju biaya LP simulasi blok $\Delta = 1\text{s}$ ($\varphi = 0{,}003$) mendekati limit Brownian terefleksi dalam `< 25%`.
+4. `c4_reflected_limit_extrapolated_3se`: Ekstrapolasi $\Delta \to 0$ dari simulasi blok ($\Delta \in \{0{,}25\text{s}, 0{,}5\text{s}, 1\text{s}, 12\text{s}, 60\text{s}\}$ pada $\varphi = 0{,}003$) menggunakan laju konvergensi OLS terukur cocok dengan limit Brownian terefleksi dalam `<= 3 SE` gabungan.
 5. `c5_concentrated_lvr_scales_with_ce`: LVR MC tiap rentang cocok dengan integral Itô dalam $3\,\mathrm{SE}$ dan $\mathrm{LVR}_{5\%} > \mathrm{LVR}_{10\%} > \mathrm{LVR}_{\mathrm{full}}$.
-6. `c6_merton_jumps_increase_lvr`: LVR realisasi di bawah lompatan Merton melampaui komponen difusi murni $\sigma^2 V/8$.
+6. `c6_merton_lvr_matches_analytic_3se`: LVR realisasi di bawah lompatan Merton cocok dengan prediksi tertutup $\sigma^2/8 + (\lambda/2)(e^{m+s^2/2} - 2e^{m/2+s^2/8} + 1)$ per unit $V_t$ dalam `<= 3 SE`.
 7. `c7_stoch_vol_lvr_matches_ev_over_8`: LVR realisasi CIR cocok dengan $\mathbb{E}[v_t V_t/8]$ dalam $3\,\mathrm{SE}$.
 8. `c8_drift_invariance_lvr_per_v`: Rasio tahunan $\mathrm{LVR}/\int V_t\,dt$ tetap `0,0800 ± 0,005` untuk $\mu = -0{,}5$ dan $\mu = +0{,}5$.
 9. `c9_runtime_under_480s`: Total waktu eksekusi `< 480s`.
@@ -87,26 +87,25 @@ Pada skenario salah spesifikasi, `misspec.rs` menguji empat pelanggaran asumsi d
 
 ## 7. Status Pencapaian Berbasis Bukti
 
-Seluruh runner penuh selesai dalam **`86,58s`** pada `8` *worker* (`part1 = 0,98s`, `part2 = 79,93s`, `part3 = 1,85s`, `part4 = 3,81s`), dengan `run_completed_without_errors = true` dan **seluruh 9 kriteria `tercapai`** ([results.json](../../outputs/day004k/results.json)):
+Seluruh runner penuh selesai dalam **`228,41s`** pada `8` *worker* (`total = 228,41s`), dengan `run_completed_without_errors = true` dan **seluruh 9 kriteria `tercapai`** ([results.json](../../outputs/day004k/results.json)):
 
 | Kriteria | Status | Bukti Terukur | Ambang A Priori |
 | --- | --- | --- | --- |
 | `c1_gbm_pool_moments_3se` | `tercapai` | `max_z = 2,31` (1d `0,25`, 7d `2,31`, 30d `0,95`, 1y `0,65`) | `<= 3 SE` |
 | `c2_pathwise_lvr_ito_matches` | `tercapai` | Rebal `0,0065501` vs Itô `0,0065516` (`diff = 1,50e-6`) | `< 2e-4` |
 | `c3_block_gl_matches_mc_3se` | `tercapai` | `max_z = 1,65` pada seluruh 12 pasangan `(Delta, phi)` | `<= 3 SE` |
-| `c4_reflected_limit_matches_1s_block` | `tercapai` | Limit `0,07988` vs `1s` MC `0,07761` (`diff = 2,84%`) | `< 25%` |
+| `c4_reflected_limit_extrapolated_3se` | `tercapai` | Limit `0,079880` vs ekstrap `0,079924 ± 0,000212` (`p_ols = 0,464`, `z = 0,21`) | `<= 3 SE` |
 | `c5_concentrated_lvr_scales_with_ce` | `tercapai` | `+-5%: 3,238`, `+-10%: 1,635`, `+-30%: 0,559`, `Full: 0,080` (`max_z = 1,13`) | `<= 3 SE` & monoton |
-| `c6_merton_jumps_increase_lvr` | `tercapai` | Lompatan `0,08678 ± 0,00005` > difusi `0,07973` (`+0,00705`) | `LVR_jump > LVR_diff` |
+| `c6_merton_lvr_matches_analytic_3se` | `tercapai` | Real `0,086779 ± 0,000054` vs pred `0,086767` (`jump_rate = 0,007061`, `z = 0,22`) | `<= 3 SE` |
 | `c7_stoch_vol_lvr_matches_ev_over_8` | `tercapai` | `0,07968 ± 0,00008` vs `0,07968` (`z = 0,07`, `corr = 0,923`) | `<= 3 SE` |
 | `c8_drift_invariance_lvr_per_v` | `tercapai` | `0,08001` ($\mu=-0{,}5$) & `0,07999` ($\mu=+0{,}5$) | `0,0800 ± 0,005` |
-| `c9_runtime_under_480s` | `tercapai` | `86,58s` (`8` *worker*) | `< 480s` |
+| `c9_runtime_under_480s` | `tercapai` | `228,41s` (`8` *worker*) | `< 480s` |
 
 ### Rincian Temuan Kuantitatif
 
 - **Bagian 1 (Bentuk tertutup & $\sigma$-sweep)**: Untuk $r \in \{0{,}25; 0{,}5; 1; 2; 4\}$, nilai pool memenuhi $x\cdot y = L^2$ hingga `1e-14` dan $\mathrm{IL}(r)$ cocok dengan rasio terhadap *hodl*. Pada $\sigma \in \{0{,}3; 0{,}5; 0{,}8; 1{,}2\}$, laju LVR teoritis $\sigma^2/8 = \{0{,}01125; 0{,}03125; 0{,}08000; 0{,}18000\}$ tercapai oleh replikasi diskret hingga galat absolut `< 4e-5` (`0,011245; 0,031248; 0,079961; 0,179994`).
-- **Bagian 2 (Blok diskret & limit refleksi)**: Pada grid 12 kombinasi $(\Delta \in \{12\text{s}, 60\text{s}, 600\text{s}\}, \varphi \in \{0; 0{,}0005; 0{,}003; 0{,}01\})$, kuadratur Gauss–Legendre 64 titik cocok sempurna dengan MC (`500.000` blok, `max_z = 1,65`). Pada $\varphi = 0$, LVR bersih sama persis dengan `0,0800` untuk semua $\Delta$ (mis. `12s: 0,08000` GL vs `0,07991 ± 0,00016` MC; `600s: 0,08000` GL vs `0,07994 ± 0,00016` MC), sementara volume arbitrase tahunan turun seiring $\Delta^{-1/2}$ (`258,7 -> 115,7 -> 36,5`). Pada simulasi berkesinambungan $\varphi = 0{,}003$, saat $\Delta$ mengecil `60s -> 12s -> 1s`, LVR bersih arbitraseur menyusut `0,01411 -> 0,00699 -> 0,00215`, sementara pendapatan biaya LP dari arbitraseur naik `0,06582 -> 0,07290 -> 0,07761` mendekati limit teoritis `0,07988`. Jadi **pendapatan biaya dari arbitrase jauh lebih besar daripada LVR bersih** pada $\Delta$ kecil (kebalikan dari blok tunggal i.i.d. tanpa memori harga).
-- **Bagian 2.4 & 3 (Titik impas, rentang terkonsentrasi & strategi 30 hari)**: Syarat impas volume/TVL harian pada $\varphi = 0{,}003$ adalah `0,0731/hari` (full range), naik menjadi `0,510` ($\pm 30\%$), `1,493` ($\pm 10\%$), dan `2,957` ($\pm 5\%$). Pada aliran *noise trader* Poisson ($\Delta = 12\text{s}, \varphi = 0{,}003$), laba bersih tahunan LP naik linear dari `0,06583` ($v=0$) menjadi `0,12067` ($v=0{,}05$), `0,17549` ($v=0{,}1$), `0,39430` ($v=0{,}3$), dan `1,15885` ($v=1{,}0$). Pada perbandingan CRN 30 hari (`v = 0,15/hari`, gas `0,0005`, *rebalance* tiap 3 hari), *delta-hedged ±10%* memberi `PnL = 0,07541, SD = 0,03753, Sharpe = 2,009` (selisih berpasangan vs *passive ±10%* `-0,00010 ± 0,00060`, memangkas SD `4,16x`); *passive ±10%* memberi `PnL = 0,07551, SD = 0,15608, Sharpe = 0,484` (unggul `+0,07600 ± 0,00056` atas *hodl* `-0,00049`); *rebalanced ±10%* memberi `PnL = 0,12724, SD = 0,11955, Sharpe = 1,064` dengan rata-rata `2,11` *rebalance* (`gas = 0,00106`, waktu dalam rentang `86,71%` vs `53,13%` pasif); dan *full-range LP* memberi `PnL = 0,00646, SD = 0,11419, Sharpe = 0,057`.
-- **Bagian 4 (Salah spesifikasi)**: Lompatan Merton menaikkan LVR tahunan dari `0,07973` menjadi `0,08678 ± 0,00005` (`kontribusi lompatan = +0,00705`); volatilitas stokastik CIR memberi `0,07968 ± 0,00008` vs prediksi $\mathbb{E}[v_t V_t/8] = 0,07968$ (`corr = 0,9228`); *drift* $\mu = -0{,}5$ (`LP ret = -0,02718, IL = -0,00663`) dan $\mu = +0{,}5$ (`LP ret = +0,01332, IL = -0,00681`) mempertahankan rasio `LVR / int V dt = 0,08001` dan `0,07999` (invarian terhadap $\mu$); dan blok `600s` pada $\varphi = 0{,}003$ hanya menghasilkan LVR `0,01631` (jauh lebih kecil dari `0,0800` bila LP salah mengira $\varphi=0$ atau $\Delta \to 0$).
+- **Bagian 2 (Blok diskret, limit refleksi & $\varphi$-invariansi)**: Pada grid 12 kombinasi $(\Delta \in \{12\text{s}, 60\text{s}, 600\text{s}\}, \varphi \in \{0; 0{,}0005; 0{,}003; 0{,}01\})$, kuadratur Gauss–Legendre 64 titik cocok sempurna dengan MC (`500.000` blok, `max_z = 1,65`). Pada simulasi berkesinambungan $\varphi = 0{,}003$ untuk $\Delta \in \{0{,}25\text{s}; 0{,}5\text{s}; 1\text{s}; 12\text{s}; 60\text{s}\}$, pendapatan biaya LP meningkat `0,06584 -> 0,07291 -> 0,07778 -> 0,07832 -> 0,07876` dengan laju konvergensi OLS terukur $p = 0{,}464 \approx 0{,}5$ ($O(\Delta^{1/2})$); ekstrapolasi Richardson ke $\Delta \to 0$ memberi `0,079924 ± 0,000212` vs limit teoritis `0,079880` (`z = 0,21`). Uji *sweep* $\varphi \in \{0{,}0005; 0{,}003; 0{,}01\}$ menunjukkan fakta ukur bahwa limit pendapatan biaya $\frac{\sigma^2 V}{8}\frac{\varphi}{\delta_\varphi}$ hampir invarian terhadap $\varphi$ (`0,07998` vs ekstrap `0,07993 ± 0,00004`, `z = 1,19`; `0,07988` vs `0,07992 ± 0,00021`, `z = 0,21`; `0,07960` vs `0,07807 ± 0,00070`, `z = 2,19`).
+- **Bagian 4 (Salah spesifikasi)**: Lompatan Merton menaikkan LVR tahunan dari `0,07973` menjadi `0,086779 ± 0,000054` (`kontribusi lompatan = +0,007050`), cocok dengan prediksi tertutup `0,086767` (laju lompatan per unit $V$: `0,0070614`, `z = 0,22`); volatilitas stokastik CIR memberi `0,07968 ± 0,00008` vs prediksi $\mathbb{E}[v_t V_t/8] = 0,07968$ (`corr = 0,9228`); *drift* $\mu = -0{,}5$ dan $\mu = +0{,}5$ mempertahankan rasio `LVR / int V dt = 0,08001` dan `0,07999`; dan blok `600s` pada $\varphi = 0{,}003$ hanya menghasilkan LVR `0,01631`.
 
 ---
 

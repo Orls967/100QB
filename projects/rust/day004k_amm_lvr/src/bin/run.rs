@@ -10,10 +10,13 @@ use day004k_amm_lvr::cpmm::{
     pool_value, variance_pool_value,
 };
 use day004k_amm_lvr::jsonout::{obj, write_json_file};
-use day004k_amm_lvr::misspec::{misspec_drift, misspec_merton_jumps, misspec_stoch_vol};
+use day004k_amm_lvr::misspec::{
+    merton_jump_lvr_rate, misspec_drift, misspec_merton_jumps, misspec_stoch_vol,
+};
 use day004k_amm_lvr::parallel::default_workers;
 use day004k_amm_lvr::reflect::{
-    mc_noise_trader_breakeven, mc_reflected_block_sim, reflected_limit_rates,
+    extrapolate_reflected_fee, mc_noise_trader_breakeven, mc_reflected_block_sim,
+    reflected_limit_rates,
 };
 use day004k_amm_lvr::stats;
 use day004k_amm_lvr::strategies::compare_lp_strategies;
@@ -123,17 +126,71 @@ fn main() {
         }
     }
 
-    // Continuous reflected limit (Delta -> 0) vs Delta = 1s, 12s, 60s at phi = 0.003
+    // Continuous reflected limit (Delta -> 0) vs Delta = 0.25s, 0.5s, 1s, 12s, 60s at phi = 0.003
     let (delta_band_003, vol_lim_003, fee_lim_003) = reflected_limit_rates(sigma, 0.003);
     let mut reflect_rows = Vec::new();
     for &(d_s, t_days, np) in &[
-        (1.0_f64, 1.0_f64, 20_000_usize),
+        (0.25_f64, 1.0_f64, 20_000_usize),
+        (0.5, 1.0, 20_000),
+        (1.0, 1.0, 20_000),
         (12.0, 3.0, 30_000),
         (60.0, 7.0, 40_000),
     ] {
-        let (pr, se, fe, vo) =
+        let (pr, se_pr, fe, se_fe, vo) =
             mc_reflected_block_sim(sigma, 0.003, d_s, t_days, np, n_workers, MAIN_SEED);
-        reflect_rows.push((d_s, pr, se, fe, vo));
+        reflect_rows.push((d_s, pr, se_pr, fe, se_fe, vo));
+    }
+
+    // Estimate convergence rate p from data: |f(Delta) - f_lim| ~ c * Delta^p via OLS on log-log
+    // and also 3-point ratio on (0.25, 1.0, 12.0) / (0.25, 0.5, 1.0).
+    let (xs_log, ys_log): (Vec<f64>, Vec<f64>) = reflect_rows
+        .iter()
+        .filter_map(|r| {
+            let gap = (fee_lim_003 - r.3).abs();
+            if gap > 1e-9 {
+                Some((r.0.ln(), gap.ln()))
+            } else {
+                None
+            }
+        })
+        .unzip();
+    let mx = stats::mean(&xs_log);
+    let my = stats::mean(&ys_log);
+    let mut num = 0.0_f64;
+    let mut den = 0.0_f64;
+    for (&x, &y) in xs_log.iter().zip(ys_log.iter()) {
+        num += (x - mx) * (y - my);
+        den += (x - mx) * (x - mx);
+    }
+    let reflect_conv_rate_ols = if den > 1e-12 { num / den } else { 0.5 };
+    let (fee_extrap_003, se_extrap_003) = extrapolate_reflected_fee(
+        reflect_rows[0].3,
+        reflect_rows[0].4,
+        reflect_rows[0].0,
+        reflect_rows[1].3,
+        reflect_rows[1].4,
+        reflect_rows[1].0,
+        reflect_conv_rate_ols,
+    );
+
+    // Sweep phi in {0.0005, 0.003, 0.01} to test fee-rate invariance: sigma^2 V / 8 * (phi / delta_phi)
+    let mut phi_sweep_rows = Vec::new();
+    for &phi_val in &[0.0005_f64, 0.003, 0.01] {
+        let (d_band, _v_lim, f_lim) = reflected_limit_rates(sigma, phi_val);
+        let (_, _, f_025, se_025, _) =
+            mc_reflected_block_sim(sigma, phi_val, 0.25, 1.0, 20_000, n_workers, MAIN_SEED);
+        let (_, _, f_050, se_050, _) =
+            mc_reflected_block_sim(sigma, phi_val, 0.5, 1.0, 20_000, n_workers, MAIN_SEED);
+        let (f_ext, se_ext) = extrapolate_reflected_fee(
+            f_025,
+            se_025,
+            0.25,
+            f_050,
+            se_050,
+            0.5,
+            reflect_conv_rate_ols,
+        );
+        phi_sweep_rows.push((phi_val, d_band, f_lim, f_025, se_025, f_ext, se_ext));
     }
 
     // Noise-trader breakeven volume/TVL at phi = 0.003
@@ -205,7 +262,8 @@ fn main() {
     // PART 4: Misspecification (Jumps, Stoch Vol, Drift, Block Size)
     // -------------------------------------------------------------------------
     let t_p4 = Instant::now();
-    let (jmp_real, jmp_diff, jmp_se) = misspec_merton_jumps(
+    let jmp_analytic_rate = merton_jump_lvr_rate(20.0, -0.02, 0.05);
+    let (jmp_real, jmp_diff, jmp_total_pred, jmp_se) = misspec_merton_jumps(
         sigma,
         20.0,
         -0.02,
@@ -462,10 +520,12 @@ fn main() {
     let c1_pass = all_moments_3se;
     let c2_pass = (lvr_rep - lvr_int).abs() < 2e-4;
     let c3_pass = all_block_gl_3se;
-    let c4_pass = (reflect_rows[0].3 - fee_lim_003).abs() / fee_lim_003 < 0.25;
+    let c4_z = (fee_extrap_003 - fee_lim_003).abs() / se_extrap_003;
+    let c4_pass = c4_z <= 3.0;
     let c5_pass =
         all_conc_3se && conc_rows[0].2 > conc_rows[1].2 && conc_rows[1].2 > conc_rows[3].2;
-    let c6_pass = jmp_real > jmp_diff;
+    let c6_z = (jmp_real - jmp_total_pred).abs() / jmp_se;
+    let c6_pass = c6_z <= 3.0;
     let c7_pass = (sv_real - sv_pred).abs() <= 3.0 * sv_se;
     let c8_pass = (dr_neg.3 - 0.08).abs() < 0.005 && (dr_pos.3 - 0.08).abs() < 0.005;
     let c9_pass = total_secs < 480.0;
@@ -561,17 +621,40 @@ fn main() {
                 ("reflect_band_delta_phi003", delta_band_003.into()),
                 ("reflect_vol_rate_limit_phi003", vol_lim_003.into()),
                 ("reflect_fee_rate_limit_phi003", fee_lim_003.into()),
+                ("reflect_conv_rate_ols", reflect_conv_rate_ols.into()),
+                ("reflect_fee_extrap_phi003", fee_extrap_003.into()),
+                ("reflect_fee_extrap_se_phi003", se_extrap_003.into()),
                 (
                     "reflect_delta_convergence",
                     reflect_rows
                         .iter()
-                        .map(|&(ds, pr, se, fe, vo)| {
+                        .map(|&(ds, pr, se_pr, fe, se_fe, vo)| {
                             obj([
                                 ("delta_sec", ds.into()),
                                 ("net_lvr_ann", pr.into()),
-                                ("se", se.into()),
+                                ("se_net_lvr", se_pr.into()),
                                 ("fee_rate_ann", fe.into()),
+                                ("se_fee_rate", se_fe.into()),
                                 ("arb_vol_ann", vo.into()),
+                            ])
+                        })
+                        .collect::<Vec<_>>()
+                        .into(),
+                ),
+                (
+                    "reflect_phi_sweep",
+                    phi_sweep_rows
+                        .iter()
+                        .map(|&(ph, db, fl, f025, se025, fext, seext)| {
+                            obj([
+                                ("phi", ph.into()),
+                                ("delta_band", db.into()),
+                                ("fee_rate_limit", fl.into()),
+                                ("fee_025s_mc", f025.into()),
+                                ("se_025s_mc", se025.into()),
+                                ("fee_extrap", fext.into()),
+                                ("se_extrap", seext.into()),
+                                ("z_extrap_vs_limit", ((fext - fl).abs() / seext).into()),
                             ])
                         })
                         .collect::<Vec<_>>()
@@ -661,8 +744,11 @@ fn main() {
             obj([
                 ("merton_lvr_realized_ann", jmp_real.into()),
                 ("merton_lvr_diffusion_ann", jmp_diff.into()),
+                ("merton_jump_lvr_rate_analytic", jmp_analytic_rate.into()),
+                ("merton_lvr_total_pred_ann", jmp_total_pred.into()),
                 ("merton_jump_contribution", (jmp_real - jmp_diff).into()),
                 ("merton_se", jmp_se.into()),
+                ("merton_z_diff", c6_z.into()),
                 ("stoch_vol_lvr_realized_ann", sv_real.into()),
                 ("stoch_vol_lvr_expected_v_over_8", sv_pred.into()),
                 ("stoch_vol_se", sv_se.into()),
@@ -717,11 +803,14 @@ fn main() {
                     ]),
                 ),
                 (
-                    "c4_reflected_limit_matches_1s_block",
+                    "c4_reflected_limit_extrapolated_3se",
                     obj([
                         ("status", status_str(c4_pass).into()),
                         ("fee_limit", fee_lim_003.into()),
-                        ("fee_1s_mc", reflect_rows[0].3.into()),
+                        ("fee_extrap", fee_extrap_003.into()),
+                        ("se_extrap", se_extrap_003.into()),
+                        ("conv_rate_ols", reflect_conv_rate_ols.into()),
+                        ("z_diff", c4_z.into()),
                     ]),
                 ),
                 (
@@ -734,11 +823,15 @@ fn main() {
                     ]),
                 ),
                 (
-                    "c6_merton_jumps_increase_lvr",
+                    "c6_merton_lvr_matches_analytic_3se",
                     obj([
                         ("status", status_str(c6_pass).into()),
-                        ("lvr_jumps", jmp_real.into()),
+                        ("lvr_jumps_realized", jmp_real.into()),
                         ("lvr_diffusion", jmp_diff.into()),
+                        ("lvr_total_pred", jmp_total_pred.into()),
+                        ("jump_rate_analytic", jmp_analytic_rate.into()),
+                        ("se", jmp_se.into()),
+                        ("z_diff", c6_z.into()),
                     ]),
                 ),
                 (
