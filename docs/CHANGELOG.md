@@ -3,6 +3,22 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 004j] — 2026-11-22 · Perbaikan day004h/day004i + Deep hedging dari nol (Rust, Bonus)
+
+### Diperbaiki (Bagian A — `day004i` & `day004h`)
+- `projects/rust/day004i_pairs_trading`: mengaudit kuantil Johansen (`q95 = 17,997`) via fungsional Brownian asimtotik (`T=5000, R=20000`: Case 1 `12,334`, Case 2 `20,266`, Case 3 drift-nol `17,987`, Case 3 drift-non-nol `15,407` vs Osterwald–Lenum `15,41`) dan sapuan $T \in \{250..5000\}$ (`18,21..18,14`), mengganti uji ukuran tautologis dengan simulasi *out-of-sample* independen (`EG = 4,77%`, `Johansen = 4,87%`, `power = 81,57%`), serta mengembalikan toleransi `c1` ke `< 1e-8` dengan polesan Newton dan cek skor/Hessian (`mle_max_diff = 8,17e-9`, `rel_score = 3,02e-9`).
+- `projects/rust/day004h_rough_bergomi`: mendiagnosis bias kalibrasi `c8` melalui uji *self-consistency* (`H_hat = 0,100001, rmse = 1,18e-7`), replikasi dengan bank CRN berbeda per replikasi (`rep_diff_crn`: `bias_H = +0,1027 ± 0,0514`), dan uji $R_{\mathrm{calib}} = 80.000$ (`H_hat = 0,1657`), serta memperbarui bagian "Batasan" dokumen penjelasan.
+
+### Ditambahkan (Bagian C — `day004j`)
+- Project Rust stable mandiri `projects/rust/day004j_deep_hedging/` (*zero external crates*, `xoshiro256++`, `std::thread::scope` deterministik blok tetap `64`, JSON 17-digit, dan 8 grafik SVG) pada data sintetis:
+  - **Bagian 1**: MLP $2 \times 32$ (`tanh`, keluaran $\delta \in \mathbb{R}$), BPTT manual 30 langkah, cek gradien vs Richardson (`< 1e-6`) untuk MSE, risiko entropik, dan CVaR 95%, Adam buatan sendiri (`< 1e-6`), dan determinisme `1` vs `8` *worker* bit-identik.
+  - **Bagian 2**: Dunia Black–Scholes tanpa biaya ($R = 100.000$): `p0_MSE = 0,039831` vs `BS = 0,039878`, `SD_BS = 0,006244` vs aproksimasi `0,006307`, namun lantai optimisasi 360 iterasi membuat `c3` (`L2 = 0,0880 > 0,03`) dan `c4` (`slope_NN = -0,141`) berstatus `belum tercapai`.
+  - **Bagian 3**: Biaya transaksi proporsional $c \in \{0{,}0005; 0{,}001; 0{,}002\}$, $\lambda \in \{10, 50\}$: pita *no-trade* NN (`eksponen c = 0,2925` vs Whalley–Wilmott `1/3`), *anchor* DP eksak $n=10$ (`DP_indiff = 0,04191` vs `NN_sim = 0,04202`), dan keunggulan NN (`rho10 = 0,002137`) atas BS (`0,002393`).
+  - **Bagian 4**: Simulator Heston QE (`z(E[S_T]=1) = 0,51`; `z(MC vs Fourier) = 0,31`) dan perbandingan 5 strategi (`NN+v_t` memangkas `SD` dari `0,01563` menjadi `0,01356`).
+  - **Bagian 5**: Uji salah spesifikasi (`BS -> Heston`, `BS -> BS(0,3)`, biaya salah) dan ablasi (lebar `4`, tanpa $\delta_{t-1}$ yang menghilangkan pita *no-trade* dan menaikkan `rho10` ke `0,00519`).
+- Seluruh runner penuh selesai dalam `132,64s` pada `8` worker (`c1, c2, c5..c10 = tercapai`; `c3, c4 = belum tercapai`).
+- Output `outputs/day004j/results.json`, 8 grafik SVG `outputs/figures/day004j_*.svg`, `projects/rust/day004j_deep_hedging/README.md`, serta [day004j_quant_deep-hedging.md](project-explanations/day004j_quant_deep-hedging.md).
+
 ## [Hari 004i] — 2026-11-22 · Perbaikan day004h + Cointegration & trading OU optimal (Rust, Bonus)
 
 ### Diperbaiki (Bagian A — `day004h`)

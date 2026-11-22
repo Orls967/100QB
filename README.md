@@ -154,7 +154,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [docs/ROADMAP.md](docs/ROADMAP.md) · Riwayat: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 34/100 topik (34%)** · quant: 33 · sim: 1
+**Progres: 35/100 topik (35%)** · quant: 34 · sim: 1
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -192,6 +192,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 4g | bonus | `quant` | `rust` | Market making optimal: Guéant–Lehalle–Tapia, HJB dan salah spesifikasi | 2026-11-22 | [day004g_market_making](projects/rust/day004g_market_making) |
 | 4h | bonus | `quant` | `rust` | Volatilitas kasar: rough Bergomi, skema hybrid, skew ATM dan identifiabilitas Hurst | 2026-11-22 | [day004h_rough_bergomi](projects/rust/day004h_rough_bergomi) |
 | 4i | bonus | `quant` | `rust` | Cointegration dan trading OU optimal: Dickey-Fuller, Engle-Granger, Johansen dan ambang Bertram | 2026-11-22 | [day004i_pairs_trading](projects/rust/day004i_pairs_trading) |
+| 4j | bonus | `quant` | `rust` | Deep hedging dari nol: jaringan saraf, risiko entropik, biaya transaksi dan pasar tak lengkap | 2026-11-22 | [day004j_deep_hedging](projects/rust/day004j_deep_hedging) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi
