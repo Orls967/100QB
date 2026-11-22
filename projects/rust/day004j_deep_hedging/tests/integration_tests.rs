@@ -3,10 +3,10 @@ use day004j_deep_hedging::dp::solve_entropic_dp_gbm;
 use day004j_deep_hedging::fourier::heston_call_fourier;
 use day004j_deep_hedging::heston::{generate_heston_qe_paths, HestonParams};
 use day004j_deep_hedging::nn::{loss_and_d_pnl, Activation, LossType, MlpPolicy, StepCache};
-use day004j_deep_hedging::stats;
 use day004j_deep_hedging::optim::Adam;
 use day004j_deep_hedging::parallel::{reduce_vec_fixed_blocks, run_chunks};
 use day004j_deep_hedging::rng::{derive_seed, Rng};
+use day004j_deep_hedging::stats;
 
 fn train_20_iters(n_workers: usize) -> Vec<f64> {
     let n_paths = 256_usize;
@@ -139,7 +139,10 @@ fn test_heston_qe_martingale_and_fourier_3se() {
     let pay: Vec<f64> = paths.iter().map(|p| (p.s[30] - 1.0).max(0.0)).collect();
     let m_st = stats::mean(&st);
     let se_st = stats::se(&st);
-    assert!((m_st - 1.0).abs() <= 3.0 * se_st, "E[S_T]={m_st} se={se_st}");
+    assert!(
+        (m_st - 1.0).abs() <= 3.0 * se_st,
+        "E[S_T]={m_st} se={se_st}"
+    );
     let mc_c = stats::mean(&pay);
     let se_c = stats::se(&pay);
     let f_c = heston_call_fourier(1.0, 1.0, 0.0, 0.04, 2.0, 0.04, 0.5, -0.7, 0.25);
