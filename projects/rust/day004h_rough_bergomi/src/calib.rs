@@ -306,27 +306,52 @@ pub struct ReplicationSummary {
 }
 
 #[derive(Clone, Debug)]
-pub struct CalibStudySummary {
+pub struct CalibCoreSummary {
     pub main_fit: CalibResult,
-    pub self_consistency_fit: CalibResult,
-    pub fit_r80k: CalibResult,
-    pub fit_vega_price: CalibResult,
-    pub true_rmse_grid: Vec<(usize, usize, f64)>,
     pub h_profile: Vec<HProfilePoint>,
     pub corr_h_eta: f64,
     pub replication: ReplicationSummary,
+}
+
+#[derive(Clone, Debug)]
+pub struct RmseGridStats {
+    pub n_steps: usize,
+    pub n_paths: usize,
+    pub n_seeds: usize,
+    pub median_rmse: f64,
+    pub iqr_rmse: f64,
+    pub min_rmse: f64,
+    pub max_rmse: f64,
+}
+
+#[derive(Clone, Debug)]
+pub struct HillEstimate {
+    pub k: usize,
+    pub alpha_st: f64,
+    pub alpha_payoff2: f64,
+}
+
+#[derive(Clone, Debug)]
+pub struct CalibA6ExtrasSummary {
+    pub self_consistency_fit: CalibResult,
+    pub fit_r80k: CalibResult,
+    pub fit_vega_price: CalibResult,
+    pub true_rmse_grid_stats: Vec<RmseGridStats>,
+    pub hill_estimates: Vec<HillEstimate>,
     pub rep_diff_crn: ReplicationSummary,
     pub rep_old_diff_n: ReplicationSummary,
     pub rep_blp_diff_n: ReplicationSummary,
+    pub rep_cond_bs_fixed_crn: ReplicationSummary,
+    pub rep_cond_bs_diff_crn: ReplicationSummary,
     pub fit_long_only: CalibResult,
     pub fit_short_only: CalibResult,
 }
 
-pub fn run_calibration_study(
+pub fn run_calibration_core(
     true_p: RBergomiParams,
     n_workers: usize,
     seed: u64,
-) -> CalibStudySummary {
+) -> CalibCoreSummary {
     let ts_main = [0.1, 0.25, 0.5, 1.0];
     let ks_calib = [-0.3, -0.2, -0.1, 0.0, 0.1, 0.2, 0.3];
     let n_pts_main = ts_main.len() * ks_calib.len();
@@ -557,11 +582,345 @@ pub fn run_calibration_study(
                 sd_rho: stats::sd(&rhos_rep),
             }
         };
-    let rep_old_diff_n = run_rep(10, 250, HybridScheme::RightEndpoint, 0x4310);
-    let rep_blp_diff_n = run_rep(10, 250, HybridScheme::BlpOptimal, 0x4320);
     let replication = run_rep(30, 100, HybridScheme::BlpOptimal, 0x4300);
 
-    // (i) Self-consistency test: market generated from the SAME CRN bank at true parameters
+    CalibCoreSummary {
+        main_fit,
+        h_profile,
+        corr_h_eta,
+        replication,
+    }
+}
+
+/// Conditional Black-Scholes smile builder (high VRF) for A6 calibration check.
+pub fn compute_smile_cond_bs(
+    bank: &CalibCrnBank,
+    p: RBergomiParams,
+    ts: &[f64],
+    log_ks: &[f64],
+    n_workers: usize,
+) -> Vec<SmilePoint> {
+    let n = bank.n_steps;
+    let hw = HybridWeights::with_scheme(n, 1.0, p.h, HybridScheme::BlpOptimal);
+    let dt = hw.dt;
+    let half_eta2 = 0.5 * p.eta * p.eta;
+    let one_m_rho2 = (1.0 - p.rho * p.rho).max(0.0);
+    let step_targets: Vec<usize> = ts.iter().map(|&t| (t / dt).round() as usize).collect();
+    let n_t = ts.len();
+    let n_k = log_ks.len();
+    let sums = parallel::run_chunk_reduce(
+        bank.n_paths,
+        n_workers,
+        |start, end| {
+            let mut local = vec![0.0_f64; n_t * n_k];
+            let mut wt = vec![0.0_f64; n];
+            let mut db = vec![0.0_f64; n];
+            for r in start..end {
+                let off = r * n;
+                hw.generate_path(
+                    &bank.u_flat[off..off + n],
+                    &bank.v_flat[off..off + n],
+                    &mut wt,
+                    &mut db,
+                );
+                let mut int_v = 0.0_f64;
+                let mut stoch_int = 0.0_f64;
+                let mut tp = 0_usize;
+                for i in 0..n {
+                    let v_i = if i == 0 {
+                        p.xi0
+                    } else {
+                        p.xi0
+                            * (p.eta * wt[i - 1] - half_eta2 * exact_var(i as f64 * dt, p.h)).exp()
+                    };
+                    int_v += v_i * dt;
+                    stoch_int += v_i.sqrt() * db[i];
+                    if tp < n_t && (i + 1) == step_targets[tp] {
+                        let s_eff = p.s0 * (p.rho * stoch_int - 0.5 * p.rho * p.rho * int_v).exp();
+                        let vc = one_m_rho2 * int_v;
+                        for (ki, &lk) in log_ks.iter().enumerate() {
+                            local[tp * n_k + ki] +=
+                                bs::bs_call_total_var(s_eff, p.s0 * lk.exp(), vc);
+                        }
+                        tp += 1;
+                    }
+                }
+            }
+            local
+        },
+        |parts| {
+            let mut tot = vec![0.0_f64; n_t * n_k];
+            for part in parts {
+                for (a, b) in tot.iter_mut().zip(part.iter()) {
+                    *a += *b;
+                }
+            }
+            tot
+        },
+    );
+    let mut pts = Vec::with_capacity(n_t * n_k);
+    for (ti, &t_h) in ts.iter().enumerate() {
+        for (ki, &lk) in log_ks.iter().enumerate() {
+            let cp = sums[ti * n_k + ki] / bank.n_paths as f64;
+            let iv = bs::implied_vol(p.s0, p.s0 * lk.exp(), t_h, cp);
+            pts.push(SmilePoint {
+                t_horizon: t_h,
+                log_k: lk,
+                call_price: cp,
+                call_se: 0.0,
+                iv,
+                iv_se: 0.0,
+            });
+        }
+    }
+    pts
+}
+
+fn hill_alpha(sorted_asc: &[f64], k: usize) -> f64 {
+    let n = sorted_asc.len();
+    if k == 0 || k >= n {
+        return 0.0;
+    }
+    let thresh = sorted_asc[n - 1 - k].max(1e-30);
+    let mut sum_log = 0.0_f64;
+    for &x in &sorted_asc[(n - k)..] {
+        sum_log += (x.max(thresh) / thresh).ln();
+    }
+    if sum_log > 1e-15 {
+        k as f64 / sum_log
+    } else {
+        0.0
+    }
+}
+
+pub fn run_calibration_a6_extras(
+    true_p: RBergomiParams,
+    n_workers: usize,
+    seed: u64,
+) -> CalibA6ExtrasSummary {
+    let ts_main = [0.1, 0.25, 0.5, 1.0];
+    let ks_calib = [-0.3, -0.2, -0.1, 0.0, 0.1, 0.2, 0.3];
+    let n_pts_main = ts_main.len() * ks_calib.len();
+
+    let market_seed = seed ^ 0xCAFE_BABE_1234_5678;
+    let market_smile = compute_smile(
+        true_p,
+        &ts_main,
+        &ks_calib,
+        500,
+        200_000,
+        n_workers,
+        market_seed,
+        0x4100,
+    );
+    let bank = CalibCrnBank::build(20_000, 100, n_workers, seed, 0x4200);
+    let init = [0.18, 1.6, -0.6];
+    let steps = [-0.04, 0.2, -0.08];
+
+    let run_rep =
+        |n_rep: usize, n_mkt: usize, scheme: HybridScheme, salt_base: u64| -> ReplicationSummary {
+            let mut hs_rep = Vec::with_capacity(n_rep);
+            let mut etas_rep = Vec::with_capacity(n_rep);
+            let mut rhos_rep = Vec::with_capacity(n_rep);
+            for rep in 0..n_rep {
+                let rep_seed = seed ^ ((rep as u64 + 1).wrapping_mul(0x9E37_79B9_7F4A_7C15));
+                let rep_mkt = compute_smile_with_scheme(
+                    true_p, &ts_main, &ks_calib, n_mkt, 20_000, n_workers, rep_seed, salt_base,
+                    scheme,
+                );
+                let (xr, _, _) =
+                    nelder_mead(&[0.18, 1.6, -0.6], &[-0.04, 0.2, -0.08], 105, 1e-8, |x| {
+                        eval_smile_sse_with_scheme(
+                            &bank, true_p.xi0, true_p.s0, x[0], x[1], x[2], &rep_mkt, &ts_main,
+                            &ks_calib, n_workers, scheme,
+                        )
+                    });
+                hs_rep.push(xr[0]);
+                etas_rep.push(xr[1]);
+                rhos_rep.push(xr[2]);
+            }
+            ReplicationSummary {
+                n_rep,
+                bias_h: stats::mean(&hs_rep) - true_p.h,
+                sd_h: stats::sd(&hs_rep),
+                bias_eta: stats::mean(&etas_rep) - true_p.eta,
+                sd_eta: stats::sd(&etas_rep),
+                bias_rho: stats::mean(&rhos_rep) - true_p.rho,
+                sd_rho: stats::sd(&rhos_rep),
+            }
+        };
+    let rep_old_diff_n = run_rep(10, 250, HybridScheme::RightEndpoint, 0x4310);
+    let rep_blp_diff_n = run_rep(10, 250, HybridScheme::BlpOptimal, 0x4320);
+
+    // 10-seed median & IQR for true_rmse_grid (n in {100,250,500} x R in {20k,80k,200k})
+    let mut true_rmse_grid_stats = Vec::new();
+    for &n_g in &[100_usize, 250, 500] {
+        for &r_g in &[20_000_usize, 80_000, 200_000] {
+            let mut rmses = Vec::with_capacity(10);
+            for s_idx in 0..10_u64 {
+                let bank_g = CalibCrnBank::build(
+                    r_g,
+                    n_g,
+                    n_workers,
+                    seed ^ 0x7777 ^ (s_idx.wrapping_mul(0x9E37_79B9_7F4A_7C15)),
+                    (n_g * 10 + r_g / 1000) as u64,
+                );
+                let sse_g = eval_smile_sse(
+                    &bank_g,
+                    true_p.xi0,
+                    true_p.s0,
+                    true_p.h,
+                    true_p.eta,
+                    true_p.rho,
+                    &market_smile,
+                    &ts_main,
+                    &ks_calib,
+                    n_workers,
+                );
+                rmses.push((sse_g / n_pts_main as f64).sqrt());
+            }
+            rmses.sort_by(|a, b| a.partial_cmp(b).unwrap());
+            let median_rmse = 0.5 * (rmses[4] + rmses[5]);
+            let q25 = rmses[2];
+            let q75 = rmses[7];
+            true_rmse_grid_stats.push(RmseGridStats {
+                n_steps: n_g,
+                n_paths: r_g,
+                n_seeds: 10,
+                median_rmse,
+                iqr_rmse: q75 - q25,
+                min_rmse: rmses[0],
+                max_rmse: rmses[9],
+            });
+        }
+    }
+
+    // Hill tail index estimator on S_T and payoff^2 (N=200k, n=500, T=1.0)
+    let hill_estimates = {
+        let n_h = 500_usize;
+        let r_h = 200_000_usize;
+        let hw = HybridWeights::with_scheme(n_h, 1.0, true_p.h, HybridScheme::BlpOptimal);
+        let dt = hw.dt;
+        let half_eta2 = 0.5 * true_p.eta * true_p.eta;
+        let one_m_rho2 = (1.0 - true_p.rho * true_p.rho).max(0.0).sqrt();
+        let pairs = parallel::run_chunks(r_h, n_workers, |r| {
+            let mut rg = Rng::new(derive_seed(seed, 0x8801, r as u64));
+            let mut u = vec![0.0_f64; n_h];
+            let mut v = vec![0.0_f64; n_h];
+            for i in 0..n_h {
+                u[i] = rg.normal();
+                v[i] = rg.normal();
+            }
+            let mut wt = vec![0.0_f64; n_h];
+            let mut db = vec![0.0_f64; n_h];
+            hw.generate_path(&u, &v, &mut wt, &mut db);
+            let mut log_s = true_p.s0.ln();
+            for i in 0..n_h {
+                let v_i = if i == 0 {
+                    true_p.xi0
+                } else {
+                    true_p.xi0
+                        * (true_p.eta * wt[i - 1] - half_eta2 * exact_var(i as f64 * dt, true_p.h))
+                            .exp()
+                };
+                let z2 = rg.normal();
+                let dw = true_p.rho * db[i] + one_m_rho2 * dt.sqrt() * z2;
+                log_s += -0.5 * v_i * dt + v_i.sqrt() * dw;
+            }
+            let st = log_s.exp();
+            let pay2 = (st - true_p.s0).max(0.0).powi(2);
+            (st, pay2)
+        });
+        let mut sts: Vec<f64> = pairs.iter().map(|x| x.0).collect();
+        let mut pay2s: Vec<f64> = pairs.iter().map(|x| x.1).filter(|&p| p > 0.0).collect();
+        sts.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        pay2s.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        [500_usize, 1000, 2000, 5000]
+            .iter()
+            .map(|&k| HillEstimate {
+                k,
+                alpha_st: hill_alpha(&sts, k),
+                alpha_payoff2: hill_alpha(&pay2s, k),
+            })
+            .collect()
+    };
+
+    // Conditional-BS market + Conditional-BS calibration (2 replication sets, R_rep=30)
+    let (rep_cond_bs_fixed_crn, rep_cond_bs_diff_crn) = {
+        let n_rep = 30_usize;
+        let mut hs_f = Vec::with_capacity(n_rep);
+        let mut etas_f = Vec::with_capacity(n_rep);
+        let mut rhos_f = Vec::with_capacity(n_rep);
+        let mut hs_d = Vec::with_capacity(n_rep);
+        let mut etas_d = Vec::with_capacity(n_rep);
+        let mut rhos_d = Vec::with_capacity(n_rep);
+        for rep in 0..n_rep {
+            let rep_seed = seed ^ ((rep as u64 + 1).wrapping_mul(0x9E37_79B9_7F4A_7C15));
+            let mkt_bank = CalibCrnBank::build(20_000, 100, n_workers, rep_seed, 0x4900);
+            let rep_mkt_cbs =
+                compute_smile_cond_bs(&mkt_bank, true_p, &ts_main, &ks_calib, n_workers);
+            let (xf, _, _) =
+                nelder_mead(&[0.18, 1.6, -0.6], &[-0.04, 0.2, -0.08], 105, 1e-8, |x| {
+                    eval_smile_sse(
+                        &bank,
+                        true_p.xi0,
+                        true_p.s0,
+                        x[0],
+                        x[1],
+                        x[2],
+                        &rep_mkt_cbs,
+                        &ts_main,
+                        &ks_calib,
+                        n_workers,
+                    )
+                });
+            hs_f.push(xf[0]);
+            etas_f.push(xf[1]);
+            rhos_f.push(xf[2]);
+
+            let bank_rep = CalibCrnBank::build(20_000, 100, n_workers, rep_seed ^ 0x5555, 0x4910);
+            let (xd, _, _) =
+                nelder_mead(&[0.18, 1.6, -0.6], &[-0.04, 0.2, -0.08], 105, 1e-8, |x| {
+                    eval_smile_sse(
+                        &bank_rep,
+                        true_p.xi0,
+                        true_p.s0,
+                        x[0],
+                        x[1],
+                        x[2],
+                        &rep_mkt_cbs,
+                        &ts_main,
+                        &ks_calib,
+                        n_workers,
+                    )
+                });
+            hs_d.push(xd[0]);
+            etas_d.push(xd[1]);
+            rhos_d.push(xd[2]);
+        }
+        (
+            ReplicationSummary {
+                n_rep,
+                bias_h: stats::mean(&hs_f) - true_p.h,
+                sd_h: stats::sd(&hs_f),
+                bias_eta: stats::mean(&etas_f) - true_p.eta,
+                sd_eta: stats::sd(&etas_f),
+                bias_rho: stats::mean(&rhos_f) - true_p.rho,
+                sd_rho: stats::sd(&rhos_f),
+            },
+            ReplicationSummary {
+                n_rep,
+                bias_h: stats::mean(&hs_d) - true_p.h,
+                sd_h: stats::sd(&hs_d),
+                bias_eta: stats::mean(&etas_d) - true_p.eta,
+                sd_eta: stats::sd(&etas_d),
+                bias_rho: stats::mean(&rhos_d) - true_p.rho,
+                sd_rho: stats::sd(&rhos_d),
+            },
+        )
+    };
+
+    // Self-consistency test & remaining moved fits
     let self_mkt = {
         let n = bank.n_steps;
         let hw = HybridWeights::with_scheme(n, 1.0, true_p.h, HybridScheme::BlpOptimal);
@@ -724,32 +1083,7 @@ pub fn run_calibration_study(
         evals: ev_80k,
     };
 
-    // (iv) Decomposition of rmse_at_true across (n, R) in {100, 250, 500} x {20k, 80k, 200k}
-    let mut true_rmse_grid = Vec::new();
-    for &n_g in &[100_usize, 250, 500] {
-        for &r_g in &[20_000_usize, 80_000, 200_000] {
-            let bank_g = CalibCrnBank::build(
-                r_g,
-                n_g,
-                n_workers,
-                seed ^ 0x7777,
-                (n_g * 10 + r_g / 1000) as u64,
-            );
-            let sse_g = eval_smile_sse(
-                &bank_g,
-                true_p.xi0,
-                true_p.s0,
-                true_p.h,
-                true_p.eta,
-                true_p.rho,
-                &market_smile,
-                &ts_main,
-                &ks_calib,
-                n_workers,
-            );
-            true_rmse_grid.push((n_g, r_g, (sse_g / n_pts_main as f64).sqrt()));
-        }
-    }
+    // (iv) Moved to 10-seed true_rmse_grid_stats above.
 
     // (v) Vega-weighted conditional-BS price-space calibration (avoids IV inversion wing noise)
     let eval_vega_price_sse = |h: f64, eta: f64, rho: f64| -> f64 {
@@ -909,18 +1243,17 @@ pub fn run_calibration_study(
         evals: evs,
     };
 
-    CalibStudySummary {
-        main_fit,
+    CalibA6ExtrasSummary {
         self_consistency_fit,
         fit_r80k,
         fit_vega_price,
-        true_rmse_grid,
-        h_profile,
-        corr_h_eta,
-        replication,
+        true_rmse_grid_stats,
+        hill_estimates,
         rep_diff_crn,
         rep_old_diff_n,
         rep_blp_diff_n,
+        rep_cond_bs_fixed_crn,
+        rep_cond_bs_diff_crn,
         fit_long_only,
         fit_short_only,
     }

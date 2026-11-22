@@ -7,7 +7,7 @@
 use std::path::PathBuf;
 use std::time::Instant;
 
-use day004h_rough_bergomi::calib::run_calibration_study;
+use day004h_rough_bergomi::calib::run_calibration_core;
 use day004h_rough_bergomi::jsonout::{write_json_file, JsonVal};
 use day004h_rough_bergomi::parallel;
 use day004h_rough_bergomi::quad::GaussLegendre;
@@ -201,7 +201,7 @@ fn main() {
 
     // ==================== BAGIAN 4: Calibration & Identifiability ====================
     let t4 = Instant::now();
-    let calib = run_calibration_study(p, n_workers, MAIN_SEED);
+    let calib = run_calibration_core(p, n_workers, MAIN_SEED);
     let part4_secs = t4.elapsed().as_secs_f64();
 
     // ==================== BAGIAN 5: 7 SVG Figures ====================
@@ -763,22 +763,6 @@ fn main() {
                         .into(),
                 ),
                 (
-                    "rep_old_diff_n",
-                    JsonVal::Obj(vec![
-                        ("n_rep", calib.rep_old_diff_n.n_rep.into()),
-                        ("bias_h", calib.rep_old_diff_n.bias_h.into()),
-                        ("sd_h", calib.rep_old_diff_n.sd_h.into()),
-                    ]),
-                ),
-                (
-                    "rep_blp_diff_n",
-                    JsonVal::Obj(vec![
-                        ("n_rep", calib.rep_blp_diff_n.n_rep.into()),
-                        ("bias_h", calib.rep_blp_diff_n.bias_h.into()),
-                        ("sd_h", calib.rep_blp_diff_n.sd_h.into()),
-                    ]),
-                ),
-                (
                     "replication_30",
                     JsonVal::Obj(vec![
                         ("n_rep", calib.replication.n_rep.into()),
@@ -788,78 +772,6 @@ fn main() {
                         ("sd_eta", calib.replication.sd_eta.into()),
                         ("bias_rho", calib.replication.bias_rho.into()),
                         ("sd_rho", calib.replication.sd_rho.into()),
-                    ]),
-                ),
-                (
-                    "fit_long_only_t_ge_05",
-                    JsonVal::Obj(vec![
-                        ("h_hat", calib.fit_long_only.h_hat.into()),
-                        ("eta_hat", calib.fit_long_only.eta_hat.into()),
-                        ("rho_hat", calib.fit_long_only.rho_hat.into()),
-                        ("rmse_opt", calib.fit_long_only.rmse_opt.into()),
-                    ]),
-                ),
-                (
-                    "fit_short_only_t_le_01",
-                    JsonVal::Obj(vec![
-                        ("h_hat", calib.fit_short_only.h_hat.into()),
-                        ("eta_hat", calib.fit_short_only.eta_hat.into()),
-                        ("rho_hat", calib.fit_short_only.rho_hat.into()),
-                        ("rmse_opt", calib.fit_short_only.rmse_opt.into()),
-                    ]),
-                ),
-                (
-                    "self_consistency_fit",
-                    JsonVal::Obj(vec![
-                        ("h_hat", calib.self_consistency_fit.h_hat.into()),
-                        ("eta_hat", calib.self_consistency_fit.eta_hat.into()),
-                        ("rho_hat", calib.self_consistency_fit.rho_hat.into()),
-                        ("rmse_opt", calib.self_consistency_fit.rmse_opt.into()),
-                    ]),
-                ),
-                (
-                    "fit_r80k",
-                    JsonVal::Obj(vec![
-                        ("h_hat", calib.fit_r80k.h_hat.into()),
-                        ("eta_hat", calib.fit_r80k.eta_hat.into()),
-                        ("rho_hat", calib.fit_r80k.rho_hat.into()),
-                        ("rmse_opt", calib.fit_r80k.rmse_opt.into()),
-                    ]),
-                ),
-                (
-                    "fit_vega_price",
-                    JsonVal::Obj(vec![
-                        ("h_hat", calib.fit_vega_price.h_hat.into()),
-                        ("eta_hat", calib.fit_vega_price.eta_hat.into()),
-                        ("rho_hat", calib.fit_vega_price.rho_hat.into()),
-                        ("rmse_opt", calib.fit_vega_price.rmse_opt.into()),
-                    ]),
-                ),
-                (
-                    "true_rmse_grid",
-                    calib
-                        .true_rmse_grid
-                        .iter()
-                        .map(|&(n_g, r_g, rm)| {
-                            JsonVal::Obj(vec![
-                                ("n_steps", n_g.into()),
-                                ("n_paths", r_g.into()),
-                                ("rmse_at_true", rm.into()),
-                            ])
-                        })
-                        .collect::<Vec<_>>()
-                        .into(),
-                ),
-                (
-                    "rep_diff_crn",
-                    JsonVal::Obj(vec![
-                        ("n_rep", calib.rep_diff_crn.n_rep.into()),
-                        ("bias_h", calib.rep_diff_crn.bias_h.into()),
-                        ("sd_h", calib.rep_diff_crn.sd_h.into()),
-                        ("bias_eta", calib.rep_diff_crn.bias_eta.into()),
-                        ("sd_eta", calib.rep_diff_crn.sd_eta.into()),
-                        ("bias_rho", calib.rep_diff_crn.bias_rho.into()),
-                        ("sd_rho", calib.rep_diff_crn.sd_rho.into()),
                     ]),
                 ),
             ]),

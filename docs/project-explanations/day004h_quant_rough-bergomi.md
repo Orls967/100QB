@@ -55,7 +55,7 @@ Seluruh kode sumber berada di [projects/rust/day004h_rough_bergomi/src/](../../p
 
 ## 7. Status Pencapaian
 
-Runner penuh selesai dalam **`423,41s`** pada `8` *worker* ([results.json](../../outputs/day004h/results.json)):
+Runner penuh selesai dalam **`123,25s`** pada `8` *worker* (`part1 = 5,49s`, `part2 = 4,57s`, `part3 = 7,53s`, `part4 = 105,65s`, `part5 = 0,002s`; eksperimen ekstra dipisah ke `run_extras`, `344,99s`) ([results.json](../../outputs/day004h/results.json)):
 
 | Kriteria | Status | Bukti Terukur |
 | --- | --- | --- |
@@ -66,8 +66,8 @@ Runner penuh selesai dalam **`423,41s`** pada `8` *worker* ([results.json](../..
 | `c5_cond_bs_matches_mc_and_vrf` | `tercapai` | `max_z_diff = 1,767 <= 3,5`; `VRF = 2,15..308,4`; `max_parity_err = 1,97e-14` |
 | `c6_hybrid_matches_cholesky_price_3se` | `tercapai` | BLP vs Cholesky ($n=50, T=1$): `max_z_comb = 1,230 <= 3,0` |
 | `c7_atm_skew_power_law_and_markov_zero` | `tercapai` | $H=0{,}1$: slope `-0,3849 ± 0,0130` ($R^2=0{,}997$); $H=0{,}5$: slope `-0,0404 ± 0,0253` |
-| `c8_calib_bias_h_under_003` | `belum tercapai` | Kondisi (c) `same-scheme-same-n` ($R_{\mathrm{rep}}=30$): `bias_H = +0,0719`, `SD_H = 0,0158` (vs `< 0,03`) |
-| `c9_runtime_under_300s` | `belum tercapai` | Total waktu `423,41s > 300s` (`8` *worker*, termasuk grid dekomposisi `(n, R)` hingga `n=500, R=200k`) |
+| `c8_calib_bias_h_under_003` | `belum tercapai` | Kondisi (c) `same-scheme-same-n` ($R_{\mathrm{rep}}=30$, pasar MC murni): `bias_H = +0,0719`, `SD_H = 0,0158` (vs `< 0,03`) |
+| `c9_runtime_under_300s` | `tercapai` | Total waktu `123,25s < 300s` (`8` *worker*, eksperimen ekstra dipisah ke `run_extras`) |
 
 Perbandingan tiga skema hybrid $\kappa = 1$ ($H = 0{,}1$, $n \in \{50, 100, 250, 500\}$):
 - **Titik kanan (*RightEndpoint*)**: bias teoretis $\operatorname{Var}(\widetilde{W}^H_1)$ `+4,94%` $\to$ `+4,38%` $\to$ `+3,69%` $\to$ `+3,23%` (`max_cov_abs_err = 0,0494 -> 0,0323`).
@@ -81,12 +81,13 @@ Pemisahan bias skema vs identifiabilitas pada kalibrasi:
 
 ## 8. Diagnosis Bagian yang Belum Tercapai (`c8`)
 
-Setelah mengganti skema titik kanan menjadi `BlpOptimal`, kriteria `c3`, `c4`, dan `c6` kini seluruhnya **tercapai**, sedangkan `c8_calib_bias_h_under_003` tetap **belum tercapai**:
+Setelah mengganti skema titik kanan menjadi `BlpOptimal` dan memisahkan eksperimen tambahan ke `run_extras`, kriteria `c3`, `c4`, `c6`, dan `c9` kini seluruhnya **tercapai**, sedangkan `c8_calib_bias_h_under_003` tetap **belum tercapai** pada runner utama (pasar MC murni):
 - **FAKTA**:
   1. Uji *self-consistency* (kalibrasi ke *smile* mesin sendiri dengan bank CRN yang sama) memulihkan parameter eksak: $\hat{H} = 0{,}100001$, $\hat{\eta} = 1{,}900000$, $\hat{\rho} = -0{,}699997$ (`rmse_opt = 1,18e-7`) — membuktikan tidak ada bug pada *forward engine* maupun *optimizer* Nelder–Mead.
-  2. Pada kondisi `(c)` (*same-scheme-same-n* dengan bank CRN kalibrasi tetap), `bias_H = +0,0719` (`SD_H = 0,0158`). Ketika setiap replikasi diberi bank CRN kalibrasi yang **berbeda** (`rep_diff_crn`, $R_{\mathrm{rep}} = 15$), `bias_H = +0,1027` dan `SD_H` melonjak menjadi `0,0514`. Pada $R_{\mathrm{calib}} = 80.000$ (`fit_r80k`), $\hat{H} = 0{,}1657$; dan dengan objektif ruang harga berbobot vega (`fit_vega_price`), $\hat{H} = 0{,}1775$ (`rmse = 0,0105`).
-  3. **Dekomposisi `(n, R)` pada parameter benar (`true_rmse_grid`)**: `n=100: (20k: 0,0794; 80k: 0,0188; 200k: 0,0202)`, `n=250: (20k: 0,0761; 80k: 0,0221; 200k: 0,0760)`, `n=500: (20k: 0,0121; 80k: 0,0756; 200k: 0,0314)`.
-- **HIPOTESIS**: Pada $\eta = 1{,}9$, faktor variansi lognormal $\exp(\eta\widetilde{W}_1 - \frac{1}{2}\eta^2)$ memiliki variansi teoritis $e^{\eta^2} - 1 \approx 36$ dan ekor kanan berat, sehingga bahkan pada $n=500, R=200.000$, realisasi jalur ekstrem antar-*seed* tetap menimbulkan lompatan galat `0,012..0,076` (bukan efek diskretisasi $n$, melainkan fluktuasi ekor berat MC). Digabung dengan *ridge* identifiabilitas datar $(H, \eta)$ pada $T \in [0{,}1; 1{,}0]$ ($\operatorname{Corr} = +0{,}778$), baik objektif IV maupun ruang harga berbobot vega tetap bergeser dari $H_0 = 0{,}18$ ke $\hat{H} \approx 0{,}17$.
+  2. **Analisis 10 *seed* `true_rmse_grid` di `run_extras`**: Ketidakmonotonan satu-*seed* (`n=500: 0,0121 -> 0,0756 -> 0,0314`) ternyata berasal dari *outlier* ekor berat antar-*seed*. Median 10 *seed* turun rapi seiring $n$ (`n=100: 0,0195/0,0182/0,0182`; `n=250: 0,0116/0,0107/0,0114`; `n=500: 0,0087/0,0068/0,0078`), namun IQR pada $R=20\mathrm{k}$ sangat lebar (`0,0672` di `n=250`, `0,0702` di `n=500`, `max = 0,0762`) sebelum menyempit ke `0,00088` di `n=500, R=200k`.
+  3. **Estimator ekor Hill ($N=200.000, n=500, T=1$)**: Indeks ekor $S_T$ adalah $\hat{\alpha}_{S_T} = 17{,}61 \to 16{,}53$ ($k=500..5000$, momen $S_T$ berhingga karena $\rho=-0{,}7 < 0$ meredam ekor kanan $S_T$), namun untuk kuadrat *payoff* $(S_T-S_0)_+^2$, $\hat{\alpha}_{\mathrm{payoff}^2} = 3{,}18 \to 2{,}84 \to 2{,}59 \to 2{,}21$ (mendekati $2$: variansi kuadrat *payoff* nyaris tak berhingga sehingga memicu lonjakan sampel langka).
+  4. **Kalibrasi dengan estimator Black–Scholes bersyarat (`run_extras`, $R_{\mathrm{rep}} = 30$)**: Ketika *smile* pasar DAN kalibrasi sama-sama memakai estimator BS bersyarat (VRF besar), bias $H$ turun drastis dari `+0,0719` menjadi **`+0,0108`** (`SD_H = 0,0265`) pada bank CRN tetap dan **`+0,0228`** (`SD_H = 0,0578`) pada bank CRN berbeda — keduanya `< 0,03`!
+- **HIPOTESIS**: Bias positif `+0,0719` pada `c8` di runner utama terutama dipicu oleh derau ekor berat pada *smile* pasar MC murni (sayap OTM yang terdistorsi saat inversi IV) yang mendorong Nelder–Mead menaikkan $\hat{H}$ di sepanjang *ridge* $(H, \eta)$ ($\operatorname{Corr} = +0{,}79$); penggunaan estimator BS bersyarat menghilangkan sumber derau pasar tersebut.
 - **Catatan martingal eksponensial lognormal (`c3`)**: Pada $\eta = 1{,}9$, variabel acak $\exp(\eta \widetilde{W}_1 - \frac{1}{2}\eta^2)$ memiliki variansi teoritis $e^{\eta^2} - 1 \approx 35{,}96$ dan ekor kanan berat, sehingga uji-$z$ normal perlu dibaca bersama kuantil bootstrap (`[0,9732; 0,9998; 1,0271]`).
 
 ## 9. Landasan Teori (11 Poin)
