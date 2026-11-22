@@ -190,7 +190,77 @@ pub fn mle_closed_form(x: &[f64], dt: f64) -> OuMleResult {
     }
 }
 
-/// Numerical maximization of exact log-likelihood via Nelder-Mead for cross-checking closed-form MLE.
+/// Computes numerical gradient (score) of `exact_loglik` at `(theta, mu, sigma)`.
+pub fn exact_loglik_score(x: &[f64], dt: f64, theta: f64, mu: f64, sigma: f64) -> [f64; 3] {
+    let h = [
+        1e-6 * theta.abs().max(1.0),
+        1e-7,
+        1e-7 * sigma.abs().max(0.1),
+    ];
+    let g0 = (exact_loglik(x, dt, theta + h[0], mu, sigma)
+        - exact_loglik(x, dt, theta - h[0], mu, sigma))
+        / (2.0 * h[0]);
+    let g1 = (exact_loglik(x, dt, theta, mu + h[1], sigma)
+        - exact_loglik(x, dt, theta, mu - h[1], sigma))
+        / (2.0 * h[1]);
+    let g2 = (exact_loglik(x, dt, theta, mu, sigma + h[2])
+        - exact_loglik(x, dt, theta, mu, sigma - h[2]))
+        / (2.0 * h[2]);
+    [g0, g1, g2]
+}
+
+/// Checks whether the 3x3 Hessian of `exact_loglik` at `(theta, mu, sigma)` is negative-definite
+/// (all 3 diagonal entries < 0 and symmetric eigenvalues < 0).
+pub fn exact_loglik_hessian_neg_def(x: &[f64], dt: f64, theta: f64, mu: f64, sigma: f64) -> bool {
+    let h = [
+        1e-4 * theta.abs().max(1.0),
+        1e-5,
+        1e-5 * sigma.abs().max(0.1),
+    ];
+    let f0 = exact_loglik(x, dt, theta, mu, sigma);
+    let mut hess = [[0.0_f64; 3]; 3];
+    let pt = [theta, mu, sigma];
+    for i in 0..3 {
+        let mut pp = pt;
+        let mut pm = pt;
+        pp[i] += h[i];
+        pm[i] -= h[i];
+        hess[i][i] = (exact_loglik(x, dt, pp[0], pp[1], pp[2]) - 2.0 * f0
+            + exact_loglik(x, dt, pm[0], pm[1], pm[2]))
+            / (h[i] * h[i]);
+        for j in (i + 1)..3 {
+            let mut xpp = pt;
+            let mut xpm = pt;
+            let mut xmp = pt;
+            let mut xmm = pt;
+            xpp[i] += h[i];
+            xpp[j] += h[j];
+            xpm[i] += h[i];
+            xpm[j] -= h[j];
+            xmp[i] -= h[i];
+            xmp[j] += h[j];
+            xmm[i] -= h[i];
+            xmm[j] -= h[j];
+            let hij = (exact_loglik(x, dt, xpp[0], xpp[1], xpp[2])
+                - exact_loglik(x, dt, xpm[0], xpm[1], xpm[2])
+                - exact_loglik(x, dt, xmp[0], xmp[1], xmp[2])
+                + exact_loglik(x, dt, xmm[0], xmm[1], xmm[2]))
+                / (4.0 * h[i] * h[j]);
+            hess[i][j] = hij;
+            hess[j][i] = hij;
+        }
+    }
+    // Sylvester's criterion for negative definiteness of H:
+    // H[0][0] < 0, det(H_2x2) > 0, det(H_3x3) < 0
+    let d1 = hess[0][0];
+    let d2 = hess[0][0] * hess[1][1] - hess[0][1] * hess[1][0];
+    let d3 = hess[0][0] * (hess[1][1] * hess[2][2] - hess[1][2] * hess[2][1])
+        - hess[0][1] * (hess[1][0] * hess[2][2] - hess[1][2] * hess[2][0])
+        + hess[0][2] * (hess[1][0] * hess[2][1] - hess[1][1] * hess[2][0]);
+    d1 < 0.0 && d2 > 0.0 && d3 < 0.0
+}
+
+/// Numerical maximization of exact log-likelihood via Nelder-Mead followed by Newton-Raphson polish.
 pub fn mle_numerical(x: &[f64], dt: f64, init: [f64; 3]) -> [f64; 3] {
     let ll_ref = exact_loglik(x, dt, init[0], init[1], init[2]);
     let obj = |pt: [f64; 3]| -> f64 { -(exact_loglik(x, dt, pt[0], pt[1], pt[2]) - ll_ref) };
@@ -257,7 +327,64 @@ pub fn mle_numerical(x: &[f64], dt: f64, init: [f64; 3]) -> [f64; 3] {
         }
     }
     simplex.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal));
-    simplex[0].0
+    let mut best = simplex[0].0;
+    // Newton-Raphson polish using numerical Hessian and solve_lu
+    let h = [
+        1e-4 * best[0].abs().max(1.0),
+        1e-5,
+        1e-5 * best[2].abs().max(0.1),
+    ];
+    for _ in 0..15 {
+        let g = exact_loglik_score(x, dt, best[0], best[1], best[2]);
+        let g_norm = (g[0] * g[0] + g[1] * g[1] + g[2] * g[2]).sqrt();
+        if g_norm < 1e-13 {
+            break;
+        }
+        let f0 = exact_loglik(x, dt, best[0], best[1], best[2]);
+        let mut hess = vec![vec![0.0_f64; 3]; 3];
+        for i in 0..3 {
+            let mut pp = best;
+            let mut pm = best;
+            pp[i] += h[i];
+            pm[i] -= h[i];
+            hess[i][i] = (exact_loglik(x, dt, pp[0], pp[1], pp[2]) - 2.0 * f0
+                + exact_loglik(x, dt, pm[0], pm[1], pm[2]))
+                / (h[i] * h[i]);
+            for j in (i + 1)..3 {
+                let mut xpp = best;
+                let mut xpm = best;
+                let mut xmp = best;
+                let mut xmm = best;
+                xpp[i] += h[i];
+                xpp[j] += h[j];
+                xpm[i] += h[i];
+                xpm[j] -= h[j];
+                xmp[i] -= h[i];
+                xmp[j] += h[j];
+                xmm[i] -= h[i];
+                xmm[j] -= h[j];
+                let hij = (exact_loglik(x, dt, xpp[0], xpp[1], xpp[2])
+                    - exact_loglik(x, dt, xpm[0], xpm[1], xpm[2])
+                    - exact_loglik(x, dt, xmp[0], xmp[1], xmp[2])
+                    + exact_loglik(x, dt, xmm[0], xmm[1], xmm[2]))
+                    / (4.0 * h[i] * h[j]);
+                hess[i][j] = hij;
+                hess[j][i] = hij;
+            }
+        }
+        if let Ok(step) = crate::linalg::solve_lu(&hess, &[-g[0], -g[1], -g[2]]) {
+            let step_norm = (step[0] * step[0] + step[1] * step[1] + step[2] * step[2]).sqrt();
+            for i in 0..3 {
+                best[i] += step[i];
+            }
+            if step_norm < 1e-12 {
+                break;
+            }
+        } else {
+            break;
+        }
+    }
+    best
 }
 
 #[derive(Clone, Debug)]

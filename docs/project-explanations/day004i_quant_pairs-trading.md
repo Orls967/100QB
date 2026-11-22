@@ -46,7 +46,7 @@ Seluruh kode sumber berada di [projects/rust/day004i_pairs_trading/src/](../../p
 
 ## 6. Output yang Ditargetkan
 
-1. `c1_ou_mle_and_stationary_moments`: MLE tertutup vs numerik cocok (`< 1e-4`) dan ACF(1) empiris cocok terhadap $e^{-\theta\Delta}$ (`< 0,01`).
+1. `c1_ou_mle_and_stationary_moments`: MLE tertutup vs numerik cocok (`< 1e-8`), gradien relatif `< 1e-8`, Hessian definit negatif, dan ACF(1) empiris cocok terhadap $e^{-\theta\Delta}$ (`< 0,01`).
 2. `c2_fpt_closed_bvp_mc_agree`: $\mathbb{E}[\tau]$ tertutup cocok dengan BVP (`rel < 1e-3`) dan MC (`<= 3,5 SE`) pada seluruh pasangan simetris maupun asimetris.
 3. `c3_optimal_threshold_and_200yr_mc`: $a^*$ langsung vs kondisi stasioner cocok (`< 1e-6`), serta MC 200 tahun cocok dengan $1/(2\mathbb{E}[\tau])$ dan $R(a^*)$ (`<= 3 SE`).
 4. `c4_df_eg_size_and_spurious_rejection`: Ukuran uji EG pada kuantil kritisnya sendiri $\approx 5\%$ (`± 0,015`) dan proporsi $|t| > 1{,}96$ pada regresi *spurious* $> 50\%$.
@@ -57,18 +57,21 @@ Seluruh kode sumber berada di [projects/rust/day004i_pairs_trading/src/](../../p
 
 ## 7. Status Pencapaian
 
-Seluruh runner penuh selesai dalam **`3,67s`** pada `8` *worker* ([results.json](../../outputs/day004i/results.json)):
+Seluruh runner penuh selesai dalam **`3,79s`** pada `8` *worker* ([results.json](../../outputs/day004i/results.json)):
 
 | Kriteria | Status | Bukti Terukur |
 | --- | --- | --- |
-| `c1_ou_mle_and_stationary_moments` | `tercapai` | `mle_max_diff = 2,12e-6`; `acf1_emp = 0,9370` vs `0,9385` (`diff = 0,00149`); `ll_exact = 3768,78` > `ll_euler = 3767,27` |
+| `c1_ou_mle_and_stationary_moments` | `tercapai` | `mle_max_diff = 8,17e-9 < 1e-8`; `mle_rel_score = 3,02e-9 < 1e-8`; `hess_neg_def = true`; `acf1_emp = 0,9370` vs `0,9385` (`diff = 0,00149`) |
 | `c2_fpt_closed_bvp_mc_agree` | `tercapai` | `(-SD,+SD)`: `0,18721` vs BVP `0,18721` vs MC `0,18672 ± 0,00036` (`z=1,36`); `(0,+SD)`: `0,13084` vs `0,13084` vs `0,13098` (`z=0,43`) |
 | `c3_optimal_threshold_and_200yr_mc` | `tercapai` | `a* = -0,0157411` (`diff = 4,9e-10`, `0,4452 SD`); `R(a*) = 0,2044`; MC 200 thn: `z_trades = 0,637`, `z_profit = 0,637` |
-| `c4_df_eg_size_and_spurious_rejection` | `tercapai` | DF (`R=10^6`): `q05 = -2,8641 ± 0,0017`; EG (`R=20k`): `q05 = -3,3531 ± 0,0123`, `size = 4,87%`; Spurious `|t|>1,96`: `93,26%` |
-| `c5_johansen_size_and_power` | `belum tercapai` | `q95 = 17,997 ± 0,089`, `spurious_size = 5,00%`, tetapi `coint_power_2yr = 81,81% < 90%` |
+| `c4_df_eg_size_and_spurious_rejection` | `tercapai` | DF (`R=10^6`): `q05 = -2,8641 ± 0,0017`; EG (`R=20k`): `q05 = -3,3531 ± 0,0123`, *out-of-sample size* `4,765%` (dalam `3 SE`); Spurious `|t|>1,96`: `93,26%` |
+| `c5_johansen_size_and_power` | `belum tercapai` | `q95 = 17,997 ± 0,089`, *out-of-sample size* `4,870%` (`10,985%` pada `15,41`), tetapi `coint_power_2yr = 81,565% < 90%` |
 | `c6_rolling_penalty_shrinks_with_w` | `tercapai` | Penalti estimasi menyusut: `0,02427 ± 0,00093` ($W=1$) $\to$ `0,01343` ($W=2$) $\to$ `0,00598 ± 0,00062` ($W=5$) |
 | `c7_spurious_filtered_profit_nonpos` | `tercapai` | Laba *spurious* berfilter EG: `-0,00061 ± 0,00038` (`trade_frac = 4,74%`); tanpa filter `-0,01365` |
-| `c8_runtime_under_300s` | `tercapai` | Total waktu `3,67s < 300s` (`8` *worker*) |
+| `c8_runtime_under_300s` | `tercapai` | Total waktu `3,79s < 300s` (`8` *worker*) |
+
+Ringkasan terukur tambahan (termasuk audit Johansen & ukuran independen):
+- **Audit kuantil Johansen (`17,997` vs `15,41`)**: Simulasi fungsional Brownian asimtotik ($T=5.000, R=20.000$) menghasilkan `case1_no_const = 12,334` (literatur `12,53`), `case2_rest_const = 20,266` (`19,96`), `case3_unrest_const` ber-drift nol `17,987`, dan `case3_nonzero_drift` ($[B_1-\bar{B}_1, u-0{,}5]$) $= 15{,}407$ (literatur Osterwald–Lenum `15,41`). Sapuan $T \in \{250, 500, 1000, 5000\}$ menghasilkan `q95 = 18,207; 18,161; 18,162; 18,136`. Artinya `17,997` bukan bug maupun distorsi sampel kecil, melainkan batas asimtotik eksak Case 3 dengan drift nol pada DGP; menggunakan `15,41` pada DGP drift nol menaikkan ukuran *spurious* menjadi `10,985%`.
 
 Ringkasan terukur tambahan:
 - **Replikasi OU ($R=20.000$)**: Bias $\hat{\theta}$ pada $T \in \{1, 2, 5, 10\}$ tahun adalah `4,436`, `2,133`, `0,844`, `0,444` (rasio terhadap Kendall `(1+3\phi)/(T\phi)` $= 1{,}091; 1{,}049; 1{,}038; 1{,}092$); *skewness* half-life turun dari `1,257` ($T=1$) menjadi `0,377` ($T=10$), dan `prob_theta_nonpos = 0`.
@@ -95,10 +98,11 @@ Ringkasan terukur tambahan:
 10. **Uji Trace VECM Johansen**: Masalah nilai eigen tergeneralisasi $S_{01}S_{11}^{-1}S_{10}v = \lambda S_{00}v$ direduksi lewat Cholesky $S_{00} = LL^\top$ menjadi matriks simetris untuk menguji rank kointegrasi; di [johansen.rs](../../projects/rust/day004i_pairs_trading/src/johansen.rs).
 11. **Akuntansi Mark-to-Market & Risiko Structural Break**: Evaluasi strategi bergulir menghitung PnL MTM harian agar posisi terbuka pada pasangan *spurious* atau pasca-break tidak menyembunyikan kerugian belum terealisasi; di [backtest.rs](../../projects/rust/day004i_pairs_trading/src/backtest.rs).
 
-## 10. Kesimpulan dan Batasan
+## 10. Kesimpulan, Batasan, dan Deviasi dari Prompt
 
-1. **Kesimpulan**: Seluruh penurunan analitik (MLE AR(1) vs numerik, koreksi bias Kendall $\approx 4/T$, rumus FPT simetris & asimetris vs BVP & MC, optimalitas Bertram $a^*$, kuantil DF/EG, serta pengurangan penalti estimasi seiring $W$) terkonfirmasi secara kuantitatif dalam `3,67s`. Akuntansi MTM harian juga membuktikan bahwa filter EG berhasil menekan laba *spurious* menjadi non-positif (`-0,00061 ± 0,00038`).
-2. **Batasan**: Seluruh data adalah sintetis; `c5_johansen_size_and_power` berstatus `belum tercapai` (`81,81% < 90%` pada horizon 2 tahun); `run_completed_without_errors = true` menandakan eksekusi bebas galat numerik, bukan bahwa semua 8 kriteria terpenuhi.
+1. **Kesimpulan**: Seluruh penurunan analitik (MLE AR(1) vs numerik hingga `< 1e-8`, koreksi bias Kendall $\approx 4/T$, rumus FPT simetris & asimetris vs BVP & MC, optimalitas Bertram $a^*$, kuantil DF/EG & Johansen drift nol vs non-nol, serta pengurangan penalti estimasi seiring $W$) terkonfirmasi secara kuantitatif dalam `3,79s`. Akuntansi MTM harian juga membuktikan bahwa filter EG berhasil menekan laba *spurious* menjadi non-positif (`-0,00061 ± 0,00038`).
+2. **Batasan**: Seluruh data adalah sintetis; `c5_johansen_size_and_power` berstatus `belum tercapai` (`81,57% < 90%` pada horizon 2 tahun); `run_completed_without_errors = true` menandakan eksekusi bebas galat numerik, bukan bahwa semua 8 kriteria terpenuhi.
+3. **Deviasi dari Prompt**: Tidak ada pelonggaran toleransi atau seed setelah perbaikan `day004j` Bagian A: toleransi `c1` dikembalikan ketat ke `< 1e-8` (dilengkapi cek skor gradien dan Hessian definit negatif), ukuran uji `c4`/`c5` dievaluasi pada sampel independen *out-of-sample* (`3 SE` binomial), dan `c5` tetap dilaporkan `belum tercapai` apa adanya (`81,565% < 90%`).
 
 ## 11. Referensi dan Jejak Bukti
 

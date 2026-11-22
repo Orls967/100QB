@@ -7,16 +7,16 @@
     "workers_used": 8,
     "main_seed": 20261122,
     "elapsed_seconds": {
-      "part1_ou_mle": 0.28280037499999999,
-      "part2_fpt_bertram": 1.30429558400000012,
-      "part3_unitroot_coint": 1.86274137500000014,
-      "part4_backtest": 0.21219387500000000,
-      "part5_figures": 0.00347258300000000,
-      "total": 3.66550437500000026
+      "part1_ou_mle": 0.28069391599999999,
+      "part2_fpt_bertram": 1.20858924999999995,
+      "part3_unitroot_coint": 2.15611925000000015,
+      "part4_backtest": 0.14271929100000000,
+      "part5_figures": 0.00100625000000000,
+      "total": 3.78912875000000016
     }
   },
   "part1_ou_estimation": {
-    "mle_closed_vs_num_max_diff": 0.00000212083476114,
+    "mle_closed_vs_num_max_diff": 0.00000000816898194,
     "ll_exact": 3768.78068673996222060,
     "ll_euler": 3767.26685519251350343,
     "stationary_var_exact": 0.00125000000000000,
@@ -252,8 +252,8 @@
       "se_q05": 0.01226256914762721,
       "q10": -3.05709857702024568,
       "se_q10": 0.01031516310051849,
-      "size_at_own_q05": 0.04870000000000000,
-      "size_if_using_df_q05": 0.14560000000000001
+      "size_at_own_q05": 0.04765000000000000,
+      "size_if_using_df_q05": 0.15004999999999999
     },
     "spurious_regression": {
       "frac_abs_t_gt_196": 0.93259999999999998,
@@ -329,8 +329,35 @@
       "q95": 17.99749368499554336,
       "se_q95": 0.08860320170694708,
       "q99": 22.72063778707645199,
-      "spurious_size_at_q95": 0.05000000000000000,
-      "coint_power_theta16_2yr": 0.81810000000000005
+      "spurious_size_at_q95": 0.04870000000000000,
+      "spurious_size_at_lit_1541": 0.10985000000000000,
+      "coint_power_theta16_2yr": 0.81564999999999999,
+      "brownian_q95_case1_no_const": 12.33432056220757111,
+      "brownian_q95_case2_rest_const": 20.26628674503058747,
+      "brownian_q95_case3_unrest_const": 17.98694141824379145,
+      "brownian_q95_case3_nonzero_drift": 15.40746175018955810,
+      "t_sweep_q95": [
+        {
+          "t_len": 250,
+          "q95": 18.20681331807477576,
+          "se_q95": 0.10556434584022281
+        },
+        {
+          "t_len": 500,
+          "q95": 18.16127071797127002,
+          "se_q95": 0.09116960770634655
+        },
+        {
+          "t_len": 1000,
+          "q95": 18.16187871101384843,
+          "se_q95": 0.09361954967178412
+        },
+        {
+          "t_len": 5000,
+          "q95": 18.13591058678946411,
+          "se_q95": 0.19138966854839753
+        }
+      ]
     }
   },
   "part4_backtest": {
@@ -420,7 +447,9 @@
   "criteria": {
     "c1_ou_mle_and_stationary_moments": {
       "status": "tercapai",
-      "mle_max_diff": 0.00000212083476114,
+      "mle_max_diff": 0.00000000816898194,
+      "mle_rel_score": 0.00000000302451676,
+      "mle_hess_neg_def": true,
       "acf1_diff": 0.00148559306136897
     },
     "c2_fpt_closed_bvp_mc_agree": {
@@ -438,14 +467,14 @@
     },
     "c4_df_eg_size_and_spurious_rejection": {
       "status": "tercapai",
-      "eg_size_at_own_q05": 0.04870000000000000,
+      "eg_size_at_own_q05": 0.04765000000000000,
       "spurious_abs_t_gt_196": 0.93259999999999998
     },
     "c5_johansen_size_and_power": {
       "status": "belum tercapai",
       "johansen_q95": 17.99749368499554336,
-      "spurious_size": 0.05000000000000000,
-      "coint_power_2yr": 0.81810000000000005
+      "spurious_size": 0.04870000000000000,
+      "coint_power_2yr": 0.81564999999999999
     },
     "c6_rolling_penalty_shrinks_with_w": {
       "status": "tercapai",
@@ -459,7 +488,7 @@
     },
     "c8_runtime_under_300s": {
       "status": "tercapai",
-      "total_seconds": 3.66550437500000026,
+      "total_seconds": 3.78912875000000016,
       "budget_seconds": 300.00000000000000000
     }
   }

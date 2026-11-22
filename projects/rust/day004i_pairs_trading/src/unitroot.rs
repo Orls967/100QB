@@ -168,6 +168,7 @@ pub struct EgDistSummary {
     pub se_q10: f64,
     pub size_at_own_q05: f64,
     pub size_if_using_df_q05: f64,
+    pub size_at_lit_eg_q05: f64,
 }
 
 /// Simulates Engle-Granger residual ADF t-statistic distribution under H0 (independent random walks),
@@ -199,9 +200,9 @@ pub fn simulate_engle_granger_dist(
     let (q05, se05) = stats::quantile_and_se(&eg_stats, 0.05);
     let (q10, se10) = stats::quantile_and_se(&eg_stats, 0.10);
 
-    // Out-of-sample size check on fresh R=n_paths independent pairs
+    // Independent out-of-sample size check on fresh seed R=n_paths independent pairs
     let oos = parallel::run_chunks(n_paths, n_workers, |r| {
-        let mut rg = Rng::new(derive_seed(seed, 0x3250, r as u64));
+        let mut rg = Rng::new(derive_seed(seed ^ 0x7777_0002, 0x3250, r as u64));
         let mut x = Vec::with_capacity(t_len);
         let mut y = Vec::with_capacity(t_len);
         let mut cx = 0.0_f64;
@@ -214,10 +215,11 @@ pub fn simulate_engle_granger_dist(
         }
         let ols = stats::ols_simple(&x, &y);
         let tstat = dickey_fuller_t_stat(&ols.residuals);
-        (tstat < q05, tstat < df_q05)
+        (tstat < q05, tstat < df_q05, tstat < -3.34)
     });
     let rej_own = oos.iter().filter(|x| x.0).count() as f64 / n_paths as f64;
     let rej_df = oos.iter().filter(|x| x.1).count() as f64 / n_paths as f64;
+    let rej_lit = oos.iter().filter(|x| x.2).count() as f64 / n_paths as f64;
 
     EgDistSummary {
         n_paths,
@@ -230,6 +232,7 @@ pub fn simulate_engle_granger_dist(
         se_q10: se10,
         size_at_own_q05: rej_own,
         size_if_using_df_q05: rej_df,
+        size_at_lit_eg_q05: rej_lit,
     }
 }
 

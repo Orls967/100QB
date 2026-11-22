@@ -12,8 +12,8 @@ use day004i_pairs_trading::fpt::{expected_fpt_exact, simulate_fpt_mc, solve_fpt_
 use day004i_pairs_trading::johansen::run_johansen_study;
 use day004i_pairs_trading::jsonout::{write_json_file, JsonVal};
 use day004i_pairs_trading::ou::{
-    euler_loglik, exact_loglik, mle_closed_form, mle_numerical, run_ou_replication_study,
-    simulate_ou_path, OuParams,
+    euler_loglik, exact_loglik, exact_loglik_hessian_neg_def, exact_loglik_score, mle_closed_form,
+    mle_numerical, run_ou_replication_study, simulate_ou_path, OuParams,
 };
 use day004i_pairs_trading::parallel;
 use day004i_pairs_trading::rng::{derive_seed, Rng, MAIN_SEED};
@@ -75,6 +75,15 @@ fn main() {
         .abs()
         .max((cf_mle.mu - num_mle[1]).abs())
         .max((cf_mle.sigma - num_mle[2]).abs());
+    let ll_at_cf = exact_loglik(&sample_path, p.dt, cf_mle.theta, cf_mle.mu, cf_mle.sigma);
+    let score_cf = exact_loglik_score(&sample_path, p.dt, cf_mle.theta, cf_mle.mu, cf_mle.sigma);
+    let mle_rel_score = (score_cf[0]
+        .abs()
+        .max(score_cf[1].abs())
+        .max(score_cf[2].abs()))
+        / ll_at_cf.abs().max(1.0);
+    let mle_hess_neg_def =
+        exact_loglik_hessian_neg_def(&sample_path, p.dt, cf_mle.theta, cf_mle.mu, cf_mle.sigma);
     let ll_exact = exact_loglik(&sample_path, p.dt, p.theta, p.mu, p.sigma);
     let ll_euler = euler_loglik(&sample_path, p.dt, p.theta, p.mu, p.sigma);
 
@@ -408,15 +417,20 @@ fn main() {
     let total_secs = t_total.elapsed().as_secs_f64();
 
     // ==================== Criteria Evaluation (pre-set thresholds) ====================
-    let c1_mle_exact = mle_max_diff < 1e-4 && (emp_acf1 - acf1_exact).abs() < 0.01;
+    let c1_mle_exact = mle_max_diff < 1e-8
+        && mle_rel_score < 1e-8
+        && mle_hess_neg_def
+        && (emp_acf1 - acf1_exact).abs() < 0.01;
     let c2_fpt_matches = fpt_rows
         .iter()
         .all(|r| (r.2 - r.3).abs() / r.2 < 1e-3 && r.7 <= 3.5);
     let c3_opt_threshold_and_mc =
         (a_dir - a_foc).abs() < 1e-6 && mc_200yr.z_trades <= 3.0 && mc_200yr.z_profit <= 3.0;
-    let c4_df_and_eg_size =
-        (eg_dist.size_at_own_q05 - 0.05).abs() < 0.015 && spurious.frac_abs_t_gt_196 > 0.50;
-    let c5_johansen_power = (johansen.spurious_size_at_q95 - 0.05).abs() < 0.02
+    let se_binom_eg = (0.05 * 0.95 / eg_dist.n_paths as f64).sqrt();
+    let se_binom_joh = (0.05 * 0.95 / johansen.n_paths as f64).sqrt();
+    let c4_df_and_eg_size = (eg_dist.size_at_own_q05 - 0.05).abs() <= 3.0 * se_binom_eg
+        && spurious.frac_abs_t_gt_196 > 0.50;
+    let c5_johansen_power = (johansen.spurious_size_at_q95 - 0.05).abs() <= 3.0 * se_binom_joh
         && johansen.coint_power_theta16_2yr > 0.90;
     let c6_rolling_est_penalty =
         bt.window_rows[2].est_penalty_vs_oracle < bt.window_rows[0].est_penalty_vs_oracle;
@@ -610,8 +624,43 @@ fn main() {
                         ("q99", johansen.q99.into()),
                         ("spurious_size_at_q95", johansen.spurious_size_at_q95.into()),
                         (
+                            "spurious_size_at_lit_1541",
+                            johansen.spurious_size_at_lit_1541.into(),
+                        ),
+                        (
                             "coint_power_theta16_2yr",
                             johansen.coint_power_theta16_2yr.into(),
+                        ),
+                        (
+                            "brownian_q95_case1_no_const",
+                            johansen.brownian_q95_case1_no_const.into(),
+                        ),
+                        (
+                            "brownian_q95_case2_rest_const",
+                            johansen.brownian_q95_case2_rest_const.into(),
+                        ),
+                        (
+                            "brownian_q95_case3_unrest_const",
+                            johansen.brownian_q95_case3_unrest_const.into(),
+                        ),
+                        (
+                            "brownian_q95_case3_nonzero_drift",
+                            johansen.brownian_q95_case3_nonzero_drift.into(),
+                        ),
+                        (
+                            "t_sweep_q95",
+                            johansen
+                                .t_sweep_q95
+                                .iter()
+                                .map(|r| {
+                                    JsonVal::Obj(vec![
+                                        ("t_len", r.0.into()),
+                                        ("q95", r.1.into()),
+                                        ("se_q95", r.2.into()),
+                                    ])
+                                })
+                                .collect::<Vec<_>>()
+                                .into(),
                         ),
                     ]),
                 ),
@@ -715,6 +764,8 @@ fn main() {
                     JsonVal::Obj(vec![
                         ("status", crit_str(c1_mle_exact).into()),
                         ("mle_max_diff", mle_max_diff.into()),
+                        ("mle_rel_score", mle_rel_score.into()),
+                        ("mle_hess_neg_def", mle_hess_neg_def.into()),
                         ("acf1_diff", (emp_acf1 - acf1_exact).abs().into()),
                     ]),
                 ),

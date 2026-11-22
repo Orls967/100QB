@@ -63,19 +63,19 @@ cargo run --release --bin run
 
 Keluaran utama ditulis ke [../../../outputs/day004i/results.json](../../../outputs/day004i/results.json) dan 7 grafik ke [../../../outputs/figures/](../../../outputs/figures/).
 
-## Ringkasan Hasil Eksperimen (`main_seed = 20261122`, `8` worker, `3,67s`)
+## Ringkasan Hasil Eksperimen (`main_seed = 20261122`, `8` worker, `3,79s`)
 
 | Bagian / Besaran | Nilai Terukur | Acuan / Pembanding | Status Kriteria |
 | --- | --- | --- | --- |
-| MLE tertutup vs numerik & ACF(1) | `max_diff = 2,12e-6`; `acf1 = 0,9370` | Eksak `0,9385` | `c1 = tercapai` |
+| MLE tertutup vs numerik & ACF(1) | `max_diff = 8,17e-9`; `acf1 = 0,9370` | Eksak `0,9385`; `rel_score = 3,02e-9` | `c1 = tercapai` |
 | Bias $\hat{\theta}$ vs Kendall ($T=1,2,5,10$) | `4,44 / 2,13 / 0,84 / 0,44` | Rasio Kendall `1,04..1,09` | — |
 | FPT tertutup vs BVP vs MC (`-SD -> +SD`) | `0,18721` / `0,18721` / `0,18672` | `z_MC = 1,36` (asimetris `0,43`) | `c2 = tercapai` |
 | Ambang optimal $a^*$ & MC 200 tahun | `a* = -0,01574` (`0,445 SD`), `R(a*) = 0,2044` | `z_trades = 0,64`, `z_profit = 0,64` | `c3 = tercapai` |
-| Dickey–Fuller ($R=10^6$) & EG ($R=20k$) | `DF q05 = -2,864`; `EG q05 = -3,353` | Size EG `4,87%`; Spurious `|t|>1,96`: `93,26%` | `c4 = tercapai` |
-| Johansen trace ($T=500, R=20k$) | `q95 = 17,997`, size `5,00%` | Power `theta=16, 2yr = 81,81%` (`< 90%`) | `c5 = belum tercapai` |
+| Dickey–Fuller ($R=10^6$) & EG ($R=20k$) | `DF q05 = -2,864`; `EG q05 = -3,353` | Size OOS EG `4,77%`; Spurious `93,26%` | `c4 = tercapai` |
+| Johansen trace ($T=500, R=20k$) | `q95 = 17,997` (drift 0), size OOS `4,87%` | Power `theta=16, 2yr = 81,57%` (`< 90%`) | `c5 = belum tercapai` |
 | Penalti estimasi bergulir ($W=1,2,5$ yr) | `0,0243` → `0,0134` → `0,0060` | Oracle `0,3920 ± 0,0009/yr` | `c6 = tercapai` |
 | Filter EG pada pasangan *spurious* ($W=2$) | Laba `-0,00061 ± 0,00038` | Tanpa filter `-0,01365` | `c7 = tercapai` |
-| Anggaran waktu runner | `3,67s` (`8` worker) | `< 300s` | `c8 = tercapai` |
+| Anggaran waktu runner | `3,79s` (`8` worker) | `< 300s` | `c8 = tercapai` |
 
 ## Daftar Grafik
 
