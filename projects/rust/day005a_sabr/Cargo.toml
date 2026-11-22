@@ -1,0 +1,11 @@
+[package]
+name = "day005a_sabr"
+version = "0.1.0"
+edition = "2021"
+description = "Model SABR: CEV eksak, ekspansi Hagan, MC referensi, kepadatan implisit negatif, kalibrasi & delta Bartlett (Rust murni)"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+
+[dependencies]
