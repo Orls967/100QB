@@ -1,0 +1,10 @@
+{
+  "day": 4,
+  "session": "g",
+  "topic_no": null,
+  "type": "quant",
+  "language": "rust",
+  "topic": "Market making optimal: Guéant–Lehalle–Tapia, HJB dan salah spesifikasi",
+  "date": "2026-11-22",
+  "link": "projects/rust/day004g_market_making"
+}

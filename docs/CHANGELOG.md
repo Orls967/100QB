@@ -3,6 +3,16 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 004g] — 2026-11-22 · Market making optimal: Guéant–Lehalle–Tapia, HJB, dan salah spesifikasi (Rust, Bonus)
+
+### Ditambahkan
+- Project Rust stable mandiri `projects/rust/day004g_market_making/` (*zero external crates*, `xoshiro256++`, `std::thread::scope`, JSON 17-digit, dan 7 grafik SVG) yang mengimplementasikan:
+  - **Bagian 1**: Solver eksak sistem-$v$ (Jacobi siklik, *scaling-and-squaring*, RK4+Richardson dengan galat relatif maks `2,80e-11`), solver HJB FD nonlinier independen bentuk $\theta$ (orde konvergensi $\Delta t$ `1,001–1,003`), verifikasi simetri/monotonisitas kuotasi, celah spektral (`1,277564`) & batas stasioner, hampiran *closed-form*, serta sensitivitas $Q \in \{10, 20, 40\}$.
+  - **Bagian 2**: Simulator Monte Carlo CRN ($R = 200.000$ lintasan, $\mathrm{CE}_{\mathrm{Rich}} = 66{,}2880$ vs eksak `66,2616`, $z = 2{,}20$), pembanding ODE Forward Kolmogorov (`c5 = belum tercapai` karena efek diskretisasi eksekusi simultan Bernoulli pada $\Delta t = 5\times 10^{-4}$ yang meredam $\operatorname{Var}(q_T)$ menjadi `60,6586` vs `62,0174`), dan perbandingan 4 strategi (`glt_optimal`, `avellaneda_stoikov`, `symmetric_fixed`, `tight_fixed_0.1`).
+  - **Bagian 3**: Studi salah spesifikasi (*adverse selection* $\varepsilon \in \{0; 0{,}02; 0{,}05; 0{,}1\}$, salah $\sigma \in \{0{,}5\sigma, \sigma, 1{,}5\sigma\}$, salah intensitas $A/k \pm 30\%$, dan *drift* $\mu \in \{-0{,}2; -0{,}05; 0; 0{,}05; 0{,}2\}$).
+- Seluruh runner penuh selesai dalam `47,05s` pada `8` worker (`c1..c4, c6..c8 = tercapai`, `c5 = belum tercapai`).
+- Output `outputs/day004g/results.json`, 7 grafik SVG `outputs/figures/day004g_*.svg`, `projects/rust/day004g_market_making/README.md`, serta [day004g_quant_market-making.md](project-explanations/day004g_quant_market-making.md).
+
 ## [Hari 004f] — 2026-11-22 · Audit tail day004e + port lengkap day004a–4e & valuasi proyek baterai AFNS (Rust, Bonus)
 
 ### Diperbaiki (Bagian A)

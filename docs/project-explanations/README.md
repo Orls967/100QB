@@ -37,6 +37,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `4d` (`day004d`) | `bonus` | `quant` | `go` | [AFNS: kalibrasi interval bootstrap yang peka bias dan batas parameter](day004d_quant_afns-interval-calibration.md) |
 | `4e` (`day004e`) | `bonus` | `quant` | `go` | [Harga listrik negatif dan arbitrase baterai (DP stokastik)](day004e_quant_power-storage.md) |
 | `4f` (`day004f`) | `bonus` | `quant` | `rust` | [Port lengkap AFNS term structure, kalibrasi interval, harga listrik & valuasi baterai (Rust)](day004f_rust-afns-energy-storage.md) |
+| `4g` (`day004g`) | `bonus` | `quant` | `rust` | [Market making optimal: Guéant–Lehalle–Tapia, HJB dan salah spesifikasi (Rust)](day004g_quant_market-making.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 
