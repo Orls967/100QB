@@ -1,0 +1,11 @@
+[package]
+name = "day004j_deep_hedging"
+version = "0.1.0"
+edition = "2021"
+description = "Deep Hedging (Buehler et al. 2019) dengan MLP, BPTT, Adam, biaya transaksi, Whalley-Wilmott, DP, dan Heston QE dalam Rust murni"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+
+[dependencies]
