@@ -92,14 +92,10 @@ pub fn run_misspec_studies(
             seed,
             0x3100,
         );
-        let (_, bid_as, ask_as) = hjb_fd::solve_nonlinear_hjb_theta(&base_p, 5e-4, eps);
+        let (_, table_as) = hjb_fd::solve_nonlinear_hjb_theta_table(&base_p, 5e-4, eps);
         let exact_as = run_mc_sim(
             mkt,
-            &Strategy::GltAsExact {
-                p: base_p,
-                bid_table: bid_as,
-                ask_table: ask_as,
-            },
+            &Strategy::GltAsExact { table: &table_as },
             n_paths,
             n_steps,
             n_workers,

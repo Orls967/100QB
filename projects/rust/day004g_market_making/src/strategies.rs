@@ -5,25 +5,11 @@ use crate::glt::{GltParams, QuoteTable};
 
 #[derive(Clone)]
 pub enum Strategy<'a> {
-    GltOptimal {
-        table: &'a QuoteTable,
-    },
-    AvellanedaStoikov {
-        p: GltParams,
-    },
-    SymmetricFixed {
-        delta: f64,
-        q_max: isize,
-    },
-    GltConstantShift {
-        table: &'a QuoteTable,
-        shift: f64,
-    },
-    GltAsExact {
-        p: GltParams,
-        bid_table: Vec<f64>,
-        ask_table: Vec<f64>,
-    },
+    GltOptimal { table: &'a QuoteTable },
+    AvellanedaStoikov { p: GltParams },
+    SymmetricFixed { delta: f64, q_max: isize },
+    GltConstantShift { table: &'a QuoteTable, shift: f64 },
+    GltAsExact { table: &'a QuoteTable },
 }
 
 impl<'a> Strategy<'a> {
@@ -57,24 +43,7 @@ impl<'a> Strategy<'a> {
                 let (db, da) = table.interp_quotes(t, q);
                 (db + shift, da + shift)
             }
-            Strategy::GltAsExact {
-                p,
-                bid_table,
-                ask_table,
-            } => {
-                let i = p.idx(q);
-                let db = if q >= p.q_max {
-                    f64::INFINITY
-                } else {
-                    bid_table[i]
-                };
-                let da = if q <= -p.q_max {
-                    f64::INFINITY
-                } else {
-                    ask_table[i]
-                };
-                (db, da)
-            }
+            Strategy::GltAsExact { table } => table.interp_quotes(t, q),
         }
     }
 }

@@ -1,5 +1,6 @@
 //! High-speed deterministic CRN forward simulator for market making evaluation.
 
+use crate::glt::QuoteTable;
 use crate::parallel;
 use crate::rng::{derive_seed, Rng};
 use crate::stats;
@@ -27,11 +28,13 @@ pub struct SimSummary {
     pub mean_inventory: f64,
     pub sd_inventory: f64,
     pub var_inventory: f64,
+    pub se_var_inventory: f64,
     pub mean_util: f64,
     pub se_util: f64,
     pub certainty_equiv: f64,
     pub se_ce: f64,
     pub mean_executions: f64,
+    pub se_executions: f64,
     pub boundary_touch_frac: f64,
     pub wealths: Vec<f64>,
 }
@@ -125,11 +128,141 @@ pub fn run_mc_sim(
         mean_inventory: mq,
         sd_inventory: sq,
         var_inventory: sq * sq,
+        se_var_inventory: stats::se_of_variance(&qs),
         mean_util: mu,
         se_util: seu,
         certainty_equiv: ce,
         se_ce,
         mean_executions: stats::mean(&exs),
+        se_executions: stats::se(&exs),
+        boundary_touch_frac: bnd_cnt as f64 / n_paths.max(1) as f64,
+        wealths,
+    }
+}
+
+/// Exact continuous-time event-driven simulator via Lewis-Shedler thinning.
+/// Between events, `S_t` evolves with exact Gaussian increments.
+pub fn run_continuous_mc_sim(
+    mkt: MarketSpec,
+    table: &QuoteTable,
+    n_paths: usize,
+    n_workers: usize,
+    seed: u64,
+    salt: u64,
+) -> SimSummary {
+    let dim = (2 * mkt.q_max + 1) as usize;
+    let mut lambda_bar = vec![0.0_f64; dim];
+    for (idx, lb_slot) in lambda_bar.iter_mut().enumerate() {
+        let q = idx as isize - mkt.q_max;
+        let mut max_rate = 0.0_f64;
+        for step in 0..=table.n_time {
+            let mut r = 0.0;
+            if q < mkt.q_max {
+                r += mkt.a_intens * (-mkt.k * table.bid[step][idx]).exp();
+            }
+            if q > -mkt.q_max {
+                r += mkt.a_intens * (-mkt.k * table.ask[step][idx]).exp();
+            }
+            if r > max_rate {
+                max_rate = r;
+            }
+        }
+        *lb_slot = (max_rate * 1.01).max(1e-6);
+    }
+
+    struct PathOut {
+        wealth: f64,
+        q_final: isize,
+        execs: usize,
+        touched_bound: bool,
+    }
+
+    let rows = parallel::run_chunks(n_paths, n_workers, |r| {
+        let mut rg = Rng::new(derive_seed(seed, salt, r as u64));
+        let mut t = 0.0_f64;
+        let mut s = 0.0_f64;
+        let mut x = 0.0_f64;
+        let mut q = 0_isize;
+        let mut execs = 0_usize;
+        let mut touched = false;
+
+        loop {
+            let idx = (q + mkt.q_max) as usize;
+            let bar = lambda_bar[idx];
+            let u_exp = rg.uniform().max(1e-16);
+            let wait = -u_exp.ln() / bar;
+            if t + wait >= mkt.t_horizon {
+                let rem = mkt.t_horizon - t;
+                if rem > 0.0 {
+                    s += mkt.mu * rem + mkt.sigma * rem.sqrt() * rg.normal();
+                }
+                break;
+            }
+            t += wait;
+            s += mkt.mu * wait + mkt.sigma * wait.sqrt() * rg.normal();
+            let (db, da) = table.interp_quotes(t, q);
+            let lb = if q < mkt.q_max {
+                mkt.a_intens * (-mkt.k * db).exp()
+            } else {
+                0.0
+            };
+            let la = if q > -mkt.q_max {
+                mkt.a_intens * (-mkt.k * da).exp()
+            } else {
+                0.0
+            };
+            let u_thin = rg.uniform() * bar;
+            if u_thin < lb {
+                x -= s - db;
+                q += 1;
+                execs += 1;
+                s -= mkt.eps_adverse;
+            } else if u_thin < lb + la {
+                x += s + da;
+                q -= 1;
+                execs += 1;
+                s += mkt.eps_adverse;
+            }
+            if q == mkt.q_max || q == -mkt.q_max {
+                touched = true;
+            }
+        }
+
+        PathOut {
+            wealth: x + (q as f64) * s,
+            q_final: q,
+            execs,
+            touched_bound: touched,
+        }
+    });
+
+    let wealths: Vec<f64> = rows.iter().map(|r| r.wealth).collect();
+    let qs: Vec<f64> = rows.iter().map(|r| r.q_final as f64).collect();
+    let exs: Vec<f64> = rows.iter().map(|r| r.execs as f64).collect();
+    let bnd_cnt = rows.iter().filter(|r| r.touched_bound).count();
+
+    let mw = stats::mean(&wealths);
+    let sw = stats::sd(&wealths);
+    let mq = stats::mean(&qs);
+    let sq = stats::sd(&qs);
+    let (mu, seu, ce, se_ce) = stats::cara_utility_and_ce(&wealths, mkt.gamma);
+
+    SimSummary {
+        n_paths,
+        dt: 0.0,
+        mean_wealth: mw,
+        sd_wealth: sw,
+        sharpe: if sw > 0.0 { mw / sw } else { 0.0 },
+        mean_inventory: mq,
+        sd_inventory: sq,
+        var_inventory: sq * sq,
+        se_var_inventory: stats::se_of_variance(&qs),
+        mean_util: mu,
+        se_util: seu,
+        certainty_equiv: ce,
+        se_ce,
+        mean_executions: stats::mean(&exs),
+        se_executions: stats::se(&exs),
         boundary_touch_frac: bnd_cnt as f64 / n_paths.max(1) as f64,
         wealths,
     }

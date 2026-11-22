@@ -9,13 +9,15 @@ use day004g_market_making::glt::{
     approx_bid_quote, eigendecompose_m, quotes_from_v, solve_v_jacobi, solve_v_mat_exp,
     solve_v_rk4_richardson, theta_from_v, GltParams, QuoteTable,
 };
-use day004g_market_making::hjb_fd::solve_nonlinear_hjb_theta;
+use day004g_market_making::hjb_fd::{solve_nonlinear_hjb_theta, solve_nonlinear_hjb_theta_table};
 use day004g_market_making::jsonout::{write_json_file, JsonVal};
 use day004g_market_making::kolmogorov::solve_forward_kolmogorov;
 use day004g_market_making::misspec::run_misspec_studies;
 use day004g_market_making::parallel;
 use day004g_market_making::rng::MAIN_SEED;
-use day004g_market_making::sim::{run_mc_sim, simulate_single_example_path, MarketSpec};
+use day004g_market_making::sim::{
+    run_continuous_mc_sim, run_mc_sim, simulate_single_example_path, MarketSpec,
+};
 use day004g_market_making::stats;
 use day004g_market_making::strategies::Strategy;
 use day004g_market_making::svg::{self, LineSeries, PALETTE};
@@ -177,7 +179,7 @@ fn main() {
         eps_adverse: 0.0,
     };
 
-    // Utility dt anchor: dt in {1e-3, 5e-4, 2.5e-4}
+    // Utility dt anchor: dt in {1e-3, 5e-4, 2.5e-4, 1.25e-4} + continuous-time thinning simulator
     let sim_dt_1e3 = run_mc_sim(
         mkt,
         &Strategy::GltOptimal { table: &table_1000 },
@@ -206,12 +208,60 @@ fn main() {
         MAIN_SEED,
         0x2001,
     );
-    let ce_rich = (4.0 * sim_dt_25e4.certainty_equiv - sim_dt_5e4.certainty_equiv) / 3.0; // O(dt) Richardson
-    let mc_vs_exact_z =
-        (sim_dt_25e4.certainty_equiv - exact_ce).abs() / sim_dt_25e4.se_ce.max(1e-12);
+    let table_8000 = QuoteTable::build(p, 8000);
+    let sim_dt_125e4 = run_mc_sim(
+        mkt,
+        &Strategy::GltOptimal { table: &table_8000 },
+        n_paths,
+        8000,
+        n_workers,
+        MAIN_SEED,
+        0x2001,
+    );
+    let p_emp = ((sim_dt_1e3.certainty_equiv - sim_dt_5e4.certainty_equiv)
+        / (sim_dt_5e4.certainty_equiv - sim_dt_25e4.certainty_equiv))
+        .abs()
+        .log2();
+    let (ce_rich, se_rich_crn, se_rich_indep) = stats::richardson_ce_and_se(
+        &sim_dt_5e4.wealths,
+        sim_dt_5e4.certainty_equiv,
+        sim_dt_5e4.se_ce,
+        &sim_dt_25e4.wealths,
+        sim_dt_25e4.certainty_equiv,
+        sim_dt_25e4.se_ce,
+        p.gamma,
+        p_emp,
+    );
+    let z_rich = (ce_rich - exact_ce).abs() / se_rich_crn.max(1e-12);
+    let z_125e4 = (sim_dt_125e4.certainty_equiv - exact_ce).abs() / sim_dt_125e4.se_ce.max(1e-12);
 
-    // Forward Kolmogorov anchor at dt = 5e-4 (2000 steps)
+    // Continuous-time bias-free event-driven simulator (thinning)
+    let sim_cont = run_continuous_mc_sim(mkt, &table_2000, n_paths, n_workers, MAIN_SEED, 0x2002);
+    let z_cont_ce = (sim_cont.certainty_equiv - exact_ce).abs() / sim_cont.se_ce.max(1e-12);
+
+    // Forward Kolmogorov anchor (continuous time)
     let kol = solve_forward_kolmogorov(&table_2000, 2000);
+    let z_kol_exec = (sim_cont.mean_executions - kol.expected_executions).abs()
+        / sim_cont.se_executions.max(1e-12);
+    let z_kol_var_q =
+        (sim_cont.var_inventory - kol.var_inventory).abs() / sim_cont.se_var_inventory.max(1e-12);
+
+    // Check eps=0 quote reduction between nonlinear FD table and exact GLT table at dt=5e-4
+    let (_, fd_table_eps0) = solve_nonlinear_hjb_theta_table(&p, 5e-4, 0.0);
+    let mut eps0_quote_max_diff = 0.0_f64;
+    for step in 0..=2000 {
+        let t = step as f64 * (p.t_horizon / 2000.0);
+        for q in -p.q_max..=p.q_max {
+            let (b1, a1) = fd_table_eps0.interp_quotes(t, q);
+            let (b2, a2) = table_2000.interp_quotes(t, q);
+            if b1.is_finite() && b2.is_finite() {
+                eps0_quote_max_diff = eps0_quote_max_diff.max((b1 - b2).abs());
+            }
+            if a1.is_finite() && a2.is_finite() {
+                eps0_quote_max_diff = eps0_quote_max_diff.max((a1 - a2).abs());
+            }
+        }
+    }
 
     // Strategy comparison (CRN at dt = 5e-4)
     let strat_glt = &sim_dt_5e4;
@@ -467,16 +517,24 @@ fn main() {
     let c1_solvers = max_rel_je < 1e-10 && max_rel_jr < 1e-10;
     let c2_hjb_conv = hjb_errs[3] < 2e-3 && hjb_orders.iter().all(|&o| o > 0.85 && o < 1.15);
     let c3_sym_mono = sym_err < 1e-12 && mono_ok;
-    let c4_mc_utility =
-        (sim_dt_25e4.certainty_equiv - exact_ce).abs() <= 3.0 * sim_dt_25e4.se_ce + 0.05;
-    let c5_kolmogorov = (sim_dt_5e4.mean_executions - kol.expected_executions).abs() < 0.5
-        && (sim_dt_5e4.var_inventory - kol.var_inventory).abs() < 0.5;
+    let c4_mc_utility = z_rich < 3.0 && z_cont_ce < 3.0;
+    let c5_kolmogorov = z_kol_exec <= 3.0 && z_kol_var_q <= 3.0;
     let c6_glt_dom = strat_glt.certainty_equiv >= strat_as.certainty_equiv - 3.0 * strat_as.se_ce
         && strat_glt.certainty_equiv >= strat_sym.certainty_equiv - 3.0 * strat_sym.se_ce
         && strat_glt.certainty_equiv >= strat_tight.certainty_equiv - 3.0 * strat_tight.se_ce;
     let c7_as_recovery = misspec.adverse[3].exact_as_hjb.certainty_equiv
         > misspec.adverse[3].unadjusted_glt.certainty_equiv;
-    let c8_budget = total_secs < 300.0 || quick;
+    let ce_s05 = misspec.wrong_sigma[0].summary.certainty_equiv;
+    let se_s05 = misspec.wrong_sigma[0].summary.se_ce;
+    let ce_s10 = misspec.wrong_sigma[1].summary.certainty_equiv;
+    let se_s10 = misspec.wrong_sigma[1].summary.se_ce;
+    let ce_s15 = misspec.wrong_sigma[2].summary.certainty_equiv;
+    let se_s15 = misspec.wrong_sigma[2].summary.se_ce;
+    let max_sigma_deg = (ce_s10 - ce_s05).abs().max((ce_s10 - ce_s15).abs());
+    let c8_wrong_sigma = ce_s05 < ce_s10 + 3.0 * (se_s05 * se_s05 + se_s10 * se_s10).sqrt()
+        && ce_s15 < ce_s10 + 3.0 * (se_s15 * se_s15 + se_s10 * se_s10).sqrt()
+        && max_sigma_deg < 0.1;
+    let c9_budget = total_secs < 300.0 || quick;
 
     let crit_str = |ok: bool| if ok { "tercapai" } else { "belum tercapai" };
 
@@ -548,18 +606,52 @@ fn main() {
                 ("mc_dt_1e3_ce", sim_dt_1e3.certainty_equiv.into()),
                 ("mc_dt_5e4_ce", sim_dt_5e4.certainty_equiv.into()),
                 ("mc_dt_25e4_ce", sim_dt_25e4.certainty_equiv.into()),
+                ("mc_dt_125e4_ce", sim_dt_125e4.certainty_equiv.into()),
+                ("mc_empirical_order_p", p_emp.into()),
                 ("mc_ce_richardson", ce_rich.into()),
-                ("mc_vs_exact_z", mc_vs_exact_z.into()),
+                ("mc_se_richardson_crn", se_rich_crn.into()),
+                ("mc_se_richardson_indep", se_rich_indep.into()),
+                ("mc_richardson_vs_exact_z", z_rich.into()),
+                ("mc_dt_125e4_vs_exact_z", z_125e4.into()),
+                ("mc_continuous_ce", sim_cont.certainty_equiv.into()),
+                ("mc_continuous_se_ce", sim_cont.se_ce.into()),
+                ("mc_continuous_vs_exact_z", z_cont_ce.into()),
                 (
                     "kolmogorov_expected_executions",
                     kol.expected_executions.into(),
                 ),
                 (
-                    "mc_expected_executions_dt5e4",
-                    sim_dt_5e4.mean_executions.into(),
+                    "mc_continuous_expected_executions",
+                    sim_cont.mean_executions.into(),
                 ),
+                ("mc_continuous_se_executions", sim_cont.se_executions.into()),
                 ("kolmogorov_var_inventory", kol.var_inventory.into()),
-                ("mc_var_inventory_dt5e4", sim_dt_5e4.var_inventory.into()),
+                ("mc_continuous_var_inventory", sim_cont.var_inventory.into()),
+                (
+                    "mc_continuous_se_var_inventory",
+                    sim_cont.se_var_inventory.into(),
+                ),
+                (
+                    "mc_var_inventory_by_dt",
+                    vec![
+                        sim_dt_1e3.var_inventory,
+                        sim_dt_5e4.var_inventory,
+                        sim_dt_25e4.var_inventory,
+                        sim_dt_125e4.var_inventory,
+                    ]
+                    .into(),
+                ),
+                (
+                    "mc_var_inventory_diff_vs_kol_by_dt",
+                    vec![
+                        (kol.var_inventory - sim_dt_1e3.var_inventory).abs(),
+                        (kol.var_inventory - sim_dt_5e4.var_inventory).abs(),
+                        (kol.var_inventory - sim_dt_25e4.var_inventory).abs(),
+                        (kol.var_inventory - sim_dt_125e4.var_inventory).abs(),
+                    ]
+                    .into(),
+                ),
+                ("eps0_fd_vs_glt_quote_max_diff", eps0_quote_max_diff.into()),
                 (
                     "strategies",
                     vec![
@@ -702,9 +794,15 @@ fn main() {
                     "c4_mc_utility_matches_exact",
                     JsonVal::Obj(vec![
                         ("status", crit_str(c4_mc_utility).into()),
-                        ("mc_ce", sim_dt_25e4.certainty_equiv.into()),
+                        ("p_emp", p_emp.into()),
+                        ("ce_rich", ce_rich.into()),
+                        ("se_rich_crn", se_rich_crn.into()),
+                        ("se_rich_indep", se_rich_indep.into()),
+                        ("z_rich", z_rich.into()),
+                        ("ce_cont", sim_cont.certainty_equiv.into()),
+                        ("se_cont", sim_cont.se_ce.into()),
+                        ("z_cont", z_cont_ce.into()),
                         ("exact_ce", exact_ce.into()),
-                        ("z_score", mc_vs_exact_z.into()),
                     ]),
                 ),
                 (
@@ -712,15 +810,17 @@ fn main() {
                     JsonVal::Obj(vec![
                         ("status", crit_str(c5_kolmogorov).into()),
                         (
-                            "exec_diff",
-                            (sim_dt_5e4.mean_executions - kol.expected_executions)
+                            "exec_diff_cont",
+                            (sim_cont.mean_executions - kol.expected_executions)
                                 .abs()
                                 .into(),
                         ),
+                        ("z_exec_cont", z_kol_exec.into()),
                         (
-                            "var_q_diff",
-                            (sim_dt_5e4.var_inventory - kol.var_inventory).abs().into(),
+                            "var_q_diff_cont",
+                            (sim_cont.var_inventory - kol.var_inventory).abs().into(),
                         ),
+                        ("z_var_q_cont", z_kol_var_q.into()),
                     ]),
                 ),
                 (
@@ -738,6 +838,14 @@ fn main() {
                     JsonVal::Obj(vec![
                         ("status", crit_str(c7_as_recovery).into()),
                         (
+                            "eps_0_unadj_ce",
+                            misspec.adverse[0].unadjusted_glt.certainty_equiv.into(),
+                        ),
+                        (
+                            "eps_0_exact_as_ce",
+                            misspec.adverse[0].exact_as_hjb.certainty_equiv.into(),
+                        ),
+                        (
                             "eps_0_1_unadj_ce",
                             misspec.adverse[3].unadjusted_glt.certainty_equiv.into(),
                         ),
@@ -748,9 +856,23 @@ fn main() {
                     ]),
                 ),
                 (
-                    "c8_runtime_under_300s",
+                    "c8_wrong_sigma_ce_degradation",
                     JsonVal::Obj(vec![
-                        ("status", crit_str(c8_budget).into()),
+                        ("status", crit_str(c8_wrong_sigma).into()),
+                        ("ce_05_sigma", ce_s05.into()),
+                        ("se_05_sigma", se_s05.into()),
+                        ("ce_10_sigma", ce_s10.into()),
+                        ("se_10_sigma", se_s10.into()),
+                        ("ce_15_sigma", ce_s15.into()),
+                        ("se_15_sigma", se_s15.into()),
+                        ("max_degradation", max_sigma_deg.into()),
+                        ("threshold_max_deg", 0.1_f64.into()),
+                    ]),
+                ),
+                (
+                    "c9_runtime_under_300s",
+                    JsonVal::Obj(vec![
+                        ("status", crit_str(c9_budget).into()),
                         ("total_seconds", total_secs.into()),
                         ("budget_seconds", 300.0_f64.into()),
                     ]),
@@ -761,9 +883,9 @@ fn main() {
 
     write_json_file(&out_json, &doc).expect("failed to write results.json");
     println!(
-        "day004g selesai dalam {:.2}s | workers={n_workers} | CE_exact={exact_ce:.4} | CE_MC={:.4} | c1..c8={}/{}/{}/{}/{}/{}/{}/{}",
+        "day004g selesai dalam {:.2}s | workers={n_workers} | CE_exact={exact_ce:.4} | CE_Rich={ce_rich:.4} (p={p_emp:.3}) | CE_cont={:.4} | c1..c9={}/{}/{}/{}/{}/{}/{}/{}/{}",
         total_secs,
-        sim_dt_25e4.certainty_equiv,
+        sim_cont.certainty_equiv,
         c1_solvers,
         c2_hjb_conv,
         c3_sym_mono,
@@ -771,6 +893,7 @@ fn main() {
         c5_kolmogorov,
         c6_glt_dom,
         c7_as_recovery,
-        c8_budget
+        c8_wrong_sigma,
+        c9_budget
     );
 }
