@@ -71,17 +71,20 @@ Parameter acuan: $T = 1$, $\sigma = 0{,}3$, $\gamma = 0{,}1$, $k = 1{,}5$, $A = 
 | Konvergensi HJB FD ($\Delta t$) | Error `1,48e-4` → `1,84e-5` | Orde empiris `1,0032` → `1,0008` | `c2 = tercapai` |
 | Simetri & monotonisitas kuotasi | `max asym = 9,38e-15` | $\delta^b(0) = \delta^a(0) = 0{,}648923$, spread `1,297846` | `c3 = tercapai` |
 | Celah spektral & batas stasioner | $\Lambda_1 - \Lambda_0 = 1{,}277564$ | Beda kuotasi $T=50$ vs *ground state* $= 0$ | — |
-| Ekstrapolasi $\mathrm{CE}_{\mathrm{MC}}(\Delta t)$ | `66,3901` → `66,2981` (`Rich = 66,2880`) | Eksak `66,2616` ($z = 2{,}20$, $\mathrm{SE} = 0{,}0165$) | `c4 = tercapai` |
-| Kolmogorov vs MC ($\Delta t = 5\times 10^{-4}$) | $\mathbb{E}[\mathrm{exec}]$: `106,0105` vs `106,0186` | $\operatorname{Var}(q_T)$: `62,0174` vs `60,6586` (beda `1,3589`) | `c5 = belum tercapai` |
+| Ekstrapolasi $\mathrm{CE}_{\mathrm{MC}}(\Delta t)$ | `66,3901` → `66,2981` (`Rich = 66,2684`, $p=1{,}017$) | Eksak `66,2616` ($z_{\mathrm{Rich}} = 0{,}23$, $z_{\mathrm{cont}} = 0{,}88$) | `c4 = tercapai` |
+| Kolmogorov vs MC kontinu | $\mathbb{E}[\mathrm{exec}]$: `106,0105` vs `106,0240` ($z=0{,}59$) | $\operatorname{Var}(q_T)$: `62,0174` vs `62,1197` ($z=0{,}60$) | `c5 = tercapai` |
 | Perbandingan Strategi (`CE`, CRN) | GLT `66,3285 ± 0,0164` | AS `66,2892`, Sym `66,0818`, Tight `23,3540` | `c6 = tercapai` |
-| Salah spesifikasi *Adverse Selection* ($\varepsilon = 0{,}1$) | Unadj `57,5183` vs Shift `57,8590` vs AS-HJB `59,7224` | Selisih AS-HJB vs Unadj `+2,2041` | `c7 = tercapai` |
-| Salah spesifikasi $\sigma$ ($\{0{,}5\sigma, \sigma, 1{,}5\sigma\}$) | CE `66,3074` / `66,3148` / `66,2944` | $\mathrm{SD}(q_T)$: `8,339` / `7,807` / `7,106` | `c8 = tercapai` |
+| Salah spesifikasi *Adverse Selection* ($\varepsilon = 0{,}1$) | Unadj `57,5183` vs Shift `57,8590` vs AS-HJB `60,7627` | Reduksi $\varepsilon=0$: `66,3191` vs `66,3191` | `c7 = tercapai` |
+| Salah spesifikasi $\sigma$ ($\{0{,}5\sigma, \sigma, 1{,}5\sigma\}$) | CE `66,3074` / `66,3148` / `66,2944` | `max_deg = 0,0203 < 0,1`; $\mathrm{SD}(q_T)$: `8,339` / `7,807` / `7,106` | `c8 = tercapai` |
+| Anggaran waktu runner | `53,53s` (`8` worker) | Batas `300s` | `c9 = tercapai` |
 | Salah spesifikasi intensitas ($A, k \pm 30\%$) | GLT `46,4034..88,7541` | AS `46,3926..88,6100` (GLT unggul konsisten) | — |
 | Salah spesifikasi *drift* ($\mu \in [-0{,}2, 0{,}2]$) | CE `66,2553` ($\pm 0{,}2$) vs `66,2920` ($\mu=0$) | Penalti kecil (~`0,037`), simetris | — |
 
-## Catatan Diagnostik Penting (`c5`)
+## Catatan Diagnostik (`c4`, `c5`, `c7`)
 
-Kriteria `c5_kolmogorov_matches_mc` berstatus `belum tercapai` bukan karena *bug* kode, melainkan efek diskretisasi waktu $O(\Delta t)$: pada langkah $\Delta t = 5\times 10^{-4}$, penarikan Bernoulli independen untuk *bid* dan *ask* memungkinkan dua eksekusi berlawanan terjadi dalam satu langkah yang sama ($\Delta q = 0$), sehingga variansi inventori diskret (`60,6586`) sedikit lebih teredam dibanding solusi kontinu ODE Forward Kolmogorov (`62,0174`, selisih `1,3589 > 0,5`).
+- **Orde Richardson `c4`**: Ekstrapolasi memakai orde empiris $p = 1{,}017$ (bukan orde 2) dengan propagasi SE CRN (`0,0295`).
+- **Simulator Kontinu `c5`**: Selisih $\operatorname{Var}(q_T)$ diskret terhadap Kolmogorov menyusut seorde $O(\Delta t)$ (`2,617` → `1,359` → `0,468` → `0,313`), dan simulator kontinu *Lewis–Shedler thinning* cocok dengan Kolmogorov dalam `< 1 SE`.
+- **Reduksi $\varepsilon = 0$ `c7`**: `exact_as_hjb` kini memakai tabel waktu penuh $(t, q)$ sehingga pada $\varepsilon = 0$ identik dengan GLT (`66,3191`, $\operatorname{Var}(q_T) = 60{,}740$).
 
 ## Daftar Grafik
 

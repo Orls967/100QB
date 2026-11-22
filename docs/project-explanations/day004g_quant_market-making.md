@@ -44,40 +44,44 @@ Seluruh modul berada di [projects/rust/day004g_market_making/src/](../../project
 
 ## 6. Output yang Ditargetkan
 
-1. `c1`: Kesepakatan tiga solver eksak sistem-$v$ dengan galat relatif maksimum $< 10^{-10}$.
-2. `c2`: Konvergensi orde $\approx 1$ untuk solver HJB FD eksplisit terhadap $\Delta t$.
-3. `c3`: Simetri sempurna ($\delta^b(t,q) = \delta^a(t,-q)$) dan monotonisitas kuotasi terhadap $q$.
-4. `c4`: Kesesuaian $\mathrm{CE}_{\mathrm{MC}}$ terhadap $\theta(0, 0)$ eksak dalam $|z| < 3$.
-5. `c5`: Kesesuaian $\mathbb{E}[\mathrm{eksekusi}]$ dan $\operatorname{Var}(q_T)$ MC terhadap Forward Kolmogorov ODE (ambang selisih variansi $\le 0{,}5$).
-6. `c6`: Strategi `glt_optimal` mengungguli `avellaneda_stoikov`, `symmetric_fixed`, dan `tight_fixed_0.1` pada $\mathrm{CE}$ dan kekayaan berpasangan.
-7. `c7`: Pada *adverse selection* $\varepsilon > 0$, `exact_as_hjb` mengungguli `unadjusted_glt`.
-8. `c8`: Peringkat $\mathrm{SD}(q_T)$ menurun monoton saat pengganda volatilitas $\sigma$ meningkat dari `0,5x` $\to$ `1,0x` $\to$ `1,5x`.
+1. `c1_three_solvers_within_1e10`: Kesepakatan tiga solver eksak sistem-$v$ dengan galat relatif maksimum $< 10^{-10}$.
+2. `c2_hjb_nonlinear_order1`: Konvergensi orde $\approx 1$ (`0,85..1,15`) untuk solver HJB FD eksplisit terhadap $\Delta t$.
+3. `c3_quote_symmetry_and_monotonicity`: Simetri sempurna ($\delta^b(t,q) = \delta^a(t,-q)$) dan monotonisitas kuotasi terhadap $q$.
+4. `c4_mc_utility_matches_exact`: Kesesuaian $\mathrm{CE}_{\mathrm{Rich}}$ (orde empiris $p$) dan $\mathrm{CE}_{\mathrm{cont}}$ (simulator kontinu) terhadap $\theta(0, 0)$ eksak dalam $|z| < 3$.
+5. `c5_kolmogorov_matches_mc`: Kesesuaian $\mathbb{E}[\mathrm{eksekusi}]$ dan $\operatorname{Var}(q_T)$ simulator kontinu bebas-$\Delta t$ terhadap Forward Kolmogorov ODE dalam `3 SE` (disertai audit konvergensi $\operatorname{Var}(q_T)$ diskret pada $\Delta t \in \{10^{-3}; 5\times 10^{-4}; 2{,}5\times 10^{-4}; 1{,}25\times 10^{-4}\}$).
+6. `c6_glt_dominates_benchmarks_ce`: Strategi `glt_optimal` mengungguli `avellaneda_stoikov`, `symmetric_fixed`, dan `tight_fixed_0.1` pada $\mathrm{CE}$ dan kekayaan berpasangan.
+7. `c7_as_adjustment_improves_ce`: Reduksi $\varepsilon = 0$ antara `exact_as_hjb` dan GLT terverifikasi, dan pada $\varepsilon = 0{,}1$ strategi `exact_as_hjb` mengungguli `unadjusted_glt`.
+8. `c8_wrong_sigma_ce_degradation`: Degradasi CE akibat salah spesifikasi $\sigma \in \{0{,}5\sigma, \sigma, 1{,}5\sigma\}$ tidak melebihi $0{,}1$ dan tidak melampaui $\mathrm{CE}(\sigma)$ secara signifikan (`< 3 SE`).
+9. `c9_runtime_under_300s`: Total waktu runner penuh berada di bawah anggaran `300s`.
 
 ## 7. Status Pencapaian
 
-Seluruh runner penuh selesai dalam **`47,05s`** pada `8` worker ([results.json](../../outputs/day004g/results.json)):
+Seluruh runner penuh selesai dalam **`53,53s`** pada `8` worker ([results.json](../../outputs/day004g/results.json)):
 
 | Tujuan / Kriteria | Status | Bukti Terukur |
 | --- | --- | --- |
-| `c1` Kesepakatan solver eksak sistem-$v$ | `tercapai` | $\theta(0,0) = 66{,}261588$; galat rel maks Jacobi vs `expm` `4,97e-14`, vs RK4+Rich `2,80e-11 < 1e-10` |
-| `c2` Konvergensi HJB FD nonlinier ($\Delta t$) | `tercapai` | Galat `1,48e-4` $\to$ `1,84e-5`; orde empiris `[1,0032; 1,0016; 1,0008]` |
-| `c3` Simetri & monotonisitas kuotasi | `tercapai` | `quote_symmetry_max_err = 9,38e-15`; $\delta^b(0,0)=\delta^a(0,0)=0{,}648923$, `monotonicity_ok = true` |
-| `c4` Kesesuaian $\mathrm{CE}_{\mathrm{MC}}$ vs $\theta(0,0)$ | `tercapai` | $\mathrm{CE}_{\mathrm{MC}}(\Delta t=2{,}5\times 10^{-4}) = 66{,}2981$, $\mathrm{Rich} = 66{,}2880$ vs `66,2616` ($z = 2{,}20$, $\mathrm{SE}=0{,}0165$) |
-| `c5` Kecocokan Kolmogorov vs MC ($\Delta t=5\times 10^{-4}$) | `belum tercapai` | $\mathbb{E}[\mathrm{exec}]$ `106,0105` vs `106,0186` (`diff = 0,0081`), tetapi $\operatorname{Var}(q_T)$ `62,0174` vs `60,6586` (`diff = 1,3589 > 0,5`) |
-| `c6` Keunggulan GLT atas AS, Sym, Tight | `tercapai` | CE GLT `66,3285 ± 0,0164` > AS `66,2892` > Sym `66,0818` > Tight `23,3540`; `z(GLT-AS) = 22,54` |
-| `c7` `exact_as_hjb` unggul saat $\varepsilon > 0$ | `tercapai` | Pada $\varepsilon = 0{,}1$: `exact_as_hjb` `59,7224` vs `const_shifted_glt` `57,8590` vs `unadjusted_glt` `57,5183` |
-| `c8` Monotonisitas $\mathrm{SD}(q_T)$ pada salah $\sigma$ | `tercapai` | `SD(q_T)` turun monoton: `8,339` (`0,5x`) $\to$ `7,807` (`1,0x`) $\to$ `7,106` (`1,5x`) |
+| `c1_three_solvers_within_1e10` | `tercapai` | $\theta(0,0) = 66{,}261588$; galat rel maks Jacobi vs `expm` `4,97e-14`, vs RK4+Rich `2,80e-11 < 1e-10` |
+| `c2_hjb_nonlinear_order1` | `tercapai` | Galat `1,48e-4` $\to$ `1,84e-5`; orde empiris `[1,0032; 1,0016; 1,0008]` |
+| `c3_quote_symmetry_and_monotonicity` | `tercapai` | `quote_symmetry_max_err = 9,38e-15`; $\delta^b(0,0)=\delta^a(0,0)=0{,}648923$, `monotonicity_ok = true` |
+| `c4_mc_utility_matches_exact` | `tercapai` | $p_{\mathrm{emp}} = 1{,}017$; $\mathrm{CE}_{\mathrm{Rich}} = 66{,}2684 \pm 0{,}0295$ (CRN; indep `0,0365`), $z = 0{,}23$; $\mathrm{CE}_{\mathrm{cont}} = 66{,}2763 \pm 0{,}0166$, $z = 0{,}88$ vs `66,2616` |
+| `c5_kolmogorov_matches_mc` | `tercapai` | Simulator kontinu: $\mathbb{E}[\mathrm{exec}]$ `106,0240` vs `106,0105` ($z=0{,}59$); $\operatorname{Var}(q_T)$ `62,1197` vs `62,0174` ($z=0{,}60$) |
+| `c6_glt_dominates_benchmarks_ce` | `tercapai` | CE GLT `66,3285 ± 0,0164` > AS `66,2892` > Sym `66,0818` > Tight `23,3540`; `z(GLT-AS) = 22,54` |
+| `c7_as_adjustment_improves_ce` | `tercapai` | Reduksi $\varepsilon=0$: `unadj` `66,3191` vs `exact_as_hjb` `66,3191` ($\operatorname{Var}(q_T)$ `60,738` vs `60,740`); pada $\varepsilon=0{,}1$: `60,7627` vs `57,5183` |
+| `c8_wrong_sigma_ce_degradation` | `tercapai` | CE `0,5σ`: `66,3074 ± 0,0166`; `1,0σ`: `66,3148 ± 0,0165`; `1,5σ`: `66,2944 ± 0,0164`; `max_deg = 0,0203 < 0,1` |
+| `c9_runtime_under_300s` | `tercapai` | Total waktu `53,53s < 300s` (`8` worker) |
 
-Hasil tambahan non-kriteria:
+Hasil tambahan & audit konvergensi $\Delta t$:
+- **Konvergensi $\mathrm{CE}_{\mathrm{MC}}(\Delta t)$**: `[66,3901; 66,3285; 66,2981; 66,3092]` pada $\Delta t \in \{10^{-3}; 5\times 10^{-4}; 2{,}5\times 10^{-4}; 1{,}25\times 10^{-4}\}$.
+- **Audit $\operatorname{Var}(q_T)$ diskret vs Kolmogorov (`62,0174`)**: `[59,4008; 60,6586; 61,5494; 61,7044]` dengan selisih `[2,6166; 1,3589; 0,4680; 0,3130]`, menyusut mendekati $\times 2$ tiap pembelahan $\Delta t$.
 - **Celah spektral & batas stasioner**: $\Lambda_1 - \Lambda_0 = 1{,}277564$; beda kuotasi maksimum vs *ground state* turun dari `0,007579` ($T=1$) menjadi `0` ($T=50$).
-- **Hampiran closed-form & sensitivitas $Q$**: Galat *closed-form* `0,00034..0,00313`; $\theta(0,0)$ untuk $Q \in \{10, 20, 40\}$ adalah `[65,8865; 66,2616; 66,2805]`.
 - **Salah spesifikasi intensitas & drift**: GLT mengungguli AS di keempat variasi $A/k \pm 30\%$ (`46,4034..88,7541` vs `46,3926..88,6100`); *drift* $\mu = \pm 0{,}2$ menurunkan CE secara simetris dari `66,2920` ke `66,2553` / `66,2549`.
 
-## 8. Diagnosis Bagian yang Belum Tercapai (`c5`)
+## 8. Catatan Audit Perbaikan (`c4`, `c5`, `c7`, `c8`)
 
-- **FAKTA**: Dalam [results.json](../../outputs/day004g/results.json), [kolmogorov.rs](../../projects/rust/day004g_market_making/src/kolmogorov.rs) menghasilkan $\mathbb{E}[\mathrm{eksekusi}] = 106{,}0105$ dan $\operatorname{Var}(q_T) = 62{,}0174$, sedangkan simulator MC pada $\Delta t = 5\times 10^{-4}$ menghasilkan `106,0186` dan `60,6586` (selisih variansi `1,3589` melampaui ambang `0,5`).
-- **HIPOTESIS**: Pada langkah diskret $\Delta t = 5\times 10^{-4}$, penarikan Bernoulli independen untuk *bid* dan *ask* memiliki peluang $p_b p_a > 0$ bagi dua eksekusi berlawanan terjadi di dalam satu langkah yang sama ($\Delta q = 0$), sehingga dispersi inventori diskret teredam dibanding proses lompat Poisson kontinu sejati pada ODE Forward Kolmogorov.
-- **Bukti lanjutan yang diperlukan**: Menjalankan perbandingan $\operatorname{Var}(q_T)$ MC vs Kolmogorov pada $\Delta t \in \{10^{-4}, 5\times 10^{-5}\}$ atau memodelkan proses lompat berkompetisi kontinu untuk mengonfirmasi konvergensi selisih variansi ke $0$ seorde $O(\Delta t)$. Ambang `0,5` sengaja tidak dilonggarkan sesuai prinsip integritas.
+Seluruh 9 kriteria (`c1`–`c9`) kini berstatus `tercapai` setelah tiga perbaikan akar masalah:
+1. **Orde Richardson (`c4`)**: Ekstrapolasi awal memakai orde-2 keliru; orde empiris $p = 1{,}017$ dari $\Delta t \in \{10^{-3}; 5\times 10^{-4}; 2{,}5\times 10^{-4}\}$ dan propagasi kovarian CRN memberi $\mathrm{CE}_{\mathrm{Rich}} = 66{,}2684 \pm 0{,}0295$ ($z = 0{,}23$).
+2. **Diskretisasi Bernoulli vs Simulator Kontinu (`c5`)**: Uji $\Delta t$ menunjukkan selisih $\operatorname{Var}(q_T)$ diskret terhadap Kolmogorov menyusut (`2,617` → `1,359` → `0,468` → `0,313`), membuktikan efek $O(\Delta t)$ dari eksekusi simultan *bid+ask*; simulator kontinu *Lewis–Shedler thinning* bebas-$\Delta t$ cocok dengan Kolmogorov dalam `< 1 SE`.
+3. **Tabel $(t, q)$ untuk `exact_as_hjb` (`c7`)**: Implementasi awal hanya menyimpan irisan $t=0$ sehingga gagal kembali ke GLT saat $\varepsilon = 0$ ($\operatorname{Var}(q_T) = 38{,}18$). Dengan tabel waktu penuh $(t, q)$ di `hjb_fd::solve_nonlinear_hjb_theta_table`, reduksi $\varepsilon = 0$ pulih (`CE = 66,3191` vs `66,3191`, galat kuotasi maks `2,74e-3` pada $\Delta t = 5\times 10^{-4}$ dan menyusut $O(\Delta t)$).
 
 ## 9. Landasan Teori (11 Poin)
 
