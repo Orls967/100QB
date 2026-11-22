@@ -105,9 +105,14 @@ pub struct JohansenSummary {
     pub q95: f64,
     pub se_q95: f64,
     pub q99: f64,
+    pub q95_h0_drift: f64,
+    pub se_q95_h0_drift: f64,
     pub spurious_size_at_q95: f64,
+    pub spurious_size_at_q95_drift: f64,
     pub spurious_size_at_lit_1541: f64,
     pub coint_power_theta16_2yr: f64,
+    pub coint_power_at_q95_drift: f64,
+    pub coint_power_at_lit_1541: f64,
     pub brownian_q95_case1_no_const: f64,
     pub brownian_q95_case2_rest_const: f64,
     pub brownian_q95_case3_unrest_const: f64,
@@ -257,6 +262,23 @@ pub fn run_johansen_study(
     // Out-of-sample spurious size (independent seed) vs cointegrated power (2yr, theta=16)
     let dt = 1.0_f64 / 252.0;
     let sqrt_dt = dt.sqrt();
+    let mut stats_h0_drift = parallel::run_chunks(n_paths, n_workers, |r| {
+        let mut rg = Rng::new(derive_seed(seed ^ 0x3520, 0x3521, r as u64));
+        let mut x = Vec::with_capacity(t_len);
+        let mut y = Vec::with_capacity(t_len);
+        let mut cx = 0.0_f64;
+        let mut cy = 0.0_f64;
+        for _ in 0..t_len {
+            cx += 0.05 * dt + 0.20 * sqrt_dt * rg.normal();
+            cy += 0.05 * dt + 0.20 * sqrt_dt * rg.normal();
+            x.push(cx);
+            y.push(cy);
+        }
+        johansen_trace_bivariate(&x, &y)
+    });
+    stats_h0_drift.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+    let (q95_h0_drift, se_q95_h0_drift) = stats::quantile_and_se(&stats_h0_drift, 0.95);
+
     let p_ou = OuParams::default_params();
     let oos = parallel::run_chunks(n_paths, n_workers, |r| {
         let mut rg = Rng::new(derive_seed(seed ^ 0x7777_0001, 0x3550, r as u64));
@@ -272,6 +294,7 @@ pub fn run_johansen_study(
         }
         let tr_sp = johansen_trace_bivariate(&x_sp, &y_sp);
         let rej_sp = tr_sp > q95;
+        let rej_sp_drift = tr_sp > q95_h0_drift;
         let rej_lit = tr_sp > 15.41;
 
         let n_2yr = 504;
@@ -284,13 +307,26 @@ pub fn run_johansen_study(
             x_co.push(cxc);
             y_co.push(0.1 + 1.2 * cxc + sp);
         }
-        let rej_co = johansen_trace_bivariate(&x_co, &y_co) > q95;
-        (rej_sp, rej_lit, rej_co)
+        let tr_co = johansen_trace_bivariate(&x_co, &y_co);
+        let rej_co = tr_co > q95;
+        let rej_co_drift = tr_co > q95_h0_drift;
+        let rej_co_lit = tr_co > 15.41;
+        (
+            rej_sp,
+            rej_sp_drift,
+            rej_lit,
+            rej_co,
+            rej_co_drift,
+            rej_co_lit,
+        )
     });
     let nf = oos.len() as f64;
     let sp_size = oos.iter().filter(|x| x.0).count() as f64 / nf;
-    let sp_lit = oos.iter().filter(|x| x.1).count() as f64 / nf;
-    let co_pwr = oos.iter().filter(|x| x.2).count() as f64 / nf;
+    let sp_size_drift = oos.iter().filter(|x| x.1).count() as f64 / nf;
+    let sp_lit = oos.iter().filter(|x| x.2).count() as f64 / nf;
+    let co_pwr = oos.iter().filter(|x| x.3).count() as f64 / nf;
+    let co_pwr_drift = oos.iter().filter(|x| x.4).count() as f64 / nf;
+    let co_pwr_lit = oos.iter().filter(|x| x.5).count() as f64 / nf;
 
     let (bm1, bm2, bm3, bm3d) = johansen_brownian_functional_q95(5000, n_paths, n_workers, seed);
     let mut t_sweep_q95 = Vec::new();
@@ -322,9 +358,14 @@ pub fn run_johansen_study(
         q95,
         se_q95,
         q99,
+        q95_h0_drift,
+        se_q95_h0_drift,
         spurious_size_at_q95: sp_size,
+        spurious_size_at_q95_drift: sp_size_drift,
         spurious_size_at_lit_1541: sp_lit,
         coint_power_theta16_2yr: co_pwr,
+        coint_power_at_q95_drift: co_pwr_drift,
+        coint_power_at_lit_1541: co_pwr_lit,
         brownian_q95_case1_no_const: bm1,
         brownian_q95_case2_rest_const: bm2,
         brownian_q95_case3_unrest_const: bm3,

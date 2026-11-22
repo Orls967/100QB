@@ -65,7 +65,7 @@ Seluruh runner penuh selesai dalam **`3,79s`** pada `8` *worker* ([results.json]
 | `c2_fpt_closed_bvp_mc_agree` | `tercapai` | `(-SD,+SD)`: `0,18721` vs BVP `0,18721` vs MC `0,18672 ± 0,00036` (`z=1,36`); `(0,+SD)`: `0,13084` vs `0,13084` vs `0,13098` (`z=0,43`) |
 | `c3_optimal_threshold_and_200yr_mc` | `tercapai` | `a* = -0,0157411` (`diff = 4,9e-10`, `0,4452 SD`); `R(a*) = 0,2044`; MC 200 thn: `z_trades = 0,637`, `z_profit = 0,637` |
 | `c4_df_eg_size_and_spurious_rejection` | `tercapai` | DF (`R=10^6`): `q05 = -2,8641 ± 0,0017`; EG (`R=20k`): `q05 = -3,3531 ± 0,0123`, *out-of-sample size* `4,765%` (dalam `3 SE`); Spurious `|t|>1,96`: `93,26%` |
-| `c5_johansen_size_and_power` | `belum tercapai` | `q95 = 17,997 ± 0,089`, *out-of-sample size* `4,870%` (`10,985%` pada `15,41`), tetapi `coint_power_2yr = 81,565% < 90%` |
+| `c5_johansen_size_and_power` | `belum tercapai` | `q95 = 17,997`, `q95_h0_drift = 18,000 ± 0,097`, *out-of-sample size* `4,870%` (`10,985%` pada `15,41`), `coint_power_2yr = 81,555% < 90%` (`93,460%` pada `15,41`) |
 | `c6_rolling_penalty_shrinks_with_w` | `tercapai` | Penalti estimasi menyusut: `0,02427 ± 0,00093` ($W=1$) $\to$ `0,01343` ($W=2$) $\to$ `0,00598 ± 0,00062` ($W=5$) |
 | `c7_spurious_filtered_profit_nonpos` | `tercapai` | Laba *spurious* berfilter EG: `-0,00061 ± 0,00038` (`trade_frac = 4,74%`); tanpa filter `-0,01365` |
 | `c8_runtime_under_300s` | `tercapai` | Total waktu `3,79s < 300s` (`8` *worker*) |
@@ -81,8 +81,11 @@ Ringkasan terukur tambahan:
 
 ## 8. Diagnosis Bagian yang Belum Tercapai (`c5`)
 
-- **FAKTA**: Dalam [results.json](../../outputs/day004i/results.json), uji *trace* Johansen bivariat ($T=500, R=20.000$) menghasilkan kuantil 95% `17,997 ± 0,089` dengan ukuran uji *spurious* tepat `5,00%`, namun *power* pada pasangan berkointegrasi berdurasi 2 tahun ($\theta=16, N=504$) hanya mencapai `81,81%`, di bawah ambang pra-tetap `90%` (sementara EG pada skenario yang sama mencapai `96,98%`).
-- **HIPOTESIS**: Uji Johansen memperkirakan matriks rank $2\times 2$ penuh beserta dua vektor penyesuaian dan dua konstanta tanpa memanfaatkan struktur asimetris $y_t = \alpha + \beta x_t + X_t$ dengan $x_t$ *random walk* eksogen, sehingga mengorbankan derajat kebebasan dan menghasilkan nilai kritis lebih tinggi (`18,00` di bawah H0 tanpa *drift*, dibanding `15,41` pada kasus *unrestricted constant* ber-*drift*) yang menurunkan *power* pada sampel 2 tahun. Ambang `90%` sengaja tidak diturunkan sesuai aturan integritas.
+- **FAKTA**:
+  1. Pada [results.json](../../outputs/day004i/results.json), kuantil asimtotik fungsional Brownian ($T=5000, R=20.000$) menghasilkan Case 1 `12,334` (literatur `12,53`), Case 2 `20,266` (`19,96`), Case 3 drift-nol `17,987`, dan Case 3 drift non-nol `15,407` (Osterwald–Lenum `15,41`).
+  2. Ketika H0 disimulasikan dengan *drift* yang sama persis seperti DGP aplikasi (`dx = 0,05*dt + 0,20*sqrt(dt)*z`), `q95_h0_drift = 18,000 ± 0,097` (hampir identik dengan H0 tanpa drift `17,997 ± 0,089`, karena rasio sinyal/derau drift selama 2 tahun hanya `0,10 / 0,283 ≈ 0,35`, sehingga belum memasuki rezim dominasi tren linear).
+  3. Pada sampel *out-of-sample* independen ($R=20.000$), memakai `q95_h0_drift` memberi `spurious_size = 0,04870` (tepat dalam `3 SE` binomial) dan `coint_power_2yr = 0,81555 < 0,90`; memakai kuantil literatur `15,41` memberi `coint_power_at_lit_1541 = 0,93460`, tetapi menaikkan `spurious_size_at_lit_1541 = 0,10985` (> `2x` ukuran nominal `5%`).
+- **HIPOTESIS**: Akar masalah rendahnya *power* (`81,555%` vs `90%`) pada $T=2$ tahun bukan bug implementasi maupun "hilangnya derajat kebebasan", melainkan karena pada DGP ber-drift kecil (`0,05/tahun`) di horizon pendek $T=2$ tahun, distribusi null Johansen berada di rezim Case 3 drift-nol (`q95 ≈ 18,00`) alih-alih rezim tren dominan (`15,41`). Menggunakan `15,41` menaikkan *power* ke `93,46%`, tetapi menyebabkan salah tolak *spurious* sebesar `10,99%`. Ambang `90%` sengaja tidak diturunkan sesuai aturan integritas.
 
 ## 9. Landasan Teori (11 Poin)
 

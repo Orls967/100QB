@@ -72,10 +72,10 @@ Keluaran utama ditulis ke [../../../outputs/day004i/results.json](../../../outpu
 | FPT tertutup vs BVP vs MC (`-SD -> +SD`) | `0,18721` / `0,18721` / `0,18672` | `z_MC = 1,36` (asimetris `0,43`) | `c2 = tercapai` |
 | Ambang optimal $a^*$ & MC 200 tahun | `a* = -0,01574` (`0,445 SD`), `R(a*) = 0,2044` | `z_trades = 0,64`, `z_profit = 0,64` | `c3 = tercapai` |
 | Dickey–Fuller ($R=10^6$) & EG ($R=20k$) | `DF q05 = -2,864`; `EG q05 = -3,353` | Size OOS EG `4,77%`; Spurious `93,26%` | `c4 = tercapai` |
-| Johansen trace ($T=500, R=20k$) | `q95 = 17,997` (drift 0), size OOS `4,87%` | Power `theta=16, 2yr = 81,57%` (`< 90%`) | `c5 = belum tercapai` |
+| Johansen trace ($T=500, R=20k$) | `q95_drift = 18,000`, size OOS `4,87%` | Power `2yr = 81,56%` (`93,46%` di `15,41`, size `10,99%`) | `c5 = belum tercapai` |
 | Penalti estimasi bergulir ($W=1,2,5$ yr) | `0,0243` → `0,0134` → `0,0060` | Oracle `0,3920 ± 0,0009/yr` | `c6 = tercapai` |
 | Filter EG pada pasangan *spurious* ($W=2$) | Laba `-0,00061 ± 0,00038` | Tanpa filter `-0,01365` | `c7 = tercapai` |
-| Anggaran waktu runner | `3,79s` (`8` worker) | `< 300s` | `c8 = tercapai` |
+| Anggaran waktu runner | `9,05s` (`8` worker) | `< 300s` | `c8 = tercapai` |
 
 ## Daftar Grafik
 

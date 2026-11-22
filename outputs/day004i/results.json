@@ -7,12 +7,12 @@
     "workers_used": 8,
     "main_seed": 20261122,
     "elapsed_seconds": {
-      "part1_ou_mle": 0.28069391599999999,
-      "part2_fpt_bertram": 1.20858924999999995,
-      "part3_unitroot_coint": 2.15611925000000015,
-      "part4_backtest": 0.14271929100000000,
-      "part5_figures": 0.00100625000000000,
-      "total": 3.78912875000000016
+      "part1_ou_mle": 0.43059370800000002,
+      "part2_fpt_bertram": 2.16376708300000020,
+      "part3_unitroot_coint": 6.19665475000000043,
+      "part4_backtest": 0.25382212500000001,
+      "part5_figures": 0.00162866600000000,
+      "total": 9.04646679200000037
     }
   },
   "part1_ou_estimation": {
@@ -329,9 +329,14 @@
       "q95": 17.99749368499554336,
       "se_q95": 0.08860320170694708,
       "q99": 22.72063778707645199,
+      "q95_h0_drift": 17.99955243605324640,
+      "se_q95_h0_drift": 0.09720423586173151,
       "spurious_size_at_q95": 0.04870000000000000,
+      "spurious_size_at_q95_drift": 0.04870000000000000,
       "spurious_size_at_lit_1541": 0.10985000000000000,
       "coint_power_theta16_2yr": 0.81564999999999999,
+      "coint_power_at_q95_drift": 0.81555000000000000,
+      "coint_power_at_lit_1541": 0.93459999999999999,
       "brownian_q95_case1_no_const": 12.33432056220757111,
       "brownian_q95_case2_rest_const": 20.26628674503058747,
       "brownian_q95_case3_unrest_const": 17.98694141824379145,
@@ -473,8 +478,11 @@
     "c5_johansen_size_and_power": {
       "status": "belum tercapai",
       "johansen_q95": 17.99749368499554336,
+      "johansen_q95_h0_drift": 17.99955243605324640,
       "spurious_size": 0.04870000000000000,
-      "coint_power_2yr": 0.81564999999999999
+      "spurious_size_at_lit_1541": 0.10985000000000000,
+      "coint_power_2yr": 0.81555000000000000,
+      "coint_power_at_lit_1541": 0.93459999999999999
     },
     "c6_rolling_penalty_shrinks_with_w": {
       "status": "tercapai",
@@ -488,7 +496,7 @@
     },
     "c8_runtime_under_300s": {
       "status": "tercapai",
-      "total_seconds": 3.78912875000000016,
+      "total_seconds": 9.04646679200000037,
       "budget_seconds": 300.00000000000000000
     }
   }

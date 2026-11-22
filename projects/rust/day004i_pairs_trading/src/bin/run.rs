@@ -430,8 +430,9 @@ fn main() {
     let se_binom_joh = (0.05 * 0.95 / johansen.n_paths as f64).sqrt();
     let c4_df_and_eg_size = (eg_dist.size_at_own_q05 - 0.05).abs() <= 3.0 * se_binom_eg
         && spurious.frac_abs_t_gt_196 > 0.50;
-    let c5_johansen_power = (johansen.spurious_size_at_q95 - 0.05).abs() <= 3.0 * se_binom_joh
-        && johansen.coint_power_theta16_2yr > 0.90;
+    let c5_johansen_power = (johansen.spurious_size_at_q95_drift - 0.05).abs()
+        <= 3.0 * se_binom_joh
+        && johansen.coint_power_at_q95_drift > 0.90;
     let c6_rolling_est_penalty =
         bt.window_rows[2].est_penalty_vs_oracle < bt.window_rows[0].est_penalty_vs_oracle;
     let c7_spurious_filter_nonpos =
@@ -622,7 +623,13 @@ fn main() {
                         ("q95", johansen.q95.into()),
                         ("se_q95", johansen.se_q95.into()),
                         ("q99", johansen.q99.into()),
+                        ("q95_h0_drift", johansen.q95_h0_drift.into()),
+                        ("se_q95_h0_drift", johansen.se_q95_h0_drift.into()),
                         ("spurious_size_at_q95", johansen.spurious_size_at_q95.into()),
+                        (
+                            "spurious_size_at_q95_drift",
+                            johansen.spurious_size_at_q95_drift.into(),
+                        ),
                         (
                             "spurious_size_at_lit_1541",
                             johansen.spurious_size_at_lit_1541.into(),
@@ -630,6 +637,14 @@ fn main() {
                         (
                             "coint_power_theta16_2yr",
                             johansen.coint_power_theta16_2yr.into(),
+                        ),
+                        (
+                            "coint_power_at_q95_drift",
+                            johansen.coint_power_at_q95_drift.into(),
+                        ),
+                        (
+                            "coint_power_at_lit_1541",
+                            johansen.coint_power_at_lit_1541.into(),
                         ),
                         (
                             "brownian_q95_case1_no_const",
@@ -801,8 +816,17 @@ fn main() {
                     JsonVal::Obj(vec![
                         ("status", crit_str(c5_johansen_power).into()),
                         ("johansen_q95", johansen.q95.into()),
-                        ("spurious_size", johansen.spurious_size_at_q95.into()),
-                        ("coint_power_2yr", johansen.coint_power_theta16_2yr.into()),
+                        ("johansen_q95_h0_drift", johansen.q95_h0_drift.into()),
+                        ("spurious_size", johansen.spurious_size_at_q95_drift.into()),
+                        (
+                            "spurious_size_at_lit_1541",
+                            johansen.spurious_size_at_lit_1541.into(),
+                        ),
+                        ("coint_power_2yr", johansen.coint_power_at_q95_drift.into()),
+                        (
+                            "coint_power_at_lit_1541",
+                            johansen.coint_power_at_lit_1541.into(),
+                        ),
                     ]),
                 ),
                 (
