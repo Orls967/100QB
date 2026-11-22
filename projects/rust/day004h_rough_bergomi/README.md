@@ -61,7 +61,7 @@ cargo run --release --bin run
 
 Keluaran utama ditulis ke [../../../outputs/day004h/results.json](../../../outputs/day004h/results.json) dan 7 grafik ke [../../../outputs/figures/](../../../outputs/figures/).
 
-## Ringkasan Hasil Eksperimen (`main_seed = 20261122`, `8` worker, `279,58s`)
+## Ringkasan Hasil Eksperimen (`main_seed = 20261122`, `8` worker, `235,06s`)
 
 | Bagian / Besaran | Nilai Terukur | Acuan / Pembanding | Status Kriteria |
 | --- | --- | --- | --- |
@@ -74,11 +74,11 @@ Keluaran utama ditulis ke [../../../outputs/day004h/results.json](../../../outpu
 | Harga Hybrid BLP vs Cholesky (`n=50, T=1`) | `max_z_comb = 1,23` | `<= 3 SE` | `c6 = tercapai` |
 | Hukum pangkat *skew* ATM ($\log \psi$ vs $\log T$) | $H=0{,}1$: `-0,3849 ± 0,0130`; $H=0{,}5$: `-0,0404 ± 0,0253` | `-0,40` dan `0,00` | `c7 = tercapai` |
 | Kalibrasi & replikasi ($R_{\mathrm{rep}} = 30$, *same-n*) | `bias_H = +0,0719 ± 0,0158` | `|bias_H| < 0,03` | `c8 = belum tercapai` |
-| Anggaran waktu runner | `279,58s` (`8` worker) | `< 300s` | `c9 = tercapai` |
+| Anggaran waktu runner | `235,06s` (`8` worker) | `< 300s` | `c9 = tercapai` |
 
 ## Catatan Diagnostik (`c8`)
 
-Dengan skema BLP titik optimal, `c3`, `c4`, dan `c6` kini seluruhnya `tercapai`. Kriteria `c8` tetap `belum tercapai` bahkan pada kondisi *same-scheme-same-n* (`bias_H = +0,0719`), yang membuktikan bahwa bias kalibrasi berasal dari *ridge* identifiabilitas datar antara $(H, \eta)$ ($\operatorname{Corr} = 0{,}778$) pada horizon $T \in [0{,}1; 1{,}0]$, bukan sekadar diskretisasi.
+Dengan skema BLP titik optimal, `c3`, `c4`, dan `c6` kini seluruhnya `tercapai`. Uji *self-consistency* memulihkan `(0,100001; 1,900000; -0,699997)` (`rmse = 1,18e-7`), membuktikan tidak ada bug *optimizer/engine*; namun `c8` tetap `belum tercapai` pada *same-scheme-same-n* (`bias_H = +0,0719 ± 0,0158`), bank CRN berbeda per replikasi (`rep_diff_crn`: `bias_H = +0,1027 ± 0,0514`), maupun `R_calib = 80.000` (`H_hat = 0,1657`), yang membuktikan akar masalahnya adalah *ridge* identifiabilitas datar antara $(H, \eta)$ ($\operatorname{Corr} = 0{,}778$) pada horizon $T \in [0{,}1; 1{,}0]$.
 
 ## Daftar Grafik
 

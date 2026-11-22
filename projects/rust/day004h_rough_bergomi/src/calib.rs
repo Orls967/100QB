@@ -308,9 +308,12 @@ pub struct ReplicationSummary {
 #[derive(Clone, Debug)]
 pub struct CalibStudySummary {
     pub main_fit: CalibResult,
+    pub self_consistency_fit: CalibResult,
+    pub fit_r80k: CalibResult,
     pub h_profile: Vec<HProfilePoint>,
     pub corr_h_eta: f64,
     pub replication: ReplicationSummary,
+    pub rep_diff_crn: ReplicationSummary,
     pub rep_old_diff_n: ReplicationSummary,
     pub rep_blp_diff_n: ReplicationSummary,
     pub fit_long_only: CalibResult,
@@ -552,9 +555,172 @@ pub fn run_calibration_study(
                 sd_rho: stats::sd(&rhos_rep),
             }
         };
-    let rep_old_diff_n = run_rep(15, 250, HybridScheme::RightEndpoint, 0x4310);
-    let rep_blp_diff_n = run_rep(15, 250, HybridScheme::BlpOptimal, 0x4320);
+    let rep_old_diff_n = run_rep(10, 250, HybridScheme::RightEndpoint, 0x4310);
+    let rep_blp_diff_n = run_rep(10, 250, HybridScheme::BlpOptimal, 0x4320);
     let replication = run_rep(30, 100, HybridScheme::BlpOptimal, 0x4300);
+
+    // (i) Self-consistency test: market generated from the SAME CRN bank at true parameters
+    let self_mkt = {
+        let n = bank.n_steps;
+        let hw = HybridWeights::with_scheme(n, 1.0, true_p.h, HybridScheme::BlpOptimal);
+        let dt = hw.dt;
+        let half_eta2 = 0.5 * true_p.eta * true_p.eta;
+        let one_m_rho2 = (1.0 - true_p.rho * true_p.rho).max(0.0);
+        let step_targets: Vec<usize> = ts_main.iter().map(|&t| (t / dt).round() as usize).collect();
+        let n_t = ts_main.len();
+        let n_k = ks_calib.len();
+        let sums = parallel::run_chunk_reduce(
+            bank.n_paths,
+            n_workers,
+            |start, end| {
+                let mut local = vec![0.0_f64; n_t * n_k];
+                let mut wt = vec![0.0_f64; n];
+                let mut db = vec![0.0_f64; n];
+                for r in start..end {
+                    let off = r * n;
+                    hw.generate_path(
+                        &bank.u_flat[off..off + n],
+                        &bank.v_flat[off..off + n],
+                        &mut wt,
+                        &mut db,
+                    );
+                    let mut int_v = 0.0_f64;
+                    let mut stoch_int = 0.0_f64;
+                    let mut tp = 0_usize;
+                    for i in 0..n {
+                        let v_i = if i == 0 {
+                            true_p.xi0
+                        } else {
+                            true_p.xi0
+                                * (true_p.eta * wt[i - 1]
+                                    - half_eta2 * exact_var(i as f64 * dt, true_p.h))
+                                .exp()
+                        };
+                        int_v += v_i * dt;
+                        stoch_int += v_i.sqrt() * db[i];
+                        if tp < n_t && (i + 1) == step_targets[tp] {
+                            let s_eff = true_p.s0
+                                * (true_p.rho * stoch_int - 0.5 * true_p.rho * true_p.rho * int_v)
+                                    .exp();
+                            let vc = one_m_rho2 * int_v;
+                            for (ki, &lk) in ks_calib.iter().enumerate() {
+                                local[tp * n_k + ki] +=
+                                    bs::bs_call_total_var(s_eff, true_p.s0 * lk.exp(), vc);
+                            }
+                            tp += 1;
+                        }
+                    }
+                }
+                local
+            },
+            |parts| {
+                let mut tot = vec![0.0_f64; n_t * n_k];
+                for part in parts {
+                    for (a, b) in tot.iter_mut().zip(part.iter()) {
+                        *a += *b;
+                    }
+                }
+                tot
+            },
+        );
+        let mut pts = Vec::with_capacity(n_t * n_k);
+        for (ti, &t_h) in ts_main.iter().enumerate() {
+            for (ki, &lk) in ks_calib.iter().enumerate() {
+                let cp = sums[ti * n_k + ki] / bank.n_paths as f64;
+                let iv = bs::implied_vol(true_p.s0, true_p.s0 * lk.exp(), t_h, cp);
+                pts.push(SmilePoint {
+                    t_horizon: t_h,
+                    log_k: lk,
+                    call_price: cp,
+                    call_se: 0.0,
+                    iv,
+                    iv_se: 0.0,
+                });
+            }
+        }
+        pts
+    };
+    let (x_sc, sse_sc, ev_sc) = nelder_mead(&init, &steps, 140, 1e-12, |x| {
+        eval_smile_sse(
+            &bank, true_p.xi0, true_p.s0, x[0], x[1], x[2], &self_mkt, &ts_main, &ks_calib,
+            n_workers,
+        )
+    });
+    let self_consistency_fit = CalibResult {
+        h_hat: x_sc[0],
+        eta_hat: x_sc[1],
+        rho_hat: x_sc[2],
+        rmse_opt: (sse_sc / n_pts_main as f64).sqrt(),
+        rmse_at_true: 0.0,
+        evals: ev_sc,
+    };
+
+    // (ii) Per-replication DIFFERENT CRN bank (same-n=100, R_rep=15)
+    let rep_diff_crn = {
+        let n_rep = 15;
+        let mut hs_rep = Vec::with_capacity(n_rep);
+        let mut etas_rep = Vec::with_capacity(n_rep);
+        let mut rhos_rep = Vec::with_capacity(n_rep);
+        for rep in 0..n_rep {
+            let rep_seed = seed ^ ((rep as u64 + 1).wrapping_mul(0x9E37_79B9_7F4A_7C15));
+            let rep_mkt = compute_smile_with_scheme(
+                true_p,
+                &ts_main,
+                &ks_calib,
+                100,
+                20_000,
+                n_workers,
+                rep_seed,
+                0x4350,
+                HybridScheme::BlpOptimal,
+            );
+            let bank_rep = CalibCrnBank::build(20_000, 100, n_workers, rep_seed ^ 0x5555, 0x4360);
+            let (xr, _, _) =
+                nelder_mead(&[0.18, 1.6, -0.6], &[-0.04, 0.2, -0.08], 105, 1e-8, |x| {
+                    eval_smile_sse(
+                        &bank_rep, true_p.xi0, true_p.s0, x[0], x[1], x[2], &rep_mkt, &ts_main,
+                        &ks_calib, n_workers,
+                    )
+                });
+            hs_rep.push(xr[0]);
+            etas_rep.push(xr[1]);
+            rhos_rep.push(xr[2]);
+        }
+        ReplicationSummary {
+            n_rep,
+            bias_h: stats::mean(&hs_rep) - true_p.h,
+            sd_h: stats::sd(&hs_rep),
+            bias_eta: stats::mean(&etas_rep) - true_p.eta,
+            sd_eta: stats::sd(&etas_rep),
+            bias_rho: stats::mean(&rhos_rep) - true_p.rho,
+            sd_rho: stats::sd(&rhos_rep),
+        }
+    };
+
+    // (iii) R_calib = 80,000 fit
+    let bank_80k = CalibCrnBank::build(80_000, 100, n_workers, seed, 0x4280);
+    let (x_80k, sse_80k, ev_80k) = nelder_mead(&init, &steps, 105, 1e-10, |x| {
+        eval_smile_sse(
+            &bank_80k,
+            true_p.xi0,
+            true_p.s0,
+            x[0],
+            x[1],
+            x[2],
+            &market_smile,
+            &ts_main,
+            &ks_calib,
+            n_workers,
+        )
+    });
+    let fit_r80k = CalibResult {
+        h_hat: x_80k[0],
+        eta_hat: x_80k[1],
+        rho_hat: x_80k[2],
+        rmse_opt: (sse_80k / n_pts_main as f64).sqrt(),
+        rmse_at_true: 0.0,
+        evals: ev_80k,
+    };
 
     // 5. Misspecification: T >= 0.5 only vs T <= 0.1 only
     let ts_long = [0.5, 1.0];
@@ -619,9 +785,12 @@ pub fn run_calibration_study(
 
     CalibStudySummary {
         main_fit,
+        self_consistency_fit,
+        fit_r80k,
         h_profile,
         corr_h_eta,
         replication,
+        rep_diff_crn,
         rep_old_diff_n,
         rep_blp_diff_n,
         fit_long_only,

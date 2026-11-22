@@ -808,6 +808,36 @@ fn main() {
                         ("rmse_opt", calib.fit_short_only.rmse_opt.into()),
                     ]),
                 ),
+                (
+                    "self_consistency_fit",
+                    JsonVal::Obj(vec![
+                        ("h_hat", calib.self_consistency_fit.h_hat.into()),
+                        ("eta_hat", calib.self_consistency_fit.eta_hat.into()),
+                        ("rho_hat", calib.self_consistency_fit.rho_hat.into()),
+                        ("rmse_opt", calib.self_consistency_fit.rmse_opt.into()),
+                    ]),
+                ),
+                (
+                    "fit_r80k",
+                    JsonVal::Obj(vec![
+                        ("h_hat", calib.fit_r80k.h_hat.into()),
+                        ("eta_hat", calib.fit_r80k.eta_hat.into()),
+                        ("rho_hat", calib.fit_r80k.rho_hat.into()),
+                        ("rmse_opt", calib.fit_r80k.rmse_opt.into()),
+                    ]),
+                ),
+                (
+                    "rep_diff_crn",
+                    JsonVal::Obj(vec![
+                        ("n_rep", calib.rep_diff_crn.n_rep.into()),
+                        ("bias_h", calib.rep_diff_crn.bias_h.into()),
+                        ("sd_h", calib.rep_diff_crn.sd_h.into()),
+                        ("bias_eta", calib.rep_diff_crn.bias_eta.into()),
+                        ("sd_eta", calib.rep_diff_crn.sd_eta.into()),
+                        ("bias_rho", calib.rep_diff_crn.bias_rho.into()),
+                        ("sd_rho", calib.rep_diff_crn.sd_rho.into()),
+                    ]),
+                ),
             ]),
         ),
         ("run_completed_without_errors", true.into()),
