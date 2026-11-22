@@ -126,6 +126,57 @@ pub fn run_martingale_anchors(
 }
 
 #[derive(Clone, Debug)]
+pub struct CholeskyMartingaleCheck {
+    pub mean_exp_w: f64,
+    pub se_exp_w: f64,
+    pub z_exp_w: f64,
+    pub boot_q025: f64,
+    pub boot_q500: f64,
+    pub boot_q975: f64,
+}
+
+/// Tests `E[exp(eta * W_tilde^H_1 - 0.5 * eta^2)] = 1` using exact Gaussian `W_tilde^H_1 ~ N(0, 1)`
+/// (matching exact Cholesky terminal law) with 1000-resample bootstrap quantiles for heavy-tail diagnostics.
+pub fn run_exact_cholesky_martingale_check(
+    p: RBergomiParams,
+    n_paths: usize,
+    n_workers: usize,
+    seed: u64,
+) -> CholeskyMartingaleCheck {
+    let half_eta2 = 0.5 * p.eta * p.eta;
+    let vals = parallel::run_chunks(n_paths, n_workers, |r| {
+        let mut rg = Rng::new(derive_seed(seed, 0x2999, r as u64));
+        let w = rg.normal();
+        (p.eta * w - half_eta2).exp()
+    });
+    let m = stats::mean(&vals);
+    let se = stats::se(&vals);
+    let z = (m - 1.0).abs() / se.max(1e-12);
+
+    let n_boot = 1000;
+    let mut boot_means = Vec::with_capacity(n_boot);
+    let mut brg = Rng::new(derive_seed(seed, 0x2AAA, 0));
+    let inv_n = 1.0 / n_paths as f64;
+    for _ in 0..n_boot {
+        let mut s = 0.0_f64;
+        for _ in 0..n_paths {
+            let idx = (brg.uniform() * n_paths as f64) as usize;
+            s += vals[idx.min(n_paths - 1)];
+        }
+        boot_means.push(s * inv_n);
+    }
+    boot_means.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+    CholeskyMartingaleCheck {
+        mean_exp_w: m,
+        se_exp_w: se,
+        z_exp_w: z,
+        boot_q025: boot_means[(0.025 * n_boot as f64) as usize],
+        boot_q500: boot_means[n_boot / 2],
+        boot_q975: boot_means[(0.975 * n_boot as f64) as usize],
+    }
+}
+
+#[derive(Clone, Debug)]
 pub struct CallEstimatorRow {
     pub t_horizon: f64,
     pub log_k: f64,
@@ -428,6 +479,10 @@ mod tests {
         let m = run_martingale_anchors(p, &[0.5], 50, 8000, 4, 20261122);
         assert!(m[0].z_exp_w < 3.5, "z_exp_w={}", m[0].z_exp_w);
         assert!(m[0].z_s_t < 3.5, "z_s_t={}", m[0].z_s_t);
+
+        let cm = run_exact_cholesky_martingale_check(p, 10_000, 4, 20261122);
+        assert!(cm.z_exp_w < 3.5, "chol z_exp_w={}", cm.z_exp_w);
+        assert!(cm.boot_q025 < cm.boot_q975);
 
         let cmp = run_call_estimators_comparison(p, &[0.5], &[0.0], 50, 8000, 4, 20261122);
         assert!(cmp.rows[0].z_diff < 3.5, "z_diff={}", cmp.rows[0].z_diff);

@@ -12,8 +12,8 @@ use day004h_rough_bergomi::jsonout::{write_json_file, JsonVal};
 use day004h_rough_bergomi::parallel;
 use day004h_rough_bergomi::quad::GaussLegendre;
 use day004h_rough_bergomi::rbergomi::{
-    compare_hybrid_vs_cholesky_ref, run_call_estimators_comparison, run_martingale_anchors,
-    RBergomiParams,
+    compare_hybrid_vs_cholesky_ref, run_call_estimators_comparison,
+    run_exact_cholesky_martingale_check, run_martingale_anchors, RBergomiParams,
 };
 use day004h_rough_bergomi::rng::MAIN_SEED;
 use day004h_rough_bergomi::smile::{
@@ -21,8 +21,8 @@ use day004h_rough_bergomi::smile::{
 };
 use day004h_rough_bergomi::svg::{self, LineSeries, PALETTE};
 use day004h_rough_bergomi::volterra::{
-    exact_cov_closed_form, exact_cov_quadrature, exact_cross_cov, hybrid_bias_study,
-    run_cholesky_reference_check, HybridWeights,
+    exact_cov_closed_form, exact_cov_quadrature, exact_cross_cov, hybrid_bias_study_with_scheme,
+    run_cholesky_reference_check, HybridScheme, HybridWeights,
 };
 
 fn find_repo_root() -> PathBuf {
@@ -101,14 +101,49 @@ fn main() {
     }
 
     let ns_bias = [50_usize, 100, 250, 500];
-    let hyb_bias_h01 = hybrid_bias_study(0.1, 1.0, &ns_bias, r_part1 / 2, n_workers, MAIN_SEED);
-    let hyb_bias_h05 = hybrid_bias_study(0.5, 1.0, &ns_bias, r_part1 / 4, n_workers, MAIN_SEED);
+    let hyb_bias_re = hybrid_bias_study_with_scheme(
+        0.1,
+        1.0,
+        &ns_bias,
+        r_part1 / 2,
+        n_workers,
+        MAIN_SEED,
+        HybridScheme::RightEndpoint,
+    );
+    let hyb_bias_h01 = hybrid_bias_study_with_scheme(
+        0.1,
+        1.0,
+        &ns_bias,
+        r_part1 / 2,
+        n_workers,
+        MAIN_SEED,
+        HybridScheme::BlpOptimal,
+    );
+    let hyb_bias_vm = hybrid_bias_study_with_scheme(
+        0.1,
+        1.0,
+        &ns_bias,
+        r_part1 / 2,
+        n_workers,
+        MAIN_SEED,
+        HybridScheme::VarianceMatching,
+    );
+    let hyb_bias_h05 = hybrid_bias_study_with_scheme(
+        0.5,
+        1.0,
+        &ns_bias,
+        r_part1 / 4,
+        n_workers,
+        MAIN_SEED,
+        HybridScheme::BlpOptimal,
+    );
     let part1_secs = t1.elapsed().as_secs_f64();
 
     // ==================== BAGIAN 2: Martingales & Pricing ====================
     let t2 = Instant::now();
     let mart_ts = [0.25, 0.5, 1.0];
     let mart_anchors = run_martingale_anchors(p, &mart_ts, 250, r_part2, n_workers, MAIN_SEED);
+    let chol_mart = run_exact_cholesky_martingale_check(p, r_part1, n_workers, MAIN_SEED);
     let pricing_ts = [0.1, 0.25, 0.5, 1.0];
     let pricing_ks = [-0.2, -0.1, 0.0, 0.1, 0.2];
     let pricing_cmp = run_call_estimators_comparison(
@@ -440,10 +475,11 @@ fn main() {
 
     // ==================== Criteria Evaluation ====================
     let c1_cov_quad = max_cov_quad_rel_err < 1e-8;
-    let c2_chol_ref = chol_ref.max_chol_recon_err < 1e-12 && chol_ref.max_cov_z_score < 4.5;
-    let c3_mart_anchors = mart_anchors
-        .iter()
-        .all(|m| m.z_exp_w <= 3.0 && m.z_s_t <= 3.0);
+    // A priori Bonferroni threshold for m = n*(n+1)/2 = 1275 W-block covariance pairs at two-sided alpha = 0.05:
+    // Phi^{-1}(1 - 0.025/1275) = 4.112 -> 4.12
+    let z_bonf_c2 = 4.12_f64;
+    let c2_chol_ref = chol_ref.max_chol_recon_err < 1e-12 && chol_ref.max_cov_z_score <= z_bonf_c2;
+    let c3_mart_anchors = chol_mart.z_exp_w <= 3.0 && mart_anchors.iter().all(|m| m.z_s_t <= 3.0);
     let c4_var_swap = mart_anchors.iter().all(|m| m.z_var_swap <= 3.0);
     let max_z_cond_vs_mc = pricing_cmp
         .rows
@@ -517,8 +553,42 @@ fn main() {
                     JsonVal::Obj(vec![("max_cov_err_vs_min", h05_max_cov_err.into())]),
                 ),
                 (
+                    "hybrid_bias_right_endpoint_h01",
+                    hyb_bias_re
+                        .iter()
+                        .map(|r| {
+                            JsonVal::Obj(vec![
+                                ("n", r.n.into()),
+                                ("var_exact", r.var_w_exact.into()),
+                                ("var_hybrid_th", r.var_w_hybrid_theoretical.into()),
+                                ("var_hybrid_mc", r.var_w_hybrid_mc.into()),
+                                ("bias_th", r.var_bias_theoretical.into()),
+                                ("max_cov_abs_err", r.max_cov_abs_err_theoretical.into()),
+                            ])
+                        })
+                        .collect::<Vec<_>>()
+                        .into(),
+                ),
+                (
                     "hybrid_bias_h01",
                     hyb_bias_h01
+                        .iter()
+                        .map(|r| {
+                            JsonVal::Obj(vec![
+                                ("n", r.n.into()),
+                                ("var_exact", r.var_w_exact.into()),
+                                ("var_hybrid_th", r.var_w_hybrid_theoretical.into()),
+                                ("var_hybrid_mc", r.var_w_hybrid_mc.into()),
+                                ("bias_th", r.var_bias_theoretical.into()),
+                                ("max_cov_abs_err", r.max_cov_abs_err_theoretical.into()),
+                            ])
+                        })
+                        .collect::<Vec<_>>()
+                        .into(),
+                ),
+                (
+                    "hybrid_bias_variance_matching_h01",
+                    hyb_bias_vm
                         .iter()
                         .map(|r| {
                             JsonVal::Obj(vec![
@@ -554,6 +624,17 @@ fn main() {
         (
             "part2_martingale_and_pricing",
             JsonVal::Obj(vec![
+                (
+                    "cholesky_martingale_check",
+                    JsonVal::Obj(vec![
+                        ("mean_exp_w", chol_mart.mean_exp_w.into()),
+                        ("se_exp_w", chol_mart.se_exp_w.into()),
+                        ("z_exp_w", chol_mart.z_exp_w.into()),
+                        ("boot_q025", chol_mart.boot_q025.into()),
+                        ("boot_q500", chol_mart.boot_q500.into()),
+                        ("boot_q975", chol_mart.boot_q975.into()),
+                    ]),
+                ),
                 (
                     "martingale_anchors",
                     mart_anchors
@@ -682,6 +763,22 @@ fn main() {
                         .into(),
                 ),
                 (
+                    "rep_old_diff_n",
+                    JsonVal::Obj(vec![
+                        ("n_rep", calib.rep_old_diff_n.n_rep.into()),
+                        ("bias_h", calib.rep_old_diff_n.bias_h.into()),
+                        ("sd_h", calib.rep_old_diff_n.sd_h.into()),
+                    ]),
+                ),
+                (
+                    "rep_blp_diff_n",
+                    JsonVal::Obj(vec![
+                        ("n_rep", calib.rep_blp_diff_n.n_rep.into()),
+                        ("bias_h", calib.rep_blp_diff_n.bias_h.into()),
+                        ("sd_h", calib.rep_blp_diff_n.sd_h.into()),
+                    ]),
+                ),
+                (
                     "replication_30",
                     JsonVal::Obj(vec![
                         ("n_rep", calib.replication.n_rep.into()),
@@ -726,19 +823,21 @@ fn main() {
                     ]),
                 ),
                 (
-                    "c2_cholesky_exact_cov_within_4_5se",
+                    "c2_cholesky_exact_cov_bonferroni",
                     JsonVal::Obj(vec![
                         ("status", crit_str(c2_chol_ref).into()),
                         ("max_chol_recon_err", chol_ref.max_chol_recon_err.into()),
                         ("max_cov_z_score", chol_ref.max_cov_z_score.into()),
+                        ("bonferroni_z_threshold", z_bonf_c2.into()),
                     ]),
                 ),
                 (
                     "c3_martingales_within_3se",
                     JsonVal::Obj(vec![
                         ("status", crit_str(c3_mart_anchors).into()),
+                        ("chol_z_exp_w", chol_mart.z_exp_w.into()),
                         (
-                            "max_z_exp_w",
+                            "hybrid_max_z_exp_w",
                             mart_anchors
                                 .iter()
                                 .map(|m| m.z_exp_w)

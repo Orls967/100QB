@@ -6,7 +6,7 @@ use crate::parallel;
 use crate::rbergomi::RBergomiParams;
 use crate::rng::{derive_seed, Rng};
 use crate::stats;
-use crate::volterra::{exact_var, HybridWeights};
+use crate::volterra::{exact_var, HybridScheme, HybridWeights};
 
 #[derive(Clone, Debug)]
 pub struct SmilePoint {
@@ -53,12 +53,37 @@ pub fn compute_smile(
     seed: u64,
     salt: u64,
 ) -> Vec<SmilePoint> {
+    compute_smile_with_scheme(
+        p,
+        ts,
+        log_ks,
+        n_steps,
+        n_paths,
+        n_workers,
+        seed,
+        salt,
+        HybridScheme::BlpOptimal,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+pub fn compute_smile_with_scheme(
+    p: RBergomiParams,
+    ts: &[f64],
+    log_ks: &[f64],
+    n_steps: usize,
+    n_paths: usize,
+    n_workers: usize,
+    seed: u64,
+    salt: u64,
+    scheme: HybridScheme,
+) -> Vec<SmilePoint> {
     let half_eta2 = 0.5 * p.eta * p.eta;
     let one_m_rho2 = (1.0 - p.rho * p.rho).max(0.0);
     let mut out = Vec::with_capacity(ts.len() * log_ks.len());
 
     for &t_h in ts {
-        let hw = HybridWeights::new(n_steps, t_h, p.h);
+        let hw = HybridWeights::with_scheme(n_steps, t_h, p.h, scheme);
         let dt = hw.dt;
         let cond_paths = parallel::run_chunks(n_paths, n_workers, |r| {
             let mut rg = Rng::new(derive_seed(seed, salt ^ t_h.to_bits(), r as u64));

@@ -9,9 +9,9 @@ use crate::linalg;
 use crate::parallel;
 use crate::rbergomi::RBergomiParams;
 use crate::rng::{derive_seed, Rng};
-use crate::smile::{compute_smile, SmilePoint};
+use crate::smile::{compute_smile, compute_smile_with_scheme, SmilePoint};
 use crate::stats;
-use crate::volterra::{exact_var, HybridWeights};
+use crate::volterra::{exact_var, HybridScheme, HybridWeights};
 
 /// Pre-generated CRN normal drivers `(u, v)` on `n_steps` for fast repeated calibration evaluations.
 #[derive(Clone)]
@@ -63,6 +63,34 @@ pub fn eval_smile_sse(
     log_ks: &[f64],
     n_workers: usize,
 ) -> f64 {
+    eval_smile_sse_with_scheme(
+        bank,
+        xi0,
+        s0,
+        h,
+        eta,
+        rho,
+        market,
+        ts,
+        log_ks,
+        n_workers,
+        HybridScheme::BlpOptimal,
+    )
+}
+
+pub fn eval_smile_sse_with_scheme(
+    bank: &CalibCrnBank,
+    xi0: f64,
+    s0: f64,
+    h: f64,
+    eta: f64,
+    rho: f64,
+    market: &[SmilePoint],
+    ts: &[f64],
+    log_ks: &[f64],
+    n_workers: usize,
+    scheme: HybridScheme,
+) -> f64 {
     if !(0.01..=0.495).contains(&h)
         || !(0.05..=5.0).contains(&eta)
         || !(-0.99..=0.99).contains(&rho)
@@ -70,7 +98,7 @@ pub fn eval_smile_sse(
         return 1e6;
     }
     let n = bank.n_steps;
-    let hw = HybridWeights::new(n, 1.0, h);
+    let hw = HybridWeights::with_scheme(n, 1.0, h, scheme);
     let dt = hw.dt;
     let half_eta2 = 0.5 * eta * eta;
     let one_m_rho2 = (1.0 - rho * rho).max(0.0);
@@ -283,6 +311,8 @@ pub struct CalibStudySummary {
     pub h_profile: Vec<HProfilePoint>,
     pub corr_h_eta: f64,
     pub replication: ReplicationSummary,
+    pub rep_old_diff_n: ReplicationSummary,
+    pub rep_blp_diff_n: ReplicationSummary,
     pub fit_long_only: CalibResult,
     pub fit_short_only: CalibResult,
 }
@@ -486,35 +516,45 @@ pub fn run_calibration_study(
         Err(_) => 0.0,
     };
 
-    // 4. Replication study R_rep = 30 (independent market realizations of size R_mkt=20,000, n=100)
-    let n_rep = 30;
-    let mut hs_rep = Vec::with_capacity(n_rep);
-    let mut etas_rep = Vec::with_capacity(n_rep);
-    let mut rhos_rep = Vec::with_capacity(n_rep);
-    for rep in 0..n_rep {
-        let rep_seed = seed ^ ((rep as u64 + 1).wrapping_mul(0x9E37_79B9_7F4A_7C15));
-        let rep_mkt = compute_smile(
-            true_p, &ts_main, &ks_calib, 100, 20_000, n_workers, rep_seed, 0x4300,
-        );
-        let (xr, _, _) = nelder_mead(&[0.18, 1.6, -0.6], &[-0.04, 0.2, -0.08], 70, 1e-8, |x| {
-            eval_smile_sse(
-                &bank, true_p.xi0, true_p.s0, x[0], x[1], x[2], &rep_mkt, &ts_main, &ks_calib,
-                n_workers,
-            )
-        });
-        hs_rep.push(xr[0]);
-        etas_rep.push(xr[1]);
-        rhos_rep.push(xr[2]);
-    }
-    let replication = ReplicationSummary {
-        n_rep,
-        bias_h: stats::mean(&hs_rep) - true_p.h,
-        sd_h: stats::sd(&hs_rep),
-        bias_eta: stats::mean(&etas_rep) - true_p.eta,
-        sd_eta: stats::sd(&etas_rep),
-        bias_rho: stats::mean(&rhos_rep) - true_p.rho,
-        sd_rho: stats::sd(&rhos_rep),
-    };
+    // 4. Three-condition replication study to separate scheme bias from pure identifiability:
+    //    (a) Old scheme (RightEndpoint), diff n (n_mkt=250, n_calib=100, R_rep=15)
+    //    (b) New scheme (BlpOptimal), diff n (n_mkt=250, n_calib=100, R_rep=15)
+    //    (c) New scheme (BlpOptimal), SAME n (n_mkt=100, n_calib=100, R_rep=30) -> pure identifiability
+    let run_rep =
+        |n_rep: usize, n_mkt: usize, scheme: HybridScheme, salt_base: u64| -> ReplicationSummary {
+            let mut hs_rep = Vec::with_capacity(n_rep);
+            let mut etas_rep = Vec::with_capacity(n_rep);
+            let mut rhos_rep = Vec::with_capacity(n_rep);
+            for rep in 0..n_rep {
+                let rep_seed = seed ^ ((rep as u64 + 1).wrapping_mul(0x9E37_79B9_7F4A_7C15));
+                let rep_mkt = compute_smile_with_scheme(
+                    true_p, &ts_main, &ks_calib, n_mkt, 20_000, n_workers, rep_seed, salt_base,
+                    scheme,
+                );
+                let (xr, _, _) =
+                    nelder_mead(&[0.18, 1.6, -0.6], &[-0.04, 0.2, -0.08], 105, 1e-8, |x| {
+                        eval_smile_sse_with_scheme(
+                            &bank, true_p.xi0, true_p.s0, x[0], x[1], x[2], &rep_mkt, &ts_main,
+                            &ks_calib, n_workers, scheme,
+                        )
+                    });
+                hs_rep.push(xr[0]);
+                etas_rep.push(xr[1]);
+                rhos_rep.push(xr[2]);
+            }
+            ReplicationSummary {
+                n_rep,
+                bias_h: stats::mean(&hs_rep) - true_p.h,
+                sd_h: stats::sd(&hs_rep),
+                bias_eta: stats::mean(&etas_rep) - true_p.eta,
+                sd_eta: stats::sd(&etas_rep),
+                bias_rho: stats::mean(&rhos_rep) - true_p.rho,
+                sd_rho: stats::sd(&rhos_rep),
+            }
+        };
+    let rep_old_diff_n = run_rep(15, 250, HybridScheme::RightEndpoint, 0x4310);
+    let rep_blp_diff_n = run_rep(15, 250, HybridScheme::BlpOptimal, 0x4320);
+    let replication = run_rep(30, 100, HybridScheme::BlpOptimal, 0x4300);
 
     // 5. Misspecification: T >= 0.5 only vs T <= 0.1 only
     let ts_long = [0.5, 1.0];
@@ -582,6 +622,8 @@ pub fn run_calibration_study(
         h_profile,
         corr_h_eta,
         replication,
+        rep_old_diff_n,
+        rep_blp_diff_n,
         fit_long_only,
         fit_short_only,
     }

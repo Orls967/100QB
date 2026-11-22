@@ -275,11 +275,22 @@ pub fn run_cholesky_reference_check(
     }
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum HybridScheme {
+    /// Right-endpoint approximation on cells `k >= 2`: `((k-1)*dt)^alpha`.
+    RightEndpoint,
+    /// Bennedsen-Lunde-Pakkanen optimal L2 evaluation point: `b_k^* = ((k^{alpha+1} - (k-1)^{alpha+1})/(alpha+1))^{1/alpha}`.
+    BlpOptimal,
+    /// Variance-matching L2 kernel weight: `dt^alpha * sqrt(k^{2H} - (k-1)^{2H})`.
+    VarianceMatching,
+}
+
 /// Precomputed Bennedsen-Lunde-Pakkanen hybrid scheme (`kappa = 1`) weights on grid `n`, `dt = T/n`.
 /// Cell 1 (`[t_{i-1}, t_i]`): exact stochastic integral correlated with `dB_i` (`rho_h`).
-/// Cells `k = 2..=n`: right-endpoint kernel weight `sqrt(2H) * ((k-1)*dt)^{H - 1/2}`.
+/// Cells `k = 2..=n`: determined by `HybridScheme`.
 #[derive(Clone, Debug)]
 pub struct HybridWeights {
+    pub scheme: HybridScheme,
     pub n: usize,
     pub dt: f64,
     pub sqrt_dt: f64,
@@ -292,6 +303,10 @@ pub struct HybridWeights {
 
 impl HybridWeights {
     pub fn new(n: usize, t_horizon: f64, h: f64) -> Self {
+        Self::with_scheme(n, t_horizon, h, HybridScheme::BlpOptimal)
+    }
+
+    pub fn with_scheme(n: usize, t_horizon: f64, h: f64, scheme: HybridScheme) -> Self {
         let dt = t_horizon / n as f64;
         let sqrt_dt = dt.sqrt();
         let dt_pow_h = dt.powf(h);
@@ -301,9 +316,22 @@ impl HybridWeights {
         let pre = (2.0 * h).sqrt();
         let mut conv_weights = vec![0.0_f64; n + 1];
         for (k, w) in conv_weights.iter_mut().enumerate().skip(2) {
-            *w = pre * (((k - 1) as f64) * dt).powf(alpha);
+            let kf = k as f64;
+            let km1 = (k - 1) as f64;
+            *w = match scheme {
+                HybridScheme::RightEndpoint => pre * (km1 * dt).powf(alpha),
+                HybridScheme::BlpOptimal => {
+                    let avg_x_alpha =
+                        (kf.powf(alpha + 1.0) - km1.powf(alpha + 1.0)) / (alpha + 1.0);
+                    pre * dt.powf(alpha) * avg_x_alpha
+                }
+                HybridScheme::VarianceMatching => {
+                    dt.powf(alpha) * (kf.powf(2.0 * h) - km1.powf(2.0 * h)).sqrt()
+                }
+            };
         }
         Self {
+            scheme,
             n,
             dt,
             sqrt_dt,
@@ -345,7 +373,7 @@ pub struct HybridBiasRow {
     pub max_cov_abs_err_theoretical: f64,
 }
 
-/// Computes exact theoretical variance & covariance of the `kappa=1` right-endpoint hybrid scheme
+/// Computes exact theoretical variance & covariance of the `kappa=1` hybrid scheme
 /// and compares against MC across `n in {50, 100, 250, 500}`.
 pub fn hybrid_bias_study(
     h: f64,
@@ -355,10 +383,30 @@ pub fn hybrid_bias_study(
     n_workers: usize,
     seed: u64,
 ) -> Vec<HybridBiasRow> {
+    hybrid_bias_study_with_scheme(
+        h,
+        t_horizon,
+        ns,
+        n_paths,
+        n_workers,
+        seed,
+        HybridScheme::BlpOptimal,
+    )
+}
+
+pub fn hybrid_bias_study_with_scheme(
+    h: f64,
+    t_horizon: f64,
+    ns: &[usize],
+    n_paths: usize,
+    n_workers: usize,
+    seed: u64,
+    scheme: HybridScheme,
+) -> Vec<HybridBiasRow> {
     let mut rows = Vec::with_capacity(ns.len());
     let var_ex = exact_var(t_horizon, h);
     for &n in ns {
-        let hw = HybridWeights::new(n, t_horizon, h);
+        let hw = HybridWeights::with_scheme(n, t_horizon, h, scheme);
         // Theoretical hybrid variance at T = t_n:
         // Var(W_n) = dt^{2H} + sum_{k=2}^n conv_weights[k]^2 * dt
         let mut var_hyb_th = hw.dt_pow_h * hw.dt_pow_h;
@@ -473,5 +521,36 @@ mod tests {
             cum += db[i];
             assert!((wt[i] - cum).abs() < 1e-13);
         }
+    }
+
+    #[test]
+    fn test_blp_optimal_weights_and_bias_shrinks() {
+        let h = 0.1;
+        let rows_re = hybrid_bias_study_with_scheme(
+            h,
+            1.0,
+            &[50, 250],
+            100,
+            1,
+            1,
+            HybridScheme::RightEndpoint,
+        );
+        let rows_blp =
+            hybrid_bias_study_with_scheme(h, 1.0, &[50, 250], 100, 1, 1, HybridScheme::BlpOptimal);
+        let rows_vm = hybrid_bias_study_with_scheme(
+            h,
+            1.0,
+            &[50, 250],
+            100,
+            1,
+            1,
+            HybridScheme::VarianceMatching,
+        );
+
+        // VarianceMatching matches exact variance at T=1
+        assert!(rows_vm[0].var_bias_theoretical.abs() < 1e-13);
+        // BLP optimal point has much smaller |var_bias| than RightEndpoint and shrinks with n
+        assert!(rows_blp[0].var_bias_theoretical.abs() < rows_re[0].var_bias_theoretical.abs());
+        assert!(rows_blp[1].var_bias_theoretical.abs() < rows_blp[0].var_bias_theoretical.abs());
     }
 }
