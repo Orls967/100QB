@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="460" viewBox="0 0 820 460">
+<rect width="820" height="460" fill="#ffffff"/>
+<text x="410" y="30" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="bold" fill="#111827">Misspecification: Realized Annualized LVR Across Regimes</text>
+<line x1="82" y1="375.0" x2="790.0" y2="375.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="379.0" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.0000</text>
+<line x1="82" y1="311.2" x2="790.0" y2="311.2" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="315.2" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.0200</text>
+<line x1="82" y1="247.4" x2="790.0" y2="247.4" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="251.4" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.0399</text>
+<line x1="82" y1="183.6" x2="790.0" y2="183.6" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="187.6" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.0599</text>
+<line x1="82" y1="119.8" x2="790.0" y2="119.8" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="123.8" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.0798</text>
+<line x1="82" y1="56.0" x2="790.0" y2="56.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="60.0" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.0998</text>
+<rect x="82" y="56" width="708" height="319" fill="none" stroke="#374151" stroke-width="1.2"/>
+<text x="20" y="215.5" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937" transform="rotate(-90 20 215.5)">Annualized LVR / V0</text>
+<rect x="112.8" y="119.3" width="80.0" height="255.7" fill="#111827"/>
+<text x="152.8" y="113.3" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#111827">0.0800</text>
+<text x="152.8" y="395.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Diffusion (0.08)</text>
+<rect x="254.4" y="97.6" width="80.0" height="277.4" fill="#dc2626"/>
+<text x="294.4" y="91.6" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#111827">0.0868</text>
+<text x="294.4" y="395.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Merton Jumps</text>
+<rect x="396.0" y="120.3" width="80.0" height="254.7" fill="#2563eb"/>
+<text x="436.0" y="114.3" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#111827">0.0797</text>
+<text x="436.0" y="395.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Stoch Vol (CIR)</text>
+<rect x="537.6" y="122.7" width="80.0" height="252.3" fill="#f59e0b"/>
+<text x="577.6" y="116.7" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#111827">0.0789</text>
+<text x="577.6" y="395.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Drift mu=-0.5</text>
+<rect x="679.2" y="117.6" width="80.0" height="257.4" fill="#16a34a"/>
+<text x="719.2" y="111.6" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#111827">0.0805</text>
+<text x="719.2" y="395.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Drift mu=+0.5</text>
+</svg>

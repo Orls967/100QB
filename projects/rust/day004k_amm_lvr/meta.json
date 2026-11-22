@@ -1,0 +1,10 @@
+{
+  "day": 4,
+  "session": "k",
+  "topic_no": null,
+  "type": "quant",
+  "language": "rust",
+  "topic": "AMM: impermanent loss, LVR, biaya dan likuiditas terkonsentrasi",
+  "date": "2026-11-22",
+  "link": "projects/rust/day004k_amm_lvr"
+}
