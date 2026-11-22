@@ -2,6 +2,7 @@
 
 pub mod glt;
 pub mod hjb_fd;
+pub mod jsonout;
 pub mod kolmogorov;
 pub mod linalg;
 pub mod misspec;
@@ -11,3 +12,4 @@ pub mod rng;
 pub mod sim;
 pub mod stats;
 pub mod strategies;
+pub mod svg;
