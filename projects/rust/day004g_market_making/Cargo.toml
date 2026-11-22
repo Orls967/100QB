@@ -1,0 +1,11 @@
+[package]
+name = "day004g_market_making"
+version = "0.1.0"
+edition = "2021"
+description = "Optimal market making (Gueant-Lehalle-Tapia): exact matrix-exp/Jacobi/RK4 solvers, nonlinear HJB FD, forward Kolmogorov, Monte Carlo & misspecification studies"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+
+[dependencies]
