@@ -1,0 +1,10 @@
+{
+  "day": 4,
+  "session": "j",
+  "topic_no": null,
+  "type": "quant",
+  "language": "rust",
+  "topic": "Deep hedging dari nol: jaringan saraf, risiko entropik, biaya transaksi dan pasar tak lengkap",
+  "date": "2026-11-22",
+  "link": "projects/rust/day004j_deep_hedging"
+}

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="480" viewBox="0 0 820 480">
+<rect width="820" height="480" fill="#ffffff"/>
+<text x="410" y="30" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="bold" fill="#111827">NN Hedge Delta vs Black-Scholes Delta (tau = 0.125)</text>
+<line x1="82" y1="410.0" x2="790.0" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="414.0" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">-0.5513</text>
+<line x1="82.0" y1="56" x2="82.0" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="82.0" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">0.800</text>
+<line x1="82" y1="339.2" x2="790.0" y2="339.2" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="343.2" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">-0.1863</text>
+<line x1="223.6" y1="56" x2="223.6" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="223.6" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">0.880</text>
+<line x1="82" y1="268.4" x2="790.0" y2="268.4" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="272.4" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.1788</text>
+<line x1="365.2" y1="56" x2="365.2" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="365.2" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">0.960</text>
+<line x1="82" y1="197.6" x2="790.0" y2="197.6" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="201.6" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.5439</text>
+<line x1="506.8" y1="56" x2="506.8" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="506.8" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">1.040</text>
+<line x1="82" y1="126.8" x2="790.0" y2="126.8" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="130.8" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.9089</text>
+<line x1="648.4" y1="56" x2="648.4" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="648.4" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">1.120</text>
+<line x1="82" y1="56.0" x2="790.0" y2="56.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="60.0" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">1.2740</text>
+<line x1="790.0" y1="56" x2="790.0" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="790.0" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">1.200</text>
+<rect x="82" y="56" width="708" height="354" fill="none" stroke="#374151" stroke-width="1.2"/>
+<text x="436.0" y="464.0" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Spot S</text>
+<text x="20" y="233.0" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937" transform="rotate(-90 20 233.0)">Delta</text>
+<polyline fill="none" stroke="#111827" stroke-width="2.2" stroke-dasharray="6,4" points="82.00,302.90 90.85,302.84 99.70,302.76 108.55,302.66 117.40,302.54 126.25,302.38 135.10,302.17 143.95,301.92 152.80,301.62 161.65,301.24 170.50,300.79 179.35,300.24 188.20,299.59 197.05,298.83 205.90,297.93 214.75,296.88 223.60,295.68 232.45,294.29 241.30,292.72 250.15,290.94 259.00,288.94 267.85,286.72 276.70,284.25 285.55,281.54 294.40,278.57 303.25,275.36 312.10,271.88 320.95,268.16 329.80,264.19 338.65,259.98 347.50,255.55 356.35,250.91 365.20,246.07 374.05,241.07 382.90,235.92 391.75,230.65 400.60,225.28 409.45,219.84 418.30,214.35 427.15,208.86 436.00,203.37 444.85,197.93 453.70,192.55 462.55,187.27 471.40,182.10 480.25,177.07 489.10,172.19 497.95,167.49 506.80,162.97 515.65,158.65 524.50,154.54 533.35,150.64 542.20,146.97 551.05,143.51 559.90,140.27 568.75,137.26 577.60,134.46 586.45,131.87 595.30,129.48 604.15,127.29 613.00,125.29 621.85,123.47 630.70,121.81 639.55,120.32 648.40,118.97 657.25,117.76 666.10,116.68 674.95,115.71 683.80,114.86 692.65,114.10 701.50,113.43 710.35,112.84 719.20,112.32 728.05,111.87 736.90,111.47 745.75,111.13 754.60,110.83 763.45,110.58 772.30,110.36 781.15,110.17 790.00,110.01 "/>
+<polyline fill="none" stroke="#2563eb" stroke-width="2.2" points="82.00,385.59 90.85,380.82 99.70,376.05 108.55,371.30 117.40,366.55 126.25,361.82 135.10,357.09 143.95,352.38 152.80,347.68 161.65,343.00 170.50,338.33 179.35,333.68 188.20,329.05 197.05,324.44 205.90,319.84 214.75,315.27 223.60,310.71 232.45,306.18 241.30,301.66 250.15,297.17 259.00,292.69 267.85,288.23 276.70,283.79 285.55,279.36 294.40,274.94 303.25,270.53 312.10,266.11 320.95,261.69 329.80,257.26 338.65,252.81 347.50,248.34 356.35,243.83 365.20,239.28 374.05,234.69 382.90,230.06 391.75,225.39 400.60,220.69 409.45,215.97 418.30,211.23 427.15,206.49 436.00,201.77 444.85,197.09 453.70,192.45 462.55,187.88 471.40,183.39 480.25,178.99 489.10,174.68 497.95,170.49 506.80,166.41 515.65,162.45 524.50,158.60 533.35,154.88 542.20,151.28 551.05,147.79 559.90,144.41 568.75,141.14 577.60,137.98 586.45,134.91 595.30,131.93 604.15,129.04 613.00,126.23 621.85,123.50 630.70,120.83 639.55,118.23 648.40,115.69 657.25,113.20 666.10,110.77 674.95,108.38 683.80,106.04 692.65,103.73 701.50,101.47 710.35,99.24 719.20,97.04 728.05,94.87 736.90,92.73 745.75,90.62 754.60,88.53 763.45,86.47 772.30,84.43 781.15,82.41 790.00,80.41 "/>
+<line x1="96.0" y1="74.0" x2="118.0" y2="74.0" stroke="#111827" stroke-width="2.5" stroke-dasharray="6,4"/>
+<text x="124.0" y="78.0" font-family="sans-serif" font-size="12" fill="#111827">BS Delta N(d1)</text>
+<line x1="229.2" y1="74.0" x2="251.2" y2="74.0" stroke="#2563eb" stroke-width="2.5"/>
+<text x="257.2" y="78.0" font-family="sans-serif" font-size="12" fill="#111827">NN (MSE)</text>
+</svg>

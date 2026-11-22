@@ -1,9 +1,14 @@
 pub mod bs;
 pub mod dp;
+pub mod eval;
+pub mod fourier;
 pub mod hedge;
+pub mod heston;
+pub mod jsonout;
 pub mod nn;
 pub mod optim;
 pub mod parallel;
 pub mod rng;
 pub mod stats;
+pub mod svg;
 pub mod train;

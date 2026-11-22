@@ -1,0 +1,252 @@
+{
+  "metadata": {
+    "session": "day004j",
+    "date_wita": "2026-11-22",
+    "language": "rust",
+    "workers_used": 8,
+    "main_seed": 20261122,
+    "elapsed_seconds": {
+      "part1_lib_check": 0.00000000000000000,
+      "part2_bs_zero_cost": 53.86565908299999705,
+      "part3_costs_and_dp": 40.43013770900000026,
+      "part4_heston": 19.44011216599999869,
+      "part5_misspec_ablation_svg": 18.90417300000000012,
+      "total": 132.64014837499999544
+    }
+  },
+  "part2_bs_zero_cost": {
+    "bs_call_price": 0.03987761167674497,
+    "sd_bs_approx": 0.00630714502063187,
+    "sd_bs_mc": 0.00624435503091504,
+    "se_sd_bs_mc": 0.00001396287213930,
+    "sd_ratio_mc_to_approx": 0.99004462565686602,
+    "rho10_bs": 0.00015887512446702,
+    "p0_nn_mse": 0.03983097464542215,
+    "sd_nn_mse": 0.01059477855501957,
+    "l2_delta_mse": 0.08796673521972308,
+    "sup_delta_mse_08_12": 0.42633128851076285,
+    "rho10_nn_ent": 0.00064929595008048,
+    "sd_nn_ent": 0.01184380707031309,
+    "l2_delta_ent": 0.10735616932862140,
+    "seed_sensitivity_l2_min": 0.09179945004461669,
+    "seed_sensitivity_l2_max": 0.09883493438482119,
+    "seed_sensitivity_sd_mean": 0.01124686962457802,
+    "seed_sensitivity_sd_sd": 0.00023419257321836,
+    "n_scaling_slope_bs": -0.48165235817282015,
+    "n_scaling_slope_nn": -0.14122494132651742,
+    "n_convergence": [
+      {
+        "n_steps": 10,
+        "sd_bs": 0.01053073915568658,
+        "sd_nn": 0.01346597608857394
+      },
+      {
+        "n_steps": 20,
+        "sd_bs": 0.00760516652365608,
+        "sd_nn": 0.01173109114272048
+      },
+      {
+        "n_steps": 30,
+        "sd_bs": 0.00621843964263748,
+        "sd_nn": 0.01109894979679667
+      },
+      {
+        "n_steps": 60,
+        "sd_bs": 0.00444889004887332,
+        "sd_nn": 0.01045104537381430
+      }
+    ]
+  },
+  "part3_costs_and_dp": {
+    "cost_sweep": [
+      {
+        "c": 0.00050000000000000,
+        "lambda": 10.00000000000000000,
+        "hw_nn": 0.02142857142857146,
+        "hw_ww": 0.13359478566479016,
+        "ratio_nn_to_ww": 0.16039975903205564,
+        "entropic_risk": 0.00155409106025380,
+        "indifference_price": 0.04143170273699878
+      },
+      {
+        "c": 0.00100000000000000,
+        "lambda": 10.00000000000000000,
+        "hw_nn": 0.02857142857142858,
+        "hw_ww": 0.16831888261526295,
+        "ratio_nn_to_ww": 0.16974583081528702,
+        "entropic_risk": 0.00213706644147225,
+        "indifference_price": 0.04201467811821722
+      },
+      {
+        "c": 0.00200000000000000,
+        "lambda": 10.00000000000000000,
+        "hw_nn": 0.03214285714285720,
+        "hw_ww": 0.21206850330175403,
+        "ratio_nn_to_ww": 0.15156827460191416,
+        "entropic_risk": 0.00349215904936071,
+        "indifference_price": 0.04336977072610568
+      },
+      {
+        "c": 0.00050000000000000,
+        "lambda": 50.00000000000000000,
+        "hw_nn": 0.01428571428571429,
+        "hw_ww": 0.07812670460331847,
+        "ratio_nn_to_ww": 0.18285315319836873,
+        "entropic_risk": 0.00379869242571818,
+        "indifference_price": 0.04367630410246316
+      },
+      {
+        "c": 0.00100000000000000,
+        "lambda": 50.00000000000000000,
+        "hw_nn": 0.01071428571428573,
+        "hw_ww": 0.09843347968863962,
+        "ratio_nn_to_ww": 0.10884798290354745,
+        "entropic_risk": 0.00493875274759522,
+        "indifference_price": 0.04481636442434020
+      },
+      {
+        "c": 0.00200000000000000,
+        "lambda": 50.00000000000000000,
+        "hw_nn": 0.01428571428571429,
+        "hw_ww": 0.12401841307411650,
+        "ratio_nn_to_ww": 0.11519026837713842,
+        "entropic_risk": 0.00660537096766288,
+        "indifference_price": 0.04648298264440785
+      }
+    ],
+    "ww_c_scaling_exponent_lam10": 0.29248125036057787,
+    "strategies_c001_lam10": {
+      "bs_delta": {
+        "rho10": 0.00239325804278036,
+        "sd_pnl": 0.00637248464336190,
+        "mean_cost": 0.00222553792281576,
+        "mean_turnover": 2.22737313787355218
+      },
+      "whalley_wilmott": {
+        "rho10": 0.00164534274055617,
+        "sd_pnl": 0.01174834785071128,
+        "mean_cost": 0.00100003764014137,
+        "mean_turnover": 0.99670267599242357
+      },
+      "leland": {
+        "rho10": 0.00236109618428763,
+        "sd_pnl": 0.00635099142630643,
+        "mean_cost": 0.00219159825609123,
+        "mean_turnover": 2.19348436773985300
+      },
+      "nn": {
+        "rho10": 0.00213706644147225,
+        "sd_pnl": 0.01255077085510012,
+        "mean_cost": 0.00137872839573151,
+        "mean_turnover": 1.38334205207120542,
+        "paired_mean_diff_vs_bs": 0.00083488979633766,
+        "paired_se_vs_bs": 0.00003501030169496
+      }
+    },
+    "dp_anchor_n10": {
+      "dp_indifference_price": 0.04190663213806181,
+      "dp_sim_indifference_price": 0.04163102876269177,
+      "nn_sim_indifference_price": 0.04202425894945470,
+      "dp_policy_agree_frac_half_grid": 0.14634146341463414,
+      "dp_policy_mae": 0.02453669272273809,
+      "sim_paired_diff_nn_minus_dp": -0.00010455970762967,
+      "sim_paired_se": 0.00003749263027263
+    }
+  },
+  "part4_heston": {
+    "mean_st": 1.00015483821818574,
+    "se_st": 0.00030520564668973,
+    "mc_call": 0.03768614638923397,
+    "se_mc_call": 0.00015187491605439,
+    "fourier_call": 0.03773269784172828,
+    "atm_iv": 0.18923425842666933,
+    "unhedged_sd": 0.04802706541787587,
+    "bs_atm_iv_rho10": 0.00070853506988835,
+    "bs_atm_iv_sd": 0.01192829616793409,
+    "bs_atm_iv_cvar95": 0.03048838323781012,
+    "heston_fourier_rho10": 0.00093588649066128,
+    "heston_fourier_sd": 0.01387186870499654,
+    "heston_fourier_cvar95": 0.03145924685440434,
+    "nn_no_v_rho10": 0.00112963086765907,
+    "nn_no_v_sd": 0.01562681399456304,
+    "nn_no_v_cvar95": 0.03143301673963005,
+    "nn_with_v_rho10": 0.00085517577512887,
+    "nn_with_v_sd": 0.01356071080152444,
+    "nn_with_v_cvar95": 0.02900033076930935,
+    "nn_with_v_indiff_price": 0.03858787361685715,
+    "nn_rv5_rho10": 0.00091329186443325,
+    "nn_rv5_sd": 0.01384752025571154,
+    "nn_rv5_cvar95": 0.03038266990828662,
+    "paired_diff_nnv_vs_fourier_mean": 0.00000998081363410,
+    "paired_diff_nnv_vs_fourier_se": 0.00004011290004741
+  },
+  "part5_misspec_and_ablation": {
+    "bs_nn_on_heston_rho10": 0.00182118099432995,
+    "bs_nn_on_bs03_rho10": 0.00339296077186600,
+    "bs_delta_on_bs03_rho10": 0.00085557800421658,
+    "heston_nn_on_bs_rho10": 0.00103685743242734,
+    "c0005_nn_at_c002_rho10": 0.00406976104156308,
+    "c002_nn_at_c0005_rho10": 0.00162279019272111,
+    "ablation_width4_rho10": 0.00227998008531798,
+    "ablation_width4_hw": 0.02142857142857141,
+    "ablation_noprev_rho10": 0.00519190842211404,
+    "ablation_noprev_hw": 0.00714285714285715
+  },
+  "run_completed_without_errors": true,
+  "criteria": {
+    "c1_grad_check_and_adam_under_1e6": {
+      "status": "tercapai",
+      "verified_in": "cargo test --release (nn & optim unit tests)",
+      "threshold_rel_err": 0.00000100000000000
+    },
+    "c2_worker_invariance_1_vs_8": {
+      "status": "tercapai",
+      "verified_in": "cargo test --release (integration_tests)"
+    },
+    "c3_bs_nn_delta_l2_and_price": {
+      "status": "belum tercapai",
+      "l2_mse": 0.08796673521972308,
+      "l2_ent": 0.10735616932862140,
+      "p0_mse_diff": 0.00004663703132282,
+      "sd_nn_mse": 0.01059477855501957,
+      "sd_bs_plus_3se": 0.00628624364733295
+    },
+    "c4_discrete_hedging_n_scaling": {
+      "status": "belum tercapai",
+      "n_slope_nn": -0.14122494132651742,
+      "n_slope_bs": -0.48165235817282015
+    },
+    "c5_cost_notrade_band_and_ww": {
+      "status": "tercapai",
+      "ww_c_scaling_exp": 0.29248125036057787
+    },
+    "c6_dp_anchor_n10_agrees": {
+      "status": "tercapai",
+      "dp_indiff": 0.04190663213806181,
+      "nn_indiff": 0.04202425894945470,
+      "dp_policy_agree_frac": 0.14634146341463414
+    },
+    "c7_nn_beats_bs_under_cost": {
+      "status": "tercapai",
+      "rho10_nn": 0.00213706644147225,
+      "rho10_bs": 0.00239325804278036
+    },
+    "c8_heston_martingale_and_fourier_3se": {
+      "status": "tercapai",
+      "z_st": 0.50732422504340546,
+      "z_call": 0.30651179077945406
+    },
+    "c9_heston_vt_reduces_residual_risk": {
+      "status": "tercapai",
+      "sd_nn_v": 0.01356071080152444,
+      "sd_nn_nov": 0.01562681399456304,
+      "rho10_nn_v": 0.00085517577512887,
+      "rho10_nn_nov": 0.00112963086765907
+    },
+    "c10_runtime_under_600s": {
+      "status": "tercapai",
+      "total_seconds": 132.64014837499999544,
+      "threshold_seconds": 600.00000000000000000
+    }
+  }
+}

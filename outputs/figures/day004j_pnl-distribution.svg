@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="480" viewBox="0 0 820 480">
+<rect width="820" height="480" fill="#ffffff"/>
+<text x="410" y="30" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="bold" fill="#111827">Discrete Hedging P&L Density (n=30, c=0, R=100k)</text>
+<line x1="82" y1="410.0" x2="790.0" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="414.0" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">-6.1996</text>
+<line x1="82.0" y1="56" x2="82.0" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="82.0" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">-0.039</text>
+<line x1="82" y1="339.2" x2="790.0" y2="339.2" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="343.2" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">11.7793</text>
+<line x1="223.6" y1="56" x2="223.6" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="223.6" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">-0.023</text>
+<line x1="82" y1="268.4" x2="790.0" y2="268.4" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="272.4" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">29.7581</text>
+<line x1="365.2" y1="56" x2="365.2" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="365.2" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">-0.008</text>
+<line x1="82" y1="197.6" x2="790.0" y2="197.6" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="201.6" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">47.7370</text>
+<line x1="506.8" y1="56" x2="506.8" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="506.8" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">0.008</text>
+<line x1="82" y1="126.8" x2="790.0" y2="126.8" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="130.8" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">65.7159</text>
+<line x1="648.4" y1="56" x2="648.4" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="648.4" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">0.023</text>
+<line x1="82" y1="56.0" x2="790.0" y2="56.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="60.0" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">83.6947</text>
+<line x1="790.0" y1="56" x2="790.0" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="790.0" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">0.039</text>
+<rect x="82" y="56" width="708" height="354" fill="none" stroke="#374151" stroke-width="1.2"/>
+<text x="436.0" y="464.0" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Terminal P&L</text>
+<text x="20" y="233.0" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937" transform="rotate(-90 20 233.0)">Density</text>
+<polyline fill="none" stroke="#111827" stroke-width="2.2" stroke-dasharray="6,4" points="82.00,385.51 99.70,385.51 117.40,385.32 135.10,385.38 152.80,385.36 170.50,385.06 188.20,384.74 205.90,384.19 223.60,383.77 241.30,382.84 259.00,380.12 276.70,377.17 294.40,372.33 312.10,364.44 329.80,352.06 347.50,329.80 365.20,300.52 382.90,251.05 400.60,179.67 418.30,115.63 436.00,80.41 453.70,113.49 471.40,175.07 489.10,237.27 506.80,291.74 524.50,325.77 542.20,347.79 559.90,362.80 577.60,372.17 595.30,378.44 613.00,382.38 630.70,383.87 648.40,384.98 666.10,385.22 683.80,385.53 701.50,385.55 719.20,385.59 736.90,385.59 754.60,385.59 772.30,385.59 790.00,385.59 "/>
+<polyline fill="none" stroke="#2563eb" stroke-width="2.2" points="82.00,385.57 99.70,385.59 117.40,385.57 135.10,385.42 152.80,385.24 170.50,384.96 188.20,383.99 205.90,383.14 223.60,380.30 241.30,375.74 259.00,368.39 276.70,357.23 294.40,339.65 312.10,318.74 329.80,291.50 347.50,255.86 365.20,231.96 382.90,211.78 400.60,213.55 418.30,228.65 436.00,247.18 453.70,266.75 471.40,280.68 489.10,291.19 506.80,299.81 524.50,305.63 542.20,311.92 559.90,322.17 577.60,331.03 595.30,340.08 613.00,350.97 630.70,359.73 648.40,370.59 666.10,377.37 683.80,381.41 701.50,383.33 719.20,383.89 736.90,384.46 754.60,384.78 772.30,384.78 790.00,385.00 "/>
+<line x1="96.0" y1="74.0" x2="118.0" y2="74.0" stroke="#111827" stroke-width="2.5" stroke-dasharray="6,4"/>
+<text x="124.0" y="78.0" font-family="sans-serif" font-size="12" fill="#111827">BS Delta</text>
+<line x1="188.4" y1="74.0" x2="210.4" y2="74.0" stroke="#2563eb" stroke-width="2.5"/>
+<text x="216.4" y="78.0" font-family="sans-serif" font-size="12" fill="#111827">NN (MSE)</text>
+</svg>
