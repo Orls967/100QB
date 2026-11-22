@@ -55,6 +55,8 @@ pub struct FeatureSpec {
     pub scale_inputs: bool,
     /// Optional `(r, sigma)` baseline for residual hedging `delta = bs_delta + NN(...)`.
     pub residual_bs: Option<(f64, f64)>,
+    /// Optional `(r, sigma)` to append `prev_delta - bs_delta(S_t, tau)` as an extra input feature.
+    pub delta_diff_bs: Option<(f64, f64)>,
 }
 
 impl FeatureSpec {
@@ -67,17 +69,29 @@ impl FeatureSpec {
             use_prev_delta,
             scale_inputs: false,
             residual_bs: None,
+            delta_diff_bs: None,
         }
     }
 
     pub fn d_in(self) -> usize {
-        2 + usize::from(self.use_v || self.use_rv5) + usize::from(self.use_prev_delta)
+        2 + usize::from(self.use_v || self.use_rv5)
+            + usize::from(self.use_prev_delta)
+            + usize::from(self.delta_diff_bs.is_some())
     }
 
     #[inline]
     pub fn prev_delta_idx(self) -> Option<usize> {
         if self.use_prev_delta {
             Some(2 + usize::from(self.use_v || self.use_rv5))
+        } else {
+            None
+        }
+    }
+
+    #[inline]
+    pub fn delta_diff_idx(self) -> Option<usize> {
+        if self.delta_diff_bs.is_some() {
+            Some(2 + usize::from(self.use_v || self.use_rv5) + usize::from(self.use_prev_delta))
         } else {
             None
         }
@@ -124,6 +138,11 @@ impl FeatureSpec {
         }
         if self.use_prev_delta {
             out[idx] = prev_delta;
+            idx += 1;
+        }
+        if let Some((r_bs, sig_bs)) = self.delta_diff_bs {
+            let db = bs_delta(path.s[t], self.k, r_bs, sig_bs, tau);
+            out[idx] = prev_delta - db;
         }
     }
 }

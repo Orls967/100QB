@@ -4,6 +4,7 @@ use crate::rng::Rng;
 pub enum Activation {
     Tanh,
     Softplus,
+    Relu,
 }
 
 impl Activation {
@@ -20,6 +21,7 @@ impl Activation {
                     (1.0 + z.exp()).ln()
                 }
             }
+            Activation::Relu => z.max(0.0),
         }
     }
 
@@ -33,6 +35,13 @@ impl Activation {
                 } else {
                     let ez = z.exp();
                     ez / (1.0 + ez)
+                }
+            }
+            Activation::Relu => {
+                if z > 0.0 {
+                    1.0
+                } else {
+                    0.0
                 }
             }
         }

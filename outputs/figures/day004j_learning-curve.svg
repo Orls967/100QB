@@ -2,11 +2,11 @@
 <rect width="820" height="480" fill="#ffffff"/>
 <text x="410" y="30" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="bold" fill="#111827">Learning Curve: Training Loss vs Adam Iteration (BS, c=0)</text>
 <line x1="82" y1="410.0" x2="790.0" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
-<text x="74.0" y="414.0" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">-0.0036</text>
+<text x="74.0" y="414.0" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">-0.0035</text>
 <line x1="82.0" y1="56" x2="82.0" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
 <text x="82.0" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">1.000</text>
 <line x1="82" y1="339.2" x2="790.0" y2="339.2" stroke="#e5e7eb" stroke-width="1"/>
-<text x="74.0" y="343.2" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.0059</text>
+<text x="74.0" y="343.2" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.0060</text>
 <line x1="223.6" y1="56" x2="223.6" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
 <text x="223.6" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">2000.800</text>
 <line x1="82" y1="268.4" x2="790.0" y2="268.4" stroke="#e5e7eb" stroke-width="1"/>
@@ -28,8 +28,8 @@
 <rect x="82" y="56" width="708" height="354" fill="none" stroke="#374151" stroke-width="1.2"/>
 <text x="436.0" y="464.0" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Iteration</text>
 <text x="20" y="233.0" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937" transform="rotate(-90 20 233.0)">Loss</text>
-<polyline fill="none" stroke="#2563eb" stroke-width="2.2" points="82.00,372.97 117.33,383.19 152.74,383.21 188.14,383.20 223.54,383.21 258.95,383.21 294.35,383.21 329.75,383.21 365.16,383.21 400.56,383.21 435.96,383.22 471.37,383.21 506.77,383.21 542.18,383.21 577.58,383.22 612.98,383.20 648.39,383.21 683.79,383.21 719.19,383.22 754.60,383.21 790.00,383.21 "/>
-<polyline fill="none" stroke="#dc2626" stroke-width="2.2" points="82.00,80.41 87.24,375.04 92.55,378.97 97.86,379.84 103.17,382.18 108.48,383.67 113.79,381.33 119.10,382.29 124.41,384.18 129.72,381.10 135.03,382.06 140.35,380.93 145.66,380.16 150.97,381.96 156.28,385.59 161.59,383.61 166.90,384.49 172.21,380.33 177.52,381.26 182.83,381.53 188.14,382.18 "/>
+<polyline fill="none" stroke="#2563eb" stroke-width="2.2" points="82.00,373.37 117.33,383.60 152.74,383.62 188.14,383.61 223.54,383.62 258.95,383.62 294.35,383.62 329.75,383.62 365.16,383.62 400.56,383.62 435.96,383.63 471.37,383.62 506.77,383.62 542.18,383.62 577.58,383.63 612.98,383.62 648.39,383.62 683.79,383.62 719.19,383.63 754.60,383.62 790.00,383.62 "/>
+<polyline fill="none" stroke="#dc2626" stroke-width="2.2" points="82.00,80.41 117.33,379.81 152.74,385.59 188.14,383.78 223.54,383.39 258.95,381.67 294.35,384.72 329.75,382.80 365.16,384.58 400.56,382.18 435.96,384.98 471.37,383.30 506.77,385.12 542.18,382.32 577.58,385.03 612.98,383.74 648.39,385.28 683.79,382.42 719.19,385.08 754.60,383.93 790.00,385.28 "/>
 <line x1="96.0" y1="74.0" x2="118.0" y2="74.0" stroke="#2563eb" stroke-width="2.5"/>
 <text x="124.0" y="78.0" font-family="sans-serif" font-size="12" fill="#111827">MSE Loss (10k)</text>
 <line x1="229.2" y1="74.0" x2="251.2" y2="74.0" stroke="#dc2626" stroke-width="2.5"/>

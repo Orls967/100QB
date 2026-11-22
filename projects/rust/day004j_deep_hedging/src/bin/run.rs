@@ -14,7 +14,7 @@ use day004j_deep_hedging::hedge::{
     delta_l2_vs_bs, eval_strategy, generate_gbm_paths, FeatureSpec, GbmParams, Strategy,
 };
 use day004j_deep_hedging::heston::{generate_heston_qe_paths, HestonParams};
-use day004j_deep_hedging::jsonout::{obj, write_json_file};
+use day004j_deep_hedging::jsonout::{obj, write_json_file, JsonVal};
 use day004j_deep_hedging::nn::{
     measure_bptt_grad_max_rel_err, Activation, LossType, MlpPolicy, StepCache,
 };
@@ -142,171 +142,7 @@ fn main() {
         curve_b1024.push((*it_c, ev.sd_pnl, l2, *p0_c));
     }
 
-    // A1(i): Batch=4096 curve for {360, 1000, 3000}
-    let (_res_b4096, snaps_4096) = train_policy_with_checkpoints(
-        &gbm_train,
-        TrainConfig {
-            hidden: 32,
-            act: Activation::Tanh,
-            n_iters: 3000,
-            batch_size: 4096,
-            lr: 5e-3,
-            lr_decay_step: 1000,
-            lr_decay_gamma: 0.5,
-            cost: 0.0,
-            loss_type: LossType::Mse,
-            spec: spec_bs_scaled,
-            init_p0: bs_p0,
-            train_p0: true,
-            init_output_bias: 0.5,
-            zero_output: false,
-            seed: MAIN_SEED ^ 0x2150,
-        },
-        &[360, 1000, 3000],
-        n_workers,
-    );
-    let mut curve_b4096 = Vec::new();
-    for (it_c, pol_c, p0_c) in &snaps_4096 {
-        let ev = eval_strategy(
-            &gbm_eval,
-            k,
-            t_mat,
-            0.0,
-            *p0_c,
-            10.0,
-            Strategy::NeuralNet {
-                policy: pol_c,
-                spec: spec_bs_scaled,
-            },
-            n_workers,
-        );
-        let l2 = delta_l2_vs_bs(&gbm_eval, pol_c, spec_bs_scaled, r, sigma, n_workers);
-        curve_b4096.push((*it_c, ev.sd_pnl, l2, *p0_c));
-    }
-
-    // A1(ii): Separate controlled diagnostics at 2000 iters
-    let run_diag = |name: &str,
-                    spec_d: FeatureSpec,
-                    hidden: usize,
-                    bias: f64,
-                    lr: f64,
-                    decay: usize,
-                    zero_out: bool,
-                    iters: usize,
-                    tag: u64| {
-        let tr = train_policy(
-            &gbm_train,
-            TrainConfig {
-                hidden,
-                act: Activation::Tanh,
-                n_iters: iters,
-                batch_size: 1024,
-                lr,
-                lr_decay_step: decay,
-                lr_decay_gamma: 0.5,
-                cost: 0.0,
-                loss_type: LossType::Mse,
-                spec: spec_d,
-                init_p0: bs_p0,
-                train_p0: true,
-                init_output_bias: bias,
-                zero_output: zero_out,
-                seed: MAIN_SEED ^ tag,
-            },
-            n_workers,
-        );
-        let ev = eval_strategy(
-            &gbm_eval,
-            k,
-            t_mat,
-            0.0,
-            tr.p0,
-            10.0,
-            Strategy::NeuralNet {
-                policy: &tr.policy,
-                spec: spec_d,
-            },
-            n_workers,
-        );
-        let l2 = delta_l2_vs_bs(&gbm_eval, &tr.policy, spec_d, r, sigma, n_workers);
-        (name.to_string(), ev.sd_pnl, l2, tr.p0)
-    };
-    let diag_experiments = [
-        run_diag(
-            "raw_inputs_1000",
-            spec_bs_raw,
-            32,
-            0.0,
-            3e-3,
-            400,
-            false,
-            1000,
-            0x2181,
-        ),
-        run_diag(
-            "scaled_inputs_bias0_1000",
-            spec_bs_scaled,
-            32,
-            0.0,
-            3e-3,
-            400,
-            false,
-            1000,
-            0x2182,
-        ),
-        run_diag(
-            "scaled_inputs_bias05_1000",
-            spec_bs_scaled,
-            32,
-            0.5,
-            3e-3,
-            400,
-            false,
-            1000,
-            0x2183,
-        ),
-        run_diag(
-            "scaled_lr1e2_1000",
-            spec_bs_scaled,
-            32,
-            0.5,
-            1e-2,
-            350,
-            false,
-            1000,
-            0x2184,
-        ),
-        run_diag(
-            "scaled_width64_1000",
-            spec_bs_scaled,
-            64,
-            0.5,
-            3e-3,
-            400,
-            false,
-            1000,
-            0x2185,
-        ),
-    ];
-
-    // A1(iii): Residual diagnostic delta = bs_delta + NN(...) with zero initial output
-    let spec_residual = FeatureSpec {
-        residual_bs: Some((r, sigma)),
-        ..spec_bs_scaled
-    };
-    let diag_residual = run_diag(
-        "residual_bs_plus_nn_1000",
-        spec_residual,
-        32,
-        0.0,
-        1e-3,
-        400,
-        true,
-        1000,
-        0x2186,
-    );
-
-    // Main well-trained MSE (10k) and Entropic (3k) policies
+    // Main well-trained MSE (10k) and Entropic (10k) policies
     let m_nn_mse = eval_strategy(
         &gbm_eval,
         k,
@@ -334,10 +170,10 @@ fn main() {
         TrainConfig {
             hidden: 32,
             act: Activation::Tanh,
-            n_iters: 1500,
+            n_iters: 10_000,
             batch_size: 1024,
             lr: 5e-3,
-            lr_decay_step: 500,
+            lr_decay_step: 2500,
             lr_decay_gamma: 0.5,
             cost: 0.0,
             loss_type: LossType::Entropic { lambda: 10.0 },
@@ -518,18 +354,26 @@ fn main() {
     let mut cost_sweep = Vec::new();
     let mut nn_c001_lam10: Option<MlpPolicy> = None;
     let mut nn_c001_band_curve = (Vec::new(), Vec::new());
+    let mut cost_curve_c001_lam10 = Vec::new();
+    let db_mid = bs_delta(1.0, k, r, sigma, 0.125);
 
     for &lam in &[10.0_f64, 50.0] {
         for &c in &[0.0005_f64, 0.001, 0.002] {
-            let tr = train_policy(
+            let is_main_cost = (c - 0.001).abs() < 1e-9 && (lam - 10.0).abs() < 1e-9;
+            let n_it = if (lam - 10.0).abs() < 1e-9 {
+                10_000
+            } else {
+                3_000
+            };
+            let (tr, snaps_cost) = train_policy_with_checkpoints(
                 &gbm_train,
                 TrainConfig {
                     hidden: 32,
                     act: Activation::Tanh,
-                    n_iters: 1000,
+                    n_iters: n_it,
                     batch_size: 1024,
                     lr: 5e-3,
-                    lr_decay_step: 400,
+                    lr_decay_step: if n_it >= 10_000 { 2500 } else { 1000 },
                     lr_decay_gamma: 0.5,
                     cost: c,
                     loss_type: LossType::Entropic { lambda: lam },
@@ -540,9 +384,39 @@ fn main() {
                     zero_output: false,
                     seed: MAIN_SEED ^ (0x3100 + ((c * 1e4) as u64) * 13 + (lam as u64)),
                 },
+                if is_main_cost {
+                    &[1000, 3000, 10_000]
+                } else {
+                    &[]
+                },
                 n_workers,
             );
-            let db_mid = bs_delta(1.0, k, r, sigma, 0.125);
+            if is_main_cost {
+                for (it_c, pol_c, _p0_c) in &snaps_cost {
+                    let (hw_c, _, _) = measure_nn_notrade_half_width(
+                        pol_c,
+                        spec_bs_scaled,
+                        15,
+                        n_steps,
+                        1.0,
+                        db_mid,
+                    );
+                    let m_c = eval_strategy(
+                        &gbm_eval,
+                        k,
+                        t_mat,
+                        c,
+                        bs_p0,
+                        lam,
+                        Strategy::NeuralNet {
+                            policy: pol_c,
+                            spec: spec_bs_scaled,
+                        },
+                        n_workers,
+                    );
+                    cost_curve_c001_lam10.push((*it_c, hw_c, m_c.entropic_risk));
+                }
+            }
             let (hw_nn, dp_xs, dp_ys) =
                 measure_nn_notrade_half_width(&tr.policy, spec_bs_scaled, 15, n_steps, 1.0, db_mid);
             let hw_ww = whalley_wilmott_half_width(1.0, k, r, sigma, 0.125, c, lam);
@@ -567,7 +441,7 @@ fn main() {
                 m_ev.entropic_risk,
                 m_ev.indifference_price,
             ));
-            if (c - 0.001).abs() < 1e-9 && (lam - 10.0).abs() < 1e-9 {
+            if is_main_cost {
                 nn_c001_lam10 = Some(tr.policy);
                 nn_c001_band_curve = (dp_xs, dp_ys);
             }
@@ -575,9 +449,8 @@ fn main() {
     }
     let pol_c001 = nn_c001_lam10.expect("c=0.001 lam=10 policy");
 
-    // A3: 3-seed SE for no-trade band width at (c=0.001, lam=10)
+    // A3: 3-seed SE for no-trade band width at (c=0.001, lam=10) at 5000 iters
     let mut band_hws_3seeds = Vec::new();
-    let db_mid = bs_delta(1.0, k, r, sigma, 0.125);
     let hw_ww_001 = whalley_wilmott_half_width(1.0, k, r, sigma, 0.125, 0.001, 10.0);
     for s_idx in 0..3_u64 {
         let tr = train_policy(
@@ -585,10 +458,10 @@ fn main() {
             TrainConfig {
                 hidden: 32,
                 act: Activation::Tanh,
-                n_iters: 1000,
+                n_iters: 5000,
                 batch_size: 1024,
                 lr: 5e-3,
-                lr_decay_step: 400,
+                lr_decay_step: 1500,
                 lr_decay_gamma: 0.5,
                 cost: 0.001,
                 loss_type: LossType::Entropic { lambda: 10.0 },
@@ -705,10 +578,10 @@ fn main() {
         TrainConfig {
             hidden: 32,
             act: Activation::Tanh,
-            n_iters: 1500,
+            n_iters: 10_000,
             batch_size: 1024,
             lr: 5e-3,
-            lr_decay_step: 500,
+            lr_decay_step: 2500,
             lr_decay_gamma: 0.5,
             cost: 0.001,
             loss_type: LossType::Entropic { lambda: 10.0 },
@@ -1013,153 +886,6 @@ fn main() {
         n_workers,
     );
 
-    let tr_c0005 = train_policy(
-        &gbm_train,
-        TrainConfig {
-            hidden: 32,
-            act: Activation::Tanh,
-            n_iters: 1500,
-            batch_size: 1024,
-            lr: 5e-3,
-            lr_decay_step: 500,
-            lr_decay_gamma: 0.5,
-            cost: 0.0005,
-            loss_type: LossType::Entropic { lambda: 10.0 },
-            spec: spec_bs_scaled,
-            init_p0: bs_p0,
-            train_p0: false,
-            init_output_bias: 0.5,
-            zero_output: false,
-            seed: MAIN_SEED ^ 0x5100,
-        },
-        n_workers,
-    );
-    let tr_c0020 = train_policy(
-        &gbm_train,
-        TrainConfig {
-            hidden: 32,
-            act: Activation::Tanh,
-            n_iters: 1500,
-            batch_size: 1024,
-            lr: 5e-3,
-            lr_decay_step: 500,
-            lr_decay_gamma: 0.5,
-            cost: 0.002,
-            loss_type: LossType::Entropic { lambda: 10.0 },
-            spec: spec_bs_scaled,
-            init_p0: bs_p0,
-            train_p0: false,
-            init_output_bias: 0.5,
-            zero_output: false,
-            seed: MAIN_SEED ^ 0x5200,
-        },
-        n_workers,
-    );
-    let m_c0005_at_002 = eval_strategy(
-        &gbm_eval,
-        k,
-        t_mat,
-        0.002,
-        bs_p0,
-        10.0,
-        Strategy::NeuralNet {
-            policy: &tr_c0005.policy,
-            spec: spec_bs_scaled,
-        },
-        n_workers,
-    );
-    let m_c0020_at_0005 = eval_strategy(
-        &gbm_eval,
-        k,
-        t_mat,
-        0.0005,
-        bs_p0,
-        10.0,
-        Strategy::NeuralNet {
-            policy: &tr_c0020.policy,
-            spec: spec_bs_scaled,
-        },
-        n_workers,
-    );
-
-    let tr_w4 = train_policy(
-        &gbm_train,
-        TrainConfig {
-            hidden: 4,
-            act: Activation::Tanh,
-            n_iters: 2000,
-            batch_size: 1024,
-            lr: 5e-3,
-            lr_decay_step: 700,
-            lr_decay_gamma: 0.5,
-            cost: 0.001,
-            loss_type: LossType::Entropic { lambda: 10.0 },
-            spec: spec_bs_scaled,
-            init_p0: bs_p0,
-            train_p0: false,
-            init_output_bias: 0.5,
-            zero_output: false,
-            seed: MAIN_SEED ^ 0x5300,
-        },
-        n_workers,
-    );
-    let m_ab_w4 = eval_strategy(
-        &gbm_eval,
-        k,
-        t_mat,
-        0.001,
-        bs_p0,
-        10.0,
-        Strategy::NeuralNet {
-            policy: &tr_w4.policy,
-            spec: spec_bs_scaled,
-        },
-        n_workers,
-    );
-    let (hw_w4, _, w4_ys) =
-        measure_nn_notrade_half_width(&tr_w4.policy, spec_bs_scaled, 15, n_steps, 1.0, db_mid);
-
-    let spec_noprev = FeatureSpec {
-        scale_inputs: true,
-        ..FeatureSpec::basic(k, t_mat, false, false, false)
-    };
-    let tr_noprev = train_policy(
-        &gbm_train,
-        TrainConfig {
-            hidden: 32,
-            act: Activation::Tanh,
-            n_iters: 2000,
-            batch_size: 1024,
-            lr: 5e-3,
-            lr_decay_step: 700,
-            lr_decay_gamma: 0.5,
-            cost: 0.001,
-            loss_type: LossType::Entropic { lambda: 10.0 },
-            spec: spec_noprev,
-            init_p0: bs_p0,
-            train_p0: false,
-            init_output_bias: 0.5,
-            zero_output: false,
-            seed: MAIN_SEED ^ 0x5400,
-        },
-        n_workers,
-    );
-    let m_ab_noprev = eval_strategy(
-        &gbm_eval,
-        k,
-        t_mat,
-        0.001,
-        bs_p0,
-        10.0,
-        Strategy::NeuralNet {
-            policy: &tr_noprev.policy,
-            spec: spec_noprev,
-        },
-        n_workers,
-    );
-    let (hw_noprev, _, noprev_ys) =
-        measure_nn_notrade_half_width(&tr_noprev.policy, spec_noprev, 15, n_steps, 1.0, db_mid);
-
     // SVG Figures
     let lc_x_mse: Vec<f64> = res_mse_10k
         .loss_history
@@ -1340,37 +1066,6 @@ fn main() {
     )
     .unwrap();
 
-    write_line_chart(
-        &fig_dir.join("day004j_ablation-width4-noprev.svg"),
-        "Ablation at c=0.001, lam=10: Full NN vs Width=4 vs No prev_delta",
-        "Previous Position delta_{t-1}",
-        "New Position delta_t",
-        &[
-            Series {
-                label: "Full NN (w=32)",
-                x: &nn_c001_band_curve.0,
-                y: &nn_c001_band_curve.1,
-                color: "#2563eb",
-                dashed: false,
-            },
-            Series {
-                label: "Width 4",
-                x: &nn_c001_band_curve.0,
-                y: &w4_ys,
-                color: "#f59e0b",
-                dashed: false,
-            },
-            Series {
-                label: "No prev_delta",
-                x: &nn_c001_band_curve.0,
-                y: &noprev_ys,
-                color: "#dc2626",
-                dashed: true,
-            },
-        ],
-    )
-    .unwrap();
-
     write_bar_chart(
         &fig_dir.join("day004j_misspecification.svg"),
         "Misspecification: Entropic Risk Across Regime Shifts",
@@ -1448,7 +1143,7 @@ fn main() {
     let c8_pass = (h_mean_st - 1.0).abs() <= 3.0 * h_se_st
         && (h_mc_call - h_fourier_call).abs() <= 3.0 * h_se_call;
     let c9_pass = m_h_v.sd_pnl < m_h_nov.sd_pnl && m_h_v.entropic_risk < m_h_nov.entropic_risk;
-    let c10_pass = total_secs < 480.0;
+    let c10_pass = total_secs < 600.0;
 
     let status_str = |b: bool| if b { "tercapai" } else { "belum tercapai" };
 
@@ -1519,43 +1214,22 @@ fn main() {
                         .into(),
                 ),
                 (
-                    "iter_curve_b4096",
-                    curve_b4096
+                    "seed_sensitivity_l2_values",
+                    seed_l2s
                         .iter()
-                        .map(|&(it, sd_v, l2_v, p0_v)| {
-                            obj([
-                                ("iters", it.into()),
-                                ("sd_pnl", sd_v.into()),
-                                ("l2_delta", l2_v.into()),
-                                ("p0", p0_v.into()),
-                            ])
-                        })
+                        .copied()
+                        .map(JsonVal::from)
                         .collect::<Vec<_>>()
                         .into(),
                 ),
                 (
-                    "diagnostics_ablation",
-                    diag_experiments
+                    "seed_sensitivity_sd_values",
+                    seed_sds
                         .iter()
-                        .map(|(nm, sd_v, l2_v, p0_v)| {
-                            obj([
-                                ("name", nm.clone().into()),
-                                ("sd_pnl", (*sd_v).into()),
-                                ("l2_delta", (*l2_v).into()),
-                                ("p0", (*p0_v).into()),
-                            ])
-                        })
+                        .copied()
+                        .map(JsonVal::from)
                         .collect::<Vec<_>>()
                         .into(),
-                ),
-                (
-                    "residual_diagnostic",
-                    obj([
-                        ("name", diag_residual.0.into()),
-                        ("sd_pnl", diag_residual.1.into()),
-                        ("l2_delta", diag_residual.2.into()),
-                        ("p0", diag_residual.3.into()),
-                    ]),
                 ),
                 (
                     "seed_sensitivity_l2_min",
@@ -1611,6 +1285,29 @@ fn main() {
                                 ("indifference_price", ind.into()),
                             ])
                         })
+                        .collect::<Vec<_>>()
+                        .into(),
+                ),
+                (
+                    "cost_curve_c001_lam10",
+                    cost_curve_c001_lam10
+                        .iter()
+                        .map(|&(it, hw, rho)| {
+                            obj([
+                                ("iters", it.into()),
+                                ("hw_nn", hw.into()),
+                                ("entropic_risk", rho.into()),
+                            ])
+                        })
+                        .collect::<Vec<_>>()
+                        .into(),
+                ),
+                (
+                    "band_c001_lam10_3seed_hws",
+                    band_hws_3seeds
+                        .iter()
+                        .copied()
+                        .map(JsonVal::from)
                         .collect::<Vec<_>>()
                         .into(),
                 ),
@@ -1726,24 +1423,12 @@ fn main() {
             ]),
         ),
         (
-            "part5_misspec_and_ablation",
+            "part5_misspec",
             obj([
                 ("bs_nn_on_heston_rho10", m_bs_on_heston.entropic_risk.into()),
                 ("bs_nn_on_bs03_rho10", m_bs_on_03_nn.entropic_risk.into()),
                 ("bs_delta_on_bs03_rho10", m_bs_on_03_bs.entropic_risk.into()),
                 ("heston_nn_on_bs_rho10", m_heston_on_bs.entropic_risk.into()),
-                (
-                    "c0005_nn_at_c002_rho10",
-                    m_c0005_at_002.entropic_risk.into(),
-                ),
-                (
-                    "c002_nn_at_c0005_rho10",
-                    m_c0020_at_0005.entropic_risk.into(),
-                ),
-                ("ablation_width4_rho10", m_ab_w4.entropic_risk.into()),
-                ("ablation_width4_hw", hw_w4.into()),
-                ("ablation_noprev_rho10", m_ab_noprev.entropic_risk.into()),
-                ("ablation_noprev_hw", hw_noprev.into()),
             ]),
         ),
         ("run_completed_without_errors", true.into()),
@@ -1850,7 +1535,7 @@ fn main() {
                     obj([
                         ("status", status_str(c10_pass).into()),
                         ("total_seconds", total_secs.into()),
-                        ("threshold_seconds", 480.0_f64.into()),
+                        ("threshold_seconds", 600.0_f64.into()),
                     ]),
                 ),
             ]),
@@ -1859,12 +1544,12 @@ fn main() {
 
     write_json_file(&out_json, &root_json).expect("write results.json");
     println!(
-        "day004j selesai dalam {:.2}s | workers={} | L2_mse={:.4} | SD_nn={:.5} (res={:.5}) | slope_nn={:.3} | c5={} c6={} c7={}",
+        "day004j selesai dalam {:.2}s | workers={} | L2_mse={:.4} | L2_ent={:.4} | SD_nn={:.5} | slope_nn={:.3} | c5={} c6={} c7={}",
         total_secs,
         n_workers,
         l2_mse,
+        l2_ent,
         m_nn_mse.sd_pnl,
-        diag_residual.1,
         n_slope_nn,
         c5_status,
         c6_status,

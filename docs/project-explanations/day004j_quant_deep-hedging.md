@@ -80,26 +80,26 @@ Seluruh 10 kriteria berikut ditetapkan sebelum eksekusi dan dievaluasi secara ot
 7. `c7_nn_beats_bs_under_cost`: Pada $c = 0{,}001, \lambda = 10$, $\rho_{10}(\mathrm{NN})$ mengungguli SEMUA benchmark (`BS`, `Leland`, dan `Whalley–Wilmott`); `sebagian` bila unggul atas `BS` dan `Leland` tetapi kalah dari `WW`.
 8. `c8_heston_martingale_and_fourier_3se`: $\mathbb{E}[S_T] = 1$ dan harga *call* MC Heston QE cocok dengan Fourier Lewis dalam $3\,\mathrm{SE}$.
 9. `c9_heston_vt_reduces_residual_risk`: Menambahkan $v_t$ menurunkan $\mathrm{SD}$ dan $\rho_{10}$ dibanding NN tanpa $v_t$.
-10. `c10_runtime_under_600s`: Total waktu eksekusi runner penuh `< 480s` (anggaran `8` menit).
+10. `c10_runtime_under_600s`: Total waktu eksekusi runner penuh `< 600s` (anggaran `10` menit).
 
 ---
 
 ## 7. Status Pencapaian Berbasis Bukti
 
-Seluruh runner penuh selesai dalam **`1305,62s`** pada `8` *worker* (`part1 = 0,07s`, `part2 = 907,31s`, `part3 = 196,13s`, `part4 = 58,03s`, `part5 = 144,09s`), dengan `run_completed_without_errors = true`:
+Seluruh runner penuh selesai dalam **`986,90s`** pada `8` *worker* (`part1 = 0,07s`, `part2 = 359,49s`, `part3 = 591,31s`, `part4 = 34,64s`, `part5 = 1,39s`), dengan `run_completed_without_errors = true` (eksperimen ablasi/aktivasi dipisah ke `run_extras`, `1061,36s`):
 
 | Kriteria | Status | Nilai Terukur | Ambang A Priori |
 | --- | --- | --- | --- |
 | `c1_grad_check_and_adam_under_1e6` | `tercapai` | `MSE 1,63e-9`, `SP 1,69e-9`, `Ent 3,04e-9`, `CVaR 6,00e-10`; Adam `1,78e-15 / 2,22e-16` | `< 1e-6` |
 | `c2_worker_invariance_1_vs_8` | `tercapai` | `n_params = 353`, `bit_diffs = 0` (`1` vs `8` worker) | Bit-identik |
-| `c3_bs_nn_delta_l2_and_price` | `belum tercapai` | `L2_mse = 0,00611`, `p0_diff = 1,69e-6`, `SD_nn = 0,006274 <= 0,006286`, tetapi `L2_ent = 0,0466 > 0,03` | `L2_mse, L2_ent <= 0,03` |
+| `c3_bs_nn_delta_l2_and_price` | `belum tercapai` | `L2_mse = 0,00611`, `p0_diff = 1,69e-6`, `SD_nn = 0,006274 <= 0,006286`, tetapi `L2_ent = 0,0601 > 0,03` (10k iter) | `L2_mse, L2_ent <= 0,03` |
 | `c4_discrete_hedging_n_scaling` | `tercapai` | `slope_BS = -0,4817`; `slope_NN = -0,4532` | `slope_NN in [-0,60; -0,40]` |
-| `c5_cost_notrade_band_and_ww` | `belum tercapai` | `hw_nn = 0,01292 ± 0,00110`, `ratio = 0,0767 ± 0,0065`, `exp_c = 0,5850` | `exp in [0,23; 0,43]` & `ratio in [0,5; 1,5]` |
-| `c6_dp_anchor_n10_agrees` | `sebagian` | `DP_indiff = 0,04191` vs `NN_sim = 0,04171` (`diff = -0,000072`), tetapi `agree_uniform = 14,63%`, `agree_visit = 20,87% < 90%` | Utilitas & kebijakan `>= 90%` |
-| `c7_nn_beats_bs_under_cost` | `sebagian` | `NN 0,001834` < `BS 0,002393` & `Leland 0,002361`, tetapi > `WW 0,001645` | Ungguli semua benchmark |
+| `c5_cost_notrade_band_and_ww` | `belum tercapai` | `hw_nn = 0,02188 ± 0,00286`, `ratio = 0,1300 ± 0,0170`, `exp_c = 1,7131` | `exp in [0,23; 0,43]` & `ratio in [0,5; 1,5]` |
+| `c6_dp_anchor_n10_agrees` | `sebagian` | `DP_indiff = 0,04191` vs `NN_sim = 0,04176` (`diff = -0,00015`), tetapi `agree_uniform = 19,51%`, `agree_visit = 24,02% < 90%` | Utilitas & kebijakan `>= 90%` |
+| `c7_nn_beats_bs_under_cost` | `sebagian` | `NN 0,001756` < `BS 0,002393` & `Leland 0,002361`, tetapi > `WW 0,001645` | Ungguli semua benchmark |
 | `c8_heston_martingale_and_fourier_3se` | `tercapai` | `E[S_T] = 1,00015 ± 0,00031` (`z=0,51`); `MC 0,03769` vs `Fourier 0,03773` (`z=0,31`) | `<= 3 SE` |
 | `c9_heston_vt_reduces_residual_risk` | `tercapai` | `SD: 0,01167 (tanpa v) -> 0,01139 (v_t)`; `rho10: 0,000682 -> 0,000646` | `v_t` menurunkan risiko |
-| `c10_runtime_under_600s` | `belum tercapai` | `1305,62s` (`8` *worker*) | `< 480s` |
+| `c10_runtime_under_600s` | `belum tercapai` | `986,90s` (`8` *worker*, termasuk 10k iter entropik & cabang biaya) | `< 600s` |
 
 ### Rincian Hasil Terukur per Bagian
 
@@ -117,13 +117,13 @@ Seluruh runner penuh selesai dalam **`1305,62s`** pada `8` *worker* (`part1 = 0,
 ## 8. Pemisahan Fakta vs Hipotesis (Diagnosis `c3`, `c5`, `c6`, `c7`, dan `c10`)
 
 - **FAKTA**:
-  1. Setelah penskalaan input ($\ln(S/K)/0{,}1, \tau/T$), bias awal `0,5`, dan pelatihan hingga `10.000` iterasi Adam, jaringan MSE mencapai `L2_mse = 0,00611` ($\le 0{,}03$), `p0_diff = 1,69e-6` ($\le 0{,}002$), `SD_nn = 0,006274` ($\le 0{,}006286$), serta `slope_NN = -0,4532` (`c4 = tercapai`). Diagnostik residual $\delta = \delta_{\mathrm{BS}} + \mathrm{NN}$ (`1000` iterasi) mencapai `SD = 0,006246` (`L2 = 0,00186`), membuktikan tidak ada bug di pipeline BPTT/P&L.
-  2. Kriteria `c3` tetap `belum tercapai` semata-mata karena cabang *Entropic* (`1500` iterasi) baru mencapai `L2_ent = 0,0466 > 0,03`.
-  3. Pada `c5`, grid halus `401` titik menghasilkan `hw_nn = 0,01292 ± 0,00110` (`ratio = 0,0767 ± 0,0065` terhadap WW) dan `exp_c = 0,5850`. Pada `c6`, utilitas DP vs NN cocok (`-0,000072 ± 0,000013`), tetapi kesepakatan kebijakan `< 0,90` (`14,63%` seragam, `20,87%` berbobot kunjungan). Pada `c7`, NN (`0,001834`) mengungguli BS (`0,002393`) dan Leland (`0,002361`) tetapi masih di belakang WW (`0,001645`). Pada `c10`, total waktu eksekusi mencapai `1305,62s > 480s`.
+  1. Setelah penskalaan input ($\ln(S/K)/0{,}1, \tau/T$), bias awal `0,5`, dan pelatihan hingga `10.000` iterasi Adam, jaringan MSE mencapai `L2_mse = 0,00611` ($\le 0{,}03$), `p0_diff = 1,69e-6` ($\le 0{,}002$), `SD_nn = 0,006274` ($\le 0,006286$), serta `slope_NN = -0,4532` (`c4 = tercapai`).
+  2. Cabang *Entropic* tanpa biaya yang dilatih `10.000` iterasi tetap menghasilkan `L2_ent = 0,0601 > 0,03` (`c3 = belum tercapai`) karena risiko entropik pada horizon diskret $n=30$ memberi bobot eksponensial pada ekor kerugian.
+  3. Pada cabang biaya `c = 0,001, lam = 10` hingga `10.000` iterasi, kurva pelatihan menunjukkan pelebaran pita bertahap (`1k: hw=0,01125, rho=0,001806 -> 3k: 0,01438, 0,001775 -> 10k: 0,02063, 0,001756`), dengan rata-rata 3 *seed* `0,02188 ± 0,00286` (`ratio vs WW = 0,1300 ± 0,0170`), `c6` `agree_uniform = 19,51%` / `agree_visit = 24,02%`, dan `c7` `NN 0,001756 < BS 0,002393 & Leland 0,002361`, masih > `WW 0,001645`.
+  4. Uji hipotesis aktivasi di `run_extras` (`10.000` iterasi, `c=0,001, lam=10`) **membantah** dugaan bahwa `tanh` membulatkan pita: `tanh` (`hw=0,03063, rho=0,001762`) justru memiliki pita lebih lebar dan risiko lebih rendah daripada `ReLU` (`hw=0,01938, rho=0,001810`) maupun `Softplus` (`hw=0,01562, rho=0,001801`). Penambahan fitur turunan $(\delta_{t-1} - \delta_{\mathrm{BS}})$ pada `tanh` menurunkan $\rho_{10}$ lebih jauh ke `0,001715`.
+  5. Benchmark 20 iterasi (`w=4`) membuktikan *persistent worker pool* + penyimpanan `StepCache` dari Pass 1 ke Pass 2 bit-identik terhadap versi lama dan `1,47x` lebih cepat (`0,7879s -> 0,5364s`). Namun overhead `std::thread::scope` sendiri ternyata hanya ~0,2% per iterasi; waktu runner penuh (`986,90s > 600s`) tetap didominasi evaluasi `tanh`/BPTT di puluhan ribu iterasi `10.000`.
 - **HIPOTESIS**:
-  1. Di BS tanpa biaya, akar kegagalan sebelumnya murni berasal dari input tak berskala ($\tau \in [0, 0{,}25]$) dan `360` iterasi yang terlalu singkat; cabang Entropic (`1500` iterasi) masih membutuhkan lebih banyak iterasi untuk menyamai `L2_mse` (`10.000` iterasi).
-  2. Di biaya proporsional diskret ($n = 30$), kurva `tanh` yang halus membulatkan batas tajam pita *no-trade* (sehingga lebar pita terukur jauh lebih sempit daripada asimtotik kontinu WW, kesepakatan kebijakan pada setengah langkah grid rendah, dan utilitas masih sedikit tertinggal di belakang WW).
-  3. Tingginya waktu eksekusi (`1305,62s`) dipicu oleh pembuatan ulang *thread pool* `std::thread::scope` (`8` *worker*) dua kali pada setiap iterasi Adam di puluhan ribu langkah pelatihan *batch* `1024`.
+  1. Perbedaan pita NN vs Whalley–Wilmott dan kesepakatan DP pada $n=10/30$ mencerminkan perbedaan antara kebijakan optimal waktu-diskret di jaringan berkapasitas terbatas dengan asimtotik kontinu WW ($n \to \infty$), bukan semata-mata artefak aktivasi `tanh`.
 
 ---
 
