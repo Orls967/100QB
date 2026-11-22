@@ -1,5 +1,9 @@
+pub mod bs;
+pub mod dp;
+pub mod hedge;
 pub mod nn;
 pub mod optim;
 pub mod parallel;
 pub mod rng;
 pub mod stats;
+pub mod train;

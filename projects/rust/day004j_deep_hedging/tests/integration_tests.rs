@@ -1,3 +1,5 @@
+use day004j_deep_hedging::bs::bs_call;
+use day004j_deep_hedging::dp::solve_entropic_dp_gbm;
 use day004j_deep_hedging::nn::{loss_and_d_pnl, Activation, LossType, MlpPolicy, StepCache};
 use day004j_deep_hedging::optim::Adam;
 use day004j_deep_hedging::parallel::{reduce_vec_fixed_blocks, run_chunks};
@@ -95,4 +97,22 @@ fn test_worker_invariance_1_vs_8_bit_identical() {
             "param[{i}] differs between 1 and 8 workers: {a} vs {b}"
         );
     }
+}
+
+#[test]
+fn test_dp_zero_cost_near_bs_and_cost_monotonicity() {
+    let dp0 = solve_entropic_dp_gbm(1.0, 1.0, 0.0, 0.2, 0.25, 10, 0.0, 10.0);
+    let bs = bs_call(1.0, 1.0, 0.0, 0.2, 0.25);
+    assert!(
+        (dp0.indifference_price - bs).abs() < 0.004,
+        "dp0={} bs={bs}",
+        dp0.indifference_price
+    );
+    let dp_c = solve_entropic_dp_gbm(1.0, 1.0, 0.0, 0.2, 0.25, 10, 0.002, 10.0);
+    assert!(
+        dp_c.indifference_price > dp0.indifference_price,
+        "dp_c={} dp0={}",
+        dp_c.indifference_price,
+        dp0.indifference_price
+    );
 }
