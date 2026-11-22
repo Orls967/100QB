@@ -39,6 +39,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `4f` (`day004f`) | `bonus` | `quant` | `rust` | [Port lengkap AFNS term structure, kalibrasi interval, harga listrik & valuasi baterai (Rust)](day004f_rust-afns-energy-storage.md) |
 | `4g` (`day004g`) | `bonus` | `quant` | `rust` | [Market making optimal: Guéant–Lehalle–Tapia, HJB dan salah spesifikasi (Rust)](day004g_quant_market-making.md) |
 | `4h` (`day004h`) | `bonus` | `quant` | `rust` | [Volatilitas kasar: rough Bergomi, skema hybrid, skew ATM & identifiabilitas Hurst (Rust)](day004h_quant_rough-bergomi.md) |
+| `4i` (`day004i`) | `bonus` | `quant` | `rust` | [Cointegration & trading OU optimal: Dickey–Fuller, Engle–Granger, Johansen & ambang Bertram (Rust)](day004i_quant_pairs-trading.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 

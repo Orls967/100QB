@@ -1,0 +1,10 @@
+{
+  "day": 4,
+  "session": "i",
+  "topic_no": null,
+  "type": "quant",
+  "language": "rust",
+  "topic": "Cointegration dan trading OU optimal: Dickey-Fuller, Engle-Granger, Johansen dan ambang Bertram",
+  "date": "2026-11-22",
+  "link": "projects/rust/day004i_pairs_trading"
+}

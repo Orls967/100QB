@@ -3,6 +3,20 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 004i] — 2026-11-22 · Perbaikan day004h + Cointegration & trading OU optimal (Rust, Bonus)
+
+### Diperbaiki (Bagian A — `day004h`)
+- `projects/rust/day004h_rough_bergomi`: mengganti skema hybrid $\kappa=1$ menjadi titik optimal $L^2$ Bennedsen–Lunde–Pakkanen (`BlpOptimal`) serta membandingkan tiga skema (`RightEndpoint`, `BlpOptimal`, `VarianceMatching`) pada $n \in \{50, 100, 250, 500\}$. Dengan `BlpOptimal`, bias variansi turun dari `+4,94%..+3,23%` menjadi `-0,062%..-0,039%`, sehingga `c3`, `c4`, dan `c6` kini seluruhnya `tercapai`. Menambahkan uji martingal Cholesky + kuantil bootstrap (`[0,9732; 0,9998; 1,0271]`), ambang Bonferroni a priori pada `c2` (`z <= 4,12` untuk `1275` pasangan), serta pemisahan 3 kondisi kalibrasi (`same-scheme-same-n`: `bias_H = +0,0719`, mengonfirmasi `c8 = belum tercapai` akibat *ridge* identifiabilitas datar).
+
+### Ditambahkan (Bagian C — `day004i`)
+- Project Rust stable mandiri `projects/rust/day004i_pairs_trading/` (*zero external crates*, `xoshiro256++`, `std::thread::scope` berurutan blok tetap, JSON 17-digit, dan 7 grafik SVG) pada data sintetis:
+  - **Bagian 1**: Transisi OU eksak vs Euler, MLE AR(1) tertutup vs numerik (`diff = 2,12e-6`), dan replikasi $R=20.000$ bias Kendall/Marriott–Pope (rasio `1,04..1,09`).
+  - **Bagian 2**: Waktu lintasan pertama tertutup vs BVP beda hingga vs MC ($R=200.000$), ambang optimal Bertram $a^* = -0{,}01574$ (`0,445 SD`, `R(a*) = 0,2044`), serta verifikasi MC 200 tahun (`z = 0,64`).
+  - **Bagian 3**: Simulasi Dickey–Fuller ($T=1000, R=10^6$: `q05 = -2,8641`), Engle–Granger ($R=20.000$: `q05 = -3,3531`), regresi palsu (`93,26%` $|t|>1{,}96$), dan Johansen trace bivariat (`q95 = 17,997`, *power* 2 thn `81,81%`, `c5 = belum tercapai`).
+  - **Bagian 4**: *Backtest* bergulir ($W \in \{1, 2, 5\}$, $R=2.000\times 10$ thn) dengan akuntansi MTM harian, filter EG pada pasangan *spurious* (`-0,00061 ± 0,00038`), *structural break* ($\theta: 16 \to 2$), dan kurva biaya.
+- Seluruh runner penuh selesai dalam `3,67s` pada `8` worker (`c1..c4, c6..c8 = tercapai`; `c5 = belum tercapai`).
+- Output `outputs/day004i/results.json`, 7 grafik SVG `outputs/figures/day004i_*.svg`, `projects/rust/day004i_pairs_trading/README.md`, serta [day004i_quant_pairs-trading.md](project-explanations/day004i_quant_pairs-trading.md).
+
 ## [Hari 004h] — 2026-11-22 · Perbaikan day004g + Volatilitas kasar: model rough Bergomi (Rust, Bonus)
 
 ### Diperbaiki (Bagian A — `day004g`)
