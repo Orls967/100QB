@@ -55,35 +55,36 @@ Seluruh kode sumber berada di [projects/rust/day004h_rough_bergomi/src/](../../p
 
 ## 7. Status Pencapaian
 
-Runner penuh selesai dalam **`104,42s`** pada `8` *worker* (`part1 = 2,46s`, `part2 = 4,48s`, `part3 = 7,78s`, `part4 = 89,70s`, `part5 = 0,002s`; [results.json](../../outputs/day004h/results.json)):
+Runner penuh selesai dalam **`279,58s`** pada `8` *worker* ([results.json](../../outputs/day004h/results.json)):
 
 | Kriteria | Status | Bukti Terukur |
 | --- | --- | --- |
 | `c1_volterra_cov_quad_within_1e8` | `tercapai` | `max_rel_err = 2,12e-10 < 1e-8` di 6 pasangan $(s, t)$ |
-| `c2_cholesky_exact_cov_within_4_5se` | `tercapai` | `max_chol_recon_err = 5,6e-16`; `max_cov_z_score = 3,84`; $\operatorname{Var}(\widetilde{W}_1)$ `0,9944` vs `1,0000` |
-| `c3_martingales_within_3se` | `belum tercapai` | Harga lolos (`max_z_s_t = 2,25`), tetapi martingal variansi gagal: $\mathbb{E}[e^{\dots}] = 1{,}0866$ di $T=0{,}5$ (`max_z_exp_w = 4,80`) |
-| `c4_variance_swap_within_3se` | `belum tercapai` | $\mathbb{E}[\int_0^T V\,dt]$: `0,01053` ($T=0{,}25$), `0,02119` ($T=0{,}5$), `0,04238` ($T=1$) vs `0,04 T` (`max_z = 13,84`) |
-| `c5_cond_bs_matches_mc_and_vrf` | `tercapai` | `max_z_diff = 1,79 <= 3,5`; `VRF = 2,16..308,4` (`T=0,1, k=0,2`); `max_parity_err = 2,45e-14` |
-| `c6_hybrid_matches_cholesky_price_3se` | `belum tercapai` | Pada $n=50, T=1$: $k=-0{,}2$ (`z=2,40`), $k=0$ (`0,06830` vs `0,06669`, `z=5,60`), $k=0{,}2$ (`z=7,26`) |
-| `c7_atm_skew_power_law_and_markov_zero` | `tercapai` | $H=0{,}1$: slope `-0,3850 ± 0,0128` ($R^2=0{,}997$); $H=0{,}5$: slope `-0,0404 ± 0,0253` |
-| `c8_calib_bias_h_under_003` | `belum tercapai` | `main_fit`: $\hat{H} = 0{,}1629, \hat{\eta}=1{,}918, \hat{\rho}=-0{,}730$; 30 replikasi: `bias_H = +0,0652`, `SD_H = 0,0139` |
-| `c9_runtime_under_300s` | `tercapai` | Total waktu `104,42s < 300s` (`8` *worker*) |
+| `c2_cholesky_exact_cov_bonferroni` | `tercapai` | `max_chol_recon_err = 5,6e-16`; `max_cov_z_score = 3,8415 <= 4,12` (Bonferroni a priori untuk `1275` pasangan, $\alpha=5\%$ dua sisi) |
+| `c3_martingales_within_3se` | `tercapai` | Cholesky $\mathbb{E}[e^{\dots}] = 0{,}99982 \pm 0{,}01301$ ($z=0{,}014$, boot `[0,9732; 0,9998; 1,0271]`); BLP `max_z_exp_w = 2,247`, `max_z_s_t = 2,229` |
+| `c4_variance_swap_within_3se` | `tercapai` | BLP $\mathbb{E}[\int_0^T V\,dt]$: `0,01002` ($T=0{,}25$), `0,02011` ($T=0{,}5$), `0,04031` ($T=1$) vs `0,04 T` (`max_z = 1,618`) |
+| `c5_cond_bs_matches_mc_and_vrf` | `tercapai` | `max_z_diff = 1,767 <= 3,5`; `VRF = 2,15..308,4`; `max_parity_err = 1,97e-14` |
+| `c6_hybrid_matches_cholesky_price_3se` | `tercapai` | BLP vs Cholesky ($n=50, T=1$): `max_z_comb = 1,230 <= 3,0` |
+| `c7_atm_skew_power_law_and_markov_zero` | `tercapai` | $H=0{,}1$: slope `-0,3849 ± 0,0130` ($R^2=0{,}997$); $H=0{,}5$: slope `-0,0404 ± 0,0253` |
+| `c8_calib_bias_h_under_003` | `belum tercapai` | Kondisi (c) `same-scheme-same-n` ($R_{\mathrm{rep}}=30$): `bias_H = +0,0719`, `SD_H = 0,0158` (vs `< 0,03`) |
+| `c9_runtime_under_300s` | `tercapai` | Total waktu `279,58s < 300s` (`8` *worker*) |
 
-Hasil terukur tambahan:
-- **Bias skema hybrid titik kanan vs $n$**: Untuk $H = 0{,}1$, $\operatorname{Var}(\widetilde{W}^H_1)$ teoretis (MC) pada $n \in \{50, 100, 250, 500\}$ adalah `1,0494 (1,0421)`, `1,0438 (1,0370)`, `1,0369 (1,0365)`, `1,0323 (1,0331)` (bias `+4,94%` $\to$ `+3,23%`). Untuk $H = 0{,}5$, bias teoretis adalah `0,0000` di seluruh $n$ dan `max_cov_err_vs_min = 0`.
-- **Skala *skew* ATM lintas $H$**: $H=0{,}05$ (`-0,4214 ± 0,0136` vs `-0,45`), $H=0{,}1$ (`-0,3850 ± 0,0128` vs `-0,40`), $H=0{,}25$ (`-0,2696 ± 0,0132` vs `-0,25`), $H=0{,}5$ (`-0,0404 ± 0,0253` vs `0,00`).
-- **Pembanding Markov ($H=0{,}5$) di $T=0{,}1$**: Setelah menala $\eta_{\mathrm{Markov}} = 4{,}020$ agar ATM IV cocok (`0,1817` vs `0,1832`), *skew* ATM Markov (`0,6045`) sedikit lebih landai daripada *rough Bergomi* (`0,6448`), namun membutuhkan *vol-of-vol* dua kali lebih besar ($\eta = 4{,}02$ vs $1{,}90$) dan kehilangan kelengkungan tajam di sayap *out-of-the-money*.
-- **Identifiabilitas & salah spesifikasi horizon**: Korelasi Hessian $\operatorname{Corr}(\hat{H}, \hat{\eta}) = +0{,}7915$ (trade-off kuat antara kekasaran $H$ dan skala $\eta$). Kalibrasi hanya pada $T \ge 0{,}5$ menggeser $\hat{H}$ lebih jauh ke `0,1946` ($\hat{\eta}=1{,}674$), sedangkan kalibrasi pada $T \le 0{,}1$ menghasilkan $\hat{H} = 0{,}1604$ ($\hat{\eta}=2{,}362$, $\hat{\rho}=-0{,}942$).
+Perbandingan tiga skema hybrid $\kappa = 1$ ($H = 0{,}1$, $n \in \{50, 100, 250, 500\}$):
+- **Titik kanan (*RightEndpoint*)**: bias teoretis $\operatorname{Var}(\widetilde{W}^H_1)$ `+4,94%` $\to$ `+4,38%` $\to$ `+3,69%` $\to$ `+3,23%` (`max_cov_abs_err = 0,0494 -> 0,0323`).
+- **BLP titik optimal (*BlpOptimal*, primer)**: bias teoretis `-0,0619%` $\to$ `-0,0539%` $\to$ `-0,0449%` $\to$ `-0,0391%` (`max_cov_abs_err = 0,00083 -> 0,00039`), karena $b_k^* = ((k^{\alpha+1}-(k-1)^{\alpha+1})/(\alpha+1))^{1/\alpha}$ membuat kovarians silang dengan $\Delta B$ eksak.
+- **Pencocok variansi (*VarianceMatching*)**: bias variansi `0,00000%` di semua $n$, `max_cov_abs_err` `0,00061 -> 0,000031` (tidak mencocokkan kovarians silang $\Delta B$ secara eksak).
 
-## 8. Diagnosis Bagian yang Belum Tercapai (`c3`, `c4`, `c6`, `c8`)
+Pemisahan bias skema vs identifiabilitas pada kalibrasi:
+- `(a)` Skema lama (`RightEndpoint`), $n$ beda (`250` vs `100`, $R=15$): `bias_H = +0,0788 ± 0,0346`.
+- `(b)` Skema baru (`BlpOptimal`), $n$ beda (`250` vs `100`, $R=15$): `bias_H = +0,0744 ± 0,0174`.
+- `(c)` Skema baru (`BlpOptimal`), $n$ SAMA (`100` vs `100`, $R=30$, identifiabilitas murni): `bias_H = +0,0719 ± 0,0158`.
 
-Keempat kriteria gagal memiliki **satu akar matematis bersama** yang terukur secara langsung:
-- **FAKTA**: Pada Bagian 1 (`hybrid_bias_h01` di [results.json](../../outputs/day004h/results.json)), bobot konvolusi titik kanan $((k-1)\Delta t)^{H-1/2}$ untuk $k \ge 2$ selalu lebih besar dari rata-rata integral selnya karena $u^{H-1/2}$ menurun ketat untuk $H < 1/2$. Akibatnya $\operatorname{Var}_{\mathrm{hyb}}(\widetilde{W}^H_1)$ melebihi $1{,}0$ sebesar `+4,94%` ($n=50$), `+4,38%` ($n=100$), `+3,69%` ($n=250$), dan `+3,23%` ($n=500$).
-- **HIPOTESIS (terkonfirmasi secara kuantitatif)**:
-  1. **Untuk `c3` & `c4`**: Karena kompensator eksponensial menggunakan $-\frac{1}{2}\eta^2 u^{2H}$ (variansi eksak) sedangkan skema hybrid menghasilkan variansi $\operatorname{Var}_{\mathrm{hyb}}(u) \approx 1{,}0369\,u^{2H}$ pada $n=250$, nilai harapannya menjadi $\exp\bigl(\frac{1}{2}\eta^2(0{,}0369)\bigr) = \exp(0{,}0666) = 1{,}0689$, cocok dengan nilai ukur `1,0646` ($T=1$) dan kenaikan *variance swap* `+5,95%` (`0,04238` vs `0,04000`).
-  2. **Untuk `c6`**: Pada $n=50$, kelebihan variansi $+4{,}94\%$ pada $\widetilde{W}^H$ menaikkan *vol-of-vol* efektif $V_u$, sehingga harga *call* hybrid (`0,06830` di ATM) lebih tinggi secara signifikan (`z = 5,60..7,26`) daripada referensi Cholesky eksak (`0,06669`).
-  3. **Untuk `c8`**: Karena kalibrasi memakai $n=100$ (bias variansi $+4{,}38\%$) terhadap pasar $n=500$ (bias $+3{,}23\%$) dan bias titik kanan membesar ketika $H$ mengecil, Nelder–Mead menaikkan $\hat{H}$ (`bias_H = +0,0652`) agar variansi efektif model turun mendekati pasar.
-- **Bukti lanjutan**: Mengganti bobot titik kanan $k \ge 2$ dengan bobot optimal $L^2$ Bennedsen–Lunde–Pakkanen ($b_k = \sqrt{\frac{k^{2H} - (k-1)^{2H}}{2H}}$) atau memperbesar $\kappa \ge 2$ akan menghilangkan bias variansi ini; sesuai prinsip integritas, bobot titik kanan dipertahankan apa adanya untuk mengukur bias diskretisasinya secara jujur.
+## 8. Diagnosis Bagian yang Belum Tercapai (`c8`)
+
+Setelah mengganti skema titik kanan menjadi `BlpOptimal`, kriteria `c3`, `c4`, dan `c6` kini seluruhnya **tercapai**, sedangkan `c8_calib_bias_h_under_003` tetap **belum tercapai**:
+- **FAKTA**: Bahkan pada kondisi `(c)` (*same-scheme-same-n* tanpa *mismatch* diskretisasi), `bias_H = +0,0719` (`SD_H = 0,0158`), hampir sama dengan kondisi `(b)` (`+0,0744`). Selain itu, $\operatorname{Corr}(\hat{H}, \hat{\eta}) = +0{,}7780$ dan profil objektif $H$ datar di sekitar `[0,12; 0,20]` (`RMSE = 0,0145` di `0,12`, `0,0136` di `0,15`, `0,0138` di `0,20`).
+- **HIPOTESIS**: Pada *grid* jatuh tempo standar $T \in \{0{,}1; 0{,}25; 0{,}5; 1{,}0\}$ dan $k \in [-0{,}3; 0{,}3]$ dengan $R = 20.000$, *ridge* identifiabilitas antara $H$ dan $\eta$ sangat datar sehingga derau MC + titik awal Nelder–Mead ($H_0 = 0{,}18$) menggeser optimum ke $\hat{H} \approx 0{,}17$. Diperlukan jatuh tempo ultra-pendek ($T \le 0{,}02$) atau ukuran sampel jauh lebih besar untuk menajamkan kelengkungan terhadap $H$.
+- **Catatan martingal eksponensial lognormal (`c3`)**: Pada $\eta = 1{,}9$, variabel acak $\exp(\eta \widetilde{W}_1 - \frac{1}{2}\eta^2)$ memiliki variansi teoritis $e^{\eta^2} - 1 \approx 35{,}96$ dan ekor kanan berat, sehingga uji-$z$ normal perlu dibaca bersama kuantil bootstrap (`[0,9732; 0,9998; 1,0271]`).
 
 ## 9. Landasan Teori (11 Poin)
 

@@ -61,24 +61,24 @@ cargo run --release --bin run
 
 Keluaran utama ditulis ke [../../../outputs/day004h/results.json](../../../outputs/day004h/results.json) dan 7 grafik ke [../../../outputs/figures/](../../../outputs/figures/).
 
-## Ringkasan Hasil Eksperimen (`main_seed = 20261122`, `8` worker, `104,42s`)
+## Ringkasan Hasil Eksperimen (`main_seed = 20261122`, `8` worker, `279,58s`)
 
 | Bagian / Besaran | Nilai Terukur | Acuan / Pembanding | Status Kriteria |
 | --- | --- | --- | --- |
 | Kovarians Volterra (`2F1` vs Gauss-Legendre) | `max_rel_err = 2,12e-10` | `< 1e-8` | `c1 = tercapai` |
-| Referensi Cholesky `2n x 2n` (`n=50, R=200k`) | `max_chol_err = 5,6e-16` | `max_cov_z = 3,84` | `c2 = tercapai` |
-| Bias variansi hybrid titik kanan ($H=0{,}1$) | `+4,94%` ($n=50$) → `+3,23%` ($n=500$) | $H=0{,}5$: `0,000%` | — |
-| Martingal $V_u$ & $S_T$ ($n=250, R=100k$) | $\mathbb{E}[e^{\dots}] = 1{,}0866$ ($z=4{,}80$); $\mathbb{E}[S_T] = 1{,}0013$ ($z=2{,}25$) | `1,0` dalam `3 SE` | `c3 = belum tercapai` |
-| Variance swap ($T=1$) | `0,04238 ± 0,00020` ($z = 12{,}18$) | `0,04000` | `c4 = belum tercapai` |
-| Estimator Bersyarat BS vs MC | `max_z_diff = 1,79`, `VRF = 2,16..308,4` | `parity_err = 2,45e-14` | `c5 = tercapai` |
-| Harga Hybrid vs Cholesky (`n=50, T=1`) | `hyb = 0,06830` vs `ref = 0,06669` ($z = 5{,}60..7{,}26$) | `<= 3 SE` | `c6 = belum tercapai` |
-| Hukum pangkat *skew* ATM ($\log \psi$ vs $\log T$) | $H=0{,}1$: `-0,3850 ± 0,0128`; $H=0{,}5$: `-0,0404 ± 0,0253` | `-0,40` dan `0,00` | `c7 = tercapai` |
-| Kalibrasi & replikasi ($R_{\mathrm{rep}} = 30$) | $\hat{H} = 0{,}1629$, `bias_H = +0,0652 ± 0,0139` | `|bias_H| < 0,03` | `c8 = belum tercapai` |
-| Anggaran waktu runner | `104,42s` (`8` worker) | `< 300s` | `c9 = tercapai` |
+| Referensi Cholesky `2n x 2n` (`n=50, R=200k`) | `max_chol_err = 5,6e-16` | `max_cov_z = 3,8415 <= 4,12` (Bonferroni) | `c2 = tercapai` |
+| Bias variansi hybrid BLP optimal ($H=0{,}1$) | `-0,062%` ($n=50$) → `-0,039%` ($n=500$) | Titik kanan: `+4,94%..+3,23%`; VM: `0%` | — |
+| Martingal $V_u$ & $S_T$ | Cholesky $\mathbb{E}[e^{\dots}] = 0{,}9998$ ($z=0{,}014$); BLP `max_z=2,25` | `1,0` dalam `3 SE` | `c3 = tercapai` |
+| Variance swap ($T=1$) | `0,04031` (`max_z = 1,62`) | `0,04000` | `c4 = tercapai` |
+| Estimator Bersyarat BS vs MC | `max_z_diff = 1,77`, `VRF = 2,15..308,4` | `parity_err = 1,97e-14` | `c5 = tercapai` |
+| Harga Hybrid BLP vs Cholesky (`n=50, T=1`) | `max_z_comb = 1,23` | `<= 3 SE` | `c6 = tercapai` |
+| Hukum pangkat *skew* ATM ($\log \psi$ vs $\log T$) | $H=0{,}1$: `-0,3849 ± 0,0130`; $H=0{,}5$: `-0,0404 ± 0,0253` | `-0,40` dan `0,00` | `c7 = tercapai` |
+| Kalibrasi & replikasi ($R_{\mathrm{rep}} = 30$, *same-n*) | `bias_H = +0,0719 ± 0,0158` | `|bias_H| < 0,03` | `c8 = belum tercapai` |
+| Anggaran waktu runner | `279,58s` (`8` worker) | `< 300s` | `c9 = tercapai` |
 
-## Catatan Diagnostik Penting (`c3`, `c4`, `c6`, `c8`)
+## Catatan Diagnostik (`c8`)
 
-Keempat kriteria tersebut gagal karena **satu akar matematis yang sama**: skema hybrid $\kappa = 1$ dengan bobot titik kanan pada sel $k \ge 2$ secara sistematis melebih-estimasi $\operatorname{Var}(\widetilde{W}^H_t)$ sebesar `+3,23%` ($n=500$) hingga `+4,94%` ($n=50$). Kelebihan variansi ini secara eksponensial menggeser $\mathbb{E}[\exp(\eta\widetilde{W}^H - \frac{1}{2}\eta^2 t^{2H})] \approx \exp(\frac{1}{2}\eta^2 \cdot 0{,}0369) \approx 1{,}069$ (terukur `1,0646`–`1,0866`), menaikkan variansi swap (`0,04238`), menaikkan harga call pada `n=50`, serta mendorong $\hat{H}$ naik (`+0,0652`) saat kalibrasi di `n=100` mencocokkan pasar `n=500`.
+Dengan skema BLP titik optimal, `c3`, `c4`, dan `c6` kini seluruhnya `tercapai`. Kriteria `c8` tetap `belum tercapai` bahkan pada kondisi *same-scheme-same-n* (`bias_H = +0,0719`), yang membuktikan bahwa bias kalibrasi berasal dari *ridge* identifiabilitas datar antara $(H, \eta)$ ($\operatorname{Corr} = 0{,}778$) pada horizon $T \in [0{,}1; 1{,}0]$, bukan sekadar diskretisasi.
 
 ## Daftar Grafik
 
