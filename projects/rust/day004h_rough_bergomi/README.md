@@ -61,7 +61,7 @@ cargo run --release --bin run
 
 Keluaran utama ditulis ke [../../../outputs/day004h/results.json](../../../outputs/day004h/results.json) dan 7 grafik ke [../../../outputs/figures/](../../../outputs/figures/).
 
-## Ringkasan Hasil Eksperimen (`main_seed = 20261122`, `8` worker, `235,06s`)
+## Ringkasan Hasil Eksperimen (`main_seed = 20261122`, `8` worker, `423,41s`)
 
 | Bagian / Besaran | Nilai Terukur | Acuan / Pembanding | Status Kriteria |
 | --- | --- | --- | --- |
@@ -74,7 +74,7 @@ Keluaran utama ditulis ke [../../../outputs/day004h/results.json](../../../outpu
 | Harga Hybrid BLP vs Cholesky (`n=50, T=1`) | `max_z_comb = 1,23` | `<= 3 SE` | `c6 = tercapai` |
 | Hukum pangkat *skew* ATM ($\log \psi$ vs $\log T$) | $H=0{,}1$: `-0,3849 ± 0,0130`; $H=0{,}5$: `-0,0404 ± 0,0253` | `-0,40` dan `0,00` | `c7 = tercapai` |
 | Kalibrasi & replikasi ($R_{\mathrm{rep}} = 30$, *same-n*) | `bias_H = +0,0719 ± 0,0158` | `|bias_H| < 0,03` | `c8 = belum tercapai` |
-| Anggaran waktu runner | `235,06s` (`8` worker) | `< 300s` | `c9 = tercapai` |
+| Anggaran waktu runner | `423,41s` (`8` worker) | `< 300s` | `c9 = belum tercapai` |
 
 ## Catatan Diagnostik (`c8`)
 

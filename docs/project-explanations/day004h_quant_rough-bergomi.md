@@ -55,7 +55,7 @@ Seluruh kode sumber berada di [projects/rust/day004h_rough_bergomi/src/](../../p
 
 ## 7. Status Pencapaian
 
-Runner penuh selesai dalam **`235,06s`** pada `8` *worker* ([results.json](../../outputs/day004h/results.json)):
+Runner penuh selesai dalam **`423,41s`** pada `8` *worker* ([results.json](../../outputs/day004h/results.json)):
 
 | Kriteria | Status | Bukti Terukur |
 | --- | --- | --- |
@@ -67,7 +67,7 @@ Runner penuh selesai dalam **`235,06s`** pada `8` *worker* ([results.json](../..
 | `c6_hybrid_matches_cholesky_price_3se` | `tercapai` | BLP vs Cholesky ($n=50, T=1$): `max_z_comb = 1,230 <= 3,0` |
 | `c7_atm_skew_power_law_and_markov_zero` | `tercapai` | $H=0{,}1$: slope `-0,3849 ± 0,0130` ($R^2=0{,}997$); $H=0{,}5$: slope `-0,0404 ± 0,0253` |
 | `c8_calib_bias_h_under_003` | `belum tercapai` | Kondisi (c) `same-scheme-same-n` ($R_{\mathrm{rep}}=30$): `bias_H = +0,0719`, `SD_H = 0,0158` (vs `< 0,03`) |
-| `c9_runtime_under_300s` | `tercapai` | Total waktu `235,06s < 300s` (`8` *worker*) |
+| `c9_runtime_under_300s` | `belum tercapai` | Total waktu `423,41s > 300s` (`8` *worker*, termasuk grid dekomposisi `(n, R)` hingga `n=500, R=200k`) |
 
 Perbandingan tiga skema hybrid $\kappa = 1$ ($H = 0{,}1$, $n \in \{50, 100, 250, 500\}$):
 - **Titik kanan (*RightEndpoint*)**: bias teoretis $\operatorname{Var}(\widetilde{W}^H_1)$ `+4,94%` $\to$ `+4,38%` $\to$ `+3,69%` $\to$ `+3,23%` (`max_cov_abs_err = 0,0494 -> 0,0323`).
@@ -84,8 +84,9 @@ Pemisahan bias skema vs identifiabilitas pada kalibrasi:
 Setelah mengganti skema titik kanan menjadi `BlpOptimal`, kriteria `c3`, `c4`, dan `c6` kini seluruhnya **tercapai**, sedangkan `c8_calib_bias_h_under_003` tetap **belum tercapai**:
 - **FAKTA**:
   1. Uji *self-consistency* (kalibrasi ke *smile* mesin sendiri dengan bank CRN yang sama) memulihkan parameter eksak: $\hat{H} = 0{,}100001$, $\hat{\eta} = 1{,}900000$, $\hat{\rho} = -0{,}699997$ (`rmse_opt = 1,18e-7`) — membuktikan tidak ada bug pada *forward engine* maupun *optimizer* Nelder–Mead.
-  2. Pada kondisi `(c)` (*same-scheme-same-n* dengan bank CRN kalibrasi tetap), `bias_H = +0,0719` (`SD_H = 0,0158`). Ketika setiap replikasi diberi bank CRN kalibrasi yang **berbeda** (`rep_diff_crn`, $R_{\mathrm{rep}} = 15$), `bias_H = +0,1027` dan `SD_H` melonjak menjadi `0,0514`. Bahkan pada $R_{\mathrm{calib}} = 80.000$ (`fit_r80k`), hasil tetap $\hat{H} = 0{,}1657$, $\hat{\eta} = 1{,}9407$, $\hat{\rho} = -0{,}7321$ (`rmse = 0,0107`). Selain itu $\operatorname{Corr}(\hat{H}, \hat{\eta}) = +0{,}7780$ dan profil objektif $H$ datar di `[0,12; 0,20]`.
-- **HIPOTESIS**: Pada *grid* jatuh tempo standar $T \in \{0{,}1; 0{,}25; 0{,}5; 1{,}0\}$ dan $k \in [-0{,}3; 0{,}3]$, *ridge* identifiabilitas antara $H$ dan $\eta$ sangat datar sehingga derau MC kecil antara kurva pasar dan kurva kalibrasi menggeser optimum Nelder–Mead (dari $H_0 = 0{,}18$) ke $\hat{H} \approx 0{,}17$; penggunaan bank CRN kalibrasi yang sama pada `replication_30` juga membuat `SD_H = 0,0158` terlalu kecil dibanding varians antar-bank sejati (`0,0514`). Diperlukan jatuh tempo ultra-pendek ($T \le 0{,}02$) atau ukuran sampel jauh lebih besar untuk menajamkan kelengkungan terhadap $H$.
+  2. Pada kondisi `(c)` (*same-scheme-same-n* dengan bank CRN kalibrasi tetap), `bias_H = +0,0719` (`SD_H = 0,0158`). Ketika setiap replikasi diberi bank CRN kalibrasi yang **berbeda** (`rep_diff_crn`, $R_{\mathrm{rep}} = 15$), `bias_H = +0,1027` dan `SD_H` melonjak menjadi `0,0514`. Pada $R_{\mathrm{calib}} = 80.000$ (`fit_r80k`), $\hat{H} = 0{,}1657$; dan dengan objektif ruang harga berbobot vega (`fit_vega_price`), $\hat{H} = 0{,}1775$ (`rmse = 0,0105`).
+  3. **Dekomposisi `(n, R)` pada parameter benar (`true_rmse_grid`)**: `n=100: (20k: 0,0794; 80k: 0,0188; 200k: 0,0202)`, `n=250: (20k: 0,0761; 80k: 0,0221; 200k: 0,0760)`, `n=500: (20k: 0,0121; 80k: 0,0756; 200k: 0,0314)`.
+- **HIPOTESIS**: Pada $\eta = 1{,}9$, faktor variansi lognormal $\exp(\eta\widetilde{W}_1 - \frac{1}{2}\eta^2)$ memiliki variansi teoritis $e^{\eta^2} - 1 \approx 36$ dan ekor kanan berat, sehingga bahkan pada $n=500, R=200.000$, realisasi jalur ekstrem antar-*seed* tetap menimbulkan lompatan galat `0,012..0,076` (bukan efek diskretisasi $n$, melainkan fluktuasi ekor berat MC). Digabung dengan *ridge* identifiabilitas datar $(H, \eta)$ pada $T \in [0{,}1; 1{,}0]$ ($\operatorname{Corr} = +0{,}778$), baik objektif IV maupun ruang harga berbobot vega tetap bergeser dari $H_0 = 0{,}18$ ke $\hat{H} \approx 0{,}17$.
 - **Catatan martingal eksponensial lognormal (`c3`)**: Pada $\eta = 1{,}9$, variabel acak $\exp(\eta \widetilde{W}_1 - \frac{1}{2}\eta^2)$ memiliki variansi teoritis $e^{\eta^2} - 1 \approx 35{,}96$ dan ekor kanan berat, sehingga uji-$z$ normal perlu dibaca bersama kuantil bootstrap (`[0,9732; 0,9998; 1,0271]`).
 
 ## 9. Landasan Teori (11 Poin)

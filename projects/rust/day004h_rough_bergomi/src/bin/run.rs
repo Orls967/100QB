@@ -827,6 +827,30 @@ fn main() {
                     ]),
                 ),
                 (
+                    "fit_vega_price",
+                    JsonVal::Obj(vec![
+                        ("h_hat", calib.fit_vega_price.h_hat.into()),
+                        ("eta_hat", calib.fit_vega_price.eta_hat.into()),
+                        ("rho_hat", calib.fit_vega_price.rho_hat.into()),
+                        ("rmse_opt", calib.fit_vega_price.rmse_opt.into()),
+                    ]),
+                ),
+                (
+                    "true_rmse_grid",
+                    calib
+                        .true_rmse_grid
+                        .iter()
+                        .map(|&(n_g, r_g, rm)| {
+                            JsonVal::Obj(vec![
+                                ("n_steps", n_g.into()),
+                                ("n_paths", r_g.into()),
+                                ("rmse_at_true", rm.into()),
+                            ])
+                        })
+                        .collect::<Vec<_>>()
+                        .into(),
+                ),
+                (
                     "rep_diff_crn",
                     JsonVal::Obj(vec![
                         ("n_rep", calib.rep_diff_crn.n_rep.into()),

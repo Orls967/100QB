@@ -310,6 +310,8 @@ pub struct CalibStudySummary {
     pub main_fit: CalibResult,
     pub self_consistency_fit: CalibResult,
     pub fit_r80k: CalibResult,
+    pub fit_vega_price: CalibResult,
+    pub true_rmse_grid: Vec<(usize, usize, f64)>,
     pub h_profile: Vec<HProfilePoint>,
     pub corr_h_eta: f64,
     pub replication: ReplicationSummary,
@@ -722,6 +724,130 @@ pub fn run_calibration_study(
         evals: ev_80k,
     };
 
+    // (iv) Decomposition of rmse_at_true across (n, R) in {100, 250, 500} x {20k, 80k, 200k}
+    let mut true_rmse_grid = Vec::new();
+    for &n_g in &[100_usize, 250, 500] {
+        for &r_g in &[20_000_usize, 80_000, 200_000] {
+            let bank_g = CalibCrnBank::build(
+                r_g,
+                n_g,
+                n_workers,
+                seed ^ 0x7777,
+                (n_g * 10 + r_g / 1000) as u64,
+            );
+            let sse_g = eval_smile_sse(
+                &bank_g,
+                true_p.xi0,
+                true_p.s0,
+                true_p.h,
+                true_p.eta,
+                true_p.rho,
+                &market_smile,
+                &ts_main,
+                &ks_calib,
+                n_workers,
+            );
+            true_rmse_grid.push((n_g, r_g, (sse_g / n_pts_main as f64).sqrt()));
+        }
+    }
+
+    // (v) Vega-weighted conditional-BS price-space calibration (avoids IV inversion wing noise)
+    let eval_vega_price_sse = |h: f64, eta: f64, rho: f64| -> f64 {
+        if !(0.01..=0.495).contains(&h)
+            || !(0.05..=5.0).contains(&eta)
+            || !(-0.99..=0.99).contains(&rho)
+        {
+            return 1e6;
+        }
+        let n = bank.n_steps;
+        let hw = HybridWeights::with_scheme(n, 1.0, h, HybridScheme::BlpOptimal);
+        let dt = hw.dt;
+        let half_eta2 = 0.5 * eta * eta;
+        let one_m_rho2 = (1.0 - rho * rho).max(0.0);
+        let step_targets: Vec<usize> = ts_main.iter().map(|&t| (t / dt).round() as usize).collect();
+        let n_t = ts_main.len();
+        let n_k = ks_calib.len();
+        let sums = parallel::run_chunk_reduce(
+            bank.n_paths,
+            n_workers,
+            |start, end| {
+                let mut local = vec![0.0_f64; n_t * n_k];
+                let mut wt = vec![0.0_f64; n];
+                let mut db = vec![0.0_f64; n];
+                for r in start..end {
+                    let off = r * n;
+                    hw.generate_path(
+                        &bank.u_flat[off..off + n],
+                        &bank.v_flat[off..off + n],
+                        &mut wt,
+                        &mut db,
+                    );
+                    let mut int_v = 0.0_f64;
+                    let mut stoch_int = 0.0_f64;
+                    let mut tp = 0_usize;
+                    for i in 0..n {
+                        let v_i = if i == 0 {
+                            true_p.xi0
+                        } else {
+                            true_p.xi0
+                                * (eta * wt[i - 1] - half_eta2 * exact_var(i as f64 * dt, h)).exp()
+                        };
+                        int_v += v_i * dt;
+                        stoch_int += v_i.sqrt() * db[i];
+                        if tp < n_t && (i + 1) == step_targets[tp] {
+                            let s_eff =
+                                true_p.s0 * (rho * stoch_int - 0.5 * rho * rho * int_v).exp();
+                            let vc = one_m_rho2 * int_v;
+                            for (ki, &lk) in ks_calib.iter().enumerate() {
+                                local[tp * n_k + ki] +=
+                                    bs::bs_call_total_var(s_eff, true_p.s0 * lk.exp(), vc);
+                            }
+                            tp += 1;
+                        }
+                    }
+                }
+                local
+            },
+            |parts| {
+                let mut tot = vec![0.0_f64; n_t * n_k];
+                for p in parts {
+                    for (a, b) in tot.iter_mut().zip(p.iter()) {
+                        *a += *b;
+                    }
+                }
+                tot
+            },
+        );
+        let nf = bank.n_paths as f64;
+        let mut sse = 0.0_f64;
+        for (ti, &t_h) in ts_main.iter().enumerate() {
+            for (ki, &lk) in ks_calib.iter().enumerate() {
+                let c_mod = sums[ti * n_k + ki] / nf;
+                if let Some(pt) = market_smile
+                    .iter()
+                    .find(|pt| (pt.t_horizon - t_h).abs() < 1e-12 && (pt.log_k - lk).abs() < 1e-9)
+                {
+                    let strike = true_p.s0 * lk.exp();
+                    let vega = bs::bs_vega(true_p.s0, strike, t_h, pt.iv).max(1e-4);
+                    let d = (c_mod - pt.call_price) / vega;
+                    sse += d * d;
+                }
+            }
+        }
+        sse
+    };
+    let (x_vp, sse_vp, ev_vp) = nelder_mead(&init, &steps, 105, 1e-10, |x| {
+        eval_vega_price_sse(x[0], x[1], x[2])
+    });
+    let fit_vega_price = CalibResult {
+        h_hat: x_vp[0],
+        eta_hat: x_vp[1],
+        rho_hat: x_vp[2],
+        rmse_opt: (sse_vp / n_pts_main as f64).sqrt(),
+        rmse_at_true: 0.0,
+        evals: ev_vp,
+    };
+
     // 5. Misspecification: T >= 0.5 only vs T <= 0.1 only
     let ts_long = [0.5, 1.0];
     let (xl, ssel, evl) = nelder_mead(&init, &steps, 90, 1e-9, |x| {
@@ -787,6 +913,8 @@ pub fn run_calibration_study(
         main_fit,
         self_consistency_fit,
         fit_r80k,
+        fit_vega_price,
+        true_rmse_grid,
         h_profile,
         corr_h_eta,
         replication,

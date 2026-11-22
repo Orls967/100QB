@@ -7,12 +7,12 @@
     "workers_used": 8,
     "main_seed": 20261122,
     "elapsed_seconds": {
-      "part1_volterra_hybrid": 5.44765662499999959,
-      "part2_martingale_pricing": 4.58639416699999991,
-      "part3_smile_skew": 7.52046687500000033,
-      "part4_calibration": 217.50099620800000366,
-      "part5_figures": 0.00215158300000000,
-      "total": 235.05766637499999661
+      "part1_volterra_hybrid": 10.91291437499999972,
+      "part2_martingale_pricing": 8.46623495799999937,
+      "part3_smile_skew": 14.03408437500000083,
+      "part4_calibration": 389.99914816599999767,
+      "part5_figures": 0.00127462500000000,
+      "total": 423.41365674999997282
     }
   },
   "part1_volterra": {
@@ -256,8 +256,8 @@
         "z_s_t": 2.22933538779729767
       }
     ],
-    "mc_secs": 1.56367391700000002,
-    "cond_secs": 1.41447450099999994,
+    "mc_secs": 3.00069987500000002,
+    "cond_secs": 2.70090595899999997,
     "call_estimators": [
       {
         "t": 0.10000000000000001,
@@ -653,6 +653,59 @@
       "rho_hat": -0.73211189193885340,
       "rmse_opt": 0.01070009376182926
     },
+    "fit_vega_price": {
+      "h_hat": 0.17752959380693523,
+      "eta_hat": 1.87614762518980616,
+      "rho_hat": -0.71313691446277150,
+      "rmse_opt": 0.01050552427802214
+    },
+    "true_rmse_grid": [
+      {
+        "n_steps": 100,
+        "n_paths": 20000,
+        "rmse_at_true": 0.07944563415734300
+      },
+      {
+        "n_steps": 100,
+        "n_paths": 80000,
+        "rmse_at_true": 0.01876086948447074
+      },
+      {
+        "n_steps": 100,
+        "n_paths": 200000,
+        "rmse_at_true": 0.02023077568577660
+      },
+      {
+        "n_steps": 250,
+        "n_paths": 20000,
+        "rmse_at_true": 0.07606717023170885
+      },
+      {
+        "n_steps": 250,
+        "n_paths": 80000,
+        "rmse_at_true": 0.02211596105171234
+      },
+      {
+        "n_steps": 250,
+        "n_paths": 200000,
+        "rmse_at_true": 0.07598359958626257
+      },
+      {
+        "n_steps": 500,
+        "n_paths": 20000,
+        "rmse_at_true": 0.01213721805728181
+      },
+      {
+        "n_steps": 500,
+        "n_paths": 80000,
+        "rmse_at_true": 0.07555778757147683
+      },
+      {
+        "n_steps": 500,
+        "n_paths": 200000,
+        "rmse_at_true": 0.03138010188260609
+      }
+    ],
     "rep_diff_crn": {
       "n_rep": 15,
       "bias_h": 0.10273424971186215,
@@ -710,8 +763,8 @@
       "threshold_abs_bias_h": 0.03000000000000000
     },
     "c9_runtime_under_300s": {
-      "status": "tercapai",
-      "total_seconds": 235.05766637499999661,
+      "status": "belum tercapai",
+      "total_seconds": 423.41365674999997282,
       "budget_seconds": 300.00000000000000000
     }
   }
