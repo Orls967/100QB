@@ -3,6 +3,22 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 004k] — 2026-11-22 · Perbaikan day004h/day004i/day004j + AMM, LVR & Likuiditas Terkonsentrasi (Rust, Bonus)
+
+### Diperbaiki (Bagian A — `day004h`, `day004i`, `day004j`)
+- `projects/rust/day004i_pairs_trading`: menyelaraskan simulasi null Johansen (`q95_h0_drift = 18,000 ± 0,097`) dengan DGP aplikasi ber-*drift* (`0,05*dt`), melaporkan ukuran & *power* baik pada `q95_h0_drift` (`size = 4,87%`, `power = 81,56%`) maupun pada kuantil literatur `15,41` (`size = 10,99%`, `power = 93,46%`), serta menulis ulang §8 dokumen penjelasan.
+- `projects/rust/day004h_rough_bergomi`: menguraikan `rmse_at_true` pada grid `(n, R) ∈ {100, 250, 500} × {20k, 80k, 200k}` (membuktikan fluktuasi `0,012..0,076` berasal dari ekor berat $\exp(\eta\widetilde{W})$ alih-alih diskretisasi $n$) dan menambahkan kalibrasi ruang harga berbobot vega (`fit_vega_price`: $\hat{H} = 0,1775$).
+- `projects/rust/day004j_deep_hedging`: melatih hingga konvergen (`10.000` iterasi, penskalaan input, bias keluaran `0,5`, *batch* `1024`/`4096`), menambahkan diagnostik residual $\delta = \delta_{\mathrm{BS}} + \mathrm{NN}$, grid pita halus `401` titik dengan SE 3 *seed*, kesepakatan kebijakan DP berbobot frekuensi kunjungan, serta metrik terukur `c1`–`c2`.
+
+### Ditambahkan (Bagian C — `day004k`)
+- Project Rust stable mandiri `projects/rust/day004k_amm_lvr/` (*zero external crates*, `xoshiro256++`, `std::thread::scope` deterministik blok tetap `64`, JSON 17-digit, dan 8 grafik SVG) pada data sintetis:
+  - **Bagian 1**: CPMM $x\cdot y = L^2$, *impermanent loss* $\mathrm{IL}(r)$, *anchor* martingal GBM ($R = 10^6$, `max_z = 2,31`), LVR *pathwise* Itô (`0,0065501` vs `0,0065516`), dan sapuan $\sigma \in \{0{,}3; 0{,}5; 0{,}8; 1{,}2\}$.
+  - **Bagian 2**: Arbitrase per blok (biaya pada input) via kuadratur Gauss–Legendre 64-titik vs MC pada $12$ kombinasi $(\Delta, \varphi)$ (`max_z = 1,65`), limit kontinu gerak Brownian terefleksi ($\Delta = 1\text{s}$ biaya LP `0,07761` vs limit `0,07988`), dan titik impas aliran *noise trader* Poisson.
+  - **Bagian 3**: Likuiditas terkonsentrasi $[P_a, P_b]$ ($\pm 5\%, \pm 10\%, \pm 30\%$, penuh), efisiensi modal $\mathrm{CE}$, waktu keluar ODE GBM, serta perbandingan CRN 5 strategi 30 hari (*delta-hedged ±10%* `Sharpe = 2,009`).
+  - **Bagian 4**: Salah spesifikasi lompatan Merton (`0,08678` > `0,07973`), volatilitas stokastik CIR (`0,07968` vs `0,07968`, `corr = 0,923`), *drift* $\mu \in \{-0{,}5; +0{,}5\}$ (`LVR/int V dt = 0,08001` & `0,07999`), dan ukuran blok `600s`.
+- Seluruh runner `day004k` selesai dalam `86,58s` pada `8` worker (`c1..c9 = tercapai` semua).
+- Output `outputs/day004k/results.json`, 8 grafik SVG `outputs/figures/day004k_*.svg`, `projects/rust/day004k_amm_lvr/README.md`, serta [day004k_quant_amm-lvr.md](project-explanations/day004k_quant_amm-lvr.md).
+
 ## [Hari 004j] — 2026-11-22 · Perbaikan day004h/day004i + Deep hedging dari nol (Rust, Bonus)
 
 ### Diperbaiki (Bagian A — `day004i` & `day004h`)
