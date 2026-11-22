@@ -2,36 +2,36 @@
 <rect width="820" height="480" fill="#ffffff"/>
 <text x="410" y="30" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="bold" fill="#111827">Learning Curve: Training Loss vs Adam Iteration (BS, c=0)</text>
 <line x1="82" y1="410.0" x2="790.0" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
-<text x="74.0" y="414.0" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">-0.0026</text>
+<text x="74.0" y="414.0" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">-0.0036</text>
 <line x1="82.0" y1="56" x2="82.0" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
 <text x="82.0" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">1.000</text>
 <line x1="82" y1="339.2" x2="790.0" y2="339.2" stroke="#e5e7eb" stroke-width="1"/>
-<text x="74.0" y="343.2" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.0044</text>
+<text x="74.0" y="343.2" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.0059</text>
 <line x1="223.6" y1="56" x2="223.6" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
-<text x="223.6" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">72.800</text>
+<text x="223.6" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">2000.800</text>
 <line x1="82" y1="268.4" x2="790.0" y2="268.4" stroke="#e5e7eb" stroke-width="1"/>
-<text x="74.0" y="272.4" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.0113</text>
+<text x="74.0" y="272.4" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.0155</text>
 <line x1="365.2" y1="56" x2="365.2" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
-<text x="365.2" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">144.600</text>
+<text x="365.2" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">4000.600</text>
 <line x1="82" y1="197.6" x2="790.0" y2="197.6" stroke="#e5e7eb" stroke-width="1"/>
-<text x="74.0" y="201.6" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.0183</text>
+<text x="74.0" y="201.6" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.0250</text>
 <line x1="506.8" y1="56" x2="506.8" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
-<text x="506.8" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">216.400</text>
+<text x="506.8" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">6000.400</text>
 <line x1="82" y1="126.8" x2="790.0" y2="126.8" stroke="#e5e7eb" stroke-width="1"/>
-<text x="74.0" y="130.8" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.0252</text>
+<text x="74.0" y="130.8" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.0345</text>
 <line x1="648.4" y1="56" x2="648.4" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
-<text x="648.4" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">288.200</text>
+<text x="648.4" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">8000.200</text>
 <line x1="82" y1="56.0" x2="790.0" y2="56.0" stroke="#e5e7eb" stroke-width="1"/>
-<text x="74.0" y="60.0" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.0321</text>
+<text x="74.0" y="60.0" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.0440</text>
 <line x1="790.0" y1="56" x2="790.0" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
-<text x="790.0" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">360.000</text>
+<text x="790.0" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">10000.000</text>
 <rect x="82" y="56" width="708" height="354" fill="none" stroke="#374151" stroke-width="1.2"/>
 <text x="436.0" y="464.0" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Iteration</text>
 <text x="20" y="233.0" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937" transform="rotate(-90 20 233.0)">Loss</text>
-<polyline fill="none" stroke="#2563eb" stroke-width="2.2" points="82.00,334.87 119.47,376.83 158.91,380.85 198.36,382.10 237.80,382.35 277.24,382.50 316.69,382.68 356.13,382.56 395.57,382.58 435.01,382.63 474.46,382.75 513.90,382.59 553.34,382.64 592.79,382.69 632.23,382.79 671.67,382.62 711.11,382.66 750.56,382.72 790.00,382.81 "/>
-<polyline fill="none" stroke="#dc2626" stroke-width="2.2" points="82.00,80.41 119.47,331.96 158.91,362.50 198.36,385.59 237.80,383.38 277.24,373.41 316.69,377.25 356.13,381.83 395.57,381.39 435.01,374.27 474.46,377.07 513.90,381.42 553.34,381.48 592.79,375.35 632.23,377.59 671.67,380.80 711.11,382.79 750.56,375.16 790.00,377.62 "/>
+<polyline fill="none" stroke="#2563eb" stroke-width="2.2" points="82.00,372.97 117.33,383.19 152.74,383.21 188.14,383.20 223.54,383.21 258.95,383.21 294.35,383.21 329.75,383.21 365.16,383.21 400.56,383.21 435.96,383.22 471.37,383.21 506.77,383.21 542.18,383.21 577.58,383.22 612.98,383.20 648.39,383.21 683.79,383.21 719.19,383.22 754.60,383.21 790.00,383.21 "/>
+<polyline fill="none" stroke="#dc2626" stroke-width="2.2" points="82.00,80.41 87.24,375.04 92.55,378.97 97.86,379.84 103.17,382.18 108.48,383.67 113.79,381.33 119.10,382.29 124.41,384.18 129.72,381.10 135.03,382.06 140.35,380.93 145.66,380.16 150.97,381.96 156.28,385.59 161.59,383.61 166.90,384.49 172.21,380.33 177.52,381.26 182.83,381.53 188.14,382.18 "/>
 <line x1="96.0" y1="74.0" x2="118.0" y2="74.0" stroke="#2563eb" stroke-width="2.5"/>
-<text x="124.0" y="78.0" font-family="sans-serif" font-size="12" fill="#111827">MSE Loss</text>
-<line x1="188.4" y1="74.0" x2="210.4" y2="74.0" stroke="#dc2626" stroke-width="2.5"/>
-<text x="216.4" y="78.0" font-family="sans-serif" font-size="12" fill="#111827">Entropic (lam=10)</text>
+<text x="124.0" y="78.0" font-family="sans-serif" font-size="12" fill="#111827">MSE Loss (10k)</text>
+<line x1="229.2" y1="74.0" x2="251.2" y2="74.0" stroke="#dc2626" stroke-width="2.5"/>
+<text x="257.2" y="78.0" font-family="sans-serif" font-size="12" fill="#111827">Entropic (lam=10, 3k)</text>
 </svg>

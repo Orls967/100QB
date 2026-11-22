@@ -63,20 +63,20 @@ cargo run --release --bin run
 
 Keluaran utama ditulis ke [../../../outputs/day004j/results.json](../../../outputs/day004j/results.json) dan 8 grafik SVG ke [../../../outputs/figures/](../../../outputs/figures/).
 
-## Ringkasan Hasil Eksperimen (`main_seed = 20261122`, `8` worker, `132,64s`)
+## Ringkasan Hasil Eksperimen (`main_seed = 20261122`, `8` worker, `1305,62s`)
 
 | Bagian / Kriteria | Nilai Terukur | Acuan / Ambang | Status |
 | --- | --- | --- | --- |
-| `c1_grad_check_and_adam_under_1e6` | BPTT vs Richardson `< 1e-6`; Adam `< 1e-6` | `< 1e-6` | `tercapai` |
-| `c2_worker_invariance_1_vs_8` | 20 iterasi `1` vs `8` worker identik bit | Bit-identik | `tercapai` |
-| `c3_bs_nn_delta_l2_and_price` | `p0_diff = 0,000047`; `L2_mse = 0,0880`; `SD_nn = 0,01059` | `L2 <= 0,03`, `SD <= 0,00629` | `belum tercapai` |
-| `c4_discrete_hedging_n_scaling` | `slope_BS = -0,4817`; `slope_NN = -0,1412` | `slope_NN in [-0,65, -0,35]` | `belum tercapai` |
-| `c5_cost_notrade_band_and_ww` | `hw_nn = 0,0286` (`c=0,001, lam=10`); eksponen `c = 0,2925` | `hw_nn > 0,01`; WW `1/3` | `tercapai` |
-| `c6_dp_anchor_n10_agrees` | `DP_indiff = 0,04191` vs `NN_sim = 0,04202` (`diff = -0,00010`) | `<= max(0,0015, 3 SE)` | `tercapai` |
-| `c7_nn_beats_bs_under_cost` | `rho10_NN = 0,002137` vs `rho10_BS = 0,002393` | `rho10_NN < rho10_BS` | `tercapai` |
+| `c1_grad_check_and_adam_under_1e6` | BPTT `<= 3,04e-9`; Adam `<= 1,78e-15` | `< 1e-6` | `tercapai` |
+| `c2_worker_invariance_1_vs_8` | `n_params = 353`, `bit_diffs = 0` | Bit-identik | `tercapai` |
+| `c3_bs_nn_delta_l2_and_price` | `p0_diff = 1,69e-6`; `L2_mse = 0,00611`; `SD_nn = 0,00627`; `L2_ent = 0,0466` | `L2 <= 0,03`, `SD <= 0,00629` | `belum tercapai` |
+| `c4_discrete_hedging_n_scaling` | `slope_BS = -0,4817`; `slope_NN = -0,4532` | `slope_NN in [-0,60; -0,40]` | `tercapai` |
+| `c5_cost_notrade_band_and_ww` | `hw_nn = 0,0129 ± 0,0011`, `ratio = 0,077 ± 0,007`, `exp_c = 0,585` | `exp in [0,23; 0,43]`, `ratio ~ 1` | `belum tercapai` |
+| `c6_dp_anchor_n10_agrees` | `DP = 0,04191` vs `NN = 0,04171`, `agree = 14,63%` (visit `20,87%`) | Utilitas & kebijakan `>= 90%` | `sebagian` |
+| `c7_nn_beats_bs_under_cost` | `NN 0,001834` < `BS 0,002393` & `Leland 0,002361` (> `WW 0,001645`) | Ungguli semua benchmark | `sebagian` |
 | `c8_heston_martingale_and_fourier_3se` | `z(E[S_T]=1) = 0,51`; `z(MC vs Fourier) = 0,31` | `<= 3 SE` | `tercapai` |
-| `c9_heston_vt_reduces_residual_risk` | `SD: 0,01563 (no v) -> 0,01356 (v_t)`; `rho10: 0,00113 -> 0,00086` | `v_t` menurunkan risiko | `tercapai` |
-| `c10_runtime_under_600s` | `132,64s` (`8` worker) | `< 600s` | `tercapai` |
+| `c9_heston_vt_reduces_residual_risk` | `SD: 0,01167 (no v) -> 0,01139 (v_t)`; `rho10: 0,000682 -> 0,000646` | `v_t` menurunkan risiko | `tercapai` |
+| `c10_runtime_under_600s` | `1305,62s` (`8` worker) | `< 480s` | `belum tercapai` |
 
 ## Daftar Grafik
 

@@ -52,9 +52,24 @@ pub struct FeatureSpec {
     pub use_v: bool,
     pub use_rv5: bool,
     pub use_prev_delta: bool,
+    pub scale_inputs: bool,
+    /// Optional `(r, sigma)` baseline for residual hedging `delta = bs_delta + NN(...)`.
+    pub residual_bs: Option<(f64, f64)>,
 }
 
 impl FeatureSpec {
+    pub fn basic(k: f64, t_mat: f64, use_v: bool, use_rv5: bool, use_prev_delta: bool) -> Self {
+        Self {
+            k,
+            t_mat,
+            use_v,
+            use_rv5,
+            use_prev_delta,
+            scale_inputs: false,
+            residual_bs: None,
+        }
+    }
+
     pub fn d_in(self) -> usize {
         2 + usize::from(self.use_v || self.use_rv5) + usize::from(self.use_prev_delta)
     }
@@ -77,8 +92,14 @@ impl FeatureSpec {
         out: &mut [f64],
     ) {
         let tau = self.t_mat * (n_steps - t) as f64 / n_steps as f64;
-        out[0] = (path.s[t] / self.k).ln();
-        out[1] = tau;
+        let log_m = (path.s[t] / self.k).ln();
+        if self.scale_inputs {
+            out[0] = log_m / 0.1;
+            out[1] = tau / self.t_mat;
+        } else {
+            out[0] = log_m;
+            out[1] = tau;
+        }
         let mut idx = 2;
         if self.use_v {
             let vt = path.v.as_ref().map_or(0.04, |vv| vv[t]);
@@ -227,7 +248,12 @@ pub fn eval_strategy(
                 Strategy::HestonFourierDelta { deltas } => deltas[r_idx][t],
                 Strategy::NeuralNet { policy, spec } => {
                     spec.fill_features(path, t, n_steps, prev_d, &mut feat);
-                    policy.forward_step(&feat, cache.as_mut().unwrap())
+                    let nn_d = policy.forward_step(&feat, cache.as_mut().unwrap());
+                    if let Some((r_bs, sig_bs)) = spec.residual_bs {
+                        bs_delta(s_t, spec.k, r_bs, sig_bs, tau) + nn_d
+                    } else {
+                        nn_d
+                    }
                 }
                 Strategy::Dp { dp } => dp.act(t, s_t, prev_d),
             };
@@ -287,7 +313,12 @@ pub fn delta_l2_vs_bs(
         for t in 0..n_steps {
             let tau = spec.t_mat * (n_steps - t) as f64 / n_steps as f64;
             spec.fill_features(path, t, n_steps, prev_d, &mut feat);
-            let d_nn = policy.forward_step(&feat, &mut cache);
+            let nn_d = policy.forward_step(&feat, &mut cache);
+            let d_nn = if let Some((r_bs, sig_bs)) = spec.residual_bs {
+                bs_delta(path.s[t], spec.k, r_bs, sig_bs, tau) + nn_d
+            } else {
+                nn_d
+            };
             let d_bs = bs_delta(path.s[t], spec.k, r, sigma, tau);
             let diff = d_nn - d_bs;
             sum_sq += diff * diff;

@@ -114,6 +114,18 @@ impl MlpPolicy {
         self.params.len()
     }
 
+    pub fn set_output_bias(&mut self, bias: f64) {
+        let idx = self.params.len() - 1;
+        self.params[idx] = bias;
+    }
+
+    pub fn zero_output_layer(&mut self) {
+        let (_, _, _, _, ow3, _) = self.offsets();
+        for p in &mut self.params[ow3..] {
+            *p = 0.0;
+        }
+    }
+
     #[inline]
     fn offsets(&self) -> (usize, usize, usize, usize, usize, usize) {
         let d = self.d_in;
@@ -276,132 +288,132 @@ pub fn loss_and_d_pnl(pnl: &[f64], loss_type: LossType) -> (f64, Vec<f64>) {
     }
 }
 
+/// Runs a multi-step recurrent trajectory `pnl = p0 + sum_t delta_t * ds_t - c * sum_t |delta_t - delta_{t-1}| * s_t - payoff`
+/// and returns the maximum relative error of analytical BPTT gradient vs central FD + Richardson extrapolation.
+pub fn measure_bptt_grad_max_rel_err(loss_type: LossType, cost: f64, act: Activation) -> f64 {
+    let n_steps = 10_usize;
+    let n_paths = 40_usize;
+    let d_in = 3_usize; // [ln(S_t/K), tau, delta_{t-1}]
+    let hidden = 8_usize;
+    let mut policy = MlpPolicy::new(d_in, hidden, act, 12345);
+    let p0 = 0.05_f64;
+
+    let mut rg = Rng::new(999);
+    let mut s_paths = vec![vec![1.0_f64; n_steps + 1]; n_paths];
+    for path in &mut s_paths {
+        let mut s = 1.0_f64;
+        for t in 0..n_steps {
+            let dt = 0.25 / n_steps as f64;
+            let z = rg.normal();
+            s *= (-0.5 * 0.04 * dt + 0.2 * dt.sqrt() * z).exp();
+            path[t + 1] = s;
+        }
+    }
+
+    let eval_loss = |pol: &MlpPolicy| -> f64 {
+        let mut cache = StepCache::new(d_in, hidden);
+        let mut pnl = Vec::with_capacity(n_paths);
+        for path in &s_paths {
+            let mut prev_d = 0.0_f64;
+            let mut wealth = p0;
+            for t in 0..n_steps {
+                let tau = 0.25 * (n_steps - t) as f64 / n_steps as f64;
+                let x = [path[t].ln(), tau, prev_d];
+                let d = pol.forward_step(&x, &mut cache);
+                wealth += d * (path[t + 1] - path[t]) - cost * (d - prev_d).abs() * path[t];
+                prev_d = d;
+            }
+            let payoff = (path[n_steps] - 1.0).max(0.0);
+            pnl.push(wealth - payoff);
+        }
+        loss_and_d_pnl(&pnl, loss_type).0
+    };
+
+    let mut pnl = Vec::with_capacity(n_paths);
+    let mut caches: Vec<Vec<StepCache>> = Vec::with_capacity(n_paths);
+    for path in &s_paths {
+        let mut prev_d = 0.0_f64;
+        let mut wealth = p0;
+        let mut path_caches = Vec::with_capacity(n_steps);
+        for t in 0..n_steps {
+            let tau = 0.25 * (n_steps - t) as f64 / n_steps as f64;
+            let mut c = StepCache::new(d_in, hidden);
+            let d = policy.forward_step(&[path[t].ln(), tau, prev_d], &mut c);
+            wealth += d * (path[t + 1] - path[t]) - cost * (d - prev_d).abs() * path[t];
+            prev_d = d;
+            path_caches.push(c);
+        }
+        let payoff = (path[n_steps] - 1.0).max(0.0);
+        pnl.push(wealth - payoff);
+        caches.push(path_caches);
+    }
+    let (_loss0, d_pnl) = loss_and_d_pnl(&pnl, loss_type);
+    let mut grad = vec![0.0_f64; policy.n_params()];
+    let mut d_in_buf = vec![0.0_f64; d_in];
+    let mut dz2 = vec![0.0_f64; hidden];
+    let mut dz1 = vec![0.0_f64; hidden];
+    for (p_idx, path) in s_paths.iter().enumerate() {
+        let dp = d_pnl[p_idx];
+        let mut d_prev_delta_next = 0.0_f64;
+        for t in (0..n_steps).rev() {
+            let c = &caches[p_idx][t];
+            let d_cur = c.out;
+            let d_prev = c.x[2];
+            let sgn_cur = if d_cur >= d_prev { 1.0 } else { -1.0 };
+            let d_direct = dp * ((path[t + 1] - path[t]) - cost * sgn_cur * path[t]);
+            let d_out = d_direct + d_prev_delta_next;
+            policy.backward_step(c, d_out, &mut grad, &mut d_in_buf, &mut dz2, &mut dz1);
+            d_prev_delta_next = d_in_buf[2] + dp * cost * sgn_cur * path[t];
+        }
+    }
+
+    let h = 1e-5_f64;
+    let check_indices = [
+        0,
+        d_in * hidden - 1,
+        d_in * hidden,
+        policy.n_params() - hidden - 1,
+        policy.n_params() - 2,
+        policy.n_params() - 1,
+    ];
+    let mut max_rel = 0.0_f64;
+    for &idx in &check_indices {
+        let orig = policy.params[idx];
+        policy.params[idx] = orig + h;
+        let fp1 = eval_loss(&policy);
+        policy.params[idx] = orig - h;
+        let fm1 = eval_loss(&policy);
+        let d1 = (fp1 - fm1) / (2.0 * h);
+
+        policy.params[idx] = orig + 0.5 * h;
+        let fp2 = eval_loss(&policy);
+        policy.params[idx] = orig - 0.5 * h;
+        let fm2 = eval_loss(&policy);
+        let d2 = (fp2 - fm2) / h;
+
+        policy.params[idx] = orig;
+        let fd_rich = (4.0 * d2 - d1) / 3.0;
+        let err = (grad[idx] - fd_rich).abs();
+        let scale = grad[idx].abs().max(fd_rich.abs()).max(1e-8);
+        max_rel = max_rel.max(err / scale);
+    }
+    max_rel
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    /// Runs a multi-step recurrent trajectory `pnl = p0 + sum_t delta_t * ds_t - c * sum_t |delta_t - delta_{t-1}| * s_t - payoff`
-    /// and verifies analytical BPTT gradient against central FD + Richardson extrapolation (`< 1e-6` rel).
-    fn check_bptt_grad(loss_type: LossType, cost: f64, act: Activation) {
-        let n_steps = 10_usize;
-        let n_paths = 40_usize;
-        let d_in = 3_usize; // [ln(S_t/K), tau, delta_{t-1}]
-        let hidden = 8_usize;
-        let mut policy = MlpPolicy::new(d_in, hidden, act, 12345);
-        let p0 = 0.05_f64;
-
-        let mut rg = Rng::new(999);
-        let mut s_paths = vec![vec![1.0_f64; n_steps + 1]; n_paths];
-        for path in &mut s_paths {
-            let mut s = 1.0_f64;
-            for t in 0..n_steps {
-                let dt = 0.25 / n_steps as f64;
-                let z = rg.normal();
-                s *= (-0.5 * 0.04 * dt + 0.2 * dt.sqrt() * z).exp();
-                path[t + 1] = s;
-            }
-        }
-
-        let eval_loss = |pol: &MlpPolicy| -> f64 {
-            let mut cache = StepCache::new(d_in, hidden);
-            let mut pnl = Vec::with_capacity(n_paths);
-            for path in &s_paths {
-                let mut prev_d = 0.0_f64;
-                let mut wealth = p0;
-                for t in 0..n_steps {
-                    let tau = 0.25 * (n_steps - t) as f64 / n_steps as f64;
-                    let x = [path[t].ln(), tau, prev_d];
-                    let d = pol.forward_step(&x, &mut cache);
-                    wealth += d * (path[t + 1] - path[t]) - cost * (d - prev_d).abs() * path[t];
-                    prev_d = d;
-                }
-                let payoff = (path[n_steps] - 1.0).max(0.0);
-                pnl.push(wealth - payoff);
-            }
-            loss_and_d_pnl(&pnl, loss_type).0
-        };
-
-        // Analytic BPTT gradient
-        let mut pnl = Vec::with_capacity(n_paths);
-        let mut caches: Vec<Vec<StepCache>> = Vec::with_capacity(n_paths);
-        for path in &s_paths {
-            let mut prev_d = 0.0_f64;
-            let mut wealth = p0;
-            let mut path_caches = Vec::with_capacity(n_steps);
-            for t in 0..n_steps {
-                let tau = 0.25 * (n_steps - t) as f64 / n_steps as f64;
-                let mut c = StepCache::new(d_in, hidden);
-                let d = policy.forward_step(&[path[t].ln(), tau, prev_d], &mut c);
-                wealth += d * (path[t + 1] - path[t]) - cost * (d - prev_d).abs() * path[t];
-                prev_d = d;
-                path_caches.push(c);
-            }
-            let payoff = (path[n_steps] - 1.0).max(0.0);
-            pnl.push(wealth - payoff);
-            caches.push(path_caches);
-        }
-        let (_loss0, d_pnl) = loss_and_d_pnl(&pnl, loss_type);
-        let mut grad = vec![0.0_f64; policy.n_params()];
-        let mut d_in_buf = vec![0.0_f64; d_in];
-        let mut dz2 = vec![0.0_f64; hidden];
-        let mut dz1 = vec![0.0_f64; hidden];
-        for (p_idx, path) in s_paths.iter().enumerate() {
-            let dp = d_pnl[p_idx];
-            let mut d_prev_delta_next = 0.0_f64;
-            for t in (0..n_steps).rev() {
-                let c = &caches[p_idx][t];
-                let d_cur = c.out;
-                let d_prev = c.x[2];
-                let sgn_cur = if d_cur >= d_prev { 1.0 } else { -1.0 };
-                let d_direct = dp * ((path[t + 1] - path[t]) - cost * sgn_cur * path[t]);
-                let d_out = d_direct + d_prev_delta_next;
-                policy.backward_step(c, d_out, &mut grad, &mut d_in_buf, &mut dz2, &mut dz1);
-                d_prev_delta_next = d_in_buf[2] + dp * cost * sgn_cur * path[t];
-            }
-        }
-
-        // Check a representative subset across all layers (W1, b1, W2, b2, W3, b3) with Richardson FD
-        let h = 1e-5_f64;
-        let check_indices = [
-            0,
-            d_in * hidden - 1,
-            d_in * hidden,
-            policy.n_params() - hidden - 1,
-            policy.n_params() - 2,
-            policy.n_params() - 1,
-        ];
-        for &idx in &check_indices {
-            let orig = policy.params[idx];
-            policy.params[idx] = orig + h;
-            let fp1 = eval_loss(&policy);
-            policy.params[idx] = orig - h;
-            let fm1 = eval_loss(&policy);
-            let d1 = (fp1 - fm1) / (2.0 * h);
-
-            policy.params[idx] = orig + 0.5 * h;
-            let fp2 = eval_loss(&policy);
-            policy.params[idx] = orig - 0.5 * h;
-            let fm2 = eval_loss(&policy);
-            let d2 = (fp2 - fm2) / h;
-
-            policy.params[idx] = orig;
-            let fd_rich = (4.0 * d2 - d1) / 3.0;
-            let err = (grad[idx] - fd_rich).abs();
-            let scale = grad[idx].abs().max(fd_rich.abs()).max(1e-8);
-            assert!(
-                err / scale < 1e-6,
-                "BPTT grad mismatch at idx={idx}: analytic={}, fd={fd_rich}, rel={}",
-                grad[idx],
-                err / scale
-            );
-        }
-    }
-
     #[test]
     fn test_bptt_gradient_check_mse_entropic_cvar() {
-        check_bptt_grad(LossType::Mse, 0.0, Activation::Tanh);
-        check_bptt_grad(LossType::Mse, 0.002, Activation::Softplus);
-        check_bptt_grad(LossType::Entropic { lambda: 10.0 }, 0.001, Activation::Tanh);
-        check_bptt_grad(LossType::Cvar { alpha: 0.95 }, 0.001, Activation::Tanh);
+        for (lt, c, act) in [
+            (LossType::Mse, 0.0, Activation::Tanh),
+            (LossType::Mse, 0.002, Activation::Softplus),
+            (LossType::Entropic { lambda: 10.0 }, 0.001, Activation::Tanh),
+            (LossType::Cvar { alpha: 0.95 }, 0.001, Activation::Tanh),
+        ] {
+            let rel = measure_bptt_grad_max_rel_err(lt, c, act);
+            assert!(rel < 1e-6, "BPTT grad mismatch: rel={rel}");
+        }
     }
 }
