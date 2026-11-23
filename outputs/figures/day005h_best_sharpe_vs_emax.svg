@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="500" viewBox="0 0 860 500">
+<rect width="860" height="500" fill="#ffffff"/>
+<text x="430" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#111827">E[max Z] Eksak vs Aproksimasi Euler-Mascheroni (log10 N)</text>
+<rect x="82" y="48" width="748" height="388" fill="#f9fafb" stroke="#d1d5db"/>
+<text x="456" y="484" text-anchor="middle" font-size="12" fill="#374151">log10(N strategi)</text>
+<text x="18" y="242" text-anchor="middle" font-size="12" fill="#374151" transform="rotate(-90 18 242)">E[max Z]</text>
+<text x="76" y="436" text-anchor="end" font-size="10" fill="#6b7280">1.44</text>
+<text x="76" y="56" text-anchor="end" font-size="10" fill="#6b7280">3.36</text>
+<polyline fill="none" stroke="#111827" stroke-width="2.3" points="122.07,415.21 355.48,271.84 456.0,219.67 615.32,144.95 789.93,71.55"/>
+<line x1="96" y1="30" x2="118" y2="30" stroke="#111827" stroke-width="2.5"/>
+<text x="124" y="34" font-size="11" fill="#1f2937">Gauss-Legendre Eksak</text>
+<polyline fill="none" stroke="#dc2626" stroke-width="2.3" stroke-dasharray="6,4" points="122.07,407.98 355.48,266.35 456.0,215.02 615.32,141.37 789.93,68.79"/>
+<line x1="306" y1="30" x2="328" y2="30" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="6,4"/>
+<text x="334" y="34" font-size="11" fill="#1f2937">Aproksimasi Bailey-LdP</text>
+</svg>

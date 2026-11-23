@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="500" viewBox="0 0 860 500">
+<rect width="860" height="500" fill="#ffffff"/>
+<text x="430" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#111827">Korelasi OOS Label Tumpang-Tindih (h=10): Naive CV vs Purged+Embargo</text>
+<rect x="82" y="48" width="748" height="388" fill="#f9fafb" stroke="#d1d5db"/>
+<text x="456" y="484" text-anchor="middle" font-size="12" fill="#374151">Korelasi OOS pada Fitur Noise Independen</text>
+<text x="18" y="242" text-anchor="middle" font-size="12" fill="#374151" transform="rotate(-90 18 242)">Proporsi</text>
+<text x="76" y="436" text-anchor="end" font-size="10" fill="#6b7280">0</text>
+<text x="76" y="56" text-anchor="end" font-size="10" fill="#6b7280">0.261</text>
+<polyline fill="none" stroke="#dc2626" stroke-width="2.3" points="99.0,436.0 133.0,436.0 167.0,436.0 201.0,436.0 235.0,436.0 269.0,436.0 303.0,436.0 337.0,436.0 371.0,436.0 405.0,436.0 439.0,436.0 473.0,436.0 507.0,436.0 541.0,356.61 575.0,267.3 609.0,187.92 643.0,98.61 677.0,148.23 711.0,217.69 745.0,326.84 779.0,396.31 813.0,436.0"/>
+<line x1="96" y1="30" x2="118" y2="30" stroke="#dc2626" stroke-width="2.5"/>
+<text x="124" y="34" font-size="11" fill="#1f2937">Naive Shuffled K-Fold (Bocor)</text>
+<polyline fill="none" stroke="#059669" stroke-width="2.3" points="99.0,436.0 133.0,416.15 167.0,416.15 201.0,396.31 235.0,356.61 269.0,316.92 303.0,287.15 337.0,267.3 371.0,267.3 405.0,257.38 439.0,307.0 473.0,257.38 507.0,336.77 541.0,386.38 575.0,376.46 609.0,416.15 643.0,426.08 677.0,436.0 711.0,436.0 745.0,436.0 779.0,436.0 813.0,436.0"/>
+<line x1="306" y1="30" x2="328" y2="30" stroke="#059669" stroke-width="2.5"/>
+<text x="334" y="34" font-size="11" fill="#1f2937">Purged + Embargo K-Fold (Bersih)</text>
+</svg>

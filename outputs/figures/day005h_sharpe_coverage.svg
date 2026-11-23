@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="500" viewBox="0 0 860 500">
+<rect width="860" height="500" fill="#ffffff"/>
+<text x="430" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#111827">Cakupan Interval 95% Sharpe: Naif vs Moment/Stationary Bootstrap</text>
+<rect x="82" y="48" width="748" height="388" fill="#f9fafb" stroke="#d1d5db"/>
+<text x="456" y="484" text-anchor="middle" font-size="12" fill="#374151"></text>
+<text x="18" y="242" text-anchor="middle" font-size="12" fill="#374151" transform="rotate(-90 18 242)">Cakupan Aktual</text>
+<text x="76" y="436" text-anchor="end" font-size="10" fill="#6b7280">0</text>
+<text x="76" y="56" text-anchor="end" font-size="10" fill="#6b7280">1.06</text>
+<rect x="104.4" y="89.6" width="139.1" height="346.4" fill="#2563eb"/>
+<text x="175.5" y="458" text-anchor="middle" font-size="10" fill="#374151">Gauss 250</text>
+<rect x="291.4" y="89.7" width="139.1" height="346.3" fill="#2563eb"/>
+<text x="362.5" y="458" text-anchor="middle" font-size="10" fill="#374151">Gauss 1k</text>
+<rect x="478.4" y="92.3" width="68.1" height="343.7" fill="#dc2626"/>
+<rect x="549.5" y="90.1" width="68.1" height="345.9" fill="#059669"/>
+<text x="549.5" y="458" text-anchor="middle" font-size="10" fill="#374151">t(5) Naif/Adj</text>
+<rect x="665.4" y="126.9" width="68.1" height="309.1" fill="#dc2626"/>
+<rect x="736.5" y="102.3" width="68.1" height="333.7" fill="#059669"/>
+<text x="736.5" y="458" text-anchor="middle" font-size="10" fill="#374151">AR(1) Naif/Boot</text>
+</svg>

@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+RubyVM::YJIT.enable if defined?(RubyVM::YJIT) && RubyVM::YJIT.respond_to?(:enable) && !RubyVM::YJIT.enabled?
+
+$LOAD_PATH.unshift(File.expand_path('../lib', __dir__))
+
+require 'backtest_overfitting'
+
+t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+cscv_300 = BacktestOverfitting::CscvPbo.noise_exchangeable_pbo_study(
+  n_strats: 300, n_obs: 512, n_mats: 12, seed: BacktestOverfitting::MAIN_SEED, workers: nil
+)
+rw_full = BacktestOverfitting::MultipleTesting.romano_wolf_study(
+  rho: 0.4, n_reps: 500, n_boot: 300, seed: BacktestOverfitting::MAIN_SEED, workers: nil
+)
+dt = Process.clock_gettime(Process::CLOCK_MONOTONIC) - t0
+
+puts format('=== day005h Extras selesai dalam %.2fs ===', dt)
+puts format('  CSCV Noise N=300 (12x12870 splits): PBO=%<p>.4f +- %<se>.4f',
+            p: cscv_300[:emp_mean_pbo], se: cscv_300[:emp_se_pbo])
+puts format('  Romano-Wolf (R=500, B=300, rho=0.4): RW FWER=%<f>.4f Power=%<pw>.4f | Bonf Power=%<bp>.4f',
+            f: rw_full[:romano_wolf][:fwer], pw: rw_full[:romano_wolf][:power],
+            bp: rw_full[:bonferroni][:power])

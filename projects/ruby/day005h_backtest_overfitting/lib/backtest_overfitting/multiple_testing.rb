@@ -155,7 +155,6 @@ module BacktestOverfitting
         romano_wolf: { fwer: chunks.sum(0.0) { |c| c[1][0] } / n_reps,
                        power: chunks.sum(0.0) { |c| c[1][1] } / n_reps } }
     end
-    private_class_method :romano_wolf_study
 
     def accumulate_rw_rep(acc, n_tot, n_true, t_len, rho, n_boot, alpha, rng)
       mat, obs_abs_t, pvals = generate_panel_with_t(n_tot, n_true, t_len, rho, rng)

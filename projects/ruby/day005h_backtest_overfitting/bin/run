@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+RubyVM::YJIT.enable if defined?(RubyVM::YJIT) && RubyVM::YJIT.respond_to?(:enable) && !RubyVM::YJIT.enabled?
+
+$LOAD_PATH.unshift(File.expand_path('../lib', __dir__))
+
+require 'optparse'
+require 'backtest_overfitting'
+
+options = { seed: BacktestOverfitting::MAIN_SEED, workers: nil }
+OptionParser.new do |opts|
+  opts.banner = 'Usage: bin/run [options]'
+  opts.on('-s', '--seed SEED', Integer, 'Seed utama') { |v| options[:seed] = v }
+  opts.on('-w', '--workers W', Integer, 'Jumlah worker fork') { |v| options[:workers] = v }
+end.parse!
+
+runner = BacktestOverfitting::Runner.new(seed: options[:seed], workers: options[:workers])
+payload = runner.execute
+repo_root = BacktestOverfitting::Runner.find_repo_root(__dir__)
+paths = runner.write_outputs(payload, repo_root: repo_root)
+
+m = payload[:metadata]
+puts format('Ruby %<ver>s | YJIT: %<yjit>s | Workers: %<w>d | Total: %<tot>.2fs',
+            ver: m[:ruby_version], yjit: m[:yjit_enabled] ? 'ON' : 'OFF',
+            w: m[:workers_used], tot: m[:elapsed_seconds][:total])
+payload[:criteria].each do |k, v|
+  puts format('  %<name>-44s : %<status>s', name: k, status: v[:status])
+end
+puts "Output JSON: #{paths[:json]}"

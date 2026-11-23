@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="500" viewBox="0 0 860 500">
+<rect width="860" height="500" fill="#ffffff"/>
+<text x="430" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#111827">Distribusi Logit OOS lambda CSCV (12.870 Pembagian C(16,8))</text>
+<rect x="82" y="48" width="748" height="388" fill="#f9fafb" stroke="#d1d5db"/>
+<text x="456" y="484" text-anchor="middle" font-size="12" fill="#374151">Logit lambda = ln(omega / (1 - omega))</text>
+<text x="18" y="242" text-anchor="middle" font-size="12" fill="#374151" transform="rotate(-90 18 242)">Proporsi</text>
+<text x="76" y="436" text-anchor="end" font-size="10" fill="#6b7280">0</text>
+<text x="76" y="56" text-anchor="end" font-size="10" fill="#6b7280">0.377</text>
+<polyline fill="none" stroke="#dc2626" stroke-width="2.3" points="99.0,436.0 133.0,419.21 167.0,436.0 201.0,424.81 235.0,424.01 269.0,423.21 303.0,362.45 337.0,392.83 371.0,324.87 405.0,286.49 439.0,260.91 473.0,358.45 507.0,256.91 541.0,360.85 575.0,372.84 609.0,409.62 643.0,436.0 677.0,433.6 711.0,436.0 745.0,436.0 779.0,436.0 813.0,436.0"/>
+<line x1="96" y1="30" x2="118" y2="30" stroke="#dc2626" stroke-width="2.5"/>
+<text x="124" y="34" font-size="11" fill="#1f2937">Noise Murni (PBO~0.5)</text>
+<polyline fill="none" stroke="#059669" stroke-width="2.3" points="99.0,436.0 133.0,436.0 167.0,436.0 201.0,436.0 235.0,436.0 269.0,436.0 303.0,436.0 337.0,436.0 371.0,436.0 405.0,436.0 439.0,436.0 473.0,436.0 507.0,436.0 541.0,436.0 575.0,431.2 609.0,375.24 643.0,193.75 677.0,221.73 711.0,98.61 745.0,436.0 779.0,266.5 813.0,436.0"/>
+<line x1="306" y1="30" x2="328" y2="30" stroke="#059669" stroke-width="2.5"/>
+<text x="334" y="34" font-size="11" fill="#1f2937">Sinyal Ditanam (PBO<<0.5)</text>
+</svg>
