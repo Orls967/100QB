@@ -9,11 +9,11 @@ require 'garch_family'
 
 t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 qmle_10k_norm = GarchFamily::Mle.run_qmle_cell(
-  n_obs: 10_000, n_reps: 150, true_dist: GarchFamily::Innovations::Normal.new,
+  n_obs: 10_000, n_reps: 1000, true_dist: GarchFamily::Innovations::Normal.new,
   stream_id: 950, seed: GarchFamily::MAIN_SEED, workers: nil
 )
 qmle_10k_t5 = GarchFamily::Mle.run_qmle_cell(
-  n_obs: 10_000, n_reps: 150, true_dist: GarchFamily::Innovations::StudentT.new(nu: 5.0),
+  n_obs: 10_000, n_reps: 1000, true_dist: GarchFamily::Innovations::StudentT.new(nu: 5.0),
   stream_id: 951, seed: GarchFamily::MAIN_SEED, workers: nil
 )
 dcc_500 = GarchFamily::Dcc.mc_dcc_recovery(seed: GarchFamily::MAIN_SEED, workers: nil, n_reps: 400)
@@ -28,14 +28,15 @@ dt = Process.clock_gettime(Process::CLOCK_MONOTONIC) - t0
 
 puts format('=== day005i Extras selesai dalam %.2fs ===', dt)
 puts format(
-  '  QMLE T=10k Normal (R=150): alpha RMSE=%<rmse>.5f | cov_sw=%<cov>.4f | conv=%<c>d/150',
+  '  QMLE T=10k Normal (R=1000): alpha RMSE=%<rmse>.5f | cov_sw=%<cov>.4f | conv=%<c>d/1000',
   rmse: qmle_10k_norm[:params][:alpha][:rmse], cov: qmle_10k_norm[:params][:alpha][:coverage_sandwich_95],
   c: qmle_10k_norm[:n_converged]
 )
 puts format(
-  '  QMLE T=10k t(5)   (R=150): alpha cov_naive=%<cn>.4f -> cov_sw=%<cs>.4f | se_ratio=%<sr>.3f',
+  '  QMLE T=10k t(5)   (R=1000): alpha cov_naive=%<cn>.4f -> cov_sw=%<cs>.4f | se_ratio=%<sr>.3f (se=%<se>.4f)',
   cn: qmle_10k_t5[:params][:alpha][:coverage_naive_95], cs: qmle_10k_t5[:params][:alpha][:coverage_sandwich_95],
-  sr: qmle_10k_t5[:params][:alpha][:mean_se_sandwich] / qmle_10k_t5[:params][:alpha][:mean_se_naive]
+  sr: qmle_10k_t5[:params][:alpha][:mean_se_sandwich] / qmle_10k_t5[:params][:alpha][:mean_se_naive],
+  se: qmle_10k_t5[:params][:alpha][:coverage_se]
 )
 puts format(
   '  DCC MC Recovery (R=400, T=2000): a=%<a>.4f +- %<sa>.4f | b=%<b>.4f +- %<sb>.4f | conv=%<c>d/400',

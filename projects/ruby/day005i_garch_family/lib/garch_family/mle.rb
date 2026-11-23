@@ -6,7 +6,7 @@ module GarchFamily
 
     module_function
 
-    def run_study(seed: MAIN_SEED, workers: nil, n_reps: 400)
+    def run_study(seed: MAIN_SEED, workers: nil, n_reps: 1000)
       t_grid = [500, 1000, 2500]
       norm_dist = Innovations::Normal.new
       t5_dist = Innovations::StudentT.new(nu: 5.0)

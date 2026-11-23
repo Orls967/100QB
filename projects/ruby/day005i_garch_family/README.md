@@ -36,18 +36,18 @@ bundle exec ruby bin/run_extras
 - [lib/garch_family/json_out.rb](lib/garch_family/json_out.rb), [svg.rb](lib/garch_family/svg.rb), [figures.rb](lib/garch_family/figures.rb), [criteria.rb](lib/garch_family/criteria.rb), [runner.rb](lib/garch_family/runner.rb) — Penulis JSON, generator 13 grafik SVG, evaluator kriteria `c1`–`c22`, dan orkestrator `Runner`.
 - `test/test_*.rb` (`6` berkas, `44` tes, `258` asersi).
 
-## Ringkasan Hasil (`MAIN_SEED = 20261123`, Ruby `4.0.9`, YJIT `ON`, `10` worker, `70,14s`)
+## Ringkasan Hasil (`MAIN_SEED = 20261123`, Ruby `4.0.9`, YJIT `ON`, `10` worker, `107,92s`)
 
-| Bagian | Metrik Utama | Hasil Terukur (`21/22` `tercapai`, `c13 = sebagian`) |
+| Bagian | Metrik Utama | Hasil Terukur (`20/22` `tercapai`, `c13 = sebagian`, `c6 = belum tercapai`) |
 |---|---|---|
 | 1. Momen & Skor Analitik | Variansi `15` grid, kurtosis, ACF, forecast | `max_var_z = 1,95`, `max_kurt_z = 1,95`, `max_acf_z = 2,35`, `fc_err = 0,57%`, skor FD `< 1e-5` |
-| 2. QMLE & Sandwich SE | `RMSE` Normal, `t(5)` Naif vs Sandwich | `RMSE(alpha) 0,0399 -> 0,0250 -> 0,0152`; `t(5)`: `cov_naive = 0,720` $\to$ `cov_sw = 0,908` (`1,676x`) |
+| 2. QMLE & Sandwich SE | `RMSE` Normal ($R=1000$), `t(5)` Naif vs Sandwich | `RMSE(alpha) 0,0385 -> 0,0256 -> 0,0154`; `t(5)`: `cov_sw` `0,834 -> 0,881 -> 0,913` ($T=2500$, `c6 = belum tercapai` vs `0,95 +- 3 SE`, namun `extras` $T=10\mathrm{k}$ mencapai `0,9380 +- 0,0076`, `1,58 SE`) |
 | 3. Student-$t$ & Uji Batas | $\hat{\nu}$, efisiensi MSE, $\frac{1}{2}\chi^2_0+\frac{1}{2}\chi^2_1$ | `nu_med = 5,048`, `eff(alpha) = 2,47x`; Null `zero = 0,577`, `mix = 0,0433`, kuasa `1,000` |
 | 4. Backtest VaR & ES | Rolling 1% ($T=3000$), $Z_2$, MC `R=500` | `garch_n: 1,80%, Z2=-0,949`; `garch_t: 0,87%, Z2=+0,143`; `fhs: 1,03%, Z2=-0,031` |
 | 5. Seleksi, DM, NIC & Leverage | AIC/BIC, QLIKE, DM, MC $\gamma=0$ | `BIC_diff = +7,28`, `NIC = 1,668`, `DM p = 0,076` (`sebagian`; `extras T=4k p = 0,0075`); LR `size=0,035`, `pwr=0,98` |
 | 6. DCC(1,1) Multivariat | Reduksi CCC, recovery `R=200`, VaR 5% | `ccc_err = 0,0`, `corr = 0,963`; `a = 0,0512`, `b = 0,8907`; port `DCC p_cc = 0,812` vs `Uncorr 2,9e-23` |
-| 7. Intraday HAR-RV vs GARCH | *Infill* $M=13..390$, OOS QLIKE | `max_z = 1,66`, `MSE(13)/MSE(390) = 34,59x`; `QLIKE HAR = 0,0117` vs `GARCH = 0,0319` (`DM p = 3,6e-8`) |
-| 8. Break Struktural | IGARCH semu vs split & CUSUM `R=25` | `full = 0,9977` vs `split = 0,8435` (sejati `0,85`), CUSUM `100%` (`tau = 1511,8`) |
+| 7. Intraday HAR-RV vs Benchmark | *Infill* $M=13..390$, OOS QLIKE setara info | `max_z = 1,66`, `MSE(13)/MSE(390) = 34,59x`; `HAR = 0,0117` vs `GARCH = 0,0319`, `RV-Naif = 0,0260`, `EWMA-RV = 0,0153`, `GARCH-X = 0,0174` (`DM p <= 9,3e-7`) |
+| 8. Break Struktural | IGARCH semu vs split & CUSUM `R=300` | `full = 0,9972 +- 0,0001` (`[0,9917..0,9999]`) vs `split = 0,8277 +- 0,0038` (`med = 0,8383`), CUSUM `100%` (`tau = 1514,9`) |
 | 9. Portofolio 5-Aset & Stres | Euler identity, OOS VaR, Stres `2.5x` | `euler_err = 8,67e-19`, `OOS 5% p_uc = 0,0695`, `div_drop = 0,313`, `var1_amp = 3,23x` |
 
 Artefak keluaran: [results.json](../../../outputs/day005i/results.json), `13` grafik SVG `outputs/figures/day005i_*.svg`, dan dokumen penjelasan [day005i_quant_garch-family.md](../../../docs/project-explanations/day005i_quant_garch-family.md).

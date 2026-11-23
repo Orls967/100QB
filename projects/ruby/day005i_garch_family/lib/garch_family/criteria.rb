@@ -55,21 +55,21 @@ module GarchFamily
       rmses = nr.map { |r| r[:params][:alpha][:rmse] }
       last_n = nr.last
       cov_a = last_n[:params][:alpha][:coverage_naive_95]
-      ok_n = rmses[0] > rmses[1] && rmses[1] > rmses[2] && cov_a.between?(0.91, 0.98) && last_n[:n_converged] >= 390
+      ok_n = rmses[0] > rmses[1] && rmses[1] > rmses[2] && cov_a.between?(0.91, 0.98) && last_n[:n_converged] >= 975
       out[:c5_qmle_root_t_consistency_normal] = crit(
         ok_n, { rmse_alpha_t: rmses, cov_alpha_2500: cov_a, n_conv: last_n[:n_converged] },
-        'RMSE monoton turun & cov in [0.91, 0.98] & conv >= 390/400',
-        'Konsistensi root-T dan cakupan asimtotik QMLE Normal tervalidasi'
+        'RMSE monoton turun & cov in [0.91, 0.98] & conv >= 975/1000',
+        'Konsistensi root-T dan cakupan asimtotik QMLE Normal tervalidasi (R=1000)'
       )
       t25 = p2[:student_t5_qmle].last[:params][:alpha]
       ratio = t25[:mean_se_sandwich] / t25[:mean_se_naive]
-      ok_sw = t25[:coverage_naive_95] < 0.85 && ratio > 1.25 &&
-              t25[:coverage_sandwich_95] >= 0.88 && t25[:coverage_sandwich_95] > t25[:coverage_naive_95] + 0.10
+      z_theo = (t25[:coverage_sandwich_95] - 0.95).abs / [t25[:coverage_se], 1.0e-6].max
+      ok_sw = t25[:coverage_naive_95] < 0.85 && ratio > 1.25 && z_theo <= 3.0
       out[:c6_sandwich_se_restores_t5_coverage] = crit(
         ok_sw, { se_ratio: ratio, cov_naive: t25[:coverage_naive_95], cov_sw: t25[:coverage_sandwich_95],
-                 cov_se: t25[:coverage_se] },
-        'cov_naive < 0.85, se_sw/se_naive > 1.25, cov_sw >= 0.88',
-        'Sandwich SE Bollerslev-Wooldridge mengoreksi kegagalan SE Hessian naif pada ekor Student-t(5)'
+                 cov_se: t25[:coverage_se], z_vs_095: z_theo },
+        'cov_naive < 0.85, se_sw/se_naive > 1.25, |cov_sw - 0.95| <= 3 SE (R=1000)',
+        'Sandwich SE Bollerslev-Wooldridge terhadap target nominal teori 0.95 +- 3 SE pada t(5) T=2500'
       )
     end
     private_class_method :add_qmle_criteria
@@ -203,13 +203,26 @@ module GarchFamily
         'Realized Variance tak bias untuk Integrated Variance dan galatnya menyusut O(1/M)'
       )
       hv = p7[:har_vs_garch]
-      out[:c18_har_rv_beats_daily_garch] = crit(
-        hv[:qlike_har_vs_iv] < hv[:qlike_garch_vs_iv] && hv[:dm_garch_minus_har][:p_value] < 0.05,
-        { qlike_har: hv[:qlike_har_vs_iv], qlike_garch: hv[:qlike_garch_vs_iv],
-          dm_p: hv[:dm_garch_minus_har][:p_value] },
-        'QLIKE_HAR < QLIKE_GARCH & DM p < 0.05',
-        'Model Corsi HAR-RV berfrekuensi tinggi mengungguli GARCH(1,1) harian secara OOS'
-      )
+      qb = hv[:qlike_benchmarks]
+      dm = hv[:dm_benchmarks]
+      beats_g = qb[:har] < qb[:garch] && dm[:garch_minus_har][:p_value] < 0.05
+      beats_info = %i[rv_naive ewma_rv garch_x].all? { |k| qb[:har] < qb[k] && dm[:"#{k}_minus_har"][:p_value] < 0.05 }
+      st = if beats_g && beats_info
+             'tercapai'
+           elsif beats_g
+             'sebagian'
+           else
+             'belum tercapai'
+           end
+      out[:c18_har_rv_beats_daily_garch] = {
+        status: st,
+        measured: { qlike_har: qb[:har], qlike_garch: qb[:garch], qlike_rv_naive: qb[:rv_naive],
+                    qlike_ewma_rv: qb[:ewma_rv], qlike_garch_x: qb[:garch_x],
+                    dm_p_garch: dm[:garch_minus_har][:p_value], dm_p_rv_naive: dm[:rv_naive_minus_har][:p_value],
+                    dm_p_ewma_rv: dm[:ewma_rv_minus_har][:p_value], dm_p_garch_x: dm[:garch_x_minus_har][:p_value] },
+        threshold: 'HAR < GARCH, RV-Naif, EWMA-RV, GARCH-X & seluruh DM p < 0.05',
+        note: 'Model Corsi HAR-RV terhadap GARCH harian dan pembanding setara informasi berbasis RV'
+      }
     end
     private_class_method :add_har_criteria
 

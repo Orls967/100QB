@@ -47,7 +47,7 @@ module GarchFamily
       { cusum_stat: best_val, detected_idx: best_k, critical_5pct: 1.358, break_detected: best_val > 1.358 }
     end
 
-    def run_structural_break_study(seed: MAIN_SEED, workers: nil, n_reps: 25)
+    def run_structural_break_study(seed: MAIN_SEED, workers: nil, n_reps: 300)
       g = Garch11.new
       norm = Innovations::Normal.new
       rows = Parallel.map_items(n_items: n_reps, workers: workers, chunk_size: 5) do |idx|
@@ -67,15 +67,30 @@ module GarchFamily
 
     def summarize_break_mc(rows)
       n = rows.length.to_f
-      full_m = rows.sum(0.0) { |r| r[:full_p] } / n
-      sub_m = rows.sum(0.0) { |r| 0.5 * (r[:pre_p] + r[:post_p]) } / n
+      full_vals = rows.map { |r| r[:full_p] }
+      sub_vals = rows.map { |r| 0.5 * (r[:pre_p] + r[:post_p]) }
+      full_dist = dist_stats(full_vals)
+      sub_dist = dist_stats(sub_vals)
       { true_persistence: 0.85, n_reps: rows.length,
-        full_sample_persistence_mean: full_m, subsample_persistence_mean: sub_m,
-        spurious_inflation: full_m - sub_m,
+        full_sample_persistence_mean: full_dist[:mean], full_sample_persistence_se: full_dist[:se],
+        subsample_persistence_mean: sub_dist[:mean], subsample_persistence_se: sub_dist[:se],
+        full_persistence_dist: full_dist, subsample_persistence_dist: sub_dist,
+        spurious_inflation: full_dist[:mean] - sub_dist[:mean],
         cusum_power: rows.count { |r| r[:detected] } / n,
         detected_idx_mean: rows.sum(0.0) { |r| r[:tau] } / n }
     end
     private_class_method :summarize_break_mc
+
+    def dist_stats(vals)
+      s = vals.sort
+      n = s.length.to_f
+      mean = s.sum(0.0) / n
+      sd = Math.sqrt(s.sum(0.0) { |v| (v - mean)**2 } / [n - 1.0, 1.0].max)
+      { mean: mean, sd: sd, se: sd / Math.sqrt(n), min: s.first,
+        p05: s[(0.05 * n).floor], p25: s[(0.25 * n).floor], median: s[(0.50 * n).floor],
+        p75: s[(0.75 * n).floor], p95: s[(0.95 * n).floor], max: s.last }
+    end
+    private_class_method :dist_stats
 
     def run_five_asset_portfolio(seed: MAIN_SEED)
       sim = simulate_five_asset_dcc(n_obs: 2500, seed: Rng.derive_seed(seed, 850, 0))
