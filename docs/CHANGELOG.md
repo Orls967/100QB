@@ -3,6 +3,25 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 005i] — 2026-11-23 · Perbaikan day005h/day005g + Sistem Volatilitas GARCH, QMLE Sandwich, VaR/ES, DCC, HAR-RV & Salah Spesifikasi (Ruby, Bonus)
+
+### Diperbaiki (Bagian A — `day005h` & `day005g`)
+- `projects/ruby/day005h_backtest_overfitting/`: mendiagnosis bias negatif sistematis Lo $\hat{\eta}(q)$ pada `c3` (normalisasi keliru terhadap parameter populasi $\mathrm{SR}_1 = 0{,}05$ alih-alih $\widehat{\mathrm{SR}}_1 = 0{,}04864$ pada sampel yang sama, sehingga setelah diperbaiki terukur `0,6157` vs `0,6200` di $q=5$ dan `0,5541` vs `0,5559` di $q=21$ serta menyentuh `[0,6203; 0,5540]` di sapuan sampel $T = 20.000$), mengukur galat standar cakupan *stationary bootstrap* (`0,91375 +- 0,00993`, hanya `+0,38 SE` di atas `0,91` akibat peredaman autokorelasi blok $\tilde{\phi} = 0{,}27$), dan menandai `c3` jujur sebagai **`sebagian`** (`10/11` `tercapai`, `32` tes, `20,66s`).
+- `projects/ruby/day005g_mlmc_heston/`: menurunkan batas atas reduksi variansi antitetik Giles–Szpruch khusus skema Euler tanpa koreksi kuadratik Milstein pada $\ell = 1..6$ (`part4_multi_model`: 1D GBM Euler tepat `1,0000`, 1D CIR *Full-Truncation* meluruh `1,0900 -> 1,0611`, 2D Heston $\rho = -0,7$ meluruh `1,2744 -> 1,1869 <= 2/(1+\rho^2) = 1,3423`) dengan tetap mempertahankan ambang CIR `<= 1,04` (`c6` jujur **`belum tercapai`** karena penolakan/pemotongan batas Feller $v_n^+=0$; `22` tes, `90,26s`).
+
+### Ditambahkan (Bagian C — `day005i`)
+- Project Ruby murni bervolume besar `projects/ruby/day005i_garch_family/` ($\ge 3{,}3$, nol gem numerik, `26` modul di `lib/garch_family/`, `44` unit/integrasi tes dalam `6` berkas dengan `258` asersi, `22` kriteria `c1`–`c22`, `13` grafik SVG, `bin/run` selesai dalam `70,14s` dan `bin/run_extras` `30,08s`):
+  - **Bagian 1 (`MomentsStudy`)**: Verifikasi `15` konfigurasi `Garch11`/`GjrGarch11`/`Egarch11` (`max_var_z = 1,95`, kurtosis `1,95`, ACF kuadrat `2,35`), prediksi multi-horizon (`max_rel_err = 0,57%`), dan paritas skor analitik vs beda hingga `< 1e-5`.
+  - **Bagian 2 (`Optim`, `Inference`, `Mle`)**: BFGS ber-skala, kovariansi *Sandwich* Bollerslev–Wooldridge, studi QMLE $T \in \{500, 1000, 2500\}$ (`R=400`, Normal `400/400` & Student-$t(5)$ `400/400`: SE naif gagal `cov = 0,720`, *Sandwich* menaikkan rasio `1,676x` ke `cov = 0,908`; `extras` $T=10\mathrm{k}$ `150/150` `0,700 -> 0,900`).
+  - **Bagian 3 (`InnovationStudy`)**: Student-$t$ MLE ($\hat{\nu}_{\mathrm{med}} = 5,048$, efisiensi MSE `2,47x` pada $\alpha$) serta uji batas $1/\nu = 0$ campuran $\frac{1}{2}\chi^2_0 + \frac{1}{2}\chi^2_1$ (`zero = 0,577`, ukuran `0,0433`, kuasa `1,000`).
+  - **Bagian 4 (`RiskBacktest`)**: Backtest *rolling* OOS 1% & 5% ($T_{\mathrm{oos}} = 3000$): VaR/ES 1% (`garch_n: 1,80%, Z2 = -0,949` vs `garch_t: 0,87%, Z2 = +0,143`, `garch_fhs: 1,03%, Z2 = -0,031`), serta MC `R=500` ukuran `0,046` & kuasa 1% `0,774`.
+  - **Bagian 5 (`ModelComparison`)**: Patton QLIKE anchor, seleksi AIC/BIC (`+7,28`), NIC (`1,668x`), Diebold–Mariano (`p = 0,076` pada `1k` OOS `c13 = sebagian`; `0,0075` pada `4k` `extras`), serta ukuran (`0,035`) & kuasa (`0,980`) uji batas $\gamma = 0$.
+  - **Bagian 6 (`Dcc`)**: DCC(1,1) 2-tahap (`CCC` `0,0`, `min_det = 0,444`, `corr = 0,963`, `200/200` `a = 0,0512, b = 0,8907`; portofolio `DCC p_cc = 0,812` vs `Uncorr 2,9e-23`).
+  - **Bagian 7 (`HarRv`)**: Intraday $M \in \{13..390\}$ *infill* (`max_z = 1,66`, penyusutan MSE `34,59x`), Corsi HAR-RV mengungguli GARCH harian (`QLIKE 0,0117` vs `0,0319`, DM `p = 3,64e-8`).
+  - **Bagian 8–9 (`MisspecPortfolio`)**: *Break* $\omega$ menciptakan persistensi semu IGARCH `0,9977` yang pulih ke `0,8435` saat dipisah (CUSUM `100%` di `1511,8`), dan portofolio 5-aset GJR-DCC + stres krisis (`euler_err = 8,67e-19`, `OOS p_uc = 0,0695`, `div_drop = 0,313`, `var1_amp = 3,23x`).
+- Status kriteria `21/22` `tercapai` dan `c13 = sebagian`; `44` tes (`258` asersi) & `rubocop` (`37` berkas) bersih.
+- Output `outputs/day005i/results.json`, `13` grafik SVG `outputs/figures/day005i_*.svg`, `projects/ruby/day005i_garch_family/README.md`, serta [day005i_quant_garch-family.md](project-explanations/day005i_quant_garch-family.md).
+
 ## [Hari 005h] — 2026-11-23 · Perbaikan day005g + Backtest, Statistik Sharpe, Bias Seleksi, Pengujian Ganda & PBO (Ruby, Bonus)
 
 ### Diperbaiki (Bagian A — `day005g`)

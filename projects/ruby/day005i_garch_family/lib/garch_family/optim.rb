@@ -17,25 +17,26 @@ module GarchFamily
       dist.is_a?(Innovations::StudentT) ? base.merge(nu: 8.0) : base
     end
 
-    def fit(model, returns, dist: Innovations::Normal.new, init_params: nil, extra_starts: [], max_iter: 120)
+    def fit(model, returns, dist: Innovations::Normal.new, init_params: nil, extra_starts: [],
+            max_iter: 120, gtol: 1.0e-5)
       starts = [init_params || initial_params(model, returns, dist)] + extra_starts
       best = nil
       starts.each do |p0|
-        res = single_start_fit(model, returns, dist, p0, max_iter)
+        res = single_start_fit(model, returns, dist, p0, max_iter, gtol)
         best = res if best.nil? || (res[:loglik].finite? && res[:loglik] > best[:loglik])
         break if res[:converged]
       end
       best
     end
 
-    def single_start_fit(model, returns, dist, p0, max_iter)
+    def single_start_fit(model, returns, dist, p0, max_iter, gtol = 1.0e-5)
       theta0 = model.transform(p0, dist)
       inv_n = 1.0 / returns.length
       sd_r = [sample_std(returns), 1.0e-4].max
       z0 = theta0.dup
       z0[0] = 0.0
       obj = ->(z) { scaled_nll_grad(model, z, theta0[0], sd_r, returns, dist, inv_n) }
-      opt = bfgs(z0, obj, max_iter: [max_iter, 160].max, gtol: 1.0e-5)
+      opt = bfgs(z0, obj, max_iter: [max_iter, 160].max, gtol: gtol)
       th_opt = unscale_theta(opt[:x], theta0[0], sd_r)
       ll = -opt[:f] * returns.length
       { params: model.untransform(th_opt, dist), theta: th_opt, loglik: ll, nll: -ll,

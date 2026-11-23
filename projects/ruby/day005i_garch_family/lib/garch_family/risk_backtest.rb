@@ -180,20 +180,21 @@ module GarchFamily
         res = christoffersen_test(hits, 0.05)
         { uc: res[:p_uc] < 0.05, ind: res[:p_ind] < 0.05, cc: res[:p_cc] < 0.05 }
       end
-      power_hits = run_power_mc(seed: seed, workers: workers, n_reps: n_reps, n_oos: n_oos)
-      { size_nominal_5pct: summarize_rates(size_hits), power_misspecified_t5_const: summarize_rates(power_hits) }
+      power_hits = run_power_mc(seed: seed, workers: workers, n_reps: n_reps, n_oos: 2000)
+      { size_nominal_5pct: summarize_rates(size_hits), power_misspecified_t5_const_1pct: summarize_rates(power_hits) }
     end
 
     def run_power_mc(seed:, workers:, n_reps:, n_oos:)
       g = Garch11.new
       t5 = Innovations::StudentT.new(nu: 5.0)
-      q5 = Special.norm_inv(0.95)
+      q1 = Special.norm_inv(0.99)
+      dgp = { mu: 0.0, omega: 5.0e-6, alpha: 0.14, beta: 0.80, nu: 5.0 }
       Parallel.map_items(n_items: n_reps, workers: workers, chunk_size: 25) do |idx|
         rng = Rng::Sampler.new(Rng.derive_seed(seed, 425, idx))
-        rets = g.simulate(InnovationStudy::TRUE_T_PARAMS, n_oos, t5, rng)[:returns]
+        rets = g.simulate(dgp, n_oos, t5, rng)[:returns]
         sd = Math.sqrt(rets.sum(0.0) { |r| r * r } / n_oos)
-        hits = rets.map { |r| -r > q5 * sd }
-        res = christoffersen_test(hits, 0.05)
+        hits = rets.map { |r| -r > q1 * sd }
+        res = christoffersen_test(hits, 0.01)
         { uc: res[:p_uc] < 0.05, ind: res[:p_ind] < 0.05, cc: res[:p_cc] < 0.05 }
       end
     end

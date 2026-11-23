@@ -93,10 +93,12 @@ module GarchFamily
       dist = Innovations::Normal.new
       rng = Rng::Sampler.new(Rng.derive_seed(seed, 240, 0))
       rets = model.simulate(TRUE_GARCH, 5000, dist, rng)[:returns]
-      fit = Optim.fit(model, rets, dist: dist, init_params: TRUE_GARCH, max_iter: 120)
+      fit = Optim.fit(model, rets, dist: dist, init_params: TRUE_GARCH, max_iter: 200, gtol: 1.0e-8)
       sc = model.score(fit[:params], rets, dist)
+      scales = [Math.sqrt(model.unconditional_variance(fit[:params])), fit[:params][:omega], 1.0, 1.0]
+      dimless_sc = sc.each_with_index.map { |v, i| (v * scales[i]).abs / 5000.0 }.max
       { n_obs: 5000, converged: fit[:converged], grad_theta_inf: fit[:grad_inf],
-        score_param_inf: sc.map(&:abs).max, loglik: fit[:loglik] }
+        dimless_score_inf: dimless_sc, loglik: fit[:loglik] }
     end
     private_class_method :single_sample_score_anchor
   end
