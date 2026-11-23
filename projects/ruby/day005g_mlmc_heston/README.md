@@ -11,7 +11,7 @@ Proyek **Ruby murni ($\ge 3.3$, nol gem numerik)** menggunakan **topik cadangan*
    - $\beta > 1$ (GBM Milstein, $\beta = 1{,}945$): $O(\varepsilon^{-2})$.
    - $\beta = 1$ (GBM Euler, $\beta = 0{,}982$): $O(\varepsilon^{-2}(\ln \varepsilon)^2)$.
    - $\beta < 1$ (Heston *Full-Truncation* saat kondisi Feller dilanggar, $\beta = 0{,}821$, $\alpha = 1{,}039$): $O(\varepsilon^{-2 - (1-\beta)/\alpha}) = O(\varepsilon^{-2{,}172})$ asimtotik, atau kemiringan pra-asimtotik diskret `2,475` pada $\varepsilon \in [0{,}01, 0{,}08]$.
-3. **Koppel Antitetik Giles–Szpruch**: Menukar pasangan inkremen halus $(\Delta W_{2k}, \Delta W_{2k+1})$ meniadakan kesalahan *Lévy area* antar-koordinat pada skema *multi-dimensional Milstein*, namun pada Euler *full-truncation* suku kuadratik diagonal belum kompensasi sehingga reduksi level hanya `1,253x` (`belum tercapai` vs target literatur `>= 2,0x`).
+3. **Koppel Antitetik Giles–Szpruch**: Menukar pasangan inkremen halus $(\Delta W_{2k}, \Delta W_{2k+1})$ meniadakan kesalahan *Lévy area* antar-koordinat; untuk skema Euler tanpa suku kuadratik Milstein, batas atas reduksi variansi adalah `1,0` (1D simetris GBM), meluruh menuju `1,0` (1D CIR dengan bias truncation kecil di $v=0$), dan $R_{\max} = \frac{2}{1+\rho^2} = 1{,}3423$ pada Heston 2D ($\rho = -0{,}7$). Terukur pada $\ell = 1..6$: GBM `1,0000`, Heston `1,2744 -> 1,1869`, CIR `1,0900 -> 1,0611` (`c6` tetap `belum tercapai` terhadap batas a priori `<= 1,04` untuk CIR pada $\ell=6$ akibat penolakan/pemotongan batas $v_n^+=0$).
 
 ## Instalasi, Lint, Test & Eksekusi
 
@@ -31,16 +31,16 @@ bundle exec ruby bin/run_extras
 - [lib/mlmc_heston/simulators.rb](lib/mlmc_heston/simulators.rb) — Momen CIR eksak dan simulator terkopel GBM (Euler/Milstein) & Heston (*Full-Truncation* European/Asian).
 - [lib/mlmc_heston/mlmc.rb](lib/mlmc_heston/mlmc.rb), [complexity.rb](lib/mlmc_heston/complexity.rb), [antithetic.rb](lib/mlmc_heston/antithetic.rb) — Regresi laju $(\alpha, \beta)$, MLMC adaptif, prediksi teori Giles + titik silang, dan *antithetic coupling*.
 - [lib/mlmc_heston/runner.rb](lib/mlmc_heston/runner.rb), [criteria.rb](lib/mlmc_heston/criteria.rb), [figures.rb](lib/mlmc_heston/figures.rb), [json_out.rb](lib/mlmc_heston/json_out.rb), [svg.rb](lib/mlmc_heston/svg.rb) — Runner, kriteria `c1`–`c8`, dan 5 grafik SVG.
-- [test/test_core.rb](test/test_core.rb) & [test/test_studies.rb](test/test_studies.rb) — `21` tes unit + integrasi (`34` asersi).
+- [test/test_core.rb](test/test_core.rb) & [test/test_studies.rb](test/test_studies.rb) — `22` tes unit + integrasi (`38` asersi).
 
-## Ringkasan Hasil (`MAIN_SEED = 20261123`, Ruby `4.0.9`, YJIT `ON`, `10` worker, `74,50s`)
+## Ringkasan Hasil (`MAIN_SEED = 20261123`, Ruby `4.0.9`, YJIT `ON`, `10` worker, `90,26s`)
 
-| Bagian | Metrik Utama | Hasil Terukur |
+| Bagian | Metrik Utama | Hasil Terukur (`7/8` `tercapai`, `c6 = belum tercapai`) |
 |---|---|---|
 | 1. Anchor Tertutup | BS ($\xi=0$), paritas, konvergensi CF | `xi_zero_err = 4,26e-14`, `parity_err = 7,11e-15`, `cf_quad_err = 8,23e-10` |
 | 2. Laju Kuat ($\beta$) | GBM & Heston (Feller OK vs dilanggar) | `GBM Euler = 0,982`, `GBM Milstein = 1,945`, `Heston Feller OK = 1,276`, `Feller dilanggar = 0,821` |
 | 3. Kompleksitas & Speedup | Terukur vs Teori Giles & titik silang | `GBM slope = 1,876` (teori `2,000`, speedup **`14,90x`**); `Heston slope = 2,471` (pra-asimtotik `2,475`, asimtotik `2,172`) vs `Std MC = 3,000`, namun pada $\varepsilon=0{,}01$ **MLMC Heston justru `5,44x` lebih lambat** (`speedup = 0,1837x`) dan di $\varepsilon=0{,}005$ masih **`0,4978x`** (*crossover* ekstrapolasi $\varepsilon^* \approx 5{,}05\times 10^{-4}$..$1{,}59\times 10^{-3}$) |
-| 4. Antithetic Giles–Szpruch | Pengurangan variansi $\ell = 3, 4$ | `l=3: 1,253x`, `l=4: 1,216x` (**`belum tercapai`** terhadap target `>= 2,0x` karena Euler tanpa suku kuadratik Milstein) |
+| 4. Antithetic Giles–Szpruch | Multi-model Euler $\ell = 1..6$ & batas teori | `GBM = 1,0000`, `CIR: 1,0900 -> 1,0611`, `Heston: 1,2744 -> 1,1869` ($\le 1,3423$); `c6 = belum tercapai` karena `CIR_l6 = 1,0611 > 1,04` (batas Feller $v_n^+=0$) |
 
 Artefak keluaran: [results.json](../../../outputs/day005g/results.json), 5 grafik SVG `outputs/figures/day005g_*.svg`, dan dokumen penjelasan [day005g_quant_mlmc-heston.md](../../../docs/project-explanations/day005g_quant_mlmc-heston.md).
 

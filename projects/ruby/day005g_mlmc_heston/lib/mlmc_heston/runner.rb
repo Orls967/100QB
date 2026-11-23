@@ -31,13 +31,15 @@ module MlmcHeston
       p2, t2 = timed { run_part2_rates }
       p3, t3 = timed { run_part3_complexity(p2) }
       p4, t4 = timed { run_part4_antithetic }
+      p4_mm = Antithetic.multi_model_level_table(GBM_BASE, HESTON_BASE, seed: @seed, workers: @workers)
       bit_diffs = check_worker_invariance
       tot = Process.clock_gettime(Process::CLOCK_MONOTONIC) - t0
 
       {
         metadata: build_metadata([t1, t2, t3, t4], tot),
-        criteria: Criteria.evaluate(p1, p2, p3, p4, bit_diffs, tot),
-        part1_anchors: p1, part2_rates: p2, part3_complexity: p3, part4_antithetic: p4
+        criteria: Criteria.evaluate(p1, p2, p3, p4, p4_mm, bit_diffs, tot),
+        part1_anchors: p1, part2_rates: p2, part3_complexity: p3,
+        part4_antithetic: p4, part4_multi_model: p4_mm
       }
     end
 

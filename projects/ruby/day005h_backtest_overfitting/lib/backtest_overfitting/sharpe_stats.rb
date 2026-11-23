@@ -103,25 +103,77 @@ module BacktestOverfitting
       sr_true = 0.05
       mean_blk = 10.0
       agg_q = verify_eta_aggregation(phi: phi, q_list: [5, 21], n_reps: 2_000, seed: seed, workers: workers)
+      t_sweep = eta_finite_sample_sweep(phi: phi, q_list: [5, 21], t_list: [250, 1_000, 5_000, 20_000],
+                                        seed: seed, workers: workers)
       cov = ar1_bootstrap_coverage_mc(phi: phi, n_obs: n_obs, sr_true: sr_true,
                                       mean_blk: mean_blk, n_reps: 800, seed: seed, workers: workers)
-      { phi: phi, n_obs: n_obs, mean_block_len: mean_blk, q_scaling: agg_q }.merge(cov)
+      { phi: phi, n_obs: n_obs, mean_block_len: mean_blk, q_scaling: agg_q,
+        finite_sample_sweep: t_sweep }.merge(cov)
     end
+
+    def eta_finite_sample_sweep(phi:, q_list:, t_list:, seed:, workers:, n_reps: 400)
+      t_list.map do |t_len|
+        chunks = Parallel.map_chunks(n_items: n_reps, workers: workers, chunk_size: 40) do |cidx, len|
+          rng = Rng::Sampler.new(Rng.derive_seed(seed, 530 + t_len, cidx))
+          run_finite_t_chunk(len, t_len, phi, q_list, rng)
+        end
+        summarize_finite_t_row(t_len, phi, q_list, chunks, n_reps)
+      end
+    end
+
+    def run_finite_t_chunk(len, t_len, phi, q_list, rng)
+      acc = { v1: 0.0 }
+      q_list.each { |q| acc[q] = 0.0 }
+      len.times do
+        rets = DataGenerator.ar1_gaussian(t_len, phi: phi, sigma: 0.01, mu: 0.0, rng: rng)
+        acc[:v1] += sample_var(rets)
+        q_list.each do |q|
+          blocks = (0...(t_len / q)).map { |b| rets[b * q, q].sum(0.0) }
+          acc[q] += sample_var(blocks)
+        end
+      end
+      acc
+    end
+    private_class_method :run_finite_t_chunk
+
+    def sample_var(arr)
+      n = arr.length
+      m = arr.sum(0.0) / n
+      arr.sum(0.0) { |x| (x - m)**2 } / (n - 1)
+    end
+    private_class_method :sample_var
+
+    def summarize_finite_t_row(t_len, phi, q_list, chunks, n_reps)
+      mv1 = chunks.sum(0.0) { |c| c[:v1] } / n_reps
+      qs = {}
+      q_list.each do |q|
+        mvq = chunks.sum(0.0) { |c| c[q] } / n_reps
+        n_blk = t_len / q
+        eta_asymp = lo_autocorr_factor(q, phi)
+        num = (t_len.to_f / (t_len - 1)) * (1.0 - (1.0 / (t_len * lo_autocorr_factor(t_len, phi))))
+        den = (n_blk.to_f / (n_blk - 1)) * (1.0 - (eta_asymp / (n_blk * lo_autocorr_factor(n_blk * q, phi))))
+        qs[q] = { eta_asymp: eta_asymp, eta_finite_theory: eta_asymp * (num / den), eta_mc_ratio: q * mv1 / mvq }
+      end
+      { n_obs: t_len, by_q: qs }
+    end
+    private_class_method :summarize_finite_t_row
 
     def verify_eta_aggregation(phi:, q_list:, n_reps:, seed:, workers:)
       sigma = 0.01
       sr1_true = 0.05
       mu = sr1_true * sigma
+      all_q = [1] + q_list
       chunks = Parallel.map_chunks(n_items: n_reps, workers: workers, chunk_size: 200) do |cidx, len|
         rng = Rng::Sampler.new(Rng.derive_seed(seed, 510, cidx))
         sums = Hash.new(0.0)
         len.times do
           rets = DataGenerator.ar1_gaussian(420, phi: phi, sigma: sigma, mu: mu, rng: rng)
-          q_list.each { |q| accumulate_q_blocks(rets, q, sums) }
+          all_q.each { |q| accumulate_q_blocks(rets, q, sums) }
         end
         sums
       end
-      q_list.map { |q| summarize_q_row(q, phi, sr1_true, chunks) }
+      sr1_emp = sr_from_bucket(1, chunks)
+      q_list.map { |q| summarize_q_row(q, phi, sr1_true, sr1_emp, chunks) }
     end
     private_class_method :verify_eta_aggregation
 
@@ -135,14 +187,22 @@ module BacktestOverfitting
     end
     private_class_method :accumulate_q_blocks
 
-    def summarize_q_row(q, phi, sr1_true, chunks)
+    def sr_from_bucket(q, chunks)
       n = chunks.sum(0.0) { |h| h[q + 2000] }
       m = chunks.sum(0.0) { |h| h[q] } / n
       var = (chunks.sum(0.0) { |h| h[q + 1000] } / n) - (m * m)
-      sr_q_mc = m / Math.sqrt(var)
+      m / Math.sqrt(var)
+    end
+    private_class_method :sr_from_bucket
+
+    def summarize_q_row(q, phi, sr1_true, sr1_emp, chunks)
+      sr_q_mc = sr_from_bucket(q, chunks)
       eta_theor = lo_autocorr_factor(q, phi)
-      { q: q, eta_theoretical: eta_theor, eta_mc: (sr_q_mc / (Math.sqrt(q) * sr1_true))**2,
-        sr_q_mc: sr_q_mc, sr_q_theor: sr1_true * Math.sqrt(q * eta_theor), sr_q_naive: sr1_true * Math.sqrt(q) }
+      eta_proper = (sr_q_mc / (Math.sqrt(q) * sr1_emp))**2
+      eta_old = (sr_q_mc / (Math.sqrt(q) * sr1_true))**2
+      { q: q, eta_theoretical: eta_theor, eta_mc: eta_proper, eta_mc_pooled_true_sr1: eta_old,
+        sr1_emp: sr1_emp, sr1_true: sr1_true, sr_q_mc: sr_q_mc,
+        sr_q_theor: sr1_true * Math.sqrt(q * eta_theor), sr_q_naive: sr1_true * Math.sqrt(q) }
     end
     private_class_method :summarize_q_row
 
@@ -163,8 +223,14 @@ module BacktestOverfitting
         end
         [cov_naive, cov_boot]
       end
-      { n_reps: n_reps, naive_coverage_95: chunks.sum(0.0) { |c| c[0] } / n_reps,
-        stationary_bootstrap_coverage_95: chunks.sum(0.0) { |c| c[1] } / n_reps, nominal: 0.95 }
+      p_naive = chunks.sum(0.0) { |c| c[0] } / n_reps
+      p_boot = chunks.sum(0.0) { |c| c[1] } / n_reps
+      se_boot = Math.sqrt(p_boot * (1.0 - p_boot) / n_reps)
+      { n_reps: n_reps, naive_coverage_95: p_naive,
+        naive_coverage_se: Math.sqrt(p_naive * (1.0 - p_naive) / n_reps),
+        stationary_bootstrap_coverage_95: p_boot, boot_coverage_se: se_boot,
+        margin_above_091_se: (p_boot - 0.91) / se_boot,
+        effective_bootstrap_phi: (1.0 - (1.0 / mean_blk)) * phi, nominal: 0.95 }
     end
     private_class_method :ar1_bootstrap_coverage_mc
 

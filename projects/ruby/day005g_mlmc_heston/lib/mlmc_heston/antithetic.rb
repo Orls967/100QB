@@ -50,6 +50,65 @@ module MlmcHeston
         reduction_ratio: v_std / [v_ant, 1.0e-18].max }
     end
 
+    def cir_antithetic_check(params, maturity, level:, n_paths: 6_000, seed: MAIN_SEED, workers: nil, n0: 4)
+      chunks = Parallel.map_chunks(n_items: n_paths, workers: workers, chunk_size: 2_000) do |cidx, len|
+        rng = Rng::Sampler.new(Rng.derive_seed(seed, 900 + level, cidx))
+        s = [0.0, 0.0, 0.0, 0.0]
+        len.times do
+          y_std, y_ant = draw_cir_antithetic_pair(params, maturity, level, n0, rng)
+          s[0] += y_std
+          s[1] += y_std * y_std
+          s[2] += y_ant
+          s[3] += y_ant * y_ant
+        end
+        s
+      end
+      v_std = var_from_sums(chunks.sum(0.0) { |c| c[0] }, chunks.sum(0.0) { |c| c[1] }, n_paths)
+      v_ant = var_from_sums(chunks.sum(0.0) { |c| c[2] }, chunks.sum(0.0) { |c| c[3] }, n_paths)
+      { level: level, var_standard: v_std, var_antithetic: v_ant, reduction_ratio: v_std / [v_ant, 1.0e-18].max }
+    end
+
+    def multi_model_level_table(gbm_params, heston_params, levels: [1, 2, 3, 4, 5, 6], n_paths: 6_000,
+                                seed: MAIN_SEED, workers: nil)
+      rho = heston_params.fetch(:rho)
+      heston_bound = 2.0 / (1.0 + (rho * rho))
+      levels.map do |lvl|
+        g = gbm_antithetic_check(gbm_params, 100.0, 1.0, level: lvl, scheme: :euler,
+                                                         n_paths: n_paths, seed: seed, workers: workers)
+        c = cir_antithetic_check(heston_params, 1.0, level: lvl, n_paths: n_paths, seed: seed, workers: workers)
+        h = heston_antithetic_var(heston_params, 100.0, 1.0,
+                                  level: lvl, n_paths: n_paths, seed: seed + 99, workers: workers)
+        { level: lvl, gbm_euler_ratio: g[:reduction_ratio], cir_euler_ratio: c[:reduction_ratio],
+          heston_euler_ratio: h[:reduction_ratio], heston_theoretical_ceiling: heston_bound }
+      end
+    end
+
+    def draw_cir_antithetic_pair(params, maturity, level, n0, rng)
+      n_f = n0 * (2**level)
+      dt_f = maturity / n_f
+      sqrt_dt_f = Math.sqrt(dt_f)
+      dw = Array.new(n_f) { sqrt_dt_f * rng.next_normal }
+      pf1 = run_cir_path(params, dt_f, dw)
+      pf2 = run_cir_path(params, dt_f, Array.new(n_f) { |i| dw[i ^ 1] })
+      dw_c = Array.new(n_f / 2) { |j| dw[2 * j] + dw[(2 * j) + 1] }
+      pc = run_cir_path(params, 2.0 * dt_f, dw_c)
+      [pf1 - pc, (0.5 * (pf1 + pf2)) - pc]
+    end
+    private_class_method :draw_cir_antithetic_pair
+
+    def run_cir_path(params, dt, dw)
+      v = params.fetch(:v0)
+      kappa = params.fetch(:kappa)
+      theta = params.fetch(:theta)
+      xi = params.fetch(:xi)
+      dw.each do |d|
+        vp = v.positive? ? v : 0.0
+        v += (kappa * (theta - vp) * dt) + (xi * Math.sqrt(vp) * d)
+      end
+      v.positive? ? v : 0.0
+    end
+    private_class_method :run_cir_path
+
     def draw_antithetic_pair(params, strike, maturity, level, n0, rng)
       n_f = n0 * (2**level)
       dt_f = maturity / n_f

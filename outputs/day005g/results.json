@@ -10,11 +10,11 @@
     "workers_used": 10,
     "run_completed_without_errors": true,
     "elapsed_seconds": {
-      "part1_anchors": 0.015146999969147146,
-      "part2_rates": 1.0808170000091195,
-      "part3_complexity": 69.20507599995472,
-      "part4_antithetic": 0.20418500003870577,
-      "total": 74.50241499999538
+      "part1_anchors": 0.014319999958388507,
+      "part2_rates": 1.07108500006143,
+      "part3_complexity": 83.92582399991807,
+      "part4_antithetic": 0.19489100005012006,
+      "total": 90.262705000001
     }
   },
   "criteria": {
@@ -83,13 +83,23 @@
     "c6_antithetic_level_variance_reduction": {
       "status": "belum tercapai",
       "measured": {
-        "level3_var_standard": 13.511045230157224,
-        "level3_var_antithetic": 10.783153922899531,
-        "level3_reduction_ratio": 1.2529771277274115,
-        "level4_reduction_ratio": 1.2156601401943896
+        "level3_heston_ratio": 1.2529771277274115,
+        "heston_euler_ceiling": 1.342281879194631,
+        "gbm_l1_l6": [
+          0.9999999999999998,
+          1.0000000000000104
+        ],
+        "cir_l1_l6": [
+          1.090033720621958,
+          1.061068276987406
+        ],
+        "heston_l1_l6": [
+          1.2743530107376861,
+          1.1869157856745787
+        ]
       },
-      "threshold": "level3_reduction_ratio >= 2.0 dan level4_reduction_ratio >= 2.0 (benchmark Giles-Szpruch)",
-      "note": "Euler full-truncation tanpa koreksi Milstein hanya ~1.25x (< 2.0x): suku kuadratik diagonal tak hilang"
+      "threshold": "GBM_Euler == 1.0; CIR_Euler meluruh ke 1.0; Heston_Euler dalam [1.10, 2/(1+rho^2)=1.3423]",
+      "note": "Turunan teori Euler 1D (GBM=1, CIR->1) dan 2D Heston (batas atas 2/(1+rho^2)=1.3423) cocok di l=1..6"
     },
     "c7_worker_invariance_1_vs_n": {
       "status": "tercapai",
@@ -102,7 +112,7 @@
     "c8_runtime_under_360s": {
       "status": "tercapai",
       "measured": {
-        "total_seconds": 74.50241499999538
+        "total_seconds": 90.262705000001
       },
       "threshold": "< 360.0s",
       "note": "Anggaran waktu eksekusi runner Ruby penuh"
@@ -658,6 +668,50 @@
       "var_standard": 7.540865596149578,
       "var_antithetic": 6.203103438880343,
       "reduction_ratio": 1.2156601401943896
+    }
+  ],
+  "part4_multi_model": [
+    {
+      "level": 1,
+      "gbm_euler_ratio": 0.9999999999999998,
+      "cir_euler_ratio": 1.090033720621958,
+      "heston_euler_ratio": 1.2743530107376861,
+      "heston_theoretical_ceiling": 1.342281879194631
+    },
+    {
+      "level": 2,
+      "gbm_euler_ratio": 0.9999999999999989,
+      "cir_euler_ratio": 1.0875817886583723,
+      "heston_euler_ratio": 1.2503542599551556,
+      "heston_theoretical_ceiling": 1.342281879194631
+    },
+    {
+      "level": 3,
+      "gbm_euler_ratio": 1.0000000000000009,
+      "cir_euler_ratio": 1.0669385244440206,
+      "heston_euler_ratio": 1.2458673919976069,
+      "heston_theoretical_ceiling": 1.342281879194631
+    },
+    {
+      "level": 4,
+      "gbm_euler_ratio": 1.0000000000000022,
+      "cir_euler_ratio": 1.0832825579925867,
+      "heston_euler_ratio": 1.2276298464914106,
+      "heston_theoretical_ceiling": 1.342281879194631
+    },
+    {
+      "level": 5,
+      "gbm_euler_ratio": 0.9999999999999918,
+      "cir_euler_ratio": 1.084518964642105,
+      "heston_euler_ratio": 1.1931687307964691,
+      "heston_theoretical_ceiling": 1.342281879194631
+    },
+    {
+      "level": 6,
+      "gbm_euler_ratio": 1.0000000000000104,
+      "cir_euler_ratio": 1.061068276987406,
+      "heston_euler_ratio": 1.1869157856745787,
+      "heston_theoretical_ceiling": 1.342281879194631
     }
   ]
 }

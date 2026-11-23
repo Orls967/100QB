@@ -101,4 +101,14 @@ class TestStudies < Minitest::Test
     )
     assert_operator res[:var_antithetic], :<, res[:var_standard]
   end
+
+  def test_antithetic_gbm_euler_ratio_is_unity_and_cir_decays_across_levels
+    tbl = MlmcHeston::Antithetic.multi_model_level_table(
+      GBM_BASE, HESTON_BASE, levels: [1, 6], n_paths: 6_000, seed: 52, workers: 2
+    )
+    assert_in_delta 1.0, tbl.first[:gbm_euler_ratio], 1.0e-9
+    assert_in_delta 1.0, tbl.last[:gbm_euler_ratio], 1.0e-9
+    assert_operator tbl.last[:cir_euler_ratio], :<=, 1.15
+    assert_operator tbl.last[:heston_euler_ratio], :<=, tbl.last[:heston_theoretical_ceiling]
+  end
 end

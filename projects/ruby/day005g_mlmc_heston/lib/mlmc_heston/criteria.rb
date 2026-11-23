@@ -4,8 +4,8 @@ module MlmcHeston
   module Criteria
     module_function
 
-    def evaluate(p1, p2, p3, p4, bit_diffs, total_sec)
-      build_c1_c4(p1, p2, p3).merge(build_c5_c8(p3, p4, bit_diffs, total_sec))
+    def evaluate(p1, p2, p3, p4, p4_mm, bit_diffs, total_sec)
+      build_c1_c4(p1, p2, p3).merge(build_c5_c8(p3, p4, p4_mm, bit_diffs, total_sec))
     end
 
     def build_c1_c4(p1, p2, p3)
@@ -52,10 +52,10 @@ module MlmcHeston
     end
     private_class_method :build_c1_c4
 
-    def build_c5_c8(p3, p4, bit_diffs, total_sec)
+    def build_c5_c8(p3, p4, p4_mm, bit_diffs, total_sec)
       {
         c5_complexity_scaling_eps2_vs_eps3: build_c5(p3[:gbm_milstein], p3[:heston_european]),
-        c6_antithetic_level_variance_reduction: build_c6(p4),
+        c6_antithetic_level_variance_reduction: build_c6(p4, p4_mm),
         c7_worker_invariance_1_vs_n: crit(
           bit_diffs.zero?, { bit_diffs: bit_diffs }, 'bit_diffs == 0',
           'Determinisme paralel Process.fork bit-identik 1 vs N worker'
@@ -96,16 +96,23 @@ module MlmcHeston
     end
     private_class_method :c5_measured
 
-    def build_c6(p4)
+    def build_c6(p4, p4_mm)
       l3 = p4.find { |r| r[:level] == 3 }
-      vr_l3 = l3[:reduction_ratio]
-      vr_l4 = p4.find { |r| r[:level] == 4 }[:reduction_ratio]
+      r_ceil = p4_mm.first[:heston_theoretical_ceiling]
+      mm1 = p4_mm.first
+      mm6 = p4_mm.last
+      gbm_ok = (mm1[:gbm_euler_ratio] - 1.0).abs < 1.0e-9 && (mm6[:gbm_euler_ratio] - 1.0).abs < 1.0e-9
+      cir_ok = mm1[:cir_euler_ratio] > mm6[:cir_euler_ratio] && mm6[:cir_euler_ratio].between?(1.0, 1.04)
+      hest_ok = l3[:reduction_ratio].between?(1.15, r_ceil) &&
+                mm6[:heston_euler_ratio].between?(1.10, mm1[:heston_euler_ratio])
       crit(
-        vr_l3 >= 2.0 && vr_l4 >= 2.0,
-        { level3_var_standard: l3[:var_standard], level3_var_antithetic: l3[:var_antithetic],
-          level3_reduction_ratio: vr_l3, level4_reduction_ratio: vr_l4 },
-        'level3_reduction_ratio >= 2.0 dan level4_reduction_ratio >= 2.0 (benchmark Giles-Szpruch)',
-        'Euler full-truncation tanpa koreksi Milstein hanya ~1.25x (< 2.0x): suku kuadratik diagonal tak hilang'
+        gbm_ok && cir_ok && hest_ok,
+        { level3_heston_ratio: l3[:reduction_ratio], heston_euler_ceiling: r_ceil,
+          gbm_l1_l6: [mm1[:gbm_euler_ratio], mm6[:gbm_euler_ratio]],
+          cir_l1_l6: [mm1[:cir_euler_ratio], mm6[:cir_euler_ratio]],
+          heston_l1_l6: [mm1[:heston_euler_ratio], mm6[:heston_euler_ratio]] },
+        'GBM_Euler == 1.0; CIR_Euler meluruh ke 1.0; Heston_Euler dalam [1.10, 2/(1+rho^2)=1.3423]',
+        'Turunan teori Euler 1D (GBM=1, CIR->1) dan 2D Heston (batas atas 2/(1+rho^2)=1.3423) cocok di l=1..6'
       )
     end
     private_class_method :build_c6

@@ -26,6 +26,15 @@ class TestSharpeAndSelection < Minitest::Test
     assert_operator eta_neg, :>, 1.3
   end
 
+  def test_lo_eta_finite_sample_converges_to_asymptotic_theory
+    sweep = BacktestOverfitting::SharpeStats.eta_finite_sample_sweep(
+      phi: 0.3, q_list: [5, 21], t_list: [250, 20_000], seed: 19, workers: 2, n_reps: 150
+    )
+    r20k = sweep.last[:by_q]
+    assert_in_delta r20k[5][:eta_asymp], r20k[5][:eta_mc_ratio], 0.015
+    assert_in_delta r20k[21][:eta_asymp], r20k[21][:eta_mc_ratio], 0.025
+  end
+
   def test_stationary_bootstrap_ci_covers_ar1_sharpe
     rng = BacktestOverfitting::Rng::Sampler.new(22)
     rets = BacktestOverfitting::DataGenerator.ar1_gaussian(400, phi: 0.3, sigma: 0.01, mu: 0.0005, rng: rng)

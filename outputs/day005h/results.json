@@ -10,13 +10,13 @@
     "workers_used": 10,
     "run_completed_without_errors": true,
     "elapsed_seconds": {
-      "part1_anchors": 0.2675850000232458,
-      "part2_sharpe_stats": 7.408093000063673,
-      "part3_selection_bias": 4.27580200007651,
-      "part4_multiple_testing": 5.57943299994804,
-      "part5_cscv_pbo": 1.390711999963969,
-      "part6_purged_cv": 1.6248399999458343,
-      "total": 20.616403000080027
+      "part1_anchors": 0.24944199994206429,
+      "part2_sharpe_stats": 7.647325000027195,
+      "part3_selection_bias": 4.491419999976642,
+      "part4_multiple_testing": 5.294518999988213,
+      "part5_cscv_pbo": 1.3842899999581277,
+      "part6_purged_cv": 1.5191499999491498,
+      "total": 20.655431999941356
     }
   },
   "criteria": {
@@ -61,25 +61,41 @@
       "note": "Metode delta SE Sharpe dan koreksi skewness/kurtosis cocok dengan MC"
     },
     "c3_autocorr_lo_eta_and_stationary_bootstrap": {
-      "status": "tercapai",
+      "status": "sebagian",
       "measured": {
         "eta_mc_vs_theo": [
           [
             5,
-            0.5827042222647448,
+            0.6157313533550969,
+            0.6200243049527542,
+            0.5827042222647448
+          ],
+          [
+            21,
+            0.5541345309878128,
+            0.5559157212315781,
+            0.5244113835520016
+          ]
+        ],
+        "eta_t20k_vs_asymp": [
+          [
+            5,
+            0.6202805487675619,
             0.6200243049527542
           ],
           [
             21,
-            0.5244113835520016,
+            0.5540471241145327,
             0.5559157212315781
           ]
         ],
         "naive_cov": 0.84625,
-        "boot_cov": 0.91375
+        "boot_cov": 0.91375,
+        "boot_se": 0.009925405375852417,
+        "margin_above_091_se": 0.3778183215693456
       },
-      "threshold": "|eta_mc - eta_theor| < 0.04; naive_cov < 0.88 & stationary_boot_cov in [0.91,0.97]",
-      "note": "Faktor Lo eta(q) dan cakupan bootstrap stasioner pada AR(1) phi=0.3"
+      "threshold": "|eta_mc - eta_theor| < 0.04, |eta_T20k - asymp| < 0.01; naive < 0.88 & boot in [0.91,0.97]",
+      "note": "eta(q) cocok setelah koreksi SR1_emp; cakupan bootstrap 0.914 +- 0.010 marginal (< 1 SE di atas 0.91)"
     },
     "c4_selection_bias_expected_max": {
       "status": "tercapai",
@@ -173,7 +189,7 @@
     "c11_runtime_under_360s": {
       "status": "tercapai",
       "measured": {
-        "total_seconds": 20.616403000080027
+        "total_seconds": 20.655431999941356
       },
       "threshold": "< 360.0s",
       "note": "Anggaran waktu eksekusi runner Ruby penuh"
@@ -250,7 +266,10 @@
         {
           "q": 5,
           "eta_theoretical": 0.6200243049527542,
-          "eta_mc": 0.5827042222647448,
+          "eta_mc": 0.6157313533550969,
+          "eta_mc_pooled_true_sr1": 0.5827042222647448,
+          "sr1_emp": 0.04864054725108464,
+          "sr1_true": 0.05,
           "sr_q_mc": 0.08534519774603204,
           "sr_q_theor": 0.08803580982707791,
           "sr_q_naive": 0.1118033988749895
@@ -258,15 +277,84 @@
         {
           "q": 21,
           "eta_theoretical": 0.5559157212315781,
-          "eta_mc": 0.5244113835520016,
+          "eta_mc": 0.5541345309878128,
+          "eta_mc_pooled_true_sr1": 0.5244113835520016,
+          "sr1_emp": 0.04864054725108464,
+          "sr1_true": 0.05,
           "sr_q_mc": 0.1659264826255293,
           "sr_q_theor": 0.17083786279586224,
           "sr_q_naive": 0.229128784747792
         }
       ],
+      "finite_sample_sweep": [
+        {
+          "n_obs": 250,
+          "by_q": {
+            "5": {
+              "eta_asymp": 0.6200243049527542,
+              "eta_finite_theory": 0.6197796793933893,
+              "eta_mc_ratio": 0.6188977978920861
+            },
+            "21": {
+              "eta_asymp": 0.5559157212315781,
+              "eta_finite_theory": 0.5556504012204572,
+              "eta_mc_ratio": 0.5731738552114456
+            }
+          }
+        },
+        {
+          "n_obs": 1000,
+          "by_q": {
+            "5": {
+              "eta_asymp": 0.6200243049527542,
+              "eta_finite_theory": 0.619962617979531,
+              "eta_mc_ratio": 0.6221539684994996
+            },
+            "21": {
+              "eta_asymp": 0.5559157212315781,
+              "eta_finite_theory": 0.555822765724226,
+              "eta_mc_ratio": 0.5529576480597349
+            }
+          }
+        },
+        {
+          "n_obs": 5000,
+          "by_q": {
+            "5": {
+              "eta_asymp": 0.6200243049527542,
+              "eta_finite_theory": 0.6200119394635067,
+              "eta_mc_ratio": 0.6188942250918975
+            },
+            "21": {
+              "eta_asymp": 0.5559157212315781,
+              "eta_finite_theory": 0.5558961410086234,
+              "eta_mc_ratio": 0.5585193654880823
+            }
+          }
+        },
+        {
+          "n_obs": 20000,
+          "by_q": {
+            "5": {
+              "eta_asymp": 0.6200243049527542,
+              "eta_finite_theory": 0.6200212122658794,
+              "eta_mc_ratio": 0.6202805487675619
+            },
+            "21": {
+              "eta_asymp": 0.5559157212315781,
+              "eta_finite_theory": 0.5559108251438362,
+              "eta_mc_ratio": 0.5540471241145327
+            }
+          }
+        }
+      ],
       "n_reps": 800,
       "naive_coverage_95": 0.84625,
+      "naive_coverage_se": 0.012752986782514911,
       "stationary_bootstrap_coverage_95": 0.91375,
+      "boot_coverage_se": 0.009925405375852417,
+      "margin_above_091_se": 0.3778183215693456,
+      "effective_bootstrap_phi": 0.27,
       "nominal": 0.95
     }
   },

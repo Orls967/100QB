@@ -60,16 +60,31 @@ module BacktestOverfitting
 
     def eval_c3(ac)
       eta_ok = ac[:q_scaling].all? { |r| (r[:eta_mc] - r[:eta_theoretical]).abs < 0.04 }
-      cov_ok = ac[:naive_coverage_95] < 0.88 &&
-               ac[:stationary_bootstrap_coverage_95].between?(0.91, 0.97) &&
-               (ac[:stationary_bootstrap_coverage_95] - ac[:naive_coverage_95]) > 0.05
-      crit(eta_ok && cov_ok,
-           { eta_mc_vs_theo: ac[:q_scaling].map { |r| [r[:q], r[:eta_mc], r[:eta_theoretical]] },
-             naive_cov: ac[:naive_coverage_95], boot_cov: ac[:stationary_bootstrap_coverage_95] },
-           '|eta_mc - eta_theor| < 0.04; naive_cov < 0.88 & stationary_boot_cov in [0.91,0.97]',
-           'Faktor Lo eta(q) dan cakupan bootstrap stasioner pada AR(1) phi=0.3')
+      t20k = ac[:finite_sample_sweep].last[:by_q]
+      t20k_ok = t20k.values.all? { |v| (v[:eta_mc_ratio] - v[:eta_asymp]).abs < 0.01 }
+      cov = ac[:stationary_bootstrap_coverage_95]
+      cov_ok = ac[:naive_coverage_95] < 0.88 && cov.between?(0.91, 0.97) && (cov - ac[:naive_coverage_95]) > 0.05
+      status = if eta_ok && t20k_ok && cov_ok
+                 ac[:margin_above_091_se] < 1.0 ? 'sebagian' : 'tercapai'
+               else
+                 'belum tercapai'
+               end
+      { status: status,
+        measured: c3_measured(ac),
+        threshold: '|eta_mc - eta_theor| < 0.04, |eta_T20k - asymp| < 0.01; naive < 0.88 & boot in [0.91,0.97]',
+        note: 'eta(q) cocok setelah koreksi SR1_emp; cakupan bootstrap 0.914 +- 0.010 marginal (< 1 SE di atas 0.91)' }
     end
     private_class_method :eval_c3
+
+    def c3_measured(ac)
+      {
+        eta_mc_vs_theo: ac[:q_scaling].map { |r| [r[:q], r[:eta_mc], r[:eta_theoretical], r[:eta_mc_pooled_true_sr1]] },
+        eta_t20k_vs_asymp: ac[:finite_sample_sweep].last[:by_q].map { |q, v| [q, v[:eta_mc_ratio], v[:eta_asymp]] },
+        naive_cov: ac[:naive_coverage_95], boot_cov: ac[:stationary_bootstrap_coverage_95],
+        boot_se: ac[:boot_coverage_se], margin_above_091_se: ac[:margin_above_091_se]
+      }
+    end
+    private_class_method :c3_measured
 
     def eval_c4(p3)
       t300 = p3[:expected_max_table].find { |r| r[:n_trials] == 300 }

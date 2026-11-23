@@ -33,14 +33,14 @@ bundle exec ruby bin/run_extras
 - [lib/backtest_overfitting/sharpe_stats.rb](lib/backtest_overfitting/sharpe_stats.rb), [selection_bias.rb](lib/backtest_overfitting/selection_bias.rb), [multiple_testing.rb](lib/backtest_overfitting/multiple_testing.rb) — Studi MC $R=20\mathrm{k}$ SE & cakupan Sharpe, faktor Lo $\eta(q)$ & *stationary bootstrap*, $\mathbb{E}[\max]$ & kalibrasi DSR ($R=2\mathrm{k}$), serta Bonferroni / Holm / BH / Romano–Wolf ($R=2\mathrm{k}$).
 - [lib/backtest_overfitting/cscv_pbo.rb](lib/backtest_overfitting/cscv_pbo.rb) & [purged_cv.rb](lib/backtest_overfitting/purged_cv.rb) — CSCV eksak $12.870$ pembagian, studi biaya transaksi $c \in \{0, 5, 20\}$ bps, dan *Purged + Embargoed K-Fold* ($h = 10$).
 - [lib/backtest_overfitting/runner.rb](lib/backtest_overfitting/runner.rb), [criteria.rb](lib/backtest_overfitting/criteria.rb), [figures.rb](lib/backtest_overfitting/figures.rb), [json_out.rb](lib/backtest_overfitting/json_out.rb), [svg.rb](lib/backtest_overfitting/svg.rb) — Orkestrator, 11 kriteria `c1`–`c11`, penulis JSON dan 6 grafik SVG.
-- [test/test_core.rb](test/test_core.rb), [test/test_engine.rb](test/test_engine.rb), [test/test_sharpe_mt.rb](test/test_sharpe_mt.rb), [test/test_cscv_purged.rb](test/test_cscv_purged.rb) — `31` tes unit + integrasi (`13.163` asersi).
+- [test/test_core.rb](test/test_core.rb), [test/test_engine.rb](test/test_engine.rb), [test/test_sharpe_mt.rb](test/test_sharpe_mt.rb), [test/test_cscv_purged.rb](test/test_cscv_purged.rb) — `32` tes unit + integrasi (`13.165` asersi).
 
-## Ringkasan Hasil (`MAIN_SEED = 20261123`, Ruby `4.0.9`, YJIT `ON`, `10` worker, `20,62s`)
+## Ringkasan Hasil (`MAIN_SEED = 20261123`, Ruby `4.0.9`, YJIT `ON`, `10` worker, `20,66s`)
 
-| Bagian | Metrik Utama | Hasil Terukur (`11/11` `tercapai`) |
+| Bagian | Metrik Utama | Hasil Terukur (`10/11` `tercapai`, `c3 = sebagian`) |
 |---|---|---|
 | 1. Anchor & Mesin | Ekuitas, no-lookahead, AR(1), GBM | `eq_err = 0`, `zero_cost_err = 0`, `ar1_z = 0,65`, `gbm_z = 0,55` |
-| 2. Statistik Sharpe | Cakupan 95%, Lo $\eta(q)$, Bootstrap | Gauss cov `0,948–0,951`; `AR(1)`: Naif `0,846` $\to$ Stationary Boot `0,914` |
+| 2. Statistik Sharpe | Cakupan 95%, Lo $\eta(q)$, Bootstrap | Gauss cov `0,948–0,951`; Lo $\hat{\eta}$ (`SR1_emp`): `0,616` vs `0,620` ($q=5$), `0,554` vs `0,556` ($q=21$); `AR(1)`: Naif `0,846` $\to$ Boot `0,9138 +- 0,0099` (`+0,38 SE` marginal di atas `0,91`) |
 | 3. Bias Seleksi & DSR | $\mathbb{E}[\max]$, $N_{\mathrm{eff}}$, Kalibrasi | Exact vs approx `< 0,018` ($N=300$); Pustaka $\bar{\rho}=0{,}229 \implies N_{\mathrm{eff}}=231{,}5$; DSR pass `0,001` vs Naif `1,000` |
 | 4. Pengujian Ganda | FWER, BH FDR $= \pi_0\alpha$, Romano–Wolf | Bonf FWER `0,041`, BH FDR `0,0405` ($\pi_0\alpha = 0{,}045$), Power `0,573` vs `0,259`; RW ($\rho=0{,}4$, `extras`): FWER `0,046`, Power `0,601` > Bonf `0,560` |
 | 5. CSCV / PBO & Biaya | $12.870$ pembagian, $c \in \{0, 5, 20\}$ bps | Noise PBO `0,464 +- 0,036` (`0,462` di $N=300$ `extras`), Sinyal PBO `0,000`; `MOM(1)` terbaik `0,112` di `0 bps` runtuh diganti `SMA(10,40)` di `20 bps` |
