@@ -11,6 +11,11 @@ require_relative 'garch_family/gjr_garch11'
 require_relative 'garch_family/egarch11'
 require_relative 'garch_family/ewma'
 require_relative 'garch_family/moments_study'
+require_relative 'garch_family/optim'
+require_relative 'garch_family/inference'
+require_relative 'garch_family/mle'
+require_relative 'garch_family/innovation_study'
+require_relative 'garch_family/risk_backtest'
 
 module GarchFamily
   MAIN_SEED = 20_261_123

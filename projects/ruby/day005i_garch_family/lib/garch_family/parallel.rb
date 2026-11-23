@@ -24,6 +24,14 @@ module GarchFamily
       run_forked(n_items, n_chunks, chunk_size, effective_workers, &)
     end
 
+    def map_items(n_items:, workers: nil, chunk_size: CHUNK_SIZE)
+      chunks = map_chunks(n_items: n_items, workers: workers, chunk_size: chunk_size) do |chunk_idx, len|
+        base = chunk_idx * chunk_size
+        Array.new(len) { |offset| yield(base + offset) }
+      end
+      chunks.flatten(1)
+    end
+
     def run_sequential(n_items, n_chunks, chunk_size)
       Array.new(n_chunks) { |chunk_idx| yield(chunk_idx, chunk_length(chunk_idx, n_items, chunk_size)) }
     end
