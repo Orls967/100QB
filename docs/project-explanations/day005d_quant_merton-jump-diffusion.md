@@ -73,23 +73,26 @@ Alur kerja eksekusi pada [`src/bin/run.rs`](../../projects/rust/day005d_merton_j
 
 ## 7. Status Pencapaian
 
-Seluruh runner `day005d` selesai dalam **`0,49s`** (`0,488s`) pada `10` *worker* (`part1 = 0,01s`, `part2 = 0,46s`, `part3 = 0,00s`, `part4 = 0,01s`), dengan `run_completed_without_errors = true`:
+Seluruh runner `day005d` selesai dalam **`0,65s`** (`0,650s`) pada `10` *worker* (`part1 = 0,01s`, `part2 = 0,45s`, `part3 = 0,18s`, `part4 = 0,01s`), dengan `run_completed_without_errors = true`:
 
 | Kriteria | Status | Nilai Terukur | Ambang A Priori |
 |---|---|---|---|
 | `c1_merton_series_vs_mc_3se` | `tercapai` | `martingale_z = 0,49`, `max_call_z = 1,10`, `max_put_z = 0,75` | `martingale_z, max_call_z, max_put_z <= 3,0` (`R=400k`) |
 | `c2_pide_cn_matches_exact_and_converges` | `tercapai` | `max_pide_abs_err = 0,00303` (`rel = 0,00066`), `conv_ratio_101_to_401 = 15,43x` | `max_pide_abs_err < 0,01` & `conv_ratio > 8,0` |
-| `c3_short_maturity_jump_skew` | `tercapai` | `IV(T=0,25; K=80) = 35,40%` vs `ATM = 22,55%` | `IV(K=80) > IV(K=100) + 2%` |
-| `c4_nelder_mead_calibration_recovery` | `tercapai` | `price_rmse = 1,15e-8`, `iv_rmse_bps = 9,17e-6`, `iters = 214` | `price_rmse < 1e-2` & `iv_rmse_bps < 5,0` |
-| `c5_tail_risk_otm_put_and_es99` | `tercapai` | `put(K=70)` rasio `191,14x` BS; `ES99 = 28,156` (Merton) vs `4,017` (BS) | `ratio(K=70) > 2,0` & `ES99_merton > ES99_bs` |
+| `c3_short_maturity_jump_skew` | `tercapai` | `IV(T=0,25; K=80) = 35,40%` vs `ATM = 22,55%`, `max_rel_err_t001_005 = 0,000823` | `IV(T=0.25, K=80) > IV(T=0.25, K=100) + 0.02 dan max_rel_err_t001_005 < 0.05` |
+| `c4_nelder_mead_calibration_recovery` | `tercapai` | `price_rmse = 1,15e-8`, `iv_rmse_bps = 9,17e-6`, `noisy_2mat_sigma_bias = -0,00047`, `noisy_2mat_lambda_bias = 0,00706`, `2mat_lambda_sd = 0,0547 < 1mat 0,0566`, `multistart = 23/24 (95,83%)` | `price_rmse < 1e-2, iv_rmse_bps < 5.0, |sigma_bias| < 0.02, |lambda_bias| < 0.15, 2mat_lambda_sd < 1mat_lambda_sd, multistart_global_fraction >= 0.50` |
+| `c5_tail_risk_otm_put_and_es99` | `tercapai` | `put(K=70)` rasio `191,14x` BS; `ES99 = 28,156` (Merton) vs `4,017` (BS-ATM) vs `9,248` (BS-VarMatched) | `ratio(K=70) > 2.0 dan ES99_merton > ES99_bs_var_matched` |
 | `c6_worker_invariance_1_vs_n` | `tercapai` | `bit_diffs = 0` (`1` vs `10` *worker*) | `bit_diffs == 0` |
-| `c7_runtime_under_240s` | `tercapai` | `0,49s` (`10` *worker*) | `< 240,0s` |
+| `c7_runtime_under_240s` | `tercapai` | `0,65s` (`10` *worker*) | `< 240,0s` |
 
 ### Rincian Hasil Terukur
-- **Bagian 1 (Seri vs MC)**: Rata-rata martingal terdiskonto adalah `100,0198 ± 0,0404` (`z = 0,49`). Untuk $K=100, T=1$: harga *call* eksak `10,8036` vs MC `10,8296 ± 0,0235` (`z = 1,10`); harga *put* eksak `6,9211` vs MC `6,9283 ± 0,0234` (`z = 0,31`).
-- **Bagian 2 (PIDE Crank–Nicolson)**: Galat absolut maksimum turun dari `0,04676` (`101x50`) menjadi `0,01190` (`201x100`) dan `0,00303` (`401x200`), menunjukkan rasio konvergensi `15,43x` (sangat dekat dengan $4^2 = 16\times$ untuk orde kedua).
-- **Bagian 3 (Smile & Kalibrasi)**: Nelder–Mead berkonvergensi dalam `214` iterasi ke $\hat{\sigma} = 0{,}150000$, $\hat{\lambda} = 0{,}800000$, $\hat{\mu}_J = -0{,}100000$, $\hat{\delta}_J = 0{,}250000$ dengan `price_rmse = 1,15e-8`.
-- **Bagian 4 (Risiko Ekor)**: Pada $T=0{,}25$ (`BS ATM IV = 22,55%`), harga *put* $K=70$ Merton adalah `0,2732` dibanding BS `0,00143` (`191,14x`); pada $K=80$, `0,6879` vs `0,0707` (`9,72x`). Untuk posisi *short put* 1 bulan ($K=90$, `BS ATM IV = 19,97%`), VaR 99% Merton adalah `19,426` vs BS `2,330`, dan ES 99% Merton adalah `28,156` vs BS `4,017`.
+- **Bagian 1 (Seri vs MC)**: Rata-rata martingal terdiskonto adalah `100,0211 ± 0,0430` (`z = 0,49`). Untuk $K=100, T=1$: harga *call* eksak `12,0174` vs MC `12,0500 ± 0,0296` (`z = 1,10`); harga *put* eksak `8,1353` vs MC `8,1471 ± 0,0211` (`z = 0,56`).
+- **Bagian 2 (PIDE Crank–Nicolson)**: Galat absolut maksimum turun dari `0,04676` (`101x50`) menjadi `0,01012` (`201x100`) dan `0,00303` (`401x200`), menunjukkan rasio konvergensi `15,43x` (sangat dekat dengan $4^2 = 16\times$ untuk orde kedua).
+- **Bagian 3 (Smile, Skew Jangka Pendek $O(T)$, & Kalibrasi Berderau/Multi-Start)**:
+  - Skew kuantitatif $T \to 0$ di $K=80$: untuk $T=0{,}01$, IV eksak `95,71%` vs aproksimasi lompatan tunggal `95,72%` (`rel_err = 0,0115%`); $T=0{,}02$: `74,43%` vs `74,45%` (`0,0266%`); $T=0{,}05$: `54,70%` vs `54,74%` (`0,0823%`).
+  - Kalibrasi kuotasi IV berderau $N(0, 10\text{ bps})$ ($R=200$): pada 1 maturitas ($T=0{,}25$), $\mathrm{SD}(\hat{\lambda}) = 0{,}0566$ dengan korelasi kolinear $\mathrm{Corr}(\hat{\lambda}, \hat{\delta}_J) = -0{,}9802$; pada 2 maturitas ($\{0{,}25, 1{,}0\}$), $\mathrm{SD}(\hat{\lambda})$ turun menjadi `0,0547` ($\mathrm{Corr} = -0{,}9631$) dengan bias sangat kecil ($\sigma_{\mathrm{bias}} = -0{,}00047$, $\lambda_{\mathrm{bias}} = +0{,}00706$).
+  - Multi-start `24` titik acak: `23/24` (`95,83%`) konvergen ke optimum global (`best_price_rmse = 2,09e-9`) dan `1` titik terjebak di optimum lokal (`price_rmse = 0,4537`).
+- **Bagian 4 (Risiko Ekor — Tiga Pembanding)**: Pada $T=0{,}25$ (`BS ATM IV = 22,55%`), harga *put* $K=70$ Merton adalah `0,2732` dibanding BS `0,00143` (`191,14x`). Untuk posisi *short put* 1 bulan ($K=90$), VaR99/ES99 masing-masing adalah `2,330 / 4,017` (BS-ATM, `vol = 19,97%`), `7,003 / 9,248` (BS variansi-sama $\sigma_{\mathrm{eq}} = \sqrt{\sigma^2 + \lambda(\mu_J^2 + \delta_J^2)} = 28{,}37\%$), dan `19,426 / 28,156` (Merton).
 
 ---
 
@@ -119,7 +122,7 @@ Seluruh runner `day005d` selesai dalam **`0,49s`** (`0,488s`) pada `10` *worker*
 ---
 
 ## 10. Kesimpulan, Batasan, dan Deviasi dari Prompt
-1. **Kesimpulan**: Proyek `day005d` berhasil mengimplementasikan dan memverifikasi model Merton Jump-Diffusion dari empat sudut pandang (seri eksak, Monte Carlo, PIDE Crank–Nicolson, kalibrasi *smile*, dan risiko ekor) dalam `0,49s` dengan seluruh `7` kriteria berstatus `tercapai`, `9` tes unit, dan `2` tes integrasi lolos.
+1. **Kesimpulan**: Proyek `day005d` berhasil mengimplementasikan dan memverifikasi model Merton Jump-Diffusion dari empat sudut pandang (seri eksak, Monte Carlo, PIDE Crank–Nicolson, kalibrasi *smile* termasuk kuotasi berderau & multi-start, serta risiko ekor vs BS variansi-sama) dalam `0,65s` dengan seluruh `7` kriteria berstatus `tercapai`, `12` tes unit, dan `2` tes integrasi lolos.
 2. **Batasan**: Seluruh data harga dan *smile* bersifat sintetis; kalibrasi diuji pada permukaan bebas-derau; suku bunga, *dividend yield*, dan intensitas lompatan diasumsikan konstan sepanjang horizon.
 3. **Deviasi dari Prompt**:
    - **Pemakaian Topik Cadangan (`ROADMAP 075`)**: Topik utama (*kovarians sampel, Marchenko–Pastur, dan penyusutan Ledoit–Wolf*) telah dikerjakan penuh pada sesi [`day002b`](day002b_quant_estimasi-kovarians-portofolio-varians.md) (Python), sehingga sesuai instruksi Langkah 0.6 proyek ini beralih ke topik cadangan **Jump-Diffusion Merton (`ROADMAP 075`)** dalam Rust murni tanpa mencentang `docs/ROADMAP.md`.

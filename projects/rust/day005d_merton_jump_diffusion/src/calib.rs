@@ -1,5 +1,8 @@
-use crate::bs::implied_vol_call;
+use crate::bs::{bs_call, implied_vol_call};
 use crate::merton::{merton_call_series, MertonParams};
+use crate::parallel::run_chunks;
+use crate::rng::{derive_seed, Rng};
+use crate::stats::{mean, sd};
 
 #[derive(Clone, Debug)]
 pub struct SmileRow {
@@ -53,7 +56,15 @@ pub fn calibrate_merton_nelder_mead(
             market.push((t, k, px, iv));
         }
     }
+    calibrate_merton_on_market(true_params, init_params, &market, max_iters)
+}
 
+pub fn calibrate_merton_on_market(
+    true_params: &MertonParams,
+    init_params: &MertonParams,
+    market: &[(f64, f64, f64, f64)],
+    max_iters: usize,
+) -> CalibResult {
     let obj = |x: &[f64; 4]| -> f64 {
         let sigma = x[0];
         let lambda = x[1];
@@ -76,7 +87,7 @@ pub fn calibrate_merton_nelder_mead(
             ..*true_params
         };
         let mut sse = 0.0_f64;
-        for &(t, k, px, _) in &market {
+        for &(t, k, px, _) in market {
             let diff = merton_call_series(&cand, k, t) - px;
             sse += diff * diff;
         }
@@ -168,7 +179,7 @@ pub fn calibrate_merton_nelder_mead(
 
     let mut sse_px = 0.0_f64;
     let mut sse_iv = 0.0_f64;
-    for &(t, k, px, iv) in &market {
+    for &(t, k, px, iv) in market {
         let f_px = merton_call_series(&fitted_params, k, t);
         let f_iv = implied_vol_call(
             f_px,
@@ -190,5 +201,149 @@ pub fn calibrate_merton_nelder_mead(
         price_rmse: (sse_px / m_cnt).sqrt(),
         iv_rmse_bps: (sse_iv / m_cnt).sqrt(),
         iters,
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct NoisyCalibSummary {
+    pub r_reps: usize,
+    pub sigma_bias: f64,
+    pub sigma_sd: f64,
+    pub lambda_bias: f64,
+    pub lambda_sd: f64,
+    pub mu_j_bias: f64,
+    pub mu_j_sd: f64,
+    pub delta_j_bias: f64,
+    pub delta_j_sd: f64,
+    pub corr_lambda_delta_j: f64,
+    pub corr_lambda_sigma: f64,
+}
+
+fn pearson_corr(xs: &[f64], ys: &[f64]) -> f64 {
+    let mx = mean(xs);
+    let my = mean(ys);
+    let mut num = 0.0_f64;
+    let mut dx2 = 0.0_f64;
+    let mut dy2 = 0.0_f64;
+    for (&x, &y) in xs.iter().zip(ys.iter()) {
+        let dx = x - mx;
+        let dy = y - my;
+        num += dx * dy;
+        dx2 += dx * dx;
+        dy2 += dy * dy;
+    }
+    let den = (dx2 * dy2).sqrt();
+    if den > 0.0 {
+        num / den
+    } else {
+        0.0
+    }
+}
+
+#[derive(Clone, Copy, Debug)]
+pub struct NoisyCalibConfig {
+    pub iv_noise_std: f64,
+    pub r_reps: usize,
+    pub main_seed: u64,
+    pub seed_stream: u64,
+    pub n_workers: usize,
+}
+
+pub fn run_noisy_calibration_study(
+    true_params: &MertonParams,
+    init_params: &MertonParams,
+    ts: &[f64],
+    ks: &[f64],
+    cfg: NoisyCalibConfig,
+) -> NoisyCalibSummary {
+    let base_surface = build_smile_table(true_params, ts, ks);
+    let fits: Vec<[f64; 4]> = run_chunks(cfg.r_reps, cfg.n_workers, |rep| {
+        let mut rng = Rng::new(derive_seed(cfg.main_seed, cfg.seed_stream, rep as u64));
+        let mut market = Vec::with_capacity(base_surface.len());
+        for row in &base_surface {
+            let iv_noisy = (row.implied_vol + cfg.iv_noise_std * rng.normal()).max(1e-4);
+            let px_noisy = bs_call(
+                true_params.s0,
+                row.k,
+                true_params.r,
+                true_params.q,
+                iv_noisy,
+                row.t,
+            );
+            market.push((row.t, row.k, px_noisy, iv_noisy));
+        }
+        let res = calibrate_merton_on_market(true_params, init_params, &market, 600);
+        [
+            res.fitted_params.sigma,
+            res.fitted_params.lambda,
+            res.fitted_params.mu_j,
+            res.fitted_params.delta_j,
+        ]
+    });
+
+    let sigs: Vec<f64> = fits.iter().map(|f| f[0]).collect();
+    let lams: Vec<f64> = fits.iter().map(|f| f[1]).collect();
+    let mus: Vec<f64> = fits.iter().map(|f| f[2]).collect();
+    let dels: Vec<f64> = fits.iter().map(|f| f[3]).collect();
+
+    NoisyCalibSummary {
+        r_reps: cfg.r_reps,
+        sigma_bias: mean(&sigs) - true_params.sigma,
+        sigma_sd: sd(&sigs),
+        lambda_bias: mean(&lams) - true_params.lambda,
+        lambda_sd: sd(&lams),
+        mu_j_bias: mean(&mus) - true_params.mu_j,
+        mu_j_sd: sd(&mus),
+        delta_j_bias: mean(&dels) - true_params.delta_j,
+        delta_j_sd: sd(&dels),
+        corr_lambda_delta_j: pearson_corr(&lams, &dels),
+        corr_lambda_sigma: pearson_corr(&lams, &sigs),
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct MultiStartSummary {
+    pub n_starts: usize,
+    pub n_global_converged: usize,
+    pub global_fraction: f64,
+    pub best_price_rmse: f64,
+    pub local_optima_rmses: Vec<f64>,
+}
+
+pub fn run_multistart_calibration(
+    true_params: &MertonParams,
+    ts: &[f64],
+    ks: &[f64],
+    n_starts: usize,
+    main_seed: u64,
+) -> MultiStartSummary {
+    let mut rng = Rng::new(derive_seed(main_seed, 350, 0));
+    let mut rmses = Vec::with_capacity(n_starts);
+    let mut n_global = 0_usize;
+    let mut local_optima_rmses = Vec::new();
+
+    for _ in 0..n_starts {
+        let init = MertonParams {
+            sigma: 0.05 + 0.30 * rng.uniform(),
+            lambda: 0.10 + 2.40 * rng.uniform(),
+            mu_j: -0.30 + 0.50 * rng.uniform(),
+            delta_j: 0.05 + 0.40 * rng.uniform(),
+            ..*true_params
+        };
+        let res = calibrate_merton_nelder_mead(true_params, &init, ts, ks, 1000);
+        rmses.push(res.price_rmse);
+        if res.price_rmse < 1e-3 {
+            n_global += 1;
+        } else {
+            local_optima_rmses.push(res.price_rmse);
+        }
+    }
+    let best_price_rmse = rmses.iter().copied().fold(f64::INFINITY, f64::min);
+    MultiStartSummary {
+        n_starts,
+        n_global_converged: n_global,
+        global_fraction: (n_global as f64) / (n_starts as f64),
+        best_price_rmse,
+        local_optima_rmses,
     }
 }

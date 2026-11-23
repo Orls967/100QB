@@ -8,11 +8,11 @@
     "workers_used": 10,
     "run_completed_without_errors": true,
     "elapsed_seconds": {
-      "part1_series_mc": 0.00886275000000000,
-      "part2_pide_cn": 0.46134541600000001,
-      "part3_smile_calib": 0.00218516600000000,
-      "part4_tail_risk": 0.01426850000000000,
-      "total": 0.48848237500000002
+      "part1_series_mc": 0.01319150000000000,
+      "part2_pide_cn": 0.44750683299999999,
+      "part3_smile_calib": 0.18273762499999999,
+      "part4_tail_risk": 0.00516112500000000,
+      "total": 0.64960212500000003
     }
   },
   "criteria": {
@@ -40,30 +40,37 @@
       "status": "tercapai",
       "measured": {
         "iv_t025_k80": 0.35401669592708884,
-        "iv_t025_k100": 0.22554182142959250
+        "iv_t025_k100": 0.22554182142959250,
+        "max_rel_err_t001_005": 0.00082337309847104
       },
-      "threshold": "IV(T=0.25, K=80) > IV(T=0.25, K=100) + 0.02",
-      "note": "Lompatan negatif rata-rata (mu_j = -0.10) menghasilkan skew jangka pendek curam"
+      "threshold": "IV(T=0.25, K=80) > IV(T=0.25, K=100) + 0.02 dan max_rel_err_t001_005 < 0.05",
+      "note": "Skew jangka pendek sesuai aproksimasi lompatan tunggal urutan pertama O(T)"
     },
     "c4_nelder_mead_calibration_recovery": {
       "status": "tercapai",
       "measured": {
         "price_rmse": 0.00000001145298998,
         "iv_rmse_bps": 0.00000916734017040,
-        "iters": 214
+        "iters": 214,
+        "noisy_2mat_sigma_bias": -0.00047468465132164,
+        "noisy_2mat_lambda_bias": 0.00705665296846303,
+        "noisy_1mat_lambda_sd": 0.05663811665418098,
+        "noisy_2mat_lambda_sd": 0.05466866281315993,
+        "multistart_global_fraction": 0.95833333333333337
       },
-      "threshold": "price_rmse < 1e-2 dan iv_rmse_bps < 5.0",
-      "note": "Kalibrasi Nelder-Mead memulihkan permukaan harga dan IV Merton"
+      "threshold": "price_rmse < 1e-2, iv_rmse_bps < 5.0, |sigma_bias| < 0.02, |lambda_bias| < 0.15, 2mat_lambda_sd < 1mat_lambda_sd, multistart_global_fraction >= 0.50",
+      "note": "Kalibrasi Nelder-Mead pada permukaan bebas-derau, kuotasi IV berderau R=200 (1-mat vs 2-mat), dan multi-start 24 titik"
     },
     "c5_tail_risk_otm_put_and_es99": {
       "status": "tercapai",
       "measured": {
         "k70_put_ratio_merton_vs_bs": 191.14049059148956644,
         "es99_merton": 28.15625542518109370,
-        "es99_bs": 4.01687664869638894
+        "es99_bs_atm": 4.01687664869638894,
+        "es99_bs_var_matched": 9.24827290521774792
       },
-      "threshold": "ratio(K=70) > 2.0 dan ES99_merton > ES99_bs",
-      "note": "Black-Scholes ATM IV meremehkan put OTM dalam dan Expected Shortfall 99%"
+      "threshold": "ratio(K=70) > 2.0 dan ES99_merton > ES99_bs_var_matched",
+      "note": "Merton tetap memiliki ES99 lebih tinggi bahkan dibanding Black-Scholes variansi total sama"
     },
     "c6_worker_invariance_1_vs_n": {
       "status": "tercapai",
@@ -76,7 +83,7 @@
     "c7_runtime_under_240s": {
       "status": "tercapai",
       "measured": {
-        "total_seconds": 0.48848237500000002
+        "total_seconds": 0.64960212500000003
       },
       "threshold": "< 240.0s",
       "note": "Anggaran waktu eksekusi runner penuh"
@@ -376,6 +383,61 @@
       "price_rmse": 0.00000001145298998,
       "iv_rmse_bps": 0.00000916734017040,
       "iters": 214
+    },
+    "short_maturity_first_order_skew": [
+      {
+        "t": 0.01000000000000000,
+        "iv_exact_k80": 0.95707798103813979,
+        "iv_first_order_k80": 0.95718847713475597,
+        "rel_err": 0.00011545150845109
+      },
+      {
+        "t": 0.02000000000000000,
+        "iv_exact_k80": 0.74428121737822173,
+        "iv_first_order_k80": 0.74447887660406731,
+        "rel_err": 0.00026557062200474
+      },
+      {
+        "t": 0.05000000000000000,
+        "iv_exact_k80": 0.54695402778119928,
+        "iv_first_order_k80": 0.54740437501377470,
+        "rel_err": 0.00082337309847104
+      }
+    ],
+    "noisy_calib_1mat_t025": {
+      "r_reps": 200,
+      "sigma_bias": 0.00000177881170138,
+      "sigma_sd": 0.00292408118874126,
+      "lambda_bias": 0.00054550846629775,
+      "lambda_sd": 0.05663811665418098,
+      "mu_j_bias": -0.00024074376445893,
+      "mu_j_sd": 0.00488366773860711,
+      "delta_j_bias": 0.00037046872823959,
+      "delta_j_sd": 0.00829276706642999,
+      "corr_lambda_delta_j": -0.98020292174328383,
+      "corr_lambda_sigma": -0.90557955859831274
+    },
+    "noisy_calib_2mat_t025_100": {
+      "r_reps": 200,
+      "sigma_bias": -0.00047468465132164,
+      "sigma_sd": 0.00296764630701337,
+      "lambda_bias": 0.00705665296846303,
+      "lambda_sd": 0.05466866281315993,
+      "mu_j_bias": 0.00043475611134877,
+      "mu_j_sd": 0.00455516554088971,
+      "delta_j_bias": -0.00033979701893239,
+      "delta_j_sd": 0.00760507803145081,
+      "corr_lambda_delta_j": -0.96314295576233822,
+      "corr_lambda_sigma": -0.86709581139471603
+    },
+    "multistart_calib": {
+      "n_starts": 24,
+      "n_global_converged": 23,
+      "global_fraction": 0.95833333333333337,
+      "best_price_rmse": 0.00000000209086325,
+      "local_optima_rmses": [
+        0.45365416580096202
+      ]
     }
   },
   "part4_tail_risk": {
@@ -404,10 +466,13 @@
     ],
     "short_put_1m_k90": {
       "bs_atm_vol": 0.19966961151087267,
+      "bs_var_matched_vol": 0.28372521918222215,
       "var99_merton": 19.42563324198701480,
       "es99_merton": 28.15625542518109370,
-      "var99_bs": 2.32997594476415149,
-      "es99_bs": 4.01687664869638894
+      "var99_bs_atm": 2.32997594476415149,
+      "es99_bs_atm": 4.01687664869638894,
+      "var99_bs_var_matched": 7.00303987515704218,
+      "es99_bs_var_matched": 9.24827290521774792
     }
   }
 }

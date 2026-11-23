@@ -14,10 +14,14 @@ pub mod tail_risk;
 #[cfg(test)]
 mod tests {
     use super::bs::{bs_call, bs_put, implied_vol_call};
-    use super::calib::calibrate_merton_nelder_mead;
+    use super::calib::{calibrate_merton_nelder_mead, run_multistart_calibration};
     use super::linalg::solve_tridiagonal;
-    use super::merton::{merton_call_series, merton_put_series, simulate_merton_mc, MertonParams};
+    use super::merton::{
+        merton_call_series, merton_put_series, short_maturity_first_order_put_iv,
+        simulate_merton_mc, MertonParams,
+    };
     use super::pide::price_call_pide_cn;
+    use super::rng::{derive_seed, Rng};
 
     #[test]
     fn test_merton_reduces_to_bs_when_lambda_zero() {
@@ -141,5 +145,56 @@ mod tests {
             400,
         );
         assert!(cal.price_rmse < 1e-2, "price_rmse={}", cal.price_rmse);
+    }
+
+    #[test]
+    fn test_var_matched_sigma_matches_mc_log_return_variance() {
+        let p = MertonParams::default();
+        let t = 0.5;
+        let n = 100_000_usize;
+        let mut rng = Rng::new(derive_seed(20261123, 999, 0));
+        let lam_t = p.lambda * t;
+        let vol_t = p.sigma * t.sqrt();
+        let mut sum = 0.0_f64;
+        let mut sum2 = 0.0_f64;
+        for _ in 0..n {
+            let nj = rng.poisson(lam_t);
+            let jump = if nj == 0 {
+                0.0
+            } else {
+                let nf = nj as f64;
+                nf * p.mu_j + nf.sqrt() * p.delta_j * rng.normal()
+            };
+            let lr = vol_t * rng.normal() + jump;
+            sum += lr;
+            sum2 += lr * lr;
+        }
+        let m = sum / (n as f64);
+        let emp_var = sum2 / (n as f64) - m * m;
+        let theo_var = p.var_matched_sigma().powi(2) * t;
+        let rel_err = (emp_var - theo_var).abs() / theo_var;
+        assert!(rel_err < 0.03, "emp_var={emp_var}, theo_var={theo_var}");
+    }
+
+    #[test]
+    fn test_short_maturity_first_order_iv_matches_exact() {
+        let p = MertonParams::default();
+        for t in [0.01, 0.02, 0.05] {
+            let px = merton_call_series(&p, 80.0, t);
+            let iv_exact = implied_vol_call(px, p.s0, 80.0, p.r, p.q, t);
+            let iv_approx = short_maturity_first_order_put_iv(&p, 80.0, t);
+            let rel_err = (iv_approx - iv_exact).abs() / iv_exact;
+            assert!(
+                rel_err < 0.05,
+                "t={t}: exact={iv_exact}, approx={iv_approx}"
+            );
+        }
+    }
+
+    #[test]
+    fn test_multistart_calibration_finds_global_minimum() {
+        let p = MertonParams::default();
+        let ms = run_multistart_calibration(&p, &[0.25, 1.0], &[80.0, 100.0, 120.0], 8, 12345);
+        assert!(ms.best_price_rmse < 1e-3, "best={}", ms.best_price_rmse);
     }
 }

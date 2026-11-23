@@ -1,6 +1,7 @@
-use crate::bs::bs_call;
+use crate::bs::{bs_call, implied_vol_call};
 use crate::parallel::reduce_vec_fixed_blocks;
 use crate::rng::{derive_seed, Rng};
+use crate::special::norm_cdf;
 
 #[derive(Clone, Copy, Debug)]
 pub struct MertonParams {
@@ -33,6 +34,26 @@ impl MertonParams {
     pub fn kappa(&self) -> f64 {
         (self.mu_j + 0.5 * self.delta_j * self.delta_j).exp() - 1.0
     }
+
+    /// Variance-matched Black-Scholes volatility: `sigma_eq^2 = sigma^2 + lambda * (mu_j^2 + delta_j^2)`.
+    #[inline]
+    pub fn var_matched_sigma(&self) -> f64 {
+        (self.sigma * self.sigma
+            + self.lambda * (self.mu_j * self.mu_j + self.delta_j * self.delta_j))
+            .sqrt()
+    }
+}
+
+/// First-order `T -> 0` approximation of OTM put implied volatility (`K < S_0`) from single-jump term:
+/// `P_Merton(K, T) ~ lambda * T * E[(K - S_0 e^J)^+]`, inverted via Black-Scholes put-call parity.
+pub fn short_maturity_first_order_put_iv(p: &MertonParams, k: f64, t: f64) -> f64 {
+    let mean_log_j = p.mu_j + 0.5 * p.delta_j * p.delta_j;
+    let d1 = ((p.s0 / k).ln() + p.mu_j + p.delta_j * p.delta_j) / p.delta_j;
+    let d2 = d1 - p.delta_j;
+    let expected_put_jump = k * norm_cdf(-d2) - p.s0 * mean_log_j.exp() * norm_cdf(-d1);
+    let put_first_order = p.lambda * t * expected_put_jump;
+    let call_first_order = put_first_order + p.s0 * (-p.q * t).exp() - k * (-p.r * t).exp();
+    implied_vol_call(call_first_order, p.s0, k, p.r, p.q, t)
 }
 
 /// Merton (1976) exact series for European call option, truncated at `n_max = 60`

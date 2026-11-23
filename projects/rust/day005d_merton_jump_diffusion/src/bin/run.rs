@@ -1,9 +1,15 @@
 use std::path::Path;
 use std::time::Instant;
 
-use day005d_merton_jump_diffusion::calib::{build_smile_table, calibrate_merton_nelder_mead};
+use day005d_merton_jump_diffusion::bs::implied_vol_call;
+use day005d_merton_jump_diffusion::calib::{
+    build_smile_table, calibrate_merton_nelder_mead, run_multistart_calibration,
+    run_noisy_calibration_study, NoisyCalibConfig,
+};
 use day005d_merton_jump_diffusion::jsonout::{obj, write_json_file, JsonVal};
-use day005d_merton_jump_diffusion::merton::{simulate_merton_mc, MertonParams};
+use day005d_merton_jump_diffusion::merton::{
+    merton_call_series, short_maturity_first_order_put_iv, simulate_merton_mc, MertonParams,
+};
 use day005d_merton_jump_diffusion::parallel::default_workers;
 use day005d_merton_jump_diffusion::pide::{compare_pide_vs_exact, pide_grid_convergence};
 use day005d_merton_jump_diffusion::svg::{write_line_chart, Series};
@@ -85,6 +91,46 @@ fn main() {
         &[80.0, 90.0, 100.0, 110.0, 120.0],
         800,
     );
+    let ks_calib = [80.0, 90.0, 100.0, 110.0, 120.0];
+    let noisy_1mat = run_noisy_calibration_study(
+        &p,
+        &p_init,
+        &[0.25],
+        &ks_calib,
+        NoisyCalibConfig {
+            iv_noise_std: 0.0010,
+            r_reps: 200,
+            main_seed: MAIN_SEED,
+            seed_stream: 310,
+            n_workers,
+        },
+    );
+    let noisy_2mat = run_noisy_calibration_study(
+        &p,
+        &p_init,
+        &[0.25, 1.0],
+        &ks_calib,
+        NoisyCalibConfig {
+            iv_noise_std: 0.0010,
+            r_reps: 200,
+            main_seed: MAIN_SEED,
+            seed_stream: 320,
+            n_workers,
+        },
+    );
+    let multistart = run_multistart_calibration(&p, &[0.25, 1.0], &ks_calib, 24, MAIN_SEED);
+
+    let short_skew_rows: Vec<(f64, f64, f64, f64)> = [0.01, 0.02, 0.05]
+        .iter()
+        .map(|&t_s| {
+            let px = merton_call_series(&p, 80.0, t_s);
+            let iv_ex = implied_vol_call(px, p.s0, 80.0, p.r, p.q, t_s);
+            let iv_ap = short_maturity_first_order_put_iv(&p, 80.0, t_s);
+            let rel_err = (iv_ap - iv_ex).abs() / iv_ex;
+            (t_s, iv_ex, iv_ap, rel_err)
+        })
+        .collect();
+    let max_short_skew_rel_err = short_skew_rows.iter().map(|r| r.3).fold(0.0_f64, f64::max);
     let dt_p3 = t3.elapsed().as_secs_f64();
 
     let iv_short_left = smile_rows
@@ -114,8 +160,11 @@ fn main() {
         simulate_short_put_tail_risk(&p, 90.0, 1.0 / 12.0, 200_000, MAIN_SEED, n_workers);
     let dt_p4 = t4.elapsed().as_secs_f64();
     println!(
-        "[Bagian 4] selesai dalam {dt_p4:.2}s | K=70 put ratio = {:.2}x BS, 1m K=90 ES99 Merton = {:.3} vs BS = {:.3}",
-        otm_puts[0].ratio_merton_to_bs, tail_risk.es99_merton, tail_risk.es99_bs
+        "[Bagian 4] selesai dalam {dt_p4:.2}s | K=70 put ratio = {:.2}x BS, 1m K=90 ES99 Merton = {:.3} vs BS-ATM = {:.3} vs BS-VarMatched = {:.3}",
+        otm_puts[0].ratio_merton_to_bs,
+        tail_risk.es99_merton,
+        tail_risk.es99_bs_atm,
+        tail_risk.es99_bs_var_matched
     );
 
     // Worker invariance check (1 vs n_workers)
@@ -252,9 +301,15 @@ fn main() {
     // -------------------------------------------------------------------------
     let c1_ok = mc_res.martingale_z.abs() <= 3.0 && max_mc_call_z <= 3.0 && max_mc_put_z <= 3.0;
     let c2_ok = max_pide_abs_err < 0.01 && conv_ratio > 8.0;
-    let c3_ok = iv_short_left > iv_short_atm + 0.02;
-    let c4_ok = calib.price_rmse < 1e-2 && calib.iv_rmse_bps < 5.0;
-    let c5_ok = otm_puts[0].ratio_merton_to_bs > 2.0 && tail_risk.es99_merton > tail_risk.es99_bs;
+    let c3_ok = iv_short_left > iv_short_atm + 0.02 && max_short_skew_rel_err < 0.05;
+    let c4_ok = calib.price_rmse < 1e-2
+        && calib.iv_rmse_bps < 5.0
+        && noisy_2mat.sigma_bias.abs() < 0.02
+        && noisy_2mat.lambda_bias.abs() < 0.15
+        && noisy_2mat.lambda_sd < noisy_1mat.lambda_sd
+        && multistart.global_fraction >= 0.50;
+    let c5_ok = otm_puts[0].ratio_merton_to_bs > 2.0
+        && tail_risk.es99_merton > tail_risk.es99_bs_var_matched;
     let c6_ok = worker_bit_diff == 0;
     let c7_ok = total_elapsed < 240.0;
 
@@ -292,9 +347,10 @@ fn main() {
                 obj([
                     ("iv_t025_k80", iv_short_left.into()),
                     ("iv_t025_k100", iv_short_atm.into()),
+                    ("max_rel_err_t001_005", max_short_skew_rel_err.into()),
                 ]),
-                "IV(T=0.25, K=80) > IV(T=0.25, K=100) + 0.02",
-                "Lompatan negatif rata-rata (mu_j = -0.10) menghasilkan skew jangka pendek curam",
+                "IV(T=0.25, K=80) > IV(T=0.25, K=100) + 0.02 dan max_rel_err_t001_005 < 0.05",
+                "Skew jangka pendek sesuai aproksimasi lompatan tunggal urutan pertama O(T)",
             ),
         ),
         (
@@ -305,9 +361,14 @@ fn main() {
                     ("price_rmse", calib.price_rmse.into()),
                     ("iv_rmse_bps", calib.iv_rmse_bps.into()),
                     ("iters", calib.iters.into()),
+                    ("noisy_2mat_sigma_bias", noisy_2mat.sigma_bias.into()),
+                    ("noisy_2mat_lambda_bias", noisy_2mat.lambda_bias.into()),
+                    ("noisy_1mat_lambda_sd", noisy_1mat.lambda_sd.into()),
+                    ("noisy_2mat_lambda_sd", noisy_2mat.lambda_sd.into()),
+                    ("multistart_global_fraction", multistart.global_fraction.into()),
                 ]),
-                "price_rmse < 1e-2 dan iv_rmse_bps < 5.0",
-                "Kalibrasi Nelder-Mead memulihkan permukaan harga dan IV Merton",
+                "price_rmse < 1e-2, iv_rmse_bps < 5.0, |sigma_bias| < 0.02, |lambda_bias| < 0.15, 2mat_lambda_sd < 1mat_lambda_sd, multistart_global_fraction >= 0.50",
+                "Kalibrasi Nelder-Mead pada permukaan bebas-derau, kuotasi IV berderau R=200 (1-mat vs 2-mat), dan multi-start 24 titik",
             ),
         ),
         (
@@ -320,10 +381,11 @@ fn main() {
                         otm_puts[0].ratio_merton_to_bs.into(),
                     ),
                     ("es99_merton", tail_risk.es99_merton.into()),
-                    ("es99_bs", tail_risk.es99_bs.into()),
+                    ("es99_bs_atm", tail_risk.es99_bs_atm.into()),
+                    ("es99_bs_var_matched", tail_risk.es99_bs_var_matched.into()),
                 ]),
-                "ratio(K=70) > 2.0 dan ES99_merton > ES99_bs",
-                "Black-Scholes ATM IV meremehkan put OTM dalam dan Expected Shortfall 99%",
+                "ratio(K=70) > 2.0 dan ES99_merton > ES99_bs_var_matched",
+                "Merton tetap memiliki ES99 lebih tinggi bahkan dibanding Black-Scholes variansi total sama",
             ),
         ),
         (
@@ -472,6 +534,73 @@ fn main() {
                         ("iters", calib.iters.into()),
                     ]),
                 ),
+                (
+                    "short_maturity_first_order_skew",
+                    JsonVal::Arr(
+                        short_skew_rows
+                            .iter()
+                            .map(|r| {
+                                obj([
+                                    ("t", r.0.into()),
+                                    ("iv_exact_k80", r.1.into()),
+                                    ("iv_first_order_k80", r.2.into()),
+                                    ("rel_err", r.3.into()),
+                                ])
+                            })
+                            .collect(),
+                    ),
+                ),
+                (
+                    "noisy_calib_1mat_t025",
+                    obj([
+                        ("r_reps", noisy_1mat.r_reps.into()),
+                        ("sigma_bias", noisy_1mat.sigma_bias.into()),
+                        ("sigma_sd", noisy_1mat.sigma_sd.into()),
+                        ("lambda_bias", noisy_1mat.lambda_bias.into()),
+                        ("lambda_sd", noisy_1mat.lambda_sd.into()),
+                        ("mu_j_bias", noisy_1mat.mu_j_bias.into()),
+                        ("mu_j_sd", noisy_1mat.mu_j_sd.into()),
+                        ("delta_j_bias", noisy_1mat.delta_j_bias.into()),
+                        ("delta_j_sd", noisy_1mat.delta_j_sd.into()),
+                        ("corr_lambda_delta_j", noisy_1mat.corr_lambda_delta_j.into()),
+                        ("corr_lambda_sigma", noisy_1mat.corr_lambda_sigma.into()),
+                    ]),
+                ),
+                (
+                    "noisy_calib_2mat_t025_100",
+                    obj([
+                        ("r_reps", noisy_2mat.r_reps.into()),
+                        ("sigma_bias", noisy_2mat.sigma_bias.into()),
+                        ("sigma_sd", noisy_2mat.sigma_sd.into()),
+                        ("lambda_bias", noisy_2mat.lambda_bias.into()),
+                        ("lambda_sd", noisy_2mat.lambda_sd.into()),
+                        ("mu_j_bias", noisy_2mat.mu_j_bias.into()),
+                        ("mu_j_sd", noisy_2mat.mu_j_sd.into()),
+                        ("delta_j_bias", noisy_2mat.delta_j_bias.into()),
+                        ("delta_j_sd", noisy_2mat.delta_j_sd.into()),
+                        ("corr_lambda_delta_j", noisy_2mat.corr_lambda_delta_j.into()),
+                        ("corr_lambda_sigma", noisy_2mat.corr_lambda_sigma.into()),
+                    ]),
+                ),
+                (
+                    "multistart_calib",
+                    obj([
+                        ("n_starts", multistart.n_starts.into()),
+                        ("n_global_converged", multistart.n_global_converged.into()),
+                        ("global_fraction", multistart.global_fraction.into()),
+                        ("best_price_rmse", multistart.best_price_rmse.into()),
+                        (
+                            "local_optima_rmses",
+                            JsonVal::Arr(
+                                multistart
+                                    .local_optima_rmses
+                                    .iter()
+                                    .map(|&v| v.into())
+                                    .collect(),
+                            ),
+                        ),
+                    ]),
+                ),
             ]),
         ),
         (
@@ -498,10 +627,16 @@ fn main() {
                     "short_put_1m_k90",
                     obj([
                         ("bs_atm_vol", tail_risk.bs_atm_vol.into()),
+                        ("bs_var_matched_vol", tail_risk.bs_var_matched_vol.into()),
                         ("var99_merton", tail_risk.var99_merton.into()),
                         ("es99_merton", tail_risk.es99_merton.into()),
-                        ("var99_bs", tail_risk.var99_bs.into()),
-                        ("es99_bs", tail_risk.es99_bs.into()),
+                        ("var99_bs_atm", tail_risk.var99_bs_atm.into()),
+                        ("es99_bs_atm", tail_risk.es99_bs_atm.into()),
+                        (
+                            "var99_bs_var_matched",
+                            tail_risk.var99_bs_var_matched.into(),
+                        ),
+                        ("es99_bs_var_matched", tail_risk.es99_bs_var_matched.into()),
                     ]),
                 ),
             ]),

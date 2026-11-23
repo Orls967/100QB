@@ -19,10 +19,13 @@ pub struct ShortPutTailRisk {
     pub k: f64,
     pub r_paths: usize,
     pub bs_atm_vol: f64,
+    pub bs_var_matched_vol: f64,
     pub var99_merton: f64,
     pub es99_merton: f64,
-    pub var99_bs: f64,
-    pub es99_bs: f64,
+    pub var99_bs_atm: f64,
+    pub es99_bs_atm: f64,
+    pub var99_bs_var_matched: f64,
+    pub es99_bs_var_matched: f64,
 }
 
 pub fn compare_otm_puts(p: &MertonParams, ks: &[f64], t: f64) -> Vec<OtmPutComparisonRow> {
@@ -55,9 +58,11 @@ pub fn simulate_short_put_tail_risk(
 ) -> ShortPutTailRisk {
     let atm_call = merton_call_series(p, p.s0, t);
     let bs_atm_vol = implied_vol_call(atm_call, p.s0, p.s0, p.r, p.q, t);
+    let bs_var_matched_vol = p.var_matched_sigma();
 
     let p0_m = merton_put_series(p, k, t);
     let p0_b = bs_put(p.s0, k, p.r, p.q, bs_atm_vol, t);
+    let p0_vm = bs_put(p.s0, k, p.r, p.q, bs_var_matched_vol, t);
 
     let kappa = p.kappa();
     let lam_t = p.lambda * t;
@@ -65,8 +70,10 @@ pub fn simulate_short_put_tail_risk(
     let vol_m = p.sigma * t.sqrt();
     let drift_b = (p.r - p.q - 0.5 * bs_atm_vol * bs_atm_vol) * t;
     let vol_b = bs_atm_vol * t.sqrt();
+    let drift_vm = (p.r - p.q - 0.5 * bs_var_matched_vol * bs_var_matched_vol) * t;
+    let vol_vm = bs_var_matched_vol * t.sqrt();
 
-    let losses: Vec<(f64, f64)> = run_chunks(r_paths, n_workers, |idx| {
+    let losses: Vec<(f64, f64, f64)> = run_chunks(r_paths, n_workers, |idx| {
         let mut rng = Rng::new(derive_seed(main_seed, 400, idx as u64));
         let z = rng.normal();
         let n_jumps = rng.poisson(lam_t);
@@ -78,30 +85,39 @@ pub fn simulate_short_put_tail_risk(
         };
         let s_m = p.s0 * (drift_m + vol_m * z + jump_sum).exp();
         let s_b = p.s0 * (drift_b + vol_b * z).exp();
+        let s_vm = p.s0 * (drift_vm + vol_vm * z).exp();
         let loss_m = (k - s_m).max(0.0) - p0_m * (p.r * t).exp();
         let loss_b = (k - s_b).max(0.0) - p0_b * (p.r * t).exp();
-        (loss_m, loss_b)
+        let loss_vm = (k - s_vm).max(0.0) - p0_vm * (p.r * t).exp();
+        (loss_m, loss_b, loss_vm)
     });
 
     let mut lm: Vec<f64> = losses.iter().map(|x| x.0).collect();
     let mut lb: Vec<f64> = losses.iter().map(|x| x.1).collect();
+    let mut lvm: Vec<f64> = losses.iter().map(|x| x.2).collect();
     let var99_merton = quantile(&lm, 0.99);
-    let var99_bs = quantile(&lb, 0.99);
+    let var99_bs_atm = quantile(&lb, 0.99);
+    let var99_bs_var_matched = quantile(&lvm, 0.99);
 
     lm.sort_by(|a, b| a.total_cmp(b));
     lb.sort_by(|a, b| a.total_cmp(b));
+    lvm.sort_by(|a, b| a.total_cmp(b));
     let tail_start = ((0.99 * r_paths as f64).floor() as usize).min(r_paths - 1);
     let es99_merton = mean(&lm[tail_start..]);
-    let es99_bs = mean(&lb[tail_start..]);
+    let es99_bs_atm = mean(&lb[tail_start..]);
+    let es99_bs_var_matched = mean(&lvm[tail_start..]);
 
     ShortPutTailRisk {
         t,
         k,
         r_paths,
         bs_atm_vol,
+        bs_var_matched_vol,
         var99_merton,
         es99_merton,
-        var99_bs,
-        es99_bs,
+        var99_bs_atm,
+        es99_bs_atm,
+        var99_bs_var_matched,
+        es99_bs_var_matched,
     }
 }

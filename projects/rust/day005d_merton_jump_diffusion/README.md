@@ -12,8 +12,8 @@ dengan parameter dasar $S_0 = 100$, $r = 0{,}05$, $q = 0{,}01$, $\sigma = 0{,}15
 2. **PIDE Crank–Nicolson + Rannacher**: Pada koordinat log-spot $x = \ln S$ ($\tau = T - t$):
    $$\frac{\partial V}{\partial \tau} = \frac{1}{2}\sigma^2 \frac{\partial^2 V}{\partial x^2} + \left(r - q - \frac{1}{2}\sigma^2 - \lambda\kappa\right)\frac{\partial V}{\partial x} - (r + \lambda)V + \lambda \int_{-\infty}^{\infty} V(\tau, x+y)\phi_{\mu_J,\delta_J}(y)\,dy.$$
    Bagian diferensial diselesaikan secara implisit dengan algoritma Thomas $O(N_x)$ dan 4 *half-step* Rannacher, sedangkan integral lompatan non-lokal dievaluasi via skema *predictor-corrector* dengan kelanjutan asimtotik *far-field*.
-3. **Implied Volatility Smile & Kalibrasi**: Lompatan negatif ($\mu_J = -0{,}10$) menciptakan *skew* tajam pada jatuh tempo pendek ($T=0{,}25$: `35,40%` di $K=80$ vs `22,55%` ATM) yang melandai seiring $T$ membesar. Optimisasi Nelder–Mead 4D memulihkan $(\sigma, \lambda, \mu_J, \delta_J)$ hingga `price_rmse = 1,15e-8`.
-4. **Risiko Ekor**: Model Black–Scholes dengan volatilitas ATM meremehkan harga *put* OTM $K=70$ hingga `191,14x` dan meremehkan *Expected Shortfall* 99% posisi *short put* 1 bulan (`28,156` vs `4,017`).
+3. **Implied Volatility Smile & Kalibrasi**: Lompatan negatif ($\mu_J = -0{,}10$) menciptakan *skew* tajam pada jatuh tempo pendek ($T=0{,}25$: `35,40%` di $K=80$ vs `22,55%` ATM) yang sesuai dengan aproksimasi lompatan tunggal orde pertama $O(T)$ ($T \in \{0{,}01, 0{,}02, 0{,}05\}$ galat relatif $\le 0{,}082\%$). Optimisasi Nelder–Mead 4D memulihkan $(\sigma, \lambda, \mu_J, \delta_J)$ pada permukaan bebas-derau (`price_rmse = 1,15e-8`), permukaan berderau IV $N(0, 10\text{ bps})$ ($R=200$, 1-maturitas vs 2-maturitas), dan multi-start `24` titik (`23/24 = 95,83%` konvergen ke optimum global).
+4. **Risiko Ekor**: Model Black–Scholes dengan volatilitas ATM meremehkan harga *put* OTM $K=70$ hingga `191,14x` dan meremehkan *Expected Shortfall* 99% posisi *short put* 1 bulan (`28,156` untuk Merton vs `4,017` BS-ATM vs `9,248` BS variansi-sama $\sigma_{\mathrm{eq}} = 28{,}37\%$).
 
 ## Build, Run & Test
 
@@ -39,14 +39,14 @@ cargo run --release --manifest-path projects/rust/day005d_merton_jump_diffusion/
 - [src/bin/run.rs](src/bin/run.rs) & [src/bin/run_extras.rs](src/bin/run_extras.rs) — Runner utama dan eksperimen tambahan
 - [tests/integration_tests.rs](tests/integration_tests.rs) — Tes integrasi invariansi worker, determinisme seed, dan 3 SE
 
-## Ringkasan Hasil (`MAIN_SEED = 20261123`, `10` worker, `0,49s`)
+## Ringkasan Hasil (`MAIN_SEED = 20261123`, `10` worker, `0,65s`)
 
 | Bagian | Metrik Utama | Hasil Terukur |
 |---|---|---|
 | 1. Seri vs MC ($R=400\mathrm{k}$) | Martingal & harga call/put | `martingale_z = 0,49`, `max |call_z| = 1,10`, `max |put_z| = 0,75` |
 | 2. PIDE CN vs Eksak | Grid `401x200` & konvergensi | `max_abs_err = 0,00303` (`rel = 0,00066`), rasio `101->401` = `15,43x` |
-| 3. Smile & Kalibrasi | Skew $T=0{,}25$ & Nelder–Mead | `IV(K=80) = 35,40% > ATM 22,55%`; `price_rmse = 1,15e-8`, `iv_rmse = 9,17e-6 bps` |
-| 4. Risiko Ekor | Put OTM $K=70$ & 1m ES 99% | Put `K=70`: `191,14x` BS; `ES99` = `28,156` (Merton) vs `4,017` (BS) |
+| 3. Smile & Kalibrasi | Skew $O(T)$, derau $R=200$, multi-start | `max_rel_err(T<=0,05) = 0,082%`; `2mat lambda_sd = 0,0547 < 1mat 0,0566`; `23/24` global |
+| 4. Risiko Ekor | Put OTM $K=70$ & 1m ES 99% | Put `K=70`: `191,14x` BS; `ES99` = `28,156` (Merton) vs `4,017` (BS-ATM) vs `9,248` (BS-VarMatched) |
 
 Artefak keluaran: [results.json](../../../outputs/day005d/results.json), 4 grafik SVG `outputs/figures/day005d_*.svg`, dan dokumen penjelasan [day005d_quant_merton-jump-diffusion.md](../../../docs/project-explanations/day005d_quant_merton-jump-diffusion.md).
 
