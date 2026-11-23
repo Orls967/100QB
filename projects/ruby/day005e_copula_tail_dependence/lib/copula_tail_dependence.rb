@@ -12,6 +12,8 @@ require_relative 'copula_tail_dependence/fit'
 require_relative 'copula_tail_dependence/importance'
 require_relative 'copula_tail_dependence/json_out'
 require_relative 'copula_tail_dependence/svg'
+require_relative 'copula_tail_dependence/criteria'
+require_relative 'copula_tail_dependence/figures'
 require_relative 'copula_tail_dependence/runner'
 
 module CopulaTailDependence

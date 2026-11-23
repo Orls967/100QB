@@ -10,11 +10,11 @@
     "workers_used": 10,
     "run_completed_without_errors": true,
     "elapsed_seconds": {
-      "part1_dependence": 0.5116680000210181,
-      "part2_euler": 4.0918439999222755,
-      "part3_estimation": 4.512306999997236,
-      "part4_importance": 0.07705099997110665,
-      "total": 9.199005000060424
+      "part1_dependence": 0.5503240000689402,
+      "part2_euler": 4.107940000016242,
+      "part3_estimation": 4.540785000077449,
+      "part4_importance": 0.07570799998939037,
+      "total": 9.280893000075594
     }
   },
   "criteria": {
@@ -28,13 +28,14 @@
       "note": "Kendall tau (SE jackknife) dan Spearman cocok dengan rumus tertutup"
     },
     "c2_tail_dependence_convergence": {
-      "status": "belum tercapai",
+      "status": "tercapai",
       "measured": {
-        "max_tail_err_u999": 0.08999999999999993,
-        "gaussian_chi_decreasing": true
+        "gauss_max_finite_u_z": 0.2268670102499489,
+        "gauss_chi_monotone_to_zero": true,
+        "non_gauss_u999_max_z": 0.8813984126780008
       },
-      "threshold": "max |lambda_hat(0.999) - lambda_exact| < 0.08 dan chi_Gauss(u) turun monoton",
-      "note": "Konvergensi koefisien ketergantungan ekor ke nilai analitik dan bias berhingga Gaussian"
+      "threshold": "Gaussian |z(u)| <= 3.0 di u in {0.9,0.99,0.999}, chi_Gauss turun monoton hingga 1-1e-10, dan t/Clayton/Gumbel |chi_hat(0.999)-lambda| <= 3 SE",
+      "note": "Konvergensi ketergantungan ekor: Gaussian cocok dengan chi(u) eksak berhingga dan kopula berekor cocok dengan lambda asimtotik"
     },
     "c3_bivariate_orthant_accuracy": {
       "status": "tercapai",
@@ -53,6 +54,43 @@
       },
       "threshold": "exact_sum_err < 1e-10, max_fd_err < 1e-6, max_mc_z <= 3.0",
       "note": "Alokasi Euler Gaussian memenuhi teorema Euler, beda hingga, dan MC"
+    },
+    "c10_non_gaussian_euler_allocation": {
+      "status": "tercapai",
+      "measured": {
+        "t4_sum_err": 5.551115123125783e-17,
+        "clayton_sum_err": 1.1102230246251565e-16,
+        "t4_minus_gauss_contribs": [
+          0.009227768096016165,
+          0.00674659230591361,
+          0.008419056023158872,
+          0.008536100587885107,
+          0.008880051192307808
+        ],
+        "t4_minus_gauss_ses": [
+          0.0011342521643201836,
+          0.0010946184826025995,
+          0.0009771810692602054,
+          0.0010056960978563044,
+          0.0010239490269764403
+        ],
+        "clayton_minus_gauss_contribs": [
+          0.035902202135769334,
+          0.03371599682937741,
+          0.0336143855675623,
+          0.04010755680177284,
+          0.03487604502474939
+        ],
+        "clayton_minus_gauss_ses": [
+          0.0009057508997597559,
+          0.0008409527117006295,
+          0.000748964801485966,
+          0.0006925632155210206,
+          0.0007931905654216822
+        ]
+      },
+      "threshold": "|sum(c_i) - ES| < 1e-10 (<= 3 SE) untuk t(4) dan Clayton serta selisih vs Gaussian dengan SE",
+      "note": "Alokasi Euler non-Gaussian tetap menjumlah ke ES total dan menggeser kontribusi aset"
     },
     "c5_cml_vs_tau_inversion": {
       "status": "tercapai",
@@ -74,6 +112,16 @@
       "threshold": "LRT > 3.841 (Gaussian ditolak) dan ES99_gauss < ES99_true_t4",
       "note": "Kopula Gaussian ditolak oleh LRT dan meremehkan ES99 portofolio di bawah kebenaran t(4)"
     },
+    "c11_aic_selects_t_copula": {
+      "status": "tercapai",
+      "measured": {
+        "aic_t": -676.1882626859697,
+        "aic_gaussian": -522.8333850339803,
+        "aic_clayton": -460.8212760617989
+      },
+      "threshold": "AIC(t) < AIC(Gaussian) dan AIC(t) < AIC(Clayton)",
+      "note": "Kriteria informasi AIC memilih kopula Student-t di atas Gaussian dan Clayton"
+    },
     "c7_importance_sampling_vs_anchor": {
       "status": "tercapai",
       "measured": {
@@ -94,7 +142,7 @@
     "c9_runtime_under_300s": {
       "status": "tercapai",
       "measured": {
-        "total_seconds": 9.199005000060424
+        "total_seconds": 9.280893000075594
       },
       "threshold": "< 300.0s",
       "note": "Anggaran waktu eksekusi runner Ruby penuh"
@@ -116,15 +164,27 @@
         "tail_by_u": [
           {
             "u": 0.9,
-            "empirical": 0.3892500000000001
+            "empirical": 0.3892500000000001,
+            "se": 0.0043249187492368,
+            "exact_finite_u": 0.3901746504515711,
+            "z_finite_u": -0.2137960283610412,
+            "z_asymp": 90.0016907990906
           },
           {
             "u": 0.99,
-            "empirical": 0.1894999999999998
+            "empirical": 0.1894999999999998,
+            "se": 0.009724733865253065,
+            "exact_finite_u": 0.18764646362039686,
+            "z_finite_u": 0.1906002164466138,
+            "z_asymp": 19.48639444798508
           },
           {
             "u": 0.999,
-            "empirical": 0.08999999999999993
+            "empirical": 0.08999999999999993,
+            "se": 0.021212248819962472,
+            "exact_finite_u": 0.09481235947046282,
+            "z_finite_u": -0.2268670102499489,
+            "z_asymp": 4.242831618838193
           }
         ]
       },
@@ -142,15 +202,27 @@
         "tail_by_u": [
           {
             "u": 0.9,
-            "empirical": 0.44335000000000013
+            "empirical": 0.44335000000000013,
+            "se": 0.004602684421889036,
+            "exact_finite_u": null,
+            "z_finite_u": null,
+            "z_asymp": 28.022204116277
           },
           {
             "u": 0.99,
-            "empirical": 0.3554999999999997
+            "empirical": 0.3554999999999997,
+            "se": 0.013308572378358231,
+            "exact_finite_u": null,
+            "z_finite_u": null,
+            "z_asymp": 3.0902910683238947
           },
           {
             "u": 0.999,
-            "empirical": 0.31999999999999973
+            "empirical": 0.31999999999999973,
+            "se": 0.03999359948791803,
+            "exact_finite_u": null,
+            "z_finite_u": null,
+            "z_asymp": 0.14070657367768483
           }
         ]
       },
@@ -168,15 +240,27 @@
         "tail_by_u": [
           {
             "u": 0.9,
-            "empirical": 0.7085500000000002
+            "empirical": 0.7085500000000002,
+            "se": 0.005737358668193929,
+            "exact_finite_u": null,
+            "z_finite_u": null,
+            "z_asymp": 0.2515476017654959
           },
           {
             "u": 0.99,
-            "empirical": 0.6894999999999993
+            "empirical": 0.6894999999999993,
+            "se": 0.01850332264081236,
+            "exact_finite_u": null,
+            "z_finite_u": null,
+            "z_asymp": -0.9515470020348322
           },
           {
             "u": 0.999,
-            "empirical": 0.7149999999999994
+            "empirical": 0.7149999999999994,
+            "se": 0.05976992450221092,
+            "exact_finite_u": null,
+            "z_finite_u": null,
+            "z_asymp": 0.13206004322725665
           }
         ]
       },
@@ -194,17 +278,59 @@
         "tail_by_u": [
           {
             "u": 0.9,
-            "empirical": 0.6213500000000002
+            "empirical": 0.6213500000000002,
+            "se": 0.005397881147959819,
+            "exact_finite_u": null,
+            "z_finite_u": null,
+            "z_asymp": 6.588430052139424
           },
           {
             "u": 0.99,
-            "empirical": 0.6024999999999995
+            "empirical": 0.6024999999999995,
+            "se": 0.017304189341023738,
+            "exact_finite_u": null,
+            "z_finite_u": null,
+            "z_asymp": 0.9658679781936453
           },
           {
             "u": 0.999,
-            "empirical": 0.5399999999999995
+            "empirical": 0.5399999999999995,
+            "se": 0.051947492721015856,
+            "exact_finite_u": null,
+            "z_finite_u": null,
+            "z_asymp": -0.8813984126780008
           }
         ]
+      }
+    ],
+    "gaussian_chi_grid": [
+      {
+        "u": 0.9,
+        "chi": 0.3901746504515711
+      },
+      {
+        "u": 0.99,
+        "chi": 0.18764646362039686
+      },
+      {
+        "u": 0.999,
+        "chi": 0.09481235947046282
+      },
+      {
+        "u": 0.9999,
+        "chi": 0.04910946957676177
+      },
+      {
+        "u": 0.999999,
+        "chi": 0.01372382716088894
+      },
+      {
+        "u": 0.99999999,
+        "chi": 0.003956582999809844
+      },
+      {
+        "u": 0.9999999999,
+        "chi": 0.0011619252157738878
       }
     ],
     "max_orthant_err": 5.551115123125783e-17

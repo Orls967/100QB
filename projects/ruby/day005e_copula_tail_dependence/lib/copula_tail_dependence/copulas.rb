@@ -86,6 +86,16 @@ module CopulaTailDependence
       end
     end
 
+    # Nilai eksak chi(u) = P(U1 > u, U2 > u) / (1 - u) untuk kopula Gaussian pada u berhingga.
+    def exact_gaussian_chi(u, rho)
+      z_u = Special.norm_inv(u)
+      Special.bivariate_norm_cdf(-z_u, -z_u, rho) / (1.0 - u)
+    end
+
+    def gaussian_chi_grid(rho, u_grid = [0.9, 0.99, 0.999, 1.0 - 1.0e-4, 1.0 - 1.0e-6, 1.0 - 1.0e-8, 1.0 - 1.0e-10])
+      u_grid.map { |u| { u: u, chi: exact_gaussian_chi(u, rho) } }
+    end
+
     # Log-densitas kopula bivariat untuk MLE (Bagian 3).
     def log_density_bivariate(type, u1, u2, params)
       u = u1.clamp(1.0e-12, 1.0 - 1.0e-12)

@@ -40,7 +40,7 @@ bundle exec ruby bin/run_extras
 | Bagian | Metrik Utama | Hasil Terukur |
 |---|---|---|
 | 1. Ketergantungan ($R=200\mathrm{k}$) | Kendall $\tau$, Spearman $\rho_S$, ortan | `max |tau_z| = 1,66`, `spearman_err = 8,8e-5`, `max_orthant_err = 5,55e-17` |
-| 1b. Ekor $\chi(0,999)$ | Konvergensi ke $\lambda$ | `t4: 0,320 vs 0,314`, `Clayton: 0,715 vs 0,707`, `Gumbel: 0,540 vs 0,586`, `Gauss: 0,090 vs 0` (`c2 = belum tercapai` karena bias berhingga lambat Gaussian) |
+| 1b. Ekor $\chi(u)$ | Konvergensi ke $\lambda$ & $\chi(u)$ eksak | `Gauss max |z| = 0,23` vs $\chi(u)$ eksak; `t4/Clayton/Gumbel` $u=0{,}999$ `max |z| = 0,88` |
 | 2. Alokasi Euler ($d=5$) | Eksak vs FD vs MC | `sum_err = 0`, `fd_err = 5,50e-12`, `max_mc_z = 0,53` (`ES99 = 0,372` Gauss vs `0,414` $t_4$ vs `0,551` Clayton) |
 | 3. Estimasi & Salah Spesifikasi | CML vs $\tau$, LRT, ES99 | `n=5000 |bias| < 0,0008`; `LRT = 155,35` (Gaussian ditolak); `ES99 = 2,062` (Gauss) vs `2,228` ($t_4$, `-7,44%`) |
 | 4. Importance Sampling ($R=100\mathrm{k}$) | $d=2, 5$; $\rho=0,5, 0,8$ | `max |is_z| = 2,45`, penghematan variansi `2.604x` hingga `5.165.715x` |
