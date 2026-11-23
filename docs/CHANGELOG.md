@@ -3,6 +3,20 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 005e] — 2026-11-23 · Perbaikan day005d + Kopula, Ketergantungan Ekor & Alokasi Modal Euler (Ruby, Bonus)
+
+### Diperbaiki (Bagian A — `day005d`)
+- `projects/rust/day005d_merton_jump_diffusion/`: menambahkan kalibrasi kuotasi IV berderau $N(0, 10\text{ bps})$ ($R=200$, perbandingan 1-maturitas $T=0{,}25$ vs 2-maturitas $\{0{,}25, 1{,}0\}$ dan $\mathrm{Corr}(\hat{\lambda}, \hat{\delta}_J)$), studi multi-start `24` titik acak (`23/24` global), uji kuantitatif skew jangka pendek orde pertama $O(T)$ pada $T \in \{0{,}01, 0{,}02, 0{,}05\}$ (`max_rel_err = 0,082%`), serta pembanding BS variansi-sama ($\sigma_{\mathrm{eq}} = 28{,}37\%$, `ES99 = 9,248` vs `4,017` BS-ATM vs `28,156` Merton).
+
+### Ditambahkan (Bagian C — `day005e`)
+- Project Ruby murni mandiri `projects/ruby/day005e_copula_tail_dependence/` ($\ge 3{,}3$, nol gem numerik, `SplitMix64`, `Process.fork` + `IO.pipe` + `Marshal` deterministik, JSON penuh, 7 grafik SVG) pada data sintetis:
+  - **Bagian 1**: Kopula Gaussian, Student-$t$, Clayton, Gumbel ($R=200\mathrm{k}$: `max |tau_z| = 1,66`, `spearman_err = 8,83e-5`), konvergensi $\chi(u)$ ($u \in \{0{,}9, 0{,}99, 0{,}999\}$), serta ortan bivariat Gauss–Legendre (`max_err = 5,55e-17`).
+  - **Bagian 2**: Alokasi modal Euler ES99 ($d=5$: `sum_err = 0`, `fd_err = 5,50e-12`, `max_mc_z = 0,53`; perbandingan vs kopula $t_4$ dan Clayton).
+  - **Bagian 3**: CML vs inversi $\tau$ ($R=500$, $n \in \{250, 1000, 5000\}$), salah spesifikasi $t_4$ vs Gaussian (`LRT = 155,35`, bias ES99 `-7,44%`), dan perbandingan efek marginal vs kopula.
+  - **Bagian 4**: *Importance sampling* pergeseran-rerata + *conditional MC* ($R=100\mathrm{k}$: `max |is_z| = 2,45`, penghematan variansi `2.604x`–`5.165.715x`).
+- Runner utama `day005e` selesai dalam `9,20s` (`Ruby 4.0.9`, YJIT `ON`, `10` *worker*; `c1, c3–c9 = tercapai`, `c2 = belum tercapai` dilaporkan dengan diagnosis bias berhingga Gaussian), `12` tes unit/integrasi (`62` asersi) dan `rubocop` lulus bersih.
+- Output `outputs/day005e/results.json`, 7 grafik SVG `outputs/figures/day005e_*.svg`, `projects/ruby/day005e_copula_tail_dependence/README.md`, serta [day005e_quant_copula-tail-dependence.md](project-explanations/day005e_quant_copula-tail-dependence.md).
+
 ## [Hari 005d] — 2026-11-23 · Jump-Diffusion Merton: Seri Eksak, PIDE Crank–Nicolson, Kalibrasi & Risiko Ekor (Rust, Bonus)
 
 ### Ditambahkan

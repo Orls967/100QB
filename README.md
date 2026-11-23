@@ -154,7 +154,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [docs/ROADMAP.md](docs/ROADMAP.md) · Riwayat: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 40/100 topik (40%)** · quant: 39 · sim: 1
+**Progres: 41/100 topik (41%)** · quant: 40 · sim: 1
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -198,6 +198,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 5b | bonus | `quant` | `rust` | Harga opsi Eropa Black-Scholes & put-call parity | 2026-11-23 | [day005b_black_scholes](projects/rust/day005b_black_scholes) |
 | 5c | bonus | `quant` | `rust` | Kriteria Kelly dan risiko drawdown: peluang sentuh eksak, Kelly fraksional dan galat estimasi | 2026-11-23 | [day005c_kelly_drawdown](projects/rust/day005c_kelly_drawdown) |
 | 5d | bonus | `quant` | `rust` | Jump-diffusion Merton: seri eksak, PIDE Crank-Nicolson, kalibrasi smile dan risiko ekor | 2026-11-23 | [day005d_merton_jump_diffusion](projects/rust/day005d_merton_jump_diffusion) |
+| 5e | bonus | `quant` | `ruby` | Kopula, ketergantungan ekor dan alokasi modal Euler | 2026-11-23 | [day005e_copula_tail_dependence](projects/ruby/day005e_copula_tail_dependence) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi
