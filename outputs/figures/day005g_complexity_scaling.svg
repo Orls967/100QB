@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="500" viewBox="0 0 860 500">
+<rect width="860" height="500" fill="#ffffff"/>
+<text x="430" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#111827">Kompleksitas Biaya MLMC vs MC Standar (log10 Cost vs log10(1/eps))</text>
+<rect x="82" y="48" width="748" height="388" fill="#f9fafb" stroke="#d1d5db"/>
+<text x="456" y="484" text-anchor="middle" font-size="12" fill="#374151">log10(1/eps)</text>
+<text x="18" y="242" text-anchor="middle" font-size="12" fill="#374151" transform="rotate(-90 18 242)">log10(Total Steps Cost)</text>
+<text x="82" y="458" font-size="10" fill="#6b7280">1.04</text>
+<text x="830" y="458" text-anchor="end" font-size="10" fill="#6b7280">2.05</text>
+<text x="76" y="436" text-anchor="end" font-size="10" fill="#6b7280">5.27</text>
+<text x="76" y="56" text-anchor="end" font-size="10" fill="#6b7280">9.13</text>
+<polyline fill="none" stroke="#111827" stroke-width="2.3" stroke-dasharray="6,4" points="122.07,415.21 344.69,324.41 567.31,233.6 789.93,142.79"/>
+<line x1="96" y1="30" x2="118" y2="30" stroke="#111827" stroke-width="2.5" stroke-dasharray="6,4"/>
+<text x="124" y="34" font-size="11" fill="#1f2937">Std MC Heston</text>
+<polyline fill="none" stroke="#dc2626" stroke-width="2.3" points="122.07,297.98 344.69,219.06 567.31,158.54 789.93,68.79"/>
+<line x1="296" y1="30" x2="318" y2="30" stroke="#dc2626" stroke-width="2.5"/>
+<text x="324" y="34" font-size="11" fill="#1f2937">MLMC Heston</text>
+<polyline fill="none" stroke="#059669" stroke-width="2.3" points="122.07,406.14 344.69,350.49 567.31,293.2 789.93,235.96"/>
+<line x1="496" y1="30" x2="518" y2="30" stroke="#059669" stroke-width="2.5"/>
+<text x="524" y="34" font-size="11" fill="#1f2937">MLMC GBM Milstein</text>
+</svg>

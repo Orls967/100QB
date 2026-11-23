@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+RubyVM::YJIT.enable if defined?(RubyVM::YJIT) && RubyVM::YJIT.respond_to?(:enable) && !RubyVM::YJIT.enabled?
+
+$LOAD_PATH.unshift(File.expand_path('../lib', __dir__))
+
+require 'mlmc_heston'
+
+t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+res = MlmcHeston::Mlmc.run_adaptive(
+  model: :heston, params: MlmcHeston::Runner::HESTON_BASE, eps: 0.005, seed: MlmcHeston::MAIN_SEED
+)
+dt = Process.clock_gettime(Process::CLOCK_MONOTONIC) - t0
+exact = MlmcHeston::HestonCf.call_price(MlmcHeston::Runner::HESTON_BASE, 100.0, 1.0)
+
+puts format('=== day005g Extras (Heston MLMC eps=0.005) selesai dalam %.2fs ===', dt)
+puts format('  Exact CF=%<ex>.6f | MLMC=%<mc>.6f ± %<se>.6f | max_level=%<lv>d | cost=%<cs>.0f',
+            ex: exact, mc: res[:price], se: res[:se], lv: res[:max_level], cs: res[:total_cost])

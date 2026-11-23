@@ -1,0 +1,620 @@
+{
+  "metadata": {
+    "day": 5,
+    "session": "g",
+    "topic_source": "backup_mlmc_giles_cir_heston",
+    "language": "ruby",
+    "ruby_version": "4.0.9",
+    "yjit_enabled": true,
+    "main_seed": 20261123,
+    "workers_used": 10,
+    "run_completed_without_errors": true,
+    "elapsed_seconds": {
+      "part1_anchors": 0.014407000038772821,
+      "part2_rates": 1.0400520000839606,
+      "part3_complexity": 67.02420499990694,
+      "part4_antithetic": 0.19845700007863343,
+      "total": 72.14082900003996
+    }
+  },
+  "criteria": {
+    "c1_anchors_bs_cir_and_heston_cf": {
+      "status": "tercapai",
+      "measured": {
+        "xi_zero_bs_err": 4.263256414560601e-14,
+        "parity_err": 7.105427357601002e-15,
+        "cf_quad_err": 8.231566539507185e-10
+      },
+      "threshold": "xi_zero_bs_err < 1e-10, parity_err < 1e-12, cf_quad_err < 1e-8",
+      "note": "Heston CF cocok dengan batas BS, paritas put-call, dan konvergensi kuadratur"
+    },
+    "c2_strong_weak_rates_gbm_milstein_vs_euler": {
+      "status": "tercapai",
+      "measured": {
+        "gbm_euler_beta": 0.9816219264551606,
+        "gbm_milstein_beta": 1.9450645186740594,
+        "gbm_milstein_alpha": 0.9740587411587853
+      },
+      "threshold": "gbm_milstein_beta > 1.5 dan gbm_milstein_beta > gbm_euler_beta",
+      "note": "Skema Milstein mencapai peluruhan variansi orde ~2 vs orde ~1 Euler"
+    },
+    "c3_heston_full_truncation_rates_feller_effect": {
+      "status": "tercapai",
+      "measured": {
+        "feller_ok_beta": 1.2761368474775807,
+        "feller_violated_beta": 0.820989217498101
+      },
+      "threshold": "beta_strong > 0.7 pada rezim Feller terpenuhi dan Feller dilanggar",
+      "note": "Full-truncation Euler menjaga laju kuat pada rezim Feller terpenuhi maupun dilanggar"
+    },
+    "c4_mlmc_matches_exact_anchors": {
+      "status": "tercapai",
+      "measured": {
+        "gbm_mlmc_price": 10.449860785595662,
+        "bs_exact": 10.450583572185565,
+        "gbm_z": 0.10243508014953932,
+        "heston_mlmc_price": 8.199651131821827,
+        "heston_cf_exact": 8.195030953565684,
+        "heston_z": 0.6488629097671513
+      },
+      "threshold": "gbm_z <= 3.5 dan heston_z <= 3.5 pada eps = 0.01",
+      "note": "Estimator MLMC adaptif cocok dengan harga referensi tertutup GBM dan Heston"
+    },
+    "c5_complexity_scaling_eps2_vs_eps3": {
+      "status": "tercapai",
+      "measured": {
+        "gbm_milstein_slope": 1.8758437598832196,
+        "heston_mlmc_slope": 2.4714911270477495,
+        "std_mc_slope": 2.9999900891677505,
+        "heston_eps001_speedup": 0.18368033878631893
+      },
+      "threshold": "gbm_milstein_slope < 2.4, heston_mlmc_slope < 2.6, std_mc_slope > 2.7",
+      "note": "Hukum kompleksitas Giles: biaya MLMC ~ eps^-2..2.4 vs MC standar ~ eps^-3"
+    },
+    "c6_antithetic_level_variance_reduction": {
+      "status": "tercapai",
+      "measured": {
+        "level3_var_standard": 13.511045230157224,
+        "level3_var_antithetic": 10.783153922899531,
+        "level3_reduction_ratio": 1.2529771277274115
+      },
+      "threshold": "level3_reduction_ratio > 1.0",
+      "note": "Koppel antitetik Giles-Szpruch menekan variansi level Heston"
+    },
+    "c7_worker_invariance_1_vs_n": {
+      "status": "tercapai",
+      "measured": {
+        "bit_diffs": 0
+      },
+      "threshold": "bit_diffs == 0",
+      "note": "Determinisme paralel Process.fork bit-identik 1 vs N worker"
+    },
+    "c8_runtime_under_360s": {
+      "status": "tercapai",
+      "measured": {
+        "total_seconds": 72.14082900003996
+      },
+      "threshold": "< 360.0s",
+      "note": "Anggaran waktu eksekusi runner Ruby penuh"
+    }
+  },
+  "part1_anchors": {
+    "anchors": {
+      "bs_exact": 10.450583572185565,
+      "heston_cf_exact": 8.195030953565684,
+      "xi_zero_bs_err": 4.263256414560601e-14,
+      "parity_err": 7.105427357601002e-15,
+      "cf_quad_err": 8.231566539507185e-10
+    }
+  },
+  "part2_rates": {
+    "gbm_euler": {
+      "rows": [
+        {
+          "level": 1,
+          "mean_abs": 0.020924671668911706,
+          "var": 0.6879259773899536,
+          "log2_mean": -5.578651204291776,
+          "log2_var": -0.5396747593172153
+        },
+        {
+          "level": 2,
+          "mean_abs": 0.005923533716488367,
+          "var": 0.3669488183315089,
+          "log2_mean": -7.399326204363801,
+          "log2_var": -1.4463492435044631
+        },
+        {
+          "level": 3,
+          "mean_abs": 0.005632391285163159,
+          "var": 0.18694636939698406,
+          "log2_mean": -7.472036722427684,
+          "log2_var": -2.419303641363531
+        },
+        {
+          "level": 4,
+          "mean_abs": 0.0033823954307599237,
+          "var": 0.08986134995703916,
+          "log2_mean": -8.207738951748098,
+          "log2_var": -3.47615545462496
+        },
+        {
+          "level": 5,
+          "mean_abs": 0.0004986238839050222,
+          "var": 0.04629880328637371,
+          "log2_mean": -10.96976039049044,
+          "log2_var": -4.43288128603277
+        }
+      ],
+      "alpha_weak": 1.1590631119781627,
+      "beta_strong": 0.9816219264551606
+    },
+    "gbm_milstein": {
+      "rows": [
+        {
+          "level": 1,
+          "mean_abs": 0.05257387176635152,
+          "var": 0.01115490501637292,
+          "log2_mean": -4.2495102046760564,
+          "log2_var": -6.486177960638316
+        },
+        {
+          "level": 2,
+          "mean_abs": 0.027826612888385074,
+          "var": 0.003253786787088396,
+          "log2_mean": -5.167390878177402,
+          "log2_var": -8.263664566930132
+        },
+        {
+          "level": 3,
+          "mean_abs": 0.014124030246490513,
+          "var": 0.0008505697283549941,
+          "log2_mean": -6.145704374042119,
+          "log2_var": -10.199282868965357
+        },
+        {
+          "level": 4,
+          "mean_abs": 0.0069957412570543715,
+          "var": 0.0002073466894773429,
+          "log2_mean": -7.159307353616872,
+          "log2_var": -12.235667366367537
+        },
+        {
+          "level": 5,
+          "mean_abs": 0.003584914253416657,
+          "var": 0.00005220331126699436,
+          "log2_mean": -8.123845672750248,
+          "log2_var": -14.225499154289912
+        }
+      ],
+      "alpha_weak": 0.9740587411587853,
+      "beta_strong": 1.9450645186740594
+    },
+    "heston_feller_ok": {
+      "rows": [
+        {
+          "level": 1,
+          "mean_abs": 0.11166506718580313,
+          "var": 14.611103057709864,
+          "log2_mean": -3.1627501649303746,
+          "log2_var": 3.8689931926602776
+        },
+        {
+          "level": 2,
+          "mean_abs": 0.0072891438153711826,
+          "var": 5.589659078292523,
+          "log2_mean": -7.1000349194733134,
+          "log2_var": 2.4827602936130773
+        },
+        {
+          "level": 3,
+          "mean_abs": 0.002074496242093614,
+          "var": 2.259385426901352,
+          "log2_mean": -8.913023240861932,
+          "log2_var": 1.1759304000130386
+        },
+        {
+          "level": 4,
+          "mean_abs": 0.007421309165949963,
+          "var": 0.9107826662757019,
+          "log2_mean": -7.074110574821104,
+          "log2_var": -0.13482126006198009
+        },
+        {
+          "level": 5,
+          "mean_abs": 0.0037560966815172003,
+          "var": 0.43440112126586,
+          "log2_mean": -8.056550086380126,
+          "log2_var": -1.202900267890097
+        }
+      ],
+      "alpha_weak": 0.9761675498247293,
+      "beta_strong": 1.2761368474775807
+    },
+    "heston_feller_violated": {
+      "rows": [
+        {
+          "level": 1,
+          "mean_abs": 0.3757784544098628,
+          "var": 38.33250645621435,
+          "log2_mean": -1.412045743954655,
+          "log2_var": 5.260496429934905
+        },
+        {
+          "level": 2,
+          "mean_abs": 0.14493616694737063,
+          "var": 23.194384524272376,
+          "log2_mean": -2.7865104491649366,
+          "log2_var": 4.535703658878044
+        },
+        {
+          "level": 3,
+          "mean_abs": 0.04163004508819357,
+          "var": 13.737179599263357,
+          "log2_mean": -4.586231068758087,
+          "log2_var": 3.780013927585481
+        },
+        {
+          "level": 4,
+          "mean_abs": 0.016082245950012498,
+          "var": 7.221188776179159,
+          "log2_mean": -5.958387291051436,
+          "log2_var": 2.8522363579327688
+        },
+        {
+          "level": 5,
+          "mean_abs": 0.030844770078966858,
+          "var": 3.9924767132564,
+          "log2_mean": -5.018830297507604,
+          "log2_var": 1.9972839929170374
+        }
+      ],
+      "alpha_weak": 1.0385445948992396,
+      "beta_strong": 0.820989217498101
+    }
+  },
+  "part3_complexity": {
+    "gbm_milstein": {
+      "rows": [
+        {
+          "eps": 0.08,
+          "price": 10.329604488566801,
+          "se": 0.05603974729672431,
+          "max_level": 2,
+          "total_cost": 371844.0,
+          "n_samples": [
+            65961,
+            3000,
+            3000
+          ],
+          "vars": [
+            206.8172667450846,
+            0.01164131341910929,
+            0.0033753720967304407
+          ],
+          "std_mc_cost": 533000.0,
+          "speedup": 1.4333968008089413
+        },
+        {
+          "eps": 0.04,
+          "price": 10.39075812343446,
+          "se": 0.027975208525184484,
+          "max_level": 3,
+          "total_cost": 1329720.0,
+          "n_samples": [
+            269430,
+            3000,
+            3000,
+            3000
+          ],
+          "vars": [
+            209.4374039540998,
+            0.01164131341910929,
+            0.0033753720967304407,
+            0.0008148019230229405
+          ],
+          "std_mc_cost": 4264000.0,
+          "speedup": 3.2066901302529858
+        },
+        {
+          "eps": 0.02,
+          "price": 10.443099509206778,
+          "se": 0.014048376987611305,
+          "max_level": 4,
+          "total_cost": 4937456.0,
+          "n_samples": [
+            1094135,
+            4743,
+            3000,
+            3000,
+            3000
+          ],
+          "vars": [
+            211.59909274404544,
+            0.011881551768106407,
+            0.0033753720967304407,
+            0.0008148019230229405,
+            0.00018344198808339766
+          ],
+          "std_mc_cost": 34112000.0,
+          "speedup": 6.908821060886416
+        },
+        {
+          "eps": 0.01,
+          "price": 10.449860785595662,
+          "se": 0.007056045534860295,
+          "max_level": 4,
+          "total_cost": 18311780.0,
+          "n_samples": [
+            4370723,
+            19048,
+            7013,
+            3000,
+            3000
+          ],
+          "vars": [
+            211.35122988021936,
+            0.012048935810559316,
+            0.0032705030712074745,
+            0.0008148019230229405,
+            0.00018344198808339766
+          ],
+          "std_mc_cost": 272895808.0,
+          "speedup": 14.902746101143636
+        }
+      ],
+      "mlmc_cost_slope": 1.8758437598832196,
+      "std_mc_cost_slope": 2.9999996954910895
+    },
+    "heston_european": {
+      "rows": [
+        {
+          "eps": 0.08,
+          "price": 8.17990823629887,
+          "se": 0.05674027575933234,
+          "max_level": 4,
+          "total_cost": 4425112.0,
+          "n_samples": [
+            203770,
+            67036,
+            36516,
+            19522,
+            10335
+          ],
+          "vars": [
+            120.29863544544274,
+            39.12394425147241,
+            23.193041524675944,
+            13.358916847214031,
+            7.503418914901594
+          ],
+          "std_mc_cost": 302056.0,
+          "speedup": 0.0682595152393883
+        },
+        {
+          "eps": 0.04,
+          "price": 8.193850068338918,
+          "se": 0.02831512390400813,
+          "max_level": 5,
+          "total_cost": 26965500.0,
+          "n_samples": [
+            1003944,
+            329907,
+            180631,
+            97135,
+            51726,
+            26185
+          ],
+          "vars": [
+            119.68162829368671,
+            38.79706436351422,
+            23.27022589461886,
+            13.358159021595878,
+            7.5362297006108,
+            4.003439820725561
+          ],
+          "std_mc_cost": 2416400.0,
+          "speedup": 0.08961079898388682
+        },
+        {
+          "eps": 0.02,
+          "price": 8.185801271235002,
+          "se": 0.014189030974216114,
+          "max_level": 5,
+          "total_cost": 107809184.0,
+          "n_samples": [
+            4020341,
+            1324817,
+            723006,
+            388749,
+            205342,
+            104714
+          ],
+          "vars": [
+            119.89046355586191,
+            39.12114338476055,
+            23.30456010038127,
+            13.438660265793766,
+            7.462953472870915,
+            4.06628343483261
+          ],
+          "std_mc_cost": 19331168.0,
+          "speedup": 0.17930910227462626
+        },
+        {
+          "eps": 0.01,
+          "price": 8.199651131821827,
+          "se": 0.0071204227990180995,
+          "max_level": 7,
+          "total_cost": 841947576.0,
+          "n_samples": [
+            22468962,
+            7402406,
+            4039853,
+            2161847,
+            1141693,
+            595228,
+            313608,
+            153914
+          ],
+          "vars": [
+            119.93541913405346,
+            39.04027983545039,
+            23.28151078771479,
+            13.330184580362682,
+            7.436225244022347,
+            4.039660158522903,
+            2.236366287544753,
+            1.1895032018610703
+          ],
+          "std_mc_cost": 154649216.0,
+          "speedup": 0.18368033878631893
+        }
+      ],
+      "mlmc_cost_slope": 2.4714911270477495,
+      "std_mc_cost_slope": 2.9999900891677505
+    },
+    "heston_asian": {
+      "rows": [
+        {
+          "eps": 0.08,
+          "price": 4.849788615088197,
+          "se": 0.054992211881707415,
+          "max_level": 5,
+          "total_cost": 2489760.0,
+          "n_samples": [
+            105489,
+            31303,
+            15287,
+            7774,
+            3918,
+            3000
+          ],
+          "vars": [
+            62.27811938565047,
+            16.502060702260735,
+            8.057976150545931,
+            4.089085837888526,
+            2.042670484887051,
+            0.9963976359007534
+          ],
+          "std_mc_cost": 155352.0,
+          "speedup": 0.06239637555427029
+        },
+        {
+          "eps": 0.04,
+          "price": 4.792943747489265,
+          "se": 0.02822078599149896,
+          "max_level": 6,
+          "total_cost": 12659084.0,
+          "n_samples": [
+            497435,
+            147296,
+            74006,
+            36747,
+            18564,
+            9108,
+            4768
+          ],
+          "vars": [
+            62.40231033521766,
+            16.448348558538907,
+            8.325699909555945,
+            4.1205397361563,
+            2.089675656854882,
+            1.0116764262649098,
+            0.5293495231742393
+          ],
+          "std_mc_cost": 1242784.0,
+          "speedup": 0.09817329595095506
+        },
+        {
+          "eps": 0.02,
+          "price": 4.786383099624309,
+          "se": 0.014193647424349847,
+          "max_level": 7,
+          "total_cost": 66200480.0,
+          "n_samples": [
+            2273195,
+            674401,
+            336339,
+            168780,
+            84791,
+            43067,
+            21647,
+            10573
+          ],
+          "vars": [
+            62.452296946403706,
+            16.477327666578024,
+            8.213709906284336,
+            4.1482757141089825,
+            2.09305048761131,
+            1.082678561421472,
+            0.5462973259317018,
+            0.2695475588785826
+          ],
+          "std_mc_cost": 9942240.0,
+          "speedup": 0.15018380531379832
+        },
+        {
+          "eps": 0.01,
+          "price": 4.76705604536938,
+          "se": 0.007104396504031396,
+          "max_level": 7,
+          "total_cost": 266227944.0,
+          "n_samples": [
+            9116868,
+            2707928,
+            1353297,
+            680412,
+            340683,
+            172937,
+            87632,
+            42404
+          ],
+          "vars": [
+            62.44047794210918,
+            16.515770383446075,
+            8.265634520244262,
+            4.174239756050186,
+            2.093758914435387,
+            1.0759658211180922,
+            0.5552134223747844,
+            0.27896046761449456
+          ],
+          "std_mc_cost": 79537728.0,
+          "speedup": 0.2987579996486019
+        }
+      ],
+      "mlmc_cost_slope": 2.2608203213615368,
+      "std_mc_cost_slope": 2.999985953760951
+    }
+  },
+  "part4_antithetic": [
+    {
+      "level": 1,
+      "var_standard": 40.35723966168067,
+      "var_antithetic": 30.929351389191403,
+      "reduction_ratio": 1.3048201093471345
+    },
+    {
+      "level": 2,
+      "var_standard": 24.370146292953773,
+      "var_antithetic": 18.819813661914168,
+      "reduction_ratio": 1.2949196379277583
+    },
+    {
+      "level": 3,
+      "var_standard": 13.511045230157224,
+      "var_antithetic": 10.783153922899531,
+      "reduction_ratio": 1.2529771277274115
+    },
+    {
+      "level": 4,
+      "var_standard": 7.540865596149578,
+      "var_antithetic": 6.203103438880343,
+      "reduction_ratio": 1.2156601401943896
+    }
+  ]
+}
