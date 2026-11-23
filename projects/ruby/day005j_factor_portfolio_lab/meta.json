@@ -1,0 +1,10 @@
+{
+  "day": 5,
+  "session": "j",
+  "topic_no": null,
+  "type": "quant",
+  "language": "ruby",
+  "topic": "Model Faktor, PCA BBP, GRS, Fama-MacBeth Shanken, Risk Parity, Black-Litterman, Markowitz QP & Backtest Portofolio",
+  "date": "2026-11-23",
+  "link": "projects/ruby/day005j_factor_portfolio_lab"
+}

@@ -51,6 +51,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `5g` (`day005g`) | `bonus` | `quant` | `ruby` | [Multilevel Monte Carlo (Giles) untuk CIR dan Heston: laju kuat, kompleksitas & antithetic (Ruby)](day005g_quant_mlmc-heston.md) |
 | `5h` (`day005h`) | `bonus` | `quant` | `ruby` | [Backtest dan overfitting: Sharpe, bias seleksi, pengujian ganda dan PBO (Ruby)](day005h_quant_backtest-overfitting.md) |
 | `5i` (`day005i`) | `bonus` | `quant` | `ruby` | [Keluarga GARCH, QMLE Sandwich, Student-t MLE, VaR/ES, DCC, HAR-RV dan salah spesifikasi (Ruby)](day005i_quant_garch-family.md) |
+| `5j` (`day005j`) | `bonus` | `quant` | `ruby` | [Model Faktor, PCA BBP, GRS, Fama-MacBeth Shanken, Risk Parity, Black-Litterman, Markowitz QP & Backtest Portofolio (Ruby)](day005j_quant_factor-portfolio-lab.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 

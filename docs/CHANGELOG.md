@@ -3,6 +3,19 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 005j] — 2026-11-23 · Perbaikan day005i + Laboratorium Model Faktor, PCA BBP, GRS, Shanken, Risk Parity, Black–Litterman, Markowitz QP & Backtest Portofolio (Ruby, Bonus)
+
+### Diperbaiki (Bagian A — `day005i`)
+- `projects/ruby/day005i_garch_family/`: meningkatkan replikasi `c6_sandwich_se_restores_t5_coverage` menjadi $R=1000$ ($T \in \{500, 1000, 2500\}$, plus $T=10{.}000$ di `bin/run_extras`: `cov_sw = 0,9380`, `se = 0,0076`, rasio `1,791x`) dengan ambang teoretis *a priori* `|cov_sw - 0,95| <= 3 SE` (`c6` jujur **`belum tercapai`** di $T=2500$: `cov_sw = 0,9130 +- 0,0089`, `z = 4,15`), menaikkan `c19_structural_break_spurious_igarch` dari `25` ke `300` replikasi beserta distribusi lengkap `mean/sd/se/min/p05/p25/median/p75/p95/max`, serta menambahkan benchmark intraday sepadan-informasi (`RV-Naif = 0,02595`, `EWMA-RV = 0,01533`, `GARCH-X = 0,01739` vs `HAR-RV = 0,01175`, seluruh DM $p \le 9{,}33\times 10^{-7}$). `37` berkas RuboCop & `44` tes (`258` asersi) bersih.
+
+### Ditambahkan (Bagian C — `day005j`)
+- Project Ruby murni bervolume sangat tinggi `projects/ruby/day005j_factor_portfolio_lab/` ($\ge 3{,}3$, nol gem numerik, `36` modul di `lib/factor_portfolio_lab/`, `83` unit/integrasi tes dengan `712` asersi, `42` kriteria `c1`–`c42`, `26` grafik SVG di `outputs/figures/day005j_*.svg`, `bin/run` selesai dalam `364,21s` dengan 10 pekerja paralel + YJIT ON):
+  - **Bagian 1–3 (`SpikedStudy`, `GrsStudy`, `FmStudy`)**: verifikasi BBP $R=500$ ($\ell=0{,}3$ tetap di tepi MP `2,168` vs `2,250`, $\ell=2{,}0$ alignment `0,832` vs teori `0,833`), GRS $R=5000$ (*size* exact `0,0522` vs Wald `0,8482` di $N=50, T=120$), serta Fama–MacBeth + Shanken $R=1000$ (`c_Sh = 0,405`, cakupan intersep `0,848 -> 0,903`, faktor `>= 0,959`).
+  - **Bagian 4–6 (`RiskParity`, `BlackLitterman`, `Markowitz`)**: Newton Spinu `6` iterasi (`rc_max_dev <= 5,55e-17`) sepakat dengan CCD (`max_w_diff <= 5,39e-15`), Black–Litterman *importance sampling* $R=500{.}000$ (`max_mu_diff = 5,41e-5`, `ESS = 288.497`), dan QP Markowitz `45` titik (*long-only* `max_kkt = 4,44e-16`, *capped 12%* `9,98e-12`).
+  - **Bagian 7–12 (`Resampling`, `BacktestStudy`, `Attribution`, `Stress`, `Robustness`, `Complexity`)**: Michaud $R=500$ (`HHI 0,809 -> 0,221`, `L1 1,702 -> 1,410`), *backtest* rolling dua-rezim `8` strategi $R=300$ pada $c \in \{0, 5, 20\}$ bps, atribusi Euler (`err = 2,08e-17`) & salah spesifikasi $K$, *reverse stress test* Mahalanobis tertutup (`-0,1500` eksak), kekokohan Student-$t(4)$, dan skalabilitas $N \in \{10..200\}$ (`slope_invert = 3,17`).
+- Status kriteria `39/42` `tercapai` dan `3` `belum tercapai` (`c30`, `c32`, `c33` dilaporkan jujur); `83` tes (`712` asersi) & `rubocop` (`51` berkas) bersih.
+- Output `outputs/day005j/results.json`, `26` grafik SVG `outputs/figures/day005j_*.svg`, `projects/ruby/day005j_factor_portfolio_lab/README.md`, serta [day005j_quant_factor-portfolio-lab.md](project-explanations/day005j_quant_factor-portfolio-lab.md).
+
 ## [Hari 005i] — 2026-11-23 · Perbaikan day005h/day005g + Sistem Volatilitas GARCH, QMLE Sandwich, VaR/ES, DCC, HAR-RV & Salah Spesifikasi (Ruby, Bonus)
 
 ### Diperbaiki (Bagian A — `day005h` & `day005g`)
