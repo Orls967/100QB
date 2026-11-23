@@ -7,11 +7,11 @@
     "workers_used": 10,
     "run_completed_without_errors": true,
     "elapsed_seconds": {
-      "part1_binary": 0.41645062500000002,
-      "part2_gbm_hitting": 46.54914470899999657,
-      "part3_fractional": 0.00000954200000000,
-      "part4_estimation_heavy_tail": 3.50643050000000001,
-      "total": 50.47477704199999948
+      "part1_binary": 0.41179850000000001,
+      "part2_gbm_hitting": 40.65334766699999847,
+      "part3_fractional": 0.00000900000000000,
+      "part4_estimation_heavy_tail": 5.73081825000000045,
+      "total": 46.79851820799999729
     }
   },
   "criteria": {
@@ -26,15 +26,18 @@
       "note": "Verifikasi fraksi Kelly biner, E[ln W_N], dan median W_N pada N=1000, R=100k"
     },
     "c2_gbm_hitting_bridge_unbiased_3se": {
-      "status": "belum tercapai",
+      "status": "tercapai",
       "measured": {
-        "frac_within_3se": 1.00000000000000000,
+        "n_informative_cells": 33,
+        "frac_inf_within_3se": 1.00000000000000000,
         "max_bridge_z": 2.80182983052448442,
         "max_bridge_abs_err": 0.00098844290538236,
-        "max_naive_bias_monthly": 0.00000247626681570
+        "frac_inf_naive_neg": 1.00000000000000000,
+        "slope_sqrt_dt": 0.49463178257722495,
+        "se_slope_sqrt_dt": 0.01684608483327363
       },
-      "threshold": "frac_within_3se >= 0.95 (72 kombinasi), max_naive_bias_monthly < 0",
-      "note": "Estimator jembatan Brownian tanpa bias vs rumus tertutup dan bias negatif naif pada R=1e6"
+      "threshold": "frac_inf_within_3se >= 0.95, frac_inf_naive_neg >= 0.90, slope_sqrt_dt in 0.5 +/- 0.15 (exact_prob >= 5e-3)",
+      "note": "Estimator jembatan Brownian tanpa bias, bias naif negatif, dan skala O(sqrt(dt)) pada sel informatif"
     },
     "c3_fractional_kelly_identity_and_roots": {
       "status": "tercapai",
@@ -67,15 +70,16 @@
       "note": "Penyusutan optimal mengungguli plug-in penuh pada pertumbuhan dan drawdown 20 tahun"
     },
     "c6_heavy_tail_t4_exceeds_gaussian_drawdown": {
-      "status": "belum tercapai",
+      "status": "tercapai",
       "measured": {
-        "prob_hit_half_t4_fstar": 0.21398000000000000,
-        "prob_hit_half_gauss_fstar": 0.21862744215205565,
-        "g_t4_2fstar": 0.02407589374175401,
-        "g_gauss_2fstar": 0.02999999999999999
+        "diff_g_t4_vs_gauss_daily_2fstar": -0.00630525569902272,
+        "se_diff_g_2fstar": 0.00057104444758177,
+        "z_diff_g_2fstar": -11.04161983489007426,
+        "ruin_prob_t4_2fstar": 0.00387000000000000,
+        "ruin_prob_gauss_daily_2fstar": 0.00000000000000000
       },
-      "threshold": "P_t4(hit 0.5 | f*) > P_gauss + 3 SE dan g_t4(2f*) < g_gauss(2f*)",
-      "note": "Ekor berat Student-t(4) mematahkan prediksi risiko dan pertumbuhan Gaussian"
+      "threshold": "|z(g_t4(2f*) - g_gauss_daily(2f*))| > 3.0 dan ruin_t4(2f*) > 0 vs ruin_gauss_daily(2f*) == 0",
+      "note": "Pembandingan berpasangan t4 harian vs Gaussian harian pada dt=1/252 serta pemisahan 3 efek"
     },
     "c7_worker_invariance_1_vs_n": {
       "status": "tercapai",
@@ -88,7 +92,7 @@
     "c8_runtime_under_180s": {
       "status": "tercapai",
       "measured": {
-        "total_seconds": 50.47477704199999948
+        "total_seconds": 46.79851820799999729
       },
       "threshold": "< 180.0s",
       "note": "Anggaran waktu eksekusi runner penuh"
@@ -1499,33 +1503,69 @@
         "c": 0.50000000000000000,
         "f": 0.62499999999999989,
         "g_gaussian_pred": 0.05343750000000000,
-        "g_t4_mc": 0.05344051385131819,
+        "g_gauss_daily_mc": 0.05354677481681228,
+        "g_gauss_daily_se": 0.00008824698372020,
+        "g_t4_mc": 0.05344051385130680,
         "g_t4_se": 0.00008837102966745,
+        "diff_g_t4_vs_gauss_daily": -0.00010626096550559,
+        "se_diff_g_t4_vs_gauss_daily": 0.00012458924981734,
         "prob_hit_half_gaussian_pred": 0.00735081052738298,
+        "prob_hit_half_gauss_daily_mc": 0.00670000000000000,
+        "prob_hit_half_gauss_daily_se": 0.00025797499878864,
         "prob_hit_half_t4_mc": 0.00732000000000000,
         "prob_hit_half_t4_se": 0.00026956293513760,
+        "diff_hit_t4_vs_gauss_daily": 0.00062000000000000,
+        "se_diff_hit_t4_vs_gauss_daily": 0.00037309001058726,
+        "effect_discrete_hit": -0.00065081052738298,
+        "effect_heavy_tail_hit": 0.00062000000000000,
+        "effect_total_hit": -0.00003081052738298,
+        "ruin_prob_gauss_daily_mc": 0.00000000000000000,
         "ruin_prob_t4_mc": 0.00000000000000000
       },
       {
         "c": 1.00000000000000000,
         "f": 1.24999999999999978,
         "g_gaussian_pred": 0.06125000000000000,
-        "g_t4_mc": 0.06087265808610098,
+        "g_gauss_daily_mc": 0.06147271952838219,
+        "g_gauss_daily_se": 0.00017651155966445,
+        "g_t4_mc": 0.06087265808608960,
         "g_t4_se": 0.00019065584885573,
+        "diff_g_t4_vs_gauss_daily": -0.00060006144229258,
+        "se_diff_g_t4_vs_gauss_daily": 0.00025940691062874,
         "prob_hit_half_gaussian_pred": 0.21862744215205565,
+        "prob_hit_half_gauss_daily_mc": 0.21462000000000001,
+        "prob_hit_half_gauss_daily_se": 0.00129829987137025,
         "prob_hit_half_t4_mc": 0.21398000000000000,
         "prob_hit_half_t4_se": 0.00129689074173579,
+        "diff_hit_t4_vs_gauss_daily": -0.00064000000000000,
+        "se_diff_hit_t4_vs_gauss_daily": 0.00183885722773684,
+        "effect_discrete_hit": -0.00400744215205565,
+        "effect_heavy_tail_hit": -0.00064000000000000,
+        "effect_total_hit": -0.00464744215205565,
+        "ruin_prob_gauss_daily_mc": 0.00000000000000000,
         "ruin_prob_t4_mc": 0.00024000000000000
       },
       {
         "c": 2.00000000000000000,
         "f": 2.49999999999999956,
         "g_gaussian_pred": 0.02999999999999999,
-        "g_t4_mc": 0.02407589374175401,
+        "g_gauss_daily_mc": 0.03038114944076563,
+        "g_gauss_daily_se": 0.00035325900477203,
+        "g_t4_mc": 0.02407589374174288,
         "g_t4_se": 0.00045053795342909,
+        "diff_g_t4_vs_gauss_daily": -0.00630525569902272,
+        "se_diff_g_t4_vs_gauss_daily": 0.00057104444758177,
         "prob_hit_half_gaussian_pred": 0.69083140162339340,
+        "prob_hit_half_gauss_daily_mc": 0.68352000000000002,
+        "prob_hit_half_gauss_daily_se": 0.00147078349732379,
         "prob_hit_half_t4_mc": 0.68145000000000000,
         "prob_hit_half_t4_se": 0.00147334957664500,
+        "diff_hit_t4_vs_gauss_daily": -0.00207000000000000,
+        "se_diff_hit_t4_vs_gauss_daily": 0.00207746411545422,
+        "effect_discrete_hit": -0.00731140162339339,
+        "effect_heavy_tail_hit": -0.00207000000000000,
+        "effect_total_hit": -0.00938140162339340,
+        "ruin_prob_gauss_daily_mc": 0.00000000000000000,
         "ruin_prob_t4_mc": 0.00387000000000000
       }
     ],

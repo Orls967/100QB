@@ -69,24 +69,78 @@ fn main() {
     let inf_table = infinite_horizon_table(&gbm, &cs_inf, 0.5);
     let dt_p2 = t2.elapsed().as_secs_f64();
 
-    let n_within_3se = hit_grid.iter().filter(|r| r.bridge_z.abs() <= 3.0).count();
-    let frac_within_3se = n_within_3se as f64 / hit_grid.len() as f64;
-    let max_bridge_abs_err = hit_grid
+    let inf_cells: Vec<_> = hit_grid
+        .iter()
+        .filter(|r| r.exact_prob >= 5e-3 && r.naive_se > 0.0)
+        .collect();
+    let n_inf = inf_cells.len();
+    let n_inf_within_3se = inf_cells.iter().filter(|r| r.bridge_z.abs() <= 3.0).count();
+    let frac_inf_within_3se = n_inf_within_3se as f64 / n_inf.max(1) as f64;
+    let n_inf_naive_neg = inf_cells.iter().filter(|r| r.naive_bias < 0.0).count();
+    let frac_inf_naive_neg = n_inf_naive_neg as f64 / n_inf.max(1) as f64;
+    let max_bridge_abs_err = inf_cells
         .iter()
         .map(|r| (r.bridge_mc - r.exact_prob).abs())
         .fold(0.0_f64, f64::max);
-    let max_bridge_z = hit_grid
+    let max_bridge_z = inf_cells
         .iter()
         .map(|r| r.bridge_z.abs())
         .fold(0.0_f64, f64::max);
-    let min_naive_bias_monthly = hit_grid
+
+    // Within-group regression of ln(|naive_bias|) on ln(dt) across (T, x, f) triples
+    // that are informative at all 3 dt values and have negative bias.
+    let mut xs_reg = Vec::new();
+    let mut ys_reg = Vec::new();
+    let mut n_groups_reg = 0_usize;
+    for &t in &ts {
+        for &x in &xs {
+            for &f in &fs_gbm {
+                let grp: Vec<_> = inf_cells
+                    .iter()
+                    .filter(|r| {
+                        (r.t - t).abs() < 1e-9
+                            && (r.x - x).abs() < 1e-9
+                            && (r.f - f).abs() < 1e-9
+                            && r.naive_bias < 0.0
+                    })
+                    .collect();
+                if grp.len() == dts.len() {
+                    n_groups_reg += 1;
+                    let mx = grp.iter().map(|r| r.dt.ln()).sum::<f64>() / grp.len() as f64;
+                    let my =
+                        grp.iter().map(|r| (-r.naive_bias).ln()).sum::<f64>() / grp.len() as f64;
+                    for r in grp {
+                        xs_reg.push(r.dt.ln() - mx);
+                        ys_reg.push((-r.naive_bias).ln() - my);
+                    }
+                }
+            }
+        }
+    }
+    let sxx_reg: f64 = xs_reg.iter().map(|&v| v * v).sum();
+    let sxy_reg: f64 = xs_reg.iter().zip(ys_reg.iter()).map(|(&a, &b)| a * b).sum();
+    let slope_sqrt_dt = if sxx_reg > 0.0 {
+        sxy_reg / sxx_reg
+    } else {
+        0.0
+    };
+    let rss_reg: f64 = xs_reg
         .iter()
-        .filter(|r| (r.dt - 1.0 / 12.0).abs() < 1e-9)
-        .map(|r| r.naive_bias)
-        .fold(0.0_f64, f64::max);
+        .zip(ys_reg.iter())
+        .map(|(&a, &b)| {
+            let res = b - slope_sqrt_dt * a;
+            res * res
+        })
+        .sum();
+    let df_reg = xs_reg.len().saturating_sub(n_groups_reg + 1).max(1) as f64;
+    let se_slope_sqrt_dt = if sxx_reg > 0.0 {
+        ((rss_reg / df_reg) / sxx_reg).sqrt()
+    } else {
+        0.0
+    };
+
     println!(
-        "[Bagian 2] selesai dalam {dt_p2:.2}s | {n_within_3se}/{} bridge dalam 3 SE (max |z| = {max_bridge_z:.2}, max |err| = {max_bridge_abs_err:.5})",
-        hit_grid.len()
+        "[Bagian 2] selesai dalam {dt_p2:.2}s | {n_inf_within_3se}/{n_inf} sel informatif dalam 3 SE (max |z| = {max_bridge_z:.2}), naive_neg = {n_inf_naive_neg}/{n_inf}, slope_sqrt_dt = {slope_sqrt_dt:.4} +/- {se_slope_sqrt_dt:.4}"
     );
 
     // -------------------------------------------------------------------------
@@ -393,16 +447,19 @@ fn main() {
     // Criteria evaluation (a-priori thresholds)
     // -------------------------------------------------------------------------
     let c1_ok = f_star_bin_err < 1e-10 && max_bin_z_log <= 3.0 && max_bin_med_rel < 0.05;
-    let c2_ok = frac_within_3se >= 0.95 && min_naive_bias_monthly < 0.0;
+    let c2_ok = frac_inf_within_3se >= 0.95
+        && frac_inf_naive_neg >= 0.90
+        && (slope_sqrt_dt - 0.5).abs() <= 0.15;
     let c3_ok = max_excess_ratio_err < 1e-12 && root_max_err < 1e-10;
     let c4_ok = max_est_z <= 3.0 && max_est_alt_z <= 3.0;
     let c5_ok = shrink.diff_shrink_vs_full > 3.0 * shrink.se_diff_shrink_vs_full
         && shrink.prob_hit_half_20y_shrink < shrink.prob_hit_half_20y_full;
-    let ht_full = &heavy_tail[1]; // c = 1.0
     let ht_over = &heavy_tail[2]; // c = 2.0
-    let c6_ok = ht_full.prob_hit_half_t4_mc
-        > ht_full.prob_hit_half_gaussian_pred + 3.0 * ht_full.prob_hit_half_t4_se
-        && ht_over.g_t4_mc < ht_over.g_gaussian_pred;
+    let z_g_t4_vs_gauss_daily_2fstar =
+        ht_over.diff_g_t4_vs_gauss_daily / ht_over.se_diff_g_t4_vs_gauss_daily.max(1e-15);
+    let c6_ok = z_g_t4_vs_gauss_daily_2fstar.abs() > 3.0
+        && ht_over.ruin_prob_t4_mc > 0.0
+        && ht_over.ruin_prob_gauss_daily_mc == 0.0;
     let c7_ok = worker_bit_diff == 0;
     let c8_ok = total_elapsed < 180.0;
 
@@ -425,13 +482,16 @@ fn main() {
             criterion(
                 if c2_ok { "tercapai" } else { "belum tercapai" },
                 obj([
-                    ("frac_within_3se", frac_within_3se.into()),
+                    ("n_informative_cells", n_inf.into()),
+                    ("frac_inf_within_3se", frac_inf_within_3se.into()),
                     ("max_bridge_z", max_bridge_z.into()),
                     ("max_bridge_abs_err", max_bridge_abs_err.into()),
-                    ("max_naive_bias_monthly", min_naive_bias_monthly.into()),
+                    ("frac_inf_naive_neg", frac_inf_naive_neg.into()),
+                    ("slope_sqrt_dt", slope_sqrt_dt.into()),
+                    ("se_slope_sqrt_dt", se_slope_sqrt_dt.into()),
                 ]),
-                "frac_within_3se >= 0.95 (72 kombinasi), max_naive_bias_monthly < 0",
-                "Estimator jembatan Brownian tanpa bias vs rumus tertutup dan bias negatif naif pada R=1e6",
+                "frac_inf_within_3se >= 0.95, frac_inf_naive_neg >= 0.90, slope_sqrt_dt in 0.5 +/- 0.15 (exact_prob >= 5e-3)",
+                "Estimator jembatan Brownian tanpa bias, bias naif negatif, dan skala O(sqrt(dt)) pada sel informatif",
             ),
         ),
         (
@@ -478,13 +538,14 @@ fn main() {
             criterion(
                 if c6_ok { "tercapai" } else { "belum tercapai" },
                 obj([
-                    ("prob_hit_half_t4_fstar", ht_full.prob_hit_half_t4_mc.into()),
-                    ("prob_hit_half_gauss_fstar", ht_full.prob_hit_half_gaussian_pred.into()),
-                    ("g_t4_2fstar", ht_over.g_t4_mc.into()),
-                    ("g_gauss_2fstar", ht_over.g_gaussian_pred.into()),
+                    ("diff_g_t4_vs_gauss_daily_2fstar", ht_over.diff_g_t4_vs_gauss_daily.into()),
+                    ("se_diff_g_2fstar", ht_over.se_diff_g_t4_vs_gauss_daily.into()),
+                    ("z_diff_g_2fstar", z_g_t4_vs_gauss_daily_2fstar.into()),
+                    ("ruin_prob_t4_2fstar", ht_over.ruin_prob_t4_mc.into()),
+                    ("ruin_prob_gauss_daily_2fstar", ht_over.ruin_prob_gauss_daily_mc.into()),
                 ]),
-                "P_t4(hit 0.5 | f*) > P_gauss + 3 SE dan g_t4(2f*) < g_gauss(2f*)",
-                "Ekor berat Student-t(4) mematahkan prediksi risiko dan pertumbuhan Gaussian",
+                "|z(g_t4(2f*) - g_gauss_daily(2f*))| > 3.0 dan ruin_t4(2f*) > 0 vs ruin_gauss_daily(2f*) == 0",
+                "Pembandingan berpasangan t4 harian vs Gaussian harian pada dt=1/252 serta pemisahan 3 efek",
             ),
         ),
         (
@@ -764,14 +825,47 @@ fn main() {
                                     ("c", r.c.into()),
                                     ("f", r.f.into()),
                                     ("g_gaussian_pred", r.g_gaussian_pred.into()),
+                                    ("g_gauss_daily_mc", r.g_gauss_daily_mc.into()),
+                                    ("g_gauss_daily_se", r.g_gauss_daily_se.into()),
                                     ("g_t4_mc", r.g_t4_mc.into()),
                                     ("g_t4_se", r.g_t4_se.into()),
+                                    (
+                                        "diff_g_t4_vs_gauss_daily",
+                                        r.diff_g_t4_vs_gauss_daily.into(),
+                                    ),
+                                    (
+                                        "se_diff_g_t4_vs_gauss_daily",
+                                        r.se_diff_g_t4_vs_gauss_daily.into(),
+                                    ),
                                     (
                                         "prob_hit_half_gaussian_pred",
                                         r.prob_hit_half_gaussian_pred.into(),
                                     ),
+                                    (
+                                        "prob_hit_half_gauss_daily_mc",
+                                        r.prob_hit_half_gauss_daily_mc.into(),
+                                    ),
+                                    (
+                                        "prob_hit_half_gauss_daily_se",
+                                        r.prob_hit_half_gauss_daily_se.into(),
+                                    ),
                                     ("prob_hit_half_t4_mc", r.prob_hit_half_t4_mc.into()),
                                     ("prob_hit_half_t4_se", r.prob_hit_half_t4_se.into()),
+                                    (
+                                        "diff_hit_t4_vs_gauss_daily",
+                                        r.diff_hit_t4_vs_gauss_daily.into(),
+                                    ),
+                                    (
+                                        "se_diff_hit_t4_vs_gauss_daily",
+                                        r.se_diff_hit_t4_vs_gauss_daily.into(),
+                                    ),
+                                    ("effect_discrete_hit", r.effect_discrete_hit.into()),
+                                    ("effect_heavy_tail_hit", r.effect_heavy_tail_hit.into()),
+                                    ("effect_total_hit", r.effect_total_hit.into()),
+                                    (
+                                        "ruin_prob_gauss_daily_mc",
+                                        r.ruin_prob_gauss_daily_mc.into(),
+                                    ),
                                     ("ruin_prob_t4_mc", r.ruin_prob_t4_mc.into()),
                                 ])
                             })

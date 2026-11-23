@@ -10,11 +10,23 @@ pub struct HeavyTailRow {
     pub c: f64,
     pub f: f64,
     pub g_gaussian_pred: f64,
+    pub g_gauss_daily_mc: f64,
+    pub g_gauss_daily_se: f64,
     pub g_t4_mc: f64,
     pub g_t4_se: f64,
+    pub diff_g_t4_vs_gauss_daily: f64,
+    pub se_diff_g_t4_vs_gauss_daily: f64,
     pub prob_hit_half_gaussian_pred: f64,
+    pub prob_hit_half_gauss_daily_mc: f64,
+    pub prob_hit_half_gauss_daily_se: f64,
     pub prob_hit_half_t4_mc: f64,
     pub prob_hit_half_t4_se: f64,
+    pub diff_hit_t4_vs_gauss_daily: f64,
+    pub se_diff_hit_t4_vs_gauss_daily: f64,
+    pub effect_discrete_hit: f64,
+    pub effect_heavy_tail_hit: f64,
+    pub effect_total_hit: f64,
+    pub ruin_prob_gauss_daily_mc: f64,
     pub ruin_prob_t4_mc: f64,
 }
 
@@ -52,61 +64,104 @@ pub fn run_heavy_tail_study(
     let half_ln = 0.5_f64.ln();
     let ruin_floor = 1e-12_f64;
 
-    // 5 accumulators per c: [sum_g, sum_g_sq, sum_hit, sum_hit_sq, sum_ruin]
-    let sums = reduce_vec_fixed_blocks(r_paths, n_workers, n_c * 5, |idx, acc| {
-        let mut rng = Rng::new(derive_seed(main_seed, 500, idx as u64));
-        let mut log_w = vec![0.0_f64; n_c];
-        let mut hit_half = vec![false; n_c];
-        let mut ruined = vec![false; n_c];
+    // 14 accumulators per c:
+    // 0,1: g_t4 sum, sq | 2,3: hit_t4 sum, sq | 4: ruin_t4 sum
+    // 5,6: g_gauss_daily sum, sq | 7,8: hit_gauss_daily sum, sq | 9: ruin_gauss_daily sum
+    // 10,11: (g_t4 - g_gauss_daily) sum, sq | 12,13: (hit_t4 - hit_gauss_daily) sum, sq
+    let sums = reduce_vec_fixed_blocks(r_paths, n_workers, n_c * 14, |idx, acc| {
+        let mut rng_t = Rng::new(derive_seed(main_seed, 500, idx as u64));
+        let mut rng_g = Rng::new(derive_seed(main_seed, 501, idx as u64));
+        let mut log_w_t = vec![0.0_f64; n_c];
+        let mut hit_t = vec![false; n_c];
+        let mut ruin_t = vec![false; n_c];
+        let mut log_w_g = vec![0.0_f64; n_c];
+        let mut hit_g = vec![false; n_c];
+        let mut ruin_g = vec![false; n_c];
 
         for _ in 0..n_steps {
-            let z_t = rng.student_t(nu) * t_scale;
-            let r_asset_excess = (gbm.mu - gbm.r) * dt + gbm.sigma * sqrt_dt * z_t;
+            let z_t = rng_t.student_t(nu) * t_scale;
+            let z_g = rng_g.normal();
+            let r_ex_t = (gbm.mu - gbm.r) * dt + gbm.sigma * sqrt_dt * z_t;
+            let r_ex_g = (gbm.mu - gbm.r) * dt + gbm.sigma * sqrt_dt * z_g;
             for ci in 0..n_c {
-                if ruined[ci] {
-                    continue;
+                if !ruin_t[ci] {
+                    let gross = 1.0 + gbm.r * dt + fs[ci] * r_ex_t;
+                    if gross <= ruin_floor {
+                        ruin_t[ci] = true;
+                        hit_t[ci] = true;
+                        log_w_t[ci] = ruin_floor.ln();
+                    } else {
+                        log_w_t[ci] += gross.ln();
+                        if log_w_t[ci] <= half_ln {
+                            hit_t[ci] = true;
+                        }
+                    }
                 }
-                let ret = gbm.r * dt + fs[ci] * r_asset_excess;
-                let gross = 1.0 + ret;
-                if gross <= ruin_floor {
-                    ruined[ci] = true;
-                    hit_half[ci] = true;
-                    log_w[ci] = ruin_floor.ln();
-                } else {
-                    log_w[ci] += gross.ln();
-                    if log_w[ci] <= half_ln {
-                        hit_half[ci] = true;
+                if !ruin_g[ci] {
+                    let gross = 1.0 + gbm.r * dt + fs[ci] * r_ex_g;
+                    if gross <= ruin_floor {
+                        ruin_g[ci] = true;
+                        hit_g[ci] = true;
+                        log_w_g[ci] = ruin_floor.ln();
+                    } else {
+                        log_w_g[ci] += gross.ln();
+                        if log_w_g[ci] <= half_ln {
+                            hit_g[ci] = true;
+                        }
                     }
                 }
             }
         }
 
         for ci in 0..n_c {
-            let g_real = log_w[ci] / horizon_years;
-            let h = if hit_half[ci] { 1.0 } else { 0.0 };
-            let r = if ruined[ci] { 1.0 } else { 0.0 };
-            let off = ci * 5;
-            acc[off] += g_real;
-            acc[off + 1] += g_real * g_real;
-            acc[off + 2] += h;
-            acc[off + 3] += h * h;
-            acc[off + 4] += r;
+            let gt = log_w_t[ci] / horizon_years;
+            let gg = log_w_g[ci] / horizon_years;
+            let ht = if hit_t[ci] { 1.0 } else { 0.0 };
+            let hg = if hit_g[ci] { 1.0 } else { 0.0 };
+            let rt = if ruin_t[ci] { 1.0 } else { 0.0 };
+            let rg = if ruin_g[ci] { 1.0 } else { 0.0 };
+            let dg = gt - gg;
+            let dh = ht - hg;
+            let off = ci * 14;
+            acc[off] += gt;
+            acc[off + 1] += gt * gt;
+            acc[off + 2] += ht;
+            acc[off + 3] += ht * ht;
+            acc[off + 4] += rt;
+            acc[off + 5] += gg;
+            acc[off + 6] += gg * gg;
+            acc[off + 7] += hg;
+            acc[off + 8] += hg * hg;
+            acc[off + 9] += rg;
+            acc[off + 10] += dg;
+            acc[off + 11] += dg * dg;
+            acc[off + 12] += dh;
+            acc[off + 13] += dh * dh;
         }
     });
 
     let rf = r_paths as f64;
+    let stat = |sum: f64, sum_sq: f64| -> (f64, f64) {
+        let m = sum / rf;
+        let se = ((sum_sq / rf - m * m).max(0.0) / rf).sqrt();
+        (m, se)
+    };
     cs.iter()
         .enumerate()
         .map(|(ci, &c)| {
             let f = fs[ci];
-            let off = ci * 5;
-            let g_t4_mc = sums[off] / rf;
-            let g_t4_se = ((sums[off + 1] / rf - g_t4_mc * g_t4_mc).max(0.0) / rf).sqrt();
-            let prob_hit_half_t4_mc = sums[off + 2] / rf;
-            let prob_hit_half_t4_se =
-                ((sums[off + 3] / rf - prob_hit_half_t4_mc * prob_hit_half_t4_mc).max(0.0) / rf)
-                    .sqrt();
+            let off = ci * 14;
+            let (g_t4_mc, g_t4_se) = stat(sums[off], sums[off + 1]);
+            let (prob_hit_half_t4_mc, prob_hit_half_t4_se) = stat(sums[off + 2], sums[off + 3]);
             let ruin_prob_t4_mc = sums[off + 4] / rf;
+            let (g_gauss_daily_mc, g_gauss_daily_se) = stat(sums[off + 5], sums[off + 6]);
+            let (prob_hit_half_gauss_daily_mc, prob_hit_half_gauss_daily_se) =
+                stat(sums[off + 7], sums[off + 8]);
+            let ruin_prob_gauss_daily_mc = sums[off + 9] / rf;
+            let (diff_g_t4_vs_gauss_daily, se_diff_g_t4_vs_gauss_daily) =
+                stat(sums[off + 10], sums[off + 11]);
+            let (diff_hit_t4_vs_gauss_daily, se_diff_hit_t4_vs_gauss_daily) =
+                stat(sums[off + 12], sums[off + 13]);
 
             let g_gaussian_pred = gbm.drift_log(f);
             let s_pred = gbm.vol_log(f);
@@ -117,11 +172,23 @@ pub fn run_heavy_tail_study(
                 c,
                 f,
                 g_gaussian_pred,
+                g_gauss_daily_mc,
+                g_gauss_daily_se,
                 g_t4_mc,
                 g_t4_se,
+                diff_g_t4_vs_gauss_daily,
+                se_diff_g_t4_vs_gauss_daily,
                 prob_hit_half_gaussian_pred,
+                prob_hit_half_gauss_daily_mc,
+                prob_hit_half_gauss_daily_se,
                 prob_hit_half_t4_mc,
                 prob_hit_half_t4_se,
+                diff_hit_t4_vs_gauss_daily,
+                se_diff_hit_t4_vs_gauss_daily,
+                effect_discrete_hit: prob_hit_half_gauss_daily_mc - prob_hit_half_gaussian_pred,
+                effect_heavy_tail_hit: diff_hit_t4_vs_gauss_daily,
+                effect_total_hit: prob_hit_half_t4_mc - prob_hit_half_gaussian_pred,
+                ruin_prob_gauss_daily_mc,
                 ruin_prob_t4_mc,
             }
         })

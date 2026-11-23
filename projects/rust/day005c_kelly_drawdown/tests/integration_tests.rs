@@ -85,3 +85,40 @@ fn integration_exact_anchors_and_3se() {
     let z = (pt.e_ln_w_mc - pt.e_ln_w_exact).abs() / pt.e_ln_w_se;
     assert!(z < 3.0, "binary E[ln W] z = {z}");
 }
+
+#[test]
+fn integration_seed_determinism_and_sensitivity() {
+    let gbm = GbmParams::default();
+    let a1 = run_hitting_grid(
+        &gbm,
+        &[1.0 / 12.0],
+        &[5.0],
+        &[0.5],
+        &[1.25],
+        2048,
+        20261123,
+        2,
+    );
+    let a2 = run_hitting_grid(
+        &gbm,
+        &[1.0 / 12.0],
+        &[5.0],
+        &[0.5],
+        &[1.25],
+        2048,
+        20261123,
+        2,
+    );
+    let b1 = run_hitting_grid(
+        &gbm,
+        &[1.0 / 12.0],
+        &[5.0],
+        &[0.5],
+        &[1.25],
+        2048,
+        99999999,
+        2,
+    );
+    assert_eq!(a1[0].bridge_mc.to_bits(), a2[0].bridge_mc.to_bits());
+    assert_ne!(a1[0].bridge_mc.to_bits(), b1[0].bridge_mc.to_bits());
+}

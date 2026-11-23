@@ -16,7 +16,7 @@ mod tests {
     use super::estimation::{optimal_shrinkage_c, run_estimation_loss_study};
     use super::fractional::compute_fractional_roots;
     use super::gbm::GbmParams;
-    use super::hitting::{prob_hit_finite, prob_hit_infinite, run_hitting_grid};
+    use super::hitting::{bridge_cross_prob, prob_hit_finite, prob_hit_infinite, run_hitting_grid};
     use super::kelly_binary::{f_star_binary, g_binary, maximize_g_binary};
     use super::special::norm_cdf;
 
@@ -86,5 +86,56 @@ mod tests {
         let est = run_estimation_loss_study(&gbm, &alt, &[5.0], 20_000, 42, 2);
         assert!(est[0].z_diff.abs() < 3.0);
         assert!(optimal_shrinkage_c(&gbm, 5.0) < 1.0);
+    }
+
+    #[test]
+    fn test_binary_kelly_fine_grid_peak() {
+        let p = 0.55;
+        let b = 1.0;
+        let f_star = f_star_binary(p, b);
+        let g_star = g_binary(p, b, f_star);
+        for k in 1..200 {
+            let f = k as f64 * 0.002;
+            if (f - f_star).abs() > 1e-12 {
+                assert!(g_binary(p, b, f) < g_star);
+            }
+        }
+    }
+
+    #[test]
+    fn test_hitting_r_zero_identity_multiple_barriers() {
+        let gbm_r0 = GbmParams {
+            mu: 0.09,
+            sigma: 0.25,
+            r: 0.0,
+        };
+        let f_star = gbm_r0.kelly_fraction();
+        let g = gbm_r0.drift_log(f_star);
+        let s = gbm_r0.vol_log(f_star);
+        for x in [0.1, 0.25, 0.5, 0.75, 0.9] {
+            let p_inf = prob_hit_infinite(g, s, x);
+            assert!((p_inf - x).abs() < 1e-12, "x={x}, p_inf={p_inf}");
+        }
+    }
+
+    #[test]
+    fn test_bridge_cross_prob_at_or_below_barrier() {
+        let a = 0.5_f64.ln();
+        assert_eq!(bridge_cross_prob(a, a + 0.1, a, 0.01), 1.0);
+        assert_eq!(bridge_cross_prob(a + 0.1, a, a, 0.01), 1.0);
+        assert_eq!(bridge_cross_prob(a - 0.05, a + 0.2, a, 0.01), 1.0);
+        let p_above = bridge_cross_prob(a + 0.1, a + 0.1, a, 0.01);
+        assert!(p_above > 0.0 && p_above < 1.0);
+    }
+
+    #[test]
+    fn test_shrinkage_monotonic_and_bounds() {
+        let gbm = GbmParams::default();
+        let c1 = optimal_shrinkage_c(&gbm, 1.0);
+        let c5 = optimal_shrinkage_c(&gbm, 5.0);
+        let c20 = optimal_shrinkage_c(&gbm, 20.0);
+        let c_large = optimal_shrinkage_c(&gbm, 100_000.0);
+        assert!(0.0 < c1 && c1 < c5 && c5 < c20 && c20 < c_large && c_large < 1.0);
+        assert!(c_large > 0.999);
     }
 }

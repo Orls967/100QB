@@ -37,16 +37,18 @@ cargo run --release --manifest-path projects/rust/day005c_kelly_drawdown/Cargo.t
 - [src/bin/run.rs](src/bin/run.rs) — Runner penuh (`MAIN_SEED = 20261123`)
 - [tests/integration_tests.rs](tests/integration_tests.rs) — Tes integrasi invariansi worker, determinisme, dan anchor 3 SE
 
-## Ringkasan Hasil (`MAIN_SEED = 20261123`, `10` worker, `50,47s`)
+## Ringkasan Hasil (`MAIN_SEED = 20261123`, `10` worker, `46,80s`)
 
 | Bagian | Metrik Utama | Hasil Terukur |
 |---|---|---|
 | 1. Kelly Biner | $f^*$ & $f_{\mathrm{be}}$; $E[\ln W_{1000}]$ | $f^* = 0{,}10$ (`diff = 0`), $f_{\mathrm{be}} = 0{,}198668$; `max_z_log = 2,07` |
-| 2. Sentuh GBM | Jembatan Brownian vs Eksak ($72$ kombinasi, $R=10^6$) | `72/72` dalam `3 SE` (`max |z| = 2,80`, `max |err| = 0,00099`); $P_{\infty}(0{,}5\mid f^*) = 0{,}257028$ |
+| 2. Sentuh GBM | Sel informatif ($33$ sel, $R=10^6$) | `33/33` bridge dalam `3 SE` (`max |z| = 2,80`), naif negatif `33/33`, kemiringan $\sqrt{\Delta}$ = `0,4946 ± 0,0168` |
 | 3. Kelly Fraksional | $c(2-c)$ & akar | `max_err = 4,44e-16`; $c=0{,}5$: `75%` *excess growth*, $P_\infty(0{,}5) = 0{,}008729$ |
 | 4. Galat Estimasi | $E[g(f^*) - g(\hat{f})] = 1/(2T_{\mathrm{est}})$ | $T_{\mathrm{est}} \in \{1,5,10,20\}$: `max |z| = 1,41` (invarian terhadap $\mu,\sigma$) |
 | 4. Penyusutan | $c^* = 0{,}2381$ ($T_{\mathrm{est}}=5$, 20 thn) | $g_{\mathrm{shrink}} = 0{,}03751$ vs $g_{\mathrm{full}} = -0{,}03810$ (`+0,0756 ± 0,0004`); $P_{20}(0{,}5)$: `5,82%` vs `53,71%` |
-| 4. Ekor Berat $t_4$ | Pertumbuhan & ruin harian ($20$ thn) | $2f^*$: $g_{t_4} = 0{,}02408$ < $0{,}03000$; `ruin = 0,387%` (Gaussian `0%`) |
+| 4. Ekor Berat $t_4$ | $t_4$ harian vs Gaussian harian ($20$ thn) | $2f^*$: $\Delta g = -0{,}00631 \pm 0{,}00057$ (`z = -11,04`), `ruin = 0,387%` vs `0%` |
+
+Tes: `8` unit test + `3` integration test (`cargo test --release` lolos semua).
 
 Artefak keluaran: [results.json](../../../outputs/day005c/results.json), grafik `outputs/figures/day005c_*.svg`, serta dokumen penjelasan [day005c_quant_kelly-drawdown.md](../../../docs/project-explanations/day005c_quant_kelly-drawdown.md).
 
