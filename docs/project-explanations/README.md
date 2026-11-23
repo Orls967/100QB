@@ -48,6 +48,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `5d` (`day005d`) | `bonus` | `quant` | `rust` | [Jump-diffusion Merton: seri eksak, PIDE Crank–Nicolson, kalibrasi smile & risiko ekor (Rust)](day005d_quant_merton-jump-diffusion.md) |
 | `5e` (`day005e`) | `bonus` | `quant` | `ruby` | [Kopula, ketergantungan ekor dan alokasi modal Euler (Ruby)](day005e_quant_copula-tail-dependence.md) |
 | `5f` (`day005f`) | `bonus` | `quant` | `ruby` | [Valuasi tranche CDO: LHP Vasicek, rekursi ASB, base correlation & exponential twisting (Ruby)](day005f_quant_cdo-tranche.md) |
+| `5g` (`day005g`) | `bonus` | `quant` | `ruby` | [Multilevel Monte Carlo (Giles) untuk CIR dan Heston: laju kuat, kompleksitas & antithetic (Ruby)](day005g_quant_mlmc-heston.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 

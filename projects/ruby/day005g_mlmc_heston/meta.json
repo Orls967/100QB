@@ -1,0 +1,10 @@
+{
+  "day": 5,
+  "session": "g",
+  "topic_no": null,
+  "type": "quant",
+  "language": "ruby",
+  "topic": "Multilevel Monte Carlo (Giles) untuk CIR dan Heston: laju kuat, hukum kompleksitas & antithetic",
+  "date": "2026-11-23",
+  "link": "projects/ruby/day005g_mlmc_heston"
+}

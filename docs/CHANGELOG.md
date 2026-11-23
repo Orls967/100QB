@@ -3,6 +3,20 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 005g] — 2026-11-23 · Perbaikan day005f + Multilevel Monte Carlo (Giles) untuk CIR & Heston (Ruby, Bonus)
+
+### Diperbaiki (Bagian A — `day005f`)
+- `projects/ruby/day005f_cdo_tranche/`: meng-commit `base_corr.rb` deterministik (kuadratur 2D eksak dengan substitusi $u = \sqrt{w}$ dan uji konvergensi `< 1e-8`: `1,09e-9`), memperkuat `c4` dengan arah *skew* dan monotonisitas EL *tranche* ternormalisasi serta sensitivitas $(\nu, \rho)$, memperkuat `c5` dengan pemindaian grid $\rho \in [0{,}01, 0{,}94]$ untuk seluruh 5 *tranche* (`0-3%`: 1, `3-7%`: 1, `7-10%`: 0, `10-15%`: 2 akar, `15-30%`: 1), dan menambah 6 unit tes baru (`16` tes, `48` asersi).
+
+### Ditambahkan (Bagian C — `day005g`)
+- Project Ruby murni mandiri `projects/ruby/day005g_mlmc_heston/` (topik cadangan sesuai Langkah 0.6 karena Hull–White telah dikerjakan penuh di `day002i`; nol gem numerik, `SplitMix64`, `Process.fork` + `IO.pipe` + `Marshal` deterministik, JSON penuh, 5 grafik SVG):
+  - **Bagian 1**: Validasi *anchor* Heston CF (*little trap* + Gil–Pelaez 96-titik: batas BS $\xi=0$ galat `4,26e-14`, *put-call parity* `7,11e-15`, konvergensi kuadratur `8,23e-10`) dan momen eksak CIR.
+  - **Bagian 2**: Regresi laju kuat $\beta$ & lemah $\alpha$: GBM Euler (`0,982`) vs Milstein (`1,945`), Heston *Full-Truncation* Feller OK (`1,276`) vs Feller dilanggar (`0,821`).
+  - **Bagian 3**: Hukum kompleksitas Giles ($\varepsilon \in \{0{,}08..0{,}01\}$): kemiringan biaya log-log `GBM Milstein = 1,876` (*speedup* `14,90x`), `Heston MLMC = 2,471` vs `Std MC = 3,000`, serta kecocokan harga dalam `0,65 SE`.
+  - **Bagian 4**: *Antithetic coupling* Giles–Szpruch pada Heston (`level 3` rasio `1,253x`).
+- Runner utama `day005g` selesai dalam `72,14s` (`Ruby 4.0.9`, YJIT `ON`, `10` *worker*; `c1`–`c8 = tercapai` semua), `10` tes unit/integrasi (`15` asersi) dan `rubocop` lulus bersih.
+- Output `outputs/day005g/results.json`, 5 grafik SVG `outputs/figures/day005g_*.svg`, `projects/ruby/day005g_mlmc_heston/README.md`, serta [day005g_quant_mlmc-heston.md](project-explanations/day005g_quant_mlmc-heston.md).
+
 ## [Hari 005f] — 2026-11-23 · Perbaikan day005e + Valuasi Tranche CDO: LHP Vasicek, Rekursi ASB & Exponential Twisting (Ruby, Bonus)
 
 ### Diperbaiki (Bagian A — `day005e`)
