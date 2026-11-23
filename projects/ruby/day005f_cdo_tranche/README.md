@@ -28,15 +28,15 @@ bundle exec ruby bin/run_extras
 - [lib/cdo_tranche/pricing.rb](lib/cdo_tranche/pricing.rb) & [base_corr.rb](lib/cdo_tranche/base_corr.rb) — *Fair spread* 6 *tranche*, studi granularitas $N$, *base correlation* vs *compound correlation*.
 - [lib/cdo_tranche/importance.rb](lib/cdo_tranche/importance.rb) & [model_risk.rb](lib/cdo_tranche/model_risk.rb) — *Exponential twisting* 2-tahap ($R=100\mathrm{k}$) dan *model risk* Gaussian vs $t(\nu=4)$ vs *random recovery*.
 - [lib/cdo_tranche/runner.rb](lib/cdo_tranche/runner.rb), [criteria.rb](lib/cdo_tranche/criteria.rb), [figures.rb](lib/cdo_tranche/figures.rb), [json_out.rb](lib/cdo_tranche/json_out.rb), [svg.rb](lib/cdo_tranche/svg.rb) — Runner, kriteria `c1`–`c9`, dan 5 grafik SVG.
-- [test/test_core.rb](test/test_core.rb) & [test/test_studies.rb](test/test_studies.rb) — `10` tes unit + integrasi (`31` asersi).
+- [test/test_core.rb](test/test_core.rb) & [test/test_studies.rb](test/test_studies.rb) — `16` tes unit + integrasi (`48` asersi).
 
-## Ringkasan Hasil (`MAIN_SEED = 20261123`, Ruby `4.0.9`, YJIT `ON`, `10` worker, `24,59s`)
+## Ringkasan Hasil (`MAIN_SEED = 20261123`, Ruby `4.0.9`, YJIT `ON`, `10` worker, `25,67s`)
 
 | Bagian | Metrik Utama | Hasil Terukur |
 |---|---|---|
 | 1. Anchor ASB & LHP | ASB vs binomial & LHP vs bivariat | `max_asb_err = 7,18e-16`, `max_lhp_err = 2,52e-10`, galat LHP turun `6,99e-4` ($N=25$) $\to$ `8,48e-5` ($N=500$) |
 | 2. Valuasi 6 Tranche | Konservasi PV proteksi | `homog_pv_sum_err = 6,94e-18`, `hetero_pv_sum_err = 6,94e-18` |
-| 3. Base & Compound Corr | Kalibrasi ke pasar $t(\nu=4)$ | `base_corr` `[0,455; 0,438; 0,432; 0,424; 0,410]`; *mezzanine* `0,3969`, *senior* `[]` (tidak ada akar) |
+| 3. Base & Compound Corr | Kalibrasi ke pasar $t(\nu=4)$ | `base_corr` `[0,455; 0,439; 0,432; 0,424; 0,408]` (`conv = 1,09e-9`); *compound*: `0-3%` (1), `3-7%` (1), `7-10%` (0), `10-15%` (2 akar), `15-30%` (1) |
 | 4. Importance Sampling | *Super-senior* `30-100%` ($R=100\mathrm{k}$) | `max |is_z| = 2,64`, penghematan variansi **`309,1x`** (`VR = 353,5x` pada `extras` $R=400\mathrm{k}$) |
 | 5. Model Risk | *Spread* senior `15-30%` | Gaussian `27,44 bps` vs $t(\nu=4)$ `74,31 bps` vs *Random Recovery* `63,46 bps` |
 

@@ -39,15 +39,36 @@ module CdoTranche
     def run_part3
       detaches = [0.03, 0.07, 0.10, 0.15, 0.30]
       market_els = detaches.map { |d| BaseCorr.t_copula_equity_el(125, 0.015, 0.40, 5.0, 0.25, 4.0, d) }
+      el_fine = BaseCorr.t_copula_equity_el(125, 0.015, 0.40, 5.0, 0.25, 4.0, 0.10, m_gl: 80, w_gl: 40)
+      quad_diff = (market_els[2] - el_fine).abs
       base_corrs = BaseCorr.calibrate_base_correlation(market_els, detaches)
-      mezz_el = market_els[1] - market_els[0]
-      sen_el = market_els[2] - market_els[1]
+      prev_d = 0.0
+      norm_els = base_corrs.map do |row|
+        w = row[:detach] - prev_d
+        prev_d = row[:detach]
+        row[:implied_tranche_el] / w
+      end
+      scans = build_compound_scans(market_els, detaches)
       {
-        market_t4_equity_els: market_els,
-        base_correlations: base_corrs,
-        mezz_compound_roots: BaseCorr.compound_correlation_scan(mezz_el, 0.03, 0.07),
-        senior_compound_roots: BaseCorr.compound_correlation_scan(sen_el, 0.07, 0.10)
+        market_t4_equity_els: market_els, quadrature_conv_diff: quad_diff,
+        base_correlations: base_corrs, normalized_tranche_els: norm_els,
+        skew_sensitivity: BaseCorr.t_copula_sensitivity_grid(detaches: detaches),
+        compound_scans: scans,
+        mezz_compound_roots: scans[1][:roots], senior_compound_roots: scans[2][:roots]
       }
+    end
+
+    def build_compound_scans(market_els, detaches)
+      prev_el = 0.0
+      prev_d = 0.0
+      detaches.each_with_index.map do |d, idx|
+        tr_el = market_els[idx] - prev_el
+        roots = BaseCorr.compound_correlation_scan(tr_el, prev_d, d)
+        res = { tranche: "#{(prev_d * 100).round}-#{(d * 100).round}%", n_roots: roots.length, roots: roots }
+        prev_el = market_els[idx]
+        prev_d = d
+        res
+      end
     end
   end
 

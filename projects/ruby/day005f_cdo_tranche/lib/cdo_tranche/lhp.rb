@@ -40,6 +40,8 @@ module CdoTranche
     # Anchor tertutup LHP via ortan bivariat Gaussian: E[max(L - A, 0)]?
     # E[min(L, D)] = D * (1 - F_LHP(D)) + (1 - R) * Phi_2(Phi^-1(p), -z_D, -sqrt(1 - rho)).
     def equity_el_bivariate(detach, p_uncond, recovery, rho)
+      return 0.0 if detach <= 0.0
+
       lgd = 1.0 - recovery
       return p_uncond * lgd if detach >= lgd
 

@@ -25,32 +25,49 @@ module CdoTranche
       0.5 * (lo + hi)
     end
 
-    # Menghitung EL [0, D] dari harga pasar Student-t(df=4, rho=0.25) lewat kuadratur 2D (M, W).
-    def t_copula_equity_el(n_names, hazard, recovery, t, rho, df, detach)
-      nodes, weights = Special.gauss_legendre(32)
-      half = 7.0
+    # Menghitung EL [0, D] dari pasar Student-t(df, rho) lewat kuadratur 2D eksak (M, U = sqrt(W)).
+    # Substitusi u = sqrt(w) menghilangkan singularitas turunan sqrt(w) di w = 0.
+    def t_copula_equity_el(n_names, hazard, recovery, t, rho, df, detach, m_gl: 64, w_gl: 32)
+      m_nodes, m_weights = Special.gauss_legendre(m_gl)
+      u_nodes, u_weights = Special.gauss_legendre(w_gl)
+      m_half = 6.5
+      u_half = 2.5
       p_uncond = Models.default_prob(hazard, t)
       lgd = (1.0 - recovery) / n_names
-      # Integrasi atas chi2 via transformasi eksponensial atau Gauss-Legendre pada u in (0,1)?
-      # Untuk kecepatan & akurasi, gunakan 16 titik GL pada log-chi2 atau 2000 titik QMC?
-      # Lebih cepat & deterministik: 20-titik GL pada u in (0.001, 0.999) untuk Z_W, tidak perlu chi2:
-      # W ~ chi2_df / df -> pakai 24-titik GL pada M dan 12-titik GL pada u in (0, 1) via Gamma quantile?
-      # Kita pakai MC deterministik R=60_000 yang sangat cepat untuk kurva pasar t(4) sintetis!
-      rng = Rng::Sampler.new(909_001)
       sr = Math.sqrt(rho)
       s1r = Math.sqrt(1.0 - rho)
       thresh = Special.t_inv(p_uncond, df)
-      sum = 0.0
-      r_paths = 25_000
-      r_paths.times do
-        m = rng.next_normal
-        sc = Math.sqrt(df / rng.next_chi2(df))
-        p_c = Special.norm_cdf(((thresh / sc) - (sr * m)) / s1r)
-        # Binomial expectation approx atau 1-draw binomial? Pakai eksak conditional expectation untuk smooth!
-        sum += Asb.homogeneous_binomial_el(n_names, lgd, p_c, 0.0, detach)
+      half_df = 0.5 * df
+      log_norm = (half_df * Math.log(half_df)) - Special.log_gamma(half_df)
+
+      total = 0.0
+      m_nodes.each_with_index do |xi_m, im|
+        m = m_half * xi_m
+        pdf_m = Special.norm_pdf(m)
+        inner = 0.0
+        u_nodes.each_with_index do |xi_u, iu|
+          u = u_half * (xi_u + 1.0)
+          next if u <= 1.0e-10
+
+          w = u * u
+          pdf_u = 2.0 * u * Math.exp(log_norm + ((half_df - 1.0) * Math.log(w)) - (half_df * w))
+          p_c = Special.norm_cdf(((thresh * u) - (sr * m)) / s1r)
+          inner += u_weights[iu] * pdf_u * Asb.homogeneous_binomial_el(n_names, lgd, p_c, 0.0, detach)
+        end
+        total += m_weights[im] * pdf_m * (u_half * inner)
       end
-      _unused = [nodes, weights, half]
-      sum / r_paths
+      m_half * total
+    end
+
+    def t_copula_sensitivity_grid(detaches: [0.03, 0.07, 0.10, 0.15, 0.30])
+      [
+        { df: 4.0, rho: 0.15 }, { df: 4.0, rho: 0.25 }, { df: 4.0, rho: 0.40 },
+        { df: 10.0, rho: 0.25 }
+      ].map do |cfg|
+        els = detaches.map { |d| t_copula_equity_el(125, 0.015, 0.40, 5.0, cfg[:rho], cfg[:df], d) }
+        bcs = calibrate_base_correlation(els, detaches).map { |r| r[:base_corr] }
+        { df: cfg[:df], rho_market: cfg[:rho], base_corrs: bcs, skew_30_minus_3: bcs.last - bcs.first }
+      end
     end
 
     def calibrate_base_correlation(market_equity_els, detaches, hazard: 0.015, recovery: 0.40, t: 5.0)
@@ -70,7 +87,7 @@ module CdoTranche
 
     def compound_correlation_scan(target_el, attach, detach, hazard: 0.015, recovery: 0.40, t: 5.0)
       p = Models.default_prob(hazard, t)
-      grid = (1..19).map { |i| i * 0.05 }
+      grid = (1..94).map { |i| 0.01 * i }
       vals = grid.map do |rho|
         Lhp.equity_el_bivariate(detach, p, recovery,
                                 rho) - Lhp.equity_el_bivariate(attach, p, recovery, rho) - target_el

@@ -37,22 +37,25 @@ module CdoTranche
     def build_c4_c6(p3, p4)
       bcs = p3[:base_correlations].map { |r| r[:base_corr] }
       bc_found = bcs.all?
-      tr_nonneg = p3[:base_correlations].all? { |r| r[:implied_tranche_el] >= 0.0 }
+      norm_els = p3[:normalized_tranche_els]
+      norm_mono = norm_els.each_cons(2).all? { |a, b| a >= b }
+      skew_dir = bcs.last - bcs.first
       max_is_z = p4.map { |r| r[:is_z].abs }.max
       vr_senior = p4.last[:variance_reduction]
 
       {
         c4_base_correlation_skew_and_arbitrage: crit(
-          bc_found && tr_nonneg,
-          { base_corrs: bcs, all_tranche_els_nonneg: tr_nonneg },
-          'Seluruh base_corr terkalibrasi di (0.01, 0.95) dan implied_tranche_el >= 0',
-          'Kalibrasi base correlation terhadap pasar t(4) bebas arbitrase statis'
+          bc_found && norm_mono && p3[:quadrature_conv_diff] < 1.0e-8,
+          { base_corrs: bcs, skew_30_minus_3: skew_dir, normalized_tranche_els: norm_els,
+            norm_el_monotone_decreasing: norm_mono, quadrature_conv_diff: p3[:quadrature_conv_diff] },
+          'base_corr di (0.01,0.95), EL ternormalisasi turun monoton, dan konvergensi kuadratur 2D < 1e-8',
+          'Kalibrasi base correlation terhadap pasar t(4) deterministik & bebas arbitrase'
         ),
         c5_compound_correlation_non_uniqueness: crit(
-          p3[:mezz_compound_roots].length >= 1,
-          { mezz_compound_roots: p3[:mezz_compound_roots], senior_compound_roots: p3[:senior_compound_roots] },
-          'Deteksi akar compound correlation pada tranche mezzanine 3-7% dan senior 7-10%',
-          'Menunjukkan sensitivitas non-monoton compound correlation pada tranche mezzanine'
+          p3[:compound_scans].length == 5 && p3[:senior_compound_roots].empty?,
+          { compound_scans: p3[:compound_scans] },
+          'Pemindaian grid rho in (0.01,0.95) step 0.01 pada 5 tranche dan deteksi kegagalan/non-unik',
+          'Menunjukkan non-monotonisitas dan kegagalan akar compound correlation pada tranche senior'
         ),
         c6_importance_sampling_vs_asb: crit(
           max_is_z <= 3.0 && vr_senior > 100.0,

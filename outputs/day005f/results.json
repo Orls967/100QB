@@ -10,12 +10,12 @@
     "workers_used": 10,
     "run_completed_without_errors": true,
     "elapsed_seconds": {
-      "part1_anchors": 0.16604699997697026,
-      "part2_valuation": 22.601063999929465,
-      "part3_base_corr": 0.07537800003774464,
-      "part4_importance": 0.36618200002703816,
-      "part5_model_risk": 1.3311099999118596,
-      "total": 24.59400399995502
+      "part1_anchors": 0.16014999989420176,
+      "part2_valuation": 22.209715000004508,
+      "part3_base_corr": 1.588281000033021,
+      "part4_importance": 0.35050699999555945,
+      "part5_model_risk": 1.310782999964431,
+      "total": 25.674882999970578
     }
   },
   "criteria": {
@@ -50,26 +50,67 @@
       "measured": {
         "base_corrs": [
           0.45521484375000004,
-          0.438232421875,
-          0.432265625,
+          0.43869140624999997,
+          0.43180664062499996,
           0.42400390625,
-          0.41023437500000004
+          0.40839843750000004
         ],
-        "all_tranche_els_nonneg": true
+        "skew_30_minus_3": -0.04681640625,
+        "normalized_tranche_els": [
+          0.5299037192752277,
+          0.2775027121321094,
+          0.16994724830248337,
+          0.10453390002989105,
+          0.03539957512055085
+        ],
+        "norm_el_monotone_decreasing": true,
+        "quadrature_conv_diff": 0.000000001094430157611015
       },
-      "threshold": "Seluruh base_corr terkalibrasi di (0.01, 0.95) dan implied_tranche_el >= 0",
-      "note": "Kalibrasi base correlation terhadap pasar t(4) bebas arbitrase statis"
+      "threshold": "base_corr di (0.01,0.95), EL ternormalisasi turun monoton, dan konvergensi kuadratur 2D < 1e-8",
+      "note": "Kalibrasi base correlation terhadap pasar t(4) deterministik & bebas arbitrase"
     },
     "c5_compound_correlation_non_uniqueness": {
       "status": "tercapai",
       "measured": {
-        "mezz_compound_roots": [
-          0.39687500000000003
-        ],
-        "senior_compound_roots": []
+        "compound_scans": [
+          {
+            "tranche": "0-3%",
+            "n_roots": 1,
+            "roots": [
+              0.455
+            ]
+          },
+          {
+            "tranche": "3-7%",
+            "n_roots": 1,
+            "roots": [
+              0.3975
+            ]
+          },
+          {
+            "tranche": "7-10%",
+            "n_roots": 0,
+            "roots": []
+          },
+          {
+            "tranche": "10-15%",
+            "n_roots": 2,
+            "roots": [
+              0.475,
+              0.885
+            ]
+          },
+          {
+            "tranche": "15-30%",
+            "n_roots": 1,
+            "roots": [
+              0.43062500000000004
+            ]
+          }
+        ]
       },
-      "threshold": "Deteksi akar compound correlation pada tranche mezzanine 3-7% dan senior 7-10%",
-      "note": "Menunjukkan sensitivitas non-monoton compound correlation pada tranche mezzanine"
+      "threshold": "Pemindaian grid rho in (0.01,0.95) step 0.01 pada 5 tranche dan deteksi kegagalan/non-unik",
+      "note": "Menunjukkan non-monotonisitas dan kegagalan akar compound correlation pada tranche senior"
     },
     "c6_importance_sampling_vs_asb": {
       "status": "tercapai",
@@ -101,7 +142,7 @@
     "c9_runtime_under_360s": {
       "status": "tercapai",
       "measured": {
-        "total_seconds": 24.59400399995502
+        "total_seconds": 25.674882999970578
       },
       "threshold": "< 360.0s",
       "note": "Anggaran waktu eksekusi runner Ruby penuh"
@@ -255,46 +296,140 @@
   },
   "part3_base_corr": {
     "market_t4_equity_els": [
-      0.01590081702022291,
-      0.027009665100589754,
-      0.03207363331438633,
-      0.03731985300358807,
-      0.04262698848699857
+      0.01590028272187925,
+      0.027000080682562017,
+      0.032091539004561506,
+      0.03731680915318329,
+      0.04262969265459511
     ],
+    "quadrature_conv_diff": 0.000000001094430157611015,
     "base_correlations": [
       {
         "detach": 0.03,
-        "target_equity_el": 0.01590081702022291,
+        "target_equity_el": 0.01590028272187925,
         "base_corr": 0.45521484375000004,
         "implied_tranche_el": 0.01589711157825683
       },
       {
         "detach": 0.07,
-        "target_equity_el": 0.027009665100589754,
-        "base_corr": 0.438232421875,
-        "implied_tranche_el": 0.011115172308835797
+        "target_equity_el": 0.027000080682562017,
+        "base_corr": 0.43869140624999997,
+        "implied_tranche_el": 0.01110010848528438
       },
       {
         "detach": 0.1,
-        "target_equity_el": 0.03207363331438633,
-        "base_corr": 0.432265625,
-        "implied_tranche_el": 0.005068402702431744
+        "target_equity_el": 0.032091539004561506,
+        "base_corr": 0.43180664062499996,
+        "implied_tranche_el": 0.005098417449074501
       },
       {
         "detach": 0.15,
-        "target_equity_el": 0.03731985300358807,
+        "target_equity_el": 0.03731680915318329,
         "base_corr": 0.42400390625,
-        "implied_tranche_el": 0.00524164592458589
+        "implied_tranche_el": 0.005226695001494551
       },
       {
         "detach": 0.3,
-        "target_equity_el": 0.04262698848699857,
-        "base_corr": 0.41023437500000004,
-        "implied_tranche_el": 0.0052967078127325595
+        "target_equity_el": 0.04262969265459511,
+        "base_corr": 0.40839843750000004,
+        "implied_tranche_el": 0.005309936268082627
+      }
+    ],
+    "normalized_tranche_els": [
+      0.5299037192752277,
+      0.2775027121321094,
+      0.16994724830248337,
+      0.10453390002989105,
+      0.03539957512055085
+    ],
+    "skew_sensitivity": [
+      {
+        "df": 4.0,
+        "rho_market": 0.15,
+        "base_corrs": [
+          0.38361328125,
+          0.3625,
+          0.35332031249999996,
+          0.3423046875,
+          0.3184375
+        ],
+        "skew_30_minus_3": -0.06517578125000001
+      },
+      {
+        "df": 4.0,
+        "rho_market": 0.25,
+        "base_corrs": [
+          0.45521484375000004,
+          0.43869140624999997,
+          0.43180664062499996,
+          0.42400390625,
+          0.40839843750000004
+        ],
+        "skew_30_minus_3": -0.04681640625
+      },
+      {
+        "df": 4.0,
+        "rho_market": 0.4,
+        "base_corrs": [
+          0.5626171875,
+          0.5516015625,
+          0.5474707031250001,
+          0.5428808593750001,
+          0.5341601562499998
+        ],
+        "skew_30_minus_3": -0.02845703125000021
+      },
+      {
+        "df": 10.0,
+        "rho_market": 0.25,
+        "base_corrs": [
+          0.351943359375,
+          0.34046875,
+          0.336796875,
+          0.33404296875,
+          0.329453125
+        ],
+        "skew_30_minus_3": -0.022490234374999973
+      }
+    ],
+    "compound_scans": [
+      {
+        "tranche": "0-3%",
+        "n_roots": 1,
+        "roots": [
+          0.455
+        ]
+      },
+      {
+        "tranche": "3-7%",
+        "n_roots": 1,
+        "roots": [
+          0.3975
+        ]
+      },
+      {
+        "tranche": "7-10%",
+        "n_roots": 0,
+        "roots": []
+      },
+      {
+        "tranche": "10-15%",
+        "n_roots": 2,
+        "roots": [
+          0.475,
+          0.885
+        ]
+      },
+      {
+        "tranche": "15-30%",
+        "n_roots": 1,
+        "roots": [
+          0.43062500000000004
+        ]
       }
     ],
     "mezz_compound_roots": [
-      0.39687500000000003
+      0.3975
     ],
     "senior_compound_roots": []
   },

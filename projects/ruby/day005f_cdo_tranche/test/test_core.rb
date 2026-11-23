@@ -80,4 +80,35 @@ class TestCore < Minitest::Test
     end
     assert_equal [run_one.call(1)].pack('D'), [run_one.call(4)].pack('D')
   end
+
+  def test_gauss_legendre_matches_analytic_integrals
+    nodes, weights = CdoTranche::Special.gauss_legendre(16)
+    poly = nodes.each_with_index.sum(0.0) { |x, i| weights[i] * (x**4) }
+    assert_in_delta 0.4, poly, 1.0e-14
+    exp_int = nodes.each_with_index.sum(0.0) { |x, i| 0.5 * weights[i] * Math.exp(0.5 * (x + 1.0)) }
+    assert_in_delta Math.exp(1.0) - 1.0, exp_int, 1.0e-14
+  end
+
+  def test_asb_n1_and_n2_exact_enumeration
+    obs1 = [{ id: 0, notional: 1.0, hazard: 0.02, recovery: 0.4, lgd: 0.6 }]
+    dist1, u1 = CdoTranche::Asb.conditional_loss_distribution(obs1, [0.1], loss_unit: 0.1)
+    assert_in_delta 0.9, dist1[0], 1.0e-14
+    assert_in_delta 0.1, dist1[(0.6 / u1).round], 1.0e-14
+
+    obs2 = [
+      { id: 0, notional: 0.5, hazard: 0.02, recovery: 0.4, lgd: 0.3 },
+      { id: 1, notional: 0.5, hazard: 0.04, recovery: 0.5, lgd: 0.2 }
+    ]
+    dist2, u2 = CdoTranche::Asb.conditional_loss_distribution(obs2, [0.1, 0.2], loss_unit: 0.1)
+    assert_in_delta 0.72, dist2[0], 1.0e-14
+    assert_in_delta 0.18, dist2[(0.2 / u2).round], 1.0e-14
+    assert_in_delta 0.08, dist2[(0.3 / u2).round], 1.0e-14
+    assert_in_delta 0.02, dist2[(0.5 / u2).round], 1.0e-14
+  end
+
+  def test_lhp_convergence_as_n_grows
+    gran = CdoTranche::Pricing.granularity_study(ns: [25, 125, 500])
+    assert_operator gran[2][:abs_err], :<, gran[1][:abs_err]
+    assert_operator gran[1][:abs_err], :<, gran[0][:abs_err]
+  end
 end
