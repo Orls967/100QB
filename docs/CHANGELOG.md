@@ -3,6 +3,21 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 005f] — 2026-11-23 · Perbaikan day005e + Valuasi Tranche CDO: LHP Vasicek, Rekursi ASB & Exponential Twisting (Ruby, Bonus)
+
+### Diperbaiki (Bagian A — `day005e`)
+- `projects/ruby/day005e_copula_tail_dependence/`: mendesain ulang `c2_tail_dependence_convergence` dengan $\chi_{\mathrm{Gauss}}(u)$ eksak berhingga via integral ortan bivariat ($\le 3$ SE di $u \in \{0{,}9, 0{,}99, 0{,}999\}$ + monoton turun hingga $1-10^{-10}$) dan SE binomial untuk $t$/Clayton/Gumbel (`11/11` kriteria `tercapai`), mengembalikan `.rubocop.yml` ke `ClassLength: 120` dengan memecah `Runner` menjadi `Criteria`, `Figures`, dan `RunnerParts`, serta menambahkan kriteria `c10_non_gaussian_euler_allocation` dan `c11_aic_selects_t_copula`.
+
+### Ditambahkan (Bagian C — `day005f`)
+- Project Ruby murni mandiri `projects/ruby/day005f_cdo_tranche/` (topik cadangan sesuai Langkah 0.6 karena Dupire/SSVI telah dikerjakan penuh di `day003a` dan Heston di `day002e`; nol gem numerik, `SplitMix64`, `Process.fork` + `IO.pipe` + `Marshal` deterministik, JSON penuh, 5 grafik SVG) pada portofolio CDO sintetis 125-nama 5Y:
+  - **Bagian 1**: Rekursi DP Andersen–Sidenius–Basu vs binomial eksak (`max_err = 7,18e-16`) dan *brute-force* $2^{12}$, bentuk tertutup LHP Vasicek via ortan bivariat (`max_err = 2,52e-10`), serta studi granularitas $N \in \{25, 50, 125, 500\}$ ($O(1/N)$).
+  - **Bagian 2**: Valuasi 6 *tranche* standar homogen vs heterogen 5-sektor dengan konservasi PV proteksi (`6,94e-18`).
+  - **Bagian 3**: Kalibrasi *base correlation* terhadap pasar Student-$t(\nu=4)$ via kuadratur 2D eksak (`[0,455; 0,438; 0,432; 0,424; 0,410]`) dan diagnosis kegagalan akar *compound correlation* pada *tranche senior*.
+  - **Bagian 4**: *Conditional MC + Exponential Twisting* dua-tahap Glasserman–Li ($R=100\mathrm{k}$: `max |is_z| = 2,64`, penghematan variansi `309,1x` pada *super-senior* `30-100%`; `353,5x` pada `extras` $R=400\mathrm{k}$).
+  - **Bagian 5**: *Model risk* *spread* `15-30%` & `30-100%` di bawah Gaussian vs Student-$t(\nu=4)$ vs *random recovery* prosiklis (`27,44` vs `74,31` vs `63,46 bps` pada `15-30%`).
+- Runner utama `day005f` selesai dalam `24,59s` (`Ruby 4.0.9`, YJIT `ON`, `10` *worker*; `c1`–`c9 = tercapai` semua), `10` tes unit/integrasi (`31` asersi) dan `rubocop` lulus bersih.
+- Output `outputs/day005f/results.json`, 5 grafik SVG `outputs/figures/day005f_*.svg`, `projects/ruby/day005f_cdo_tranche/README.md`, serta [day005f_quant_cdo-tranche.md](project-explanations/day005f_quant_cdo-tranche.md).
+
 ## [Hari 005e] — 2026-11-23 · Perbaikan day005d + Kopula, Ketergantungan Ekor & Alokasi Modal Euler (Ruby, Bonus)
 
 ### Diperbaiki (Bagian A — `day005d`)

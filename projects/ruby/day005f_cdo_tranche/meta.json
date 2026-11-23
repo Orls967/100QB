@@ -1,0 +1,10 @@
+{
+  "day": 5,
+  "session": "f",
+  "topic_no": null,
+  "type": "quant",
+  "language": "ruby",
+  "topic": "Valuasi tranche CDO: LHP Vasicek, rekursi ASB, base correlation & exponential twisting",
+  "date": "2026-11-23",
+  "link": "projects/ruby/day005f_cdo_tranche"
+}

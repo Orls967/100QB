@@ -154,7 +154,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [docs/ROADMAP.md](docs/ROADMAP.md) · Riwayat: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 41/100 topik (41%)** · quant: 40 · sim: 1
+**Progres: 42/100 topik (42%)** · quant: 41 · sim: 1
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -199,6 +199,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 5c | bonus | `quant` | `rust` | Kriteria Kelly dan risiko drawdown: peluang sentuh eksak, Kelly fraksional dan galat estimasi | 2026-11-23 | [day005c_kelly_drawdown](projects/rust/day005c_kelly_drawdown) |
 | 5d | bonus | `quant` | `rust` | Jump-diffusion Merton: seri eksak, PIDE Crank-Nicolson, kalibrasi smile dan risiko ekor | 2026-11-23 | [day005d_merton_jump_diffusion](projects/rust/day005d_merton_jump_diffusion) |
 | 5e | bonus | `quant` | `ruby` | Kopula, ketergantungan ekor dan alokasi modal Euler | 2026-11-23 | [day005e_copula_tail_dependence](projects/ruby/day005e_copula_tail_dependence) |
+| 5f | bonus | `quant` | `ruby` | Valuasi tranche CDO: LHP Vasicek, rekursi ASB, base correlation & exponential twisting | 2026-11-23 | [day005f_cdo_tranche](projects/ruby/day005f_cdo_tranche) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi
