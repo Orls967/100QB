@@ -1,0 +1,11 @@
+[package]
+name = "day005d_merton_jump_diffusion"
+version = "0.1.0"
+edition = "2021"
+description = "Jump-diffusion Merton: seri eksak, PIDE Crank-Nicolson, kalibrasi smile dan risiko ekor (Rust murni)"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+
+[dependencies]

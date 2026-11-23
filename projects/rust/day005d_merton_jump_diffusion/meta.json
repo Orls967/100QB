@@ -1,0 +1,10 @@
+{
+  "day": 5,
+  "session": "d",
+  "topic_no": null,
+  "type": "quant",
+  "language": "rust",
+  "topic": "Jump-diffusion Merton: seri eksak, PIDE Crank-Nicolson, kalibrasi smile dan risiko ekor",
+  "date": "2026-11-23",
+  "link": "projects/rust/day005d_merton_jump_diffusion"
+}
