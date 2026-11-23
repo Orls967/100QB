@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+RubyVM::YJIT.enable if defined?(RubyVM::YJIT) && RubyVM::YJIT.respond_to?(:enable)
+
+$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
+require 'factor_portfolio_lab'
+
+puts '=== day005j Extra Checks: High-N Spiked PCA & Complexity ==='
+sp = FactorPortfolioLab::SpikedStudy.run(
+  master_seed: FactorPortfolioLab::MAIN_SEED + 1,
+  n_assets: 80,
+  t_len: 320,
+  n_reps: 200,
+  spikes: [0.3, 2.0, 5.0]
+)
+sp[:levels].each do |lvl|
+  puts "  spike=#{lvl[:spike].round(1)} | theory_l1=#{lvl[:theory_lambda1].round(3)} " \
+       "emp_l1=#{lvl[:emp_lambda1_mean].round(3)} | theory_align=#{lvl[:theory_alignment_sq].round(3)} " \
+       "emp_align=#{lvl[:emp_alignment_sq_mean].round(3)}"
+end

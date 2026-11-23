@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+RubyVM::YJIT.enable if defined?(RubyVM::YJIT) && RubyVM::YJIT.respond_to?(:enable)
+
+$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
+require 'factor_portfolio_lab'
+
+repo_root = File.expand_path('../../../..', __dir__)
+FactorPortfolioLab::Runner.run_all(root_dir: repo_root)

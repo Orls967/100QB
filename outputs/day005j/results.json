@@ -1,0 +1,2160 @@
+{
+  "project": "day005j_factor_portfolio_lab",
+  "ruby_version": "4.0.9",
+  "yjit_enabled": true,
+  "main_seed": 20261123,
+  "elapsed_seconds": 364.2119520000415,
+  "n_figures": 26,
+  "criteria": {
+    "c1_bbp_subthreshold_bulk": {
+      "status": "tercapai",
+      "observed": 2.1681202566854707,
+      "threshold": "|err| < 0.15",
+      "note": "Sub-threshold spike stays near MP edge"
+    },
+    "c2_bbp_subthreshold_low_align": {
+      "status": "tercapai",
+      "observed": 0.09616124409141485,
+      "threshold": "< 0.12",
+      "note": "Sub-threshold eigenvector alignment stays low"
+    },
+    "c3_bbp_superthreshold_lambda1": {
+      "status": "tercapai",
+      "observed": 3.3456131355423726,
+      "threshold": "|err| < 0.25",
+      "note": "Super-threshold spike=2.0 matches BBP lambda1"
+    },
+    "c4_bbp_superthreshold_align": {
+      "status": "tercapai",
+      "observed": 0.831657965905285,
+      "threshold": "|err| < 0.04",
+      "note": "Super-threshold spike=2.0 matches BBP alignment"
+    },
+    "c5_bbp_strong_spike_align": {
+      "status": "tercapai",
+      "observed": 0.9426754191897746,
+      "threshold": "> 0.90",
+      "note": "Strong spike=5.0 achieves >90% alignment"
+    },
+    "c6_pca_effective_rank_drops": {
+      "status": "tercapai",
+      "observed": 31.413370338141398,
+      "threshold": "< null eff_rank",
+      "note": "Strong spike reduces PCA effective rank"
+    },
+    "c7_grs_n10_t120_h0": {
+      "status": "tercapai",
+      "observed": 0.0488,
+      "threshold": "0.05 +- 3 SE",
+      "note": "GRS exact F calibrated at N=10, T=120"
+    },
+    "c8_grs_n50_t120_h0": {
+      "status": "tercapai",
+      "observed": 0.0522,
+      "threshold": "0.05 +- 3 SE",
+      "note": "GRS exact F calibrated at N=50, T=120"
+    },
+    "c9_wald_n50_t120_overrejects": {
+      "status": "tercapai",
+      "observed": 0.8482,
+      "threshold": "> 0.40",
+      "note": "Asymptotic Wald severely over-rejects at N=50, T=120"
+    },
+    "c10_grs_n50_t600_h0": {
+      "status": "tercapai",
+      "observed": 0.0544,
+      "threshold": "0.05 +- 3 SE",
+      "note": "GRS calibrated at N=50, T=600"
+    },
+    "c11_grs_h1_power": {
+      "status": "tercapai",
+      "observed": 1.0,
+      "threshold": "> 0.80",
+      "note": "GRS detects nonzero alpha under H1"
+    },
+    "c12_fm_shanken_c_positive": {
+      "status": "tercapai",
+      "observed": 0.40464383797841896,
+      "threshold": "> 0.05",
+      "note": "Shanken EIV factor c_Sh is non-trivial"
+    },
+    "c13_shanken_se_exceeds_fm": {
+      "status": "tercapai",
+      "observed": 0.0025284865769385234,
+      "threshold": "> se_fm",
+      "note": "Shanken SE exceeds naive FM SE"
+    },
+    "c14_shanken_cov_improves": {
+      "status": "tercapai",
+      "observed": 0.903,
+      "threshold": ">= cov_fm",
+      "note": "Shanken improves 95% CI coverage over naive FM"
+    },
+    "c15_shanken_cov_near_95": {
+      "status": "tercapai",
+      "observed": 0.965,
+      "threshold": ">= 0.90",
+      "note": "Factor premia Shanken CI coverage >= 90%"
+    },
+    "c16_rp_newton_rc_exact": {
+      "status": "tercapai",
+      "observed": 5.551115123125783e-17,
+      "threshold": "< 1e-10",
+      "note": "Spinu Newton achieves exact ERC"
+    },
+    "c17_rp_ccd_matches_newton": {
+      "status": "tercapai",
+      "observed": 5.3915205633359164e-15,
+      "threshold": "< 1e-8",
+      "note": "CCD matches Newton weights"
+    },
+    "c18_rp_vol_below_eq": {
+      "status": "tercapai",
+      "observed": 0.04168248273549672,
+      "threshold": "< eq_vol",
+      "note": "Risk Parity volatility below 1/N"
+    },
+    "c19_bl_mc_mu_parity": {
+      "status": "tercapai",
+      "observed": 0.00005406822096285652,
+      "threshold": "< 1e-4",
+      "note": "500k MC posterior mean matches exact Bayes"
+    },
+    "c20_bl_mc_cov_parity": {
+      "status": "tercapai",
+      "observed": 0.0000009571687774163299,
+      "threshold": "< 1e-5",
+      "note": "500k MC posterior cov matches exact Bayes"
+    },
+    "c21_bl_mc_ess_high": {
+      "status": "tercapai",
+      "observed": 288496.66677237675,
+      "threshold": "> 50000",
+      "note": "Importance sampling ESS > 50k out of 500k"
+    },
+    "c22_bl_idzorek_monotone": {
+      "status": "tercapai",
+      "observed": 0.016570304448567205,
+      "threshold": "monotone",
+      "note": "Idzorek posterior shift increases with confidence"
+    },
+    "c23_mv_45_points": {
+      "status": "tercapai",
+      "observed": 45,
+      "threshold": ">= 45",
+      "note": "Frontier has >= 45 points"
+    },
+    "c24_mv_long_only_kkt": {
+      "status": "tercapai",
+      "observed": 4.440892098500626e-16,
+      "threshold": "< 1e-8",
+      "note": "Long-only QP KKT < 1e-8"
+    },
+    "c25_mv_capped_kkt": {
+      "status": "tercapai",
+      "observed": 9.975185499659645e-12,
+      "threshold": "< 1e-8",
+      "note": "Capped QP KKT < 1e-8"
+    },
+    "c26_mv_cap_increases_min_vol": {
+      "status": "tercapai",
+      "observed": 0.03491431420903715,
+      "threshold": ">= lo_vol",
+      "note": "Cap constraint weakly raises GMV vol"
+    },
+    "c27_michaud_500_boot": {
+      "status": "tercapai",
+      "observed": 500,
+      "threshold": ">= 500",
+      "note": "Michaud bootstrap >= 500"
+    },
+    "c28_michaud_lower_hhi_than_plugin": {
+      "status": "tercapai",
+      "observed": 0.22138212124045079,
+      "threshold": "< plugin_hhi",
+      "note": "Michaud reduces concentration vs plug-in"
+    },
+    "c29_michaud_closer_to_true_than_plugin": {
+      "status": "tercapai",
+      "observed": 1.4096277719669155,
+      "threshold": "< plugin_l1",
+      "note": "Michaud L1 closer to true opt than plug-in"
+    },
+    "c30_shrinkage_closer_than_plugin": {
+      "status": "belum tercapai",
+      "observed": 1.702337632497418,
+      "threshold": "< plugin_l1",
+      "note": "Shrinkage L1 closer to true opt than plug-in"
+    },
+    "c31_bt_300_worlds": {
+      "status": "tercapai",
+      "observed": 300,
+      "threshold": ">= 300",
+      "note": "Two-regime backtest >= 300 worlds"
+    },
+    "c32_bt_minvar_shrink_beats_sample_vol": {
+      "status": "belum tercapai",
+      "observed": 0.2636769088639326,
+      "threshold": "<= sample_vol",
+      "note": "MinVarShrink lowers vol vs MinVarSample"
+    },
+    "c33_bt_rp_beats_eq_sharpe": {
+      "status": "belum tercapai",
+      "observed": -0.03752047739051788,
+      "threshold": ">= eq_sharpe",
+      "note": "RiskParity beats EqualWeight Sharpe at 5 bps"
+    },
+    "c34_bt_tc_erodes_sharpe": {
+      "status": "tercapai",
+      "observed": -0.06489843240755444,
+      "threshold": "< 0bps_sharpe",
+      "note": "20 bps TC reduces active Sharpe vs 0 bps"
+    },
+    "c35_bt_rp_lower_turnover_than_tan": {
+      "status": "tercapai",
+      "observed": 0.03064430316594189,
+      "threshold": "< tan_to",
+      "note": "RiskParity turnover lower than TangencyShrink"
+    },
+    "c36_euler_exact": {
+      "status": "tercapai",
+      "observed": 2.0816681711721685e-17,
+      "threshold": "< 1e-12",
+      "note": "Euler exact to 1e-12"
+    },
+    "c37_misspec_k_understates_sys": {
+      "status": "tercapai",
+      "observed": 0.9511902505399895,
+      "threshold": "< K=3 share",
+      "note": "Omitted factors understate sys share"
+    },
+    "c38_reverse_stress_exact_loss": {
+      "status": "tercapai",
+      "observed": -0.15,
+      "threshold": "-0.15 exact",
+      "note": "Reverse stress achieves exact target loss"
+    },
+    "c39_reverse_stress_mahal_theory": {
+      "status": "tercapai",
+      "observed": 13.214048634062507,
+      "threshold": "exact closed form",
+      "note": "Mahalanobis norm matches closed form"
+    },
+    "c40_t4_increases_cvar": {
+      "status": "tercapai",
+      "observed": 0.09210804810482597,
+      "threshold": "> gauss_cvar",
+      "note": "Student-t(4) increases portfolio 95% CVaR"
+    },
+    "c41_rp_lower_cvar_than_eq_t4": {
+      "status": "tercapai",
+      "observed": 0.08588505054966898,
+      "threshold": "< eq_cvar",
+      "note": "RiskParity reduces t(4) CVaR vs EqualWeight"
+    },
+    "c42_complexity_invert_cubic": {
+      "status": "tercapai",
+      "observed": 3.1720666052788324,
+      "threshold": "in [1.5, 3.6]",
+      "note": "Matrix inversion scaling exponent in expected range"
+    }
+  },
+  "studies": {
+    "spiked": {
+      "n_assets": 40,
+      "t_len": 160,
+      "gamma": 0.25,
+      "n_reps": 500,
+      "marchenko_pastur": {
+        "lambda_minus": 0.25,
+        "lambda_plus": 2.25,
+        "bbp_threshold": 0.5
+      },
+      "levels": [
+        {
+          "spike": 0.0,
+          "above_threshold": false,
+          "theory_lambda1": 2.25,
+          "emp_lambda1_mean": 2.143748164707821,
+          "emp_lambda1_se": 0.0041030079181760435,
+          "theory_alignment_sq": 0.0,
+          "emp_alignment_sq_mean": 0.024364150957525223,
+          "emp_alignment_sq_se": 0.0015082291408865212,
+          "lambda2_mean": 1.991171637829998,
+          "lambda_min_mean": 0.271816551899647,
+          "eff_rank_mean": 35.17823679598307
+        },
+        {
+          "spike": 0.3,
+          "above_threshold": false,
+          "theory_lambda1": 2.25,
+          "emp_lambda1_mean": 2.1681202566854707,
+          "emp_lambda1_se": 0.0040717597811850414,
+          "theory_alignment_sq": 0.0,
+          "emp_alignment_sq_mean": 0.09616124409141485,
+          "emp_alignment_sq_se": 0.0046988194866573775,
+          "lambda2_mean": 2.0160352911003008,
+          "lambda_min_mean": 0.2715419556761559,
+          "eff_rank_mean": 35.140524399151566
+        },
+        {
+          "spike": 0.5,
+          "above_threshold": false,
+          "theory_lambda1": 2.25,
+          "emp_lambda1_mean": 2.2107207250888874,
+          "emp_lambda1_se": 0.0045256828815877425,
+          "theory_alignment_sq": 0.0,
+          "emp_alignment_sq_mean": 0.19992286315936367,
+          "emp_alignment_sq_se": 0.007324482250200397,
+          "lambda2_mean": 2.0403579552648288,
+          "lambda_min_mean": 0.2707266723192586,
+          "eff_rank_mean": 35.08685481739735
+        },
+        {
+          "spike": 1.0,
+          "above_threshold": true,
+          "theory_lambda1": 2.5,
+          "emp_lambda1_mean": 2.4857163432244582,
+          "emp_lambda1_se": 0.008505577203332901,
+          "theory_alignment_sq": 0.6,
+          "emp_alignment_sq_mean": 0.573314354786013,
+          "emp_alignment_sq_se": 0.0071708998540905965,
+          "lambda2_mean": 2.0897071687753264,
+          "lambda_min_mean": 0.2716868118061637,
+          "eff_rank_mean": 34.86256596160224
+        },
+        {
+          "spike": 2.0,
+          "above_threshold": true,
+          "theory_lambda1": 3.375,
+          "emp_lambda1_mean": 3.3456131355423726,
+          "emp_lambda1_se": 0.01428828553175253,
+          "theory_alignment_sq": 0.8333333333333334,
+          "emp_alignment_sq_mean": 0.831657965905285,
+          "emp_alignment_sq_se": 0.0021598762384354643,
+          "lambda2_mean": 2.104446036813383,
+          "lambda_min_mean": 0.2741895798908782,
+          "eff_rank_mean": 34.21483601946259
+        },
+        {
+          "spike": 5.0,
+          "above_threshold": true,
+          "theory_lambda1": 6.300000000000001,
+          "emp_lambda1_mean": 6.24989328274982,
+          "emp_lambda1_se": 0.030341974880767765,
+          "theory_alignment_sq": 0.9428571428571428,
+          "emp_alignment_sq_mean": 0.9426754191897746,
+          "emp_alignment_sq_se": 0.0006371379654661777,
+          "lambda2_mean": 2.110257733442874,
+          "lambda_min_mean": 0.27389046907367454,
+          "eff_rank_mean": 31.413370338141398
+        }
+      ]
+    },
+    "grs": {
+      "n_reps": 5000,
+      "regimes": [
+        {
+          "label": "N10_T120_H0",
+          "n_assets": 10,
+          "t_len": 120,
+          "n_factors": 3,
+          "alpha_scale": 0.0,
+          "grs_rejection_05": 0.0488,
+          "grs_rejection_se": 0.00304691844328003,
+          "wald_rejection_05": 0.104,
+          "wald_rejection_se": 0.004317036020234253,
+          "mean_grs_f": 1.0162058910243388,
+          "mean_wald_chi2": 11.39670158158137
+        },
+        {
+          "label": "N25_T120_H0",
+          "n_assets": 25,
+          "t_len": 120,
+          "n_factors": 3,
+          "alpha_scale": 0.0,
+          "grs_rejection_05": 0.0498,
+          "grs_rejection_se": 0.0030763601869742106,
+          "wald_rejection_05": 0.2988,
+          "wald_rejection_se": 0.00647330765528721,
+          "mean_grs_f": 1.0222540721140025,
+          "mean_wald_chi2": 33.33437191676095
+        },
+        {
+          "label": "N50_T120_H0",
+          "n_assets": 50,
+          "t_len": 120,
+          "n_factors": 3,
+          "alpha_scale": 0.0,
+          "grs_rejection_05": 0.0522,
+          "grs_rejection_se": 0.003145636978419474,
+          "wald_rejection_05": 0.8482,
+          "wald_rejection_se": 0.005074578997315935,
+          "mean_grs_f": 1.0258961363955117,
+          "mean_wald_chi2": 91.87129579661297
+        },
+        {
+          "label": "N50_T600_H0",
+          "n_assets": 50,
+          "t_len": 600,
+          "n_factors": 3,
+          "alpha_scale": 0.0,
+          "grs_rejection_05": 0.0544,
+          "grs_rejection_se": 0.0032075111847038036,
+          "wald_rejection_05": 0.146,
+          "wald_rejection_se": 0.00499367600070329,
+          "mean_grs_f": 1.0101389503767417,
+          "mean_wald_chi2": 55.40067369525093
+        },
+        {
+          "label": "N25_T120_H1",
+          "n_assets": 25,
+          "t_len": 120,
+          "n_factors": 3,
+          "alpha_scale": 0.004,
+          "grs_rejection_05": 1.0,
+          "grs_rejection_se": 0.0,
+          "wald_rejection_05": 1.0,
+          "wald_rejection_se": 0.0,
+          "mean_grs_f": 5.2842254936272415,
+          "mean_wald_chi2": 172.31170087914919
+        }
+      ]
+    },
+    "fama_macbeth": {
+      "n_reps": 1000,
+      "true_lambda": [
+        0.0,
+        0.02,
+        0.016,
+        0.012
+      ],
+      "mean_lambda": [
+        0.0010923751778080244,
+        0.01871686298202451,
+        0.015622105251485247,
+        0.011637852336272183
+      ],
+      "empirical_sd": [
+        0.002632203247288409,
+        0.005096272405425822,
+        0.004116362900675226,
+        0.003315438731364371
+      ],
+      "mean_se_fm": [
+        0.0021367543319056053,
+        0.005443119222013096,
+        0.004267723072240416,
+        0.0033742302230616392
+      ],
+      "mean_se_shanken": [
+        0.0025284865769385234,
+        0.005608936626148399,
+        0.004332980283580611,
+        0.003437371990518293
+      ],
+      "coverage_fm_95": [
+        0.848,
+        0.958,
+        0.955,
+        0.954
+      ],
+      "coverage_shanken_95": [
+        0.903,
+        0.965,
+        0.959,
+        0.959
+      ],
+      "mean_c_shanken": 0.40464383797841896,
+      "mean_cs_r2": 0.9021563243153922
+    },
+    "risk_parity": {
+      "comparisons": [
+        {
+          "n_assets": 10,
+          "newton_iters": 6,
+          "newton_time_s": 0.0026889999862760305,
+          "newton_rc_max_dev": 5.551115123125783e-17,
+          "ccd_iters": 15,
+          "ccd_time_s": 0.0014809999847784638,
+          "ccd_rc_max_dev": 3.164135620181696e-15,
+          "max_weight_diff": 2.1510571102112408e-15,
+          "rp_vol": 0.046376958064546475,
+          "eq_vol": 0.048562515237735165,
+          "rp_hhi": 0.1044168489896603,
+          "eq_rc_max_dev": 0.04080175017870327
+        },
+        {
+          "n_assets": 25,
+          "newton_iters": 6,
+          "newton_time_s": 0.0014430000446736813,
+          "newton_rc_max_dev": 2.7755575615628914e-17,
+          "ccd_iters": 17,
+          "ccd_time_s": 0.000691999914124608,
+          "ccd_rc_max_dev": 4.038436252074007e-15,
+          "max_weight_diff": 3.816391647148976e-15,
+          "rp_vol": 0.042493969768393605,
+          "eq_vol": 0.04501409369368262,
+          "rp_hhi": 0.04266089676791152,
+          "eq_rc_max_dev": 0.018929020559163384
+        },
+        {
+          "n_assets": 50,
+          "newton_iters": 6,
+          "newton_time_s": 0.006560000008903444,
+          "newton_rc_max_dev": 3.469446951953614e-17,
+          "ccd_iters": 17,
+          "ccd_time_s": 0.0009220000356435776,
+          "ccd_rc_max_dev": 5.981326545168031e-15,
+          "max_weight_diff": 5.3915205633359164e-15,
+          "rp_vol": 0.04168248273549672,
+          "eq_vol": 0.04496012550141325,
+          "rp_hhi": 0.02159886086113051,
+          "eq_rc_max_dev": 0.012155642922497312
+        }
+      ]
+    },
+    "black_litterman": {
+      "n_mc": 500000,
+      "n_assets": 6,
+      "tau": 0.05,
+      "pi": [
+        0.00896255634958023,
+        0.008040990378406361,
+        0.007024728995455877,
+        0.0076932457133662,
+        0.0071686682252289045,
+        0.006820634197779328
+      ],
+      "mu_exact": [
+        0.015343074664415547,
+        0.008265653656676981,
+        0.011454838749356048,
+        0.011451227610680143,
+        0.01069602713232178,
+        0.009887683541755087
+      ],
+      "mu_mc": [
+        0.015297518733489484,
+        0.008211585435714125,
+        0.011446282959803093,
+        0.011401605826218393,
+        0.010652059249861914,
+        0.009861768149704735
+      ],
+      "max_mu_diff": 0.00005406822096285652,
+      "max_cov_diff": 0.0000009571687774163299,
+      "ess": 288496.66677237675,
+      "idzorek_sweep": [
+        {
+          "confidence": 0.1,
+          "view0_implied": 0.002183053644339848,
+          "view1_implied": 0.007982792798562963,
+          "shift_norm": 0.0020930777947345933
+        },
+        {
+          "confidence": 0.25,
+          "view0_implied": 0.004045410622289795,
+          "view1_implied": 0.009351356844061132,
+          "shift_norm": 0.005108515451294777
+        },
+        {
+          "confidence": 0.5,
+          "view0_implied": 0.007077421007738565,
+          "view1_implied": 0.011454838749356048,
+          "shift_norm": 0.00981625389160868
+        },
+        {
+          "confidence": 0.75,
+          "view0_implied": 0.01003164802496136,
+          "view1_implied": 0.013343761609571556,
+          "shift_norm": 0.01414580378057617
+        },
+        {
+          "confidence": 0.9,
+          "view0_implied": 0.011772471213136952,
+          "view1_implied": 0.014376954232855548,
+          "shift_norm": 0.016570304448567205
+        }
+      ]
+    },
+    "markowitz": {
+      "n_assets": 20,
+      "n_points": 45,
+      "unconstrained": [
+        {
+          "expected_return": 0.001121545855754648,
+          "volatility": 0.021371061033461123
+        },
+        {
+          "expected_return": 0.001356989996100155,
+          "volatility": 0.021437234785135744
+        },
+        {
+          "expected_return": 0.0015924341364456623,
+          "volatility": 0.021634541637029752
+        },
+        {
+          "expected_return": 0.001827878276791169,
+          "volatility": 0.02195944715902341
+        },
+        {
+          "expected_return": 0.002063322417136677,
+          "volatility": 0.022406401279316052
+        },
+        {
+          "expected_return": 0.0022987665574821844,
+          "volatility": 0.02296828004278416
+        },
+        {
+          "expected_return": 0.002534210697827692,
+          "volatility": 0.02363688915724753
+        },
+        {
+          "expected_return": 0.0027696548381732,
+          "volatility": 0.02440345756269961
+        },
+        {
+          "expected_return": 0.0030050989785187074,
+          "volatility": 0.02525906815524245
+        },
+        {
+          "expected_return": 0.003240543118864216,
+          "volatility": 0.02619499719797871
+        },
+        {
+          "expected_return": 0.0034759872592097225,
+          "volatility": 0.02720295578438617
+        },
+        {
+          "expected_return": 0.0037114313995552303,
+          "volatility": 0.028275241814821883
+        },
+        {
+          "expected_return": 0.00394687553990074,
+          "volatility": 0.029404818772443775
+        },
+        {
+          "expected_return": 0.004182319680246245,
+          "volatility": 0.030585339714773476
+        },
+        {
+          "expected_return": 0.004417763820591758,
+          "volatility": 0.03181113350652824
+        },
+        {
+          "expected_return": 0.0046532079609372615,
+          "volatility": 0.0330771672841925
+        },
+        {
+          "expected_return": 0.004888652101282769,
+          "volatility": 0.03437899572699839
+        },
+        {
+          "expected_return": 0.005124096241628276,
+          "volatility": 0.03571270460104805
+        },
+        {
+          "expected_return": 0.005359540381973787,
+          "volatility": 0.03707485352257903
+        },
+        {
+          "expected_return": 0.005594984522319291,
+          "volatility": 0.0384624209923646
+        },
+        {
+          "expected_return": 0.0058304286626647975,
+          "volatility": 0.039872753410584966
+        },
+        {
+          "expected_return": 0.006065872803010308,
+          "volatility": 0.041303518876276986
+        },
+        {
+          "expected_return": 0.006301316943355816,
+          "volatility": 0.04275266599475228
+        },
+        {
+          "expected_return": 0.006536761083701321,
+          "volatility": 0.044218387564778465
+        },
+        {
+          "expected_return": 0.006772205224046829,
+          "volatility": 0.045699088821039846
+        },
+        {
+          "expected_return": 0.007007649364392337,
+          "volatility": 0.04719335981249746
+        },
+        {
+          "expected_return": 0.007243093504737847,
+          "volatility": 0.0486999514659372
+        },
+        {
+          "expected_return": 0.007478537645083351,
+          "volatility": 0.05021775489059276
+        },
+        {
+          "expected_return": 0.00771398178542886,
+          "volatility": 0.05174578350738246
+        },
+        {
+          "expected_return": 0.007949425925774366,
+          "volatility": 0.05328315762422835
+        },
+        {
+          "expected_return": 0.008184870066119874,
+          "volatility": 0.05482909112048145
+        },
+        {
+          "expected_return": 0.008420314206465385,
+          "volatility": 0.056382879944731304
+        },
+        {
+          "expected_return": 0.008655758346810894,
+          "volatility": 0.057943892169064135
+        },
+        {
+          "expected_return": 0.0088912024871564,
+          "volatility": 0.05951155937809486
+        },
+        {
+          "expected_return": 0.009126646627501905,
+          "volatility": 0.0610853692024458
+        },
+        {
+          "expected_return": 0.009362090767847412,
+          "volatility": 0.06266485883379888
+        },
+        {
+          "expected_return": 0.009597534908192921,
+          "volatility": 0.06424960938243128
+        },
+        {
+          "expected_return": 0.00983297904853843,
+          "volatility": 0.06583924095859768
+        },
+        {
+          "expected_return": 0.010068423188883936,
+          "volatility": 0.06743340837661846
+        },
+        {
+          "expected_return": 0.010303867329229442,
+          "volatility": 0.06903179739544332
+        },
+        {
+          "expected_return": 0.01053931146957495,
+          "volatility": 0.07063412142213917
+        },
+        {
+          "expected_return": 0.010774755609920458,
+          "volatility": 0.07224011861551512
+        },
+        {
+          "expected_return": 0.011010199750265964,
+          "volatility": 0.07384954933622895
+        },
+        {
+          "expected_return": 0.011245643890611475,
+          "volatility": 0.07546219389746604
+        },
+        {
+          "expected_return": 0.011481088030956982,
+          "volatility": 0.0770778505768527
+        }
+      ],
+      "long_only": [
+        {
+          "kappa": 0.0,
+          "expected_return": 0.002923758575594295,
+          "volatility": 0.03210119400028767,
+          "max_kkt": 2.168404344971009e-19,
+          "n_active": 7,
+          "max_weight": 0.5205586644453349
+        },
+        {
+          "kappa": 0.03409090909090909,
+          "expected_return": 0.0033862270342137164,
+          "volatility": 0.03234582857841661,
+          "max_kkt": 1.1102230246251565e-16,
+          "n_active": 7,
+          "max_weight": 0.477192207344025
+        },
+        {
+          "kappa": 0.06818181818181818,
+          "expected_return": 0.0038486954928331376,
+          "volatility": 0.03306887565317176,
+          "max_kkt": 2.168404344971009e-19,
+          "n_active": 6,
+          "max_weight": 0.43382575024271514
+        },
+        {
+          "kappa": 0.10227272727272727,
+          "expected_return": 0.004310787014213621,
+          "volatility": 0.03423910027595923,
+          "max_kkt": 2.168404344971009e-19,
+          "n_active": 6,
+          "max_weight": 0.38947873596911886
+        },
+        {
+          "kappa": 0.13636363636363635,
+          "expected_return": 0.00477287409884931,
+          "volatility": 0.03581322059335046,
+          "max_kkt": 1.0842021724855044e-19,
+          "n_active": 6,
+          "max_weight": 0.3451201800342611
+        },
+        {
+          "kappa": 0.17045454545454544,
+          "expected_return": 0.005234961183484997,
+          "volatility": 0.03774074043282096,
+          "max_kkt": 1.0842021724855044e-19,
+          "n_active": 6,
+          "max_weight": 0.3188315904500366
+        },
+        {
+          "kappa": 0.20454545454545453,
+          "expected_return": 0.0056869218789583,
+          "volatility": 0.039922666473016656,
+          "max_kkt": 3.2526065174565133e-19,
+          "n_active": 5,
+          "max_weight": 0.38751824216133834
+        },
+        {
+          "kappa": 0.23863636363636365,
+          "expected_return": 0.006138545761399687,
+          "volatility": 0.04235553217474088,
+          "max_kkt": 2.710505431213761e-19,
+          "n_active": 6,
+          "max_weight": 0.4565558754586809
+        },
+        {
+          "kappa": 0.2727272727272727,
+          "expected_return": 0.0066065503120114255,
+          "volatility": 0.045090284803187566,
+          "max_kkt": 1.1102230246251565e-16,
+          "n_active": 5,
+          "max_weight": 0.5163457544636706
+        },
+        {
+          "kappa": 0.3068181818181818,
+          "expected_return": 0.007099818383175766,
+          "volatility": 0.04816124965143867,
+          "max_kkt": 1.1102230246251565e-16,
+          "n_active": 6,
+          "max_weight": 0.5697493951487359
+        },
+        {
+          "kappa": 0.3409090909090909,
+          "expected_return": 0.007572941617309668,
+          "volatility": 0.05123020438966432,
+          "max_kkt": 0.0,
+          "n_active": 5,
+          "max_weight": 0.6150419430632352
+        },
+        {
+          "kappa": 0.375,
+          "expected_return": 0.007828077482045993,
+          "volatility": 0.05298335832921045,
+          "max_kkt": 5.149960319306146e-19,
+          "n_active": 6,
+          "max_weight": 0.6662623704642083
+        },
+        {
+          "kappa": 0.40909090909090906,
+          "expected_return": 0.008085381329136075,
+          "volatility": 0.05485422378649582,
+          "max_kkt": 1.1102230246251565e-16,
+          "n_active": 6,
+          "max_weight": 0.7174207891205528
+        },
+        {
+          "kappa": 0.44318181818181823,
+          "expected_return": 0.008139759983244614,
+          "volatility": 0.05526714405589641,
+          "max_kkt": 1.1102230246251565e-16,
+          "n_active": 5,
+          "max_weight": 0.7105623811162306
+        },
+        {
+          "kappa": 0.4772727272727273,
+          "expected_return": 0.008164790124051047,
+          "volatility": 0.055475186515899645,
+          "max_kkt": 2.168404344971009e-19,
+          "n_active": 5,
+          "max_weight": 0.6953131588222738
+        },
+        {
+          "kappa": 0.5113636363636364,
+          "expected_return": 0.00818982026485748,
+          "volatility": 0.055697773980312996,
+          "max_kkt": 4.336808689942018e-19,
+          "n_active": 5,
+          "max_weight": 0.6800639365283171
+        },
+        {
+          "kappa": 0.5454545454545454,
+          "expected_return": 0.008214850405663911,
+          "volatility": 0.05593473280761909,
+          "max_kkt": 2.168404344971009e-19,
+          "n_active": 5,
+          "max_weight": 0.6648147142343608
+        },
+        {
+          "kappa": 0.5795454545454546,
+          "expected_return": 0.008239880546470346,
+          "volatility": 0.05618588116837696,
+          "max_kkt": 1.1102230246251565e-16,
+          "n_active": 5,
+          "max_weight": 0.649565491940403
+        },
+        {
+          "kappa": 0.6136363636363636,
+          "expected_return": 0.00826491068727678,
+          "volatility": 0.05645102967691326,
+          "max_kkt": 1.3010426069826053e-18,
+          "n_active": 5,
+          "max_weight": 0.634316269646447
+        },
+        {
+          "kappa": 0.6477272727272727,
+          "expected_return": 0.008289940828083214,
+          "volatility": 0.056729982028994506,
+          "max_kkt": 8.673617379884035e-19,
+          "n_active": 5,
+          "max_weight": 0.619067047352489
+        },
+        {
+          "kappa": 0.6818181818181818,
+          "expected_return": 0.008314970968889645,
+          "volatility": 0.057022535641146864,
+          "max_kkt": 1.3010426069826053e-18,
+          "n_active": 5,
+          "max_weight": 0.6038178250585322
+        },
+        {
+          "kappa": 0.7159090909090909,
+          "expected_return": 0.008340001109696077,
+          "volatility": 0.057328482287526315,
+          "max_kkt": 1.1102230246251565e-16,
+          "n_active": 5,
+          "max_weight": 0.5885686027645755
+        },
+        {
+          "kappa": 0.75,
+          "expected_return": 0.008365031250502511,
+          "volatility": 0.057647608730511155,
+          "max_kkt": 2.220446049250313e-16,
+          "n_active": 5,
+          "max_weight": 0.5733193804706177
+        },
+        {
+          "kappa": 0.7840909090909091,
+          "expected_return": 0.00839006139130894,
+          "volatility": 0.05797969734148772,
+          "max_kkt": 2.220446049250313e-16,
+          "n_active": 5,
+          "max_weight": 0.5580701581766618
+        },
+        {
+          "kappa": 0.8181818181818181,
+          "expected_return": 0.008415091532115376,
+          "volatility": 0.058324526708619435,
+          "max_kkt": 2.220446049250313e-16,
+          "n_active": 5,
+          "max_weight": 0.5428209358827056
+        },
+        {
+          "kappa": 0.8522727272727273,
+          "expected_return": 0.00844012167292181,
+          "volatility": 0.05868187222872099,
+          "max_kkt": 2.220446049250313e-16,
+          "n_active": 5,
+          "max_weight": 0.5275717135887485
+        },
+        {
+          "kappa": 0.8863636363636365,
+          "expected_return": 0.008464825005710988,
+          "volatility": 0.05904662514969961,
+          "max_kkt": 2.220446049250313e-16,
+          "n_active": 4,
+          "max_weight": 0.5115609512167438
+        },
+        {
+          "kappa": 0.9204545454545454,
+          "expected_return": 0.00848857390354738,
+          "volatility": 0.0594088703980986,
+          "max_kkt": 1.1102230246251565e-16,
+          "n_active": 4,
+          "max_weight": 0.4933261293662208
+        },
+        {
+          "kappa": 0.9545454545454546,
+          "expected_return": 0.008512019528629702,
+          "volatility": 0.05977768086495265,
+          "max_kkt": 2.220446049250313e-16,
+          "n_active": 3,
+          "max_weight": 0.4742551021073158
+        },
+        {
+          "kappa": 0.9886363636363635,
+          "expected_return": 0.008535323008259228,
+          "volatility": 0.06015524937616492,
+          "max_kkt": 4.440892098500626e-16,
+          "n_active": 3,
+          "max_weight": 0.4735011607322054
+        },
+        {
+          "kappa": 1.0227272727272727,
+          "expected_return": 0.008558626487888748,
+          "volatility": 0.06054358594464119,
+          "max_kkt": 2.220446049250313e-16,
+          "n_active": 3,
+          "max_weight": 0.4928172742968993
+        },
+        {
+          "kappa": 1.0568181818181819,
+          "expected_return": 0.00858192996751827,
+          "volatility": 0.06094248472268605,
+          "max_kkt": 3.3306690738754696e-16,
+          "n_active": 3,
+          "max_weight": 0.5121333878615941
+        },
+        {
+          "kappa": 1.0909090909090908,
+          "expected_return": 0.008605233447147798,
+          "volatility": 0.061351739689470906,
+          "max_kkt": 8.673617379884035e-19,
+          "n_active": 3,
+          "max_weight": 0.5314495014262888
+        },
+        {
+          "kappa": 1.125,
+          "expected_return": 0.00862853692677732,
+          "volatility": 0.06177114500545928,
+          "max_kkt": 2.220446049250313e-16,
+          "n_active": 3,
+          "max_weight": 0.5507656149909836
+        },
+        {
+          "kappa": 1.1590909090909092,
+          "expected_return": 0.008651840406406848,
+          "volatility": 0.06220049534575639,
+          "max_kkt": 2.220446049250313e-16,
+          "n_active": 3,
+          "max_weight": 0.5700817285556783
+        },
+        {
+          "kappa": 1.1931818181818181,
+          "expected_return": 0.008675143886036369,
+          "volatility": 0.06263958621223918,
+          "max_kkt": 3.3306690738754696e-16,
+          "n_active": 3,
+          "max_weight": 0.5893978421203725
+        },
+        {
+          "kappa": 1.2272727272727273,
+          "expected_return": 0.008698447365665897,
+          "volatility": 0.0630882142244868,
+          "max_kkt": 8.673617379884035e-19,
+          "n_active": 3,
+          "max_weight": 0.6087139556850671
+        },
+        {
+          "kappa": 1.2613636363636365,
+          "expected_return": 0.00872175084529542,
+          "volatility": 0.06354617738967493,
+          "max_kkt": 8.673617379884035e-19,
+          "n_active": 3,
+          "max_weight": 0.6280300692497618
+        },
+        {
+          "kappa": 1.2954545454545454,
+          "expected_return": 0.008745054324924947,
+          "volatility": 0.06401327535173024,
+          "max_kkt": 1.1102230246251565e-16,
+          "n_active": 3,
+          "max_weight": 0.6473461828144573
+        },
+        {
+          "kappa": 1.3295454545454546,
+          "expected_return": 0.008768357804554473,
+          "volatility": 0.06448930962015281,
+          "max_kkt": 2.220446049250313e-16,
+          "n_active": 3,
+          "max_weight": 0.6666622963791513
+        },
+        {
+          "kappa": 1.3636363636363635,
+          "expected_return": 0.008791661284183993,
+          "volatility": 0.0649740837790156,
+          "max_kkt": 2.220446049250313e-16,
+          "n_active": 3,
+          "max_weight": 0.6859784099438461
+        },
+        {
+          "kappa": 1.3977272727272727,
+          "expected_return": 0.00881496476381352,
+          "volatility": 0.0654674036767325,
+          "max_kkt": 0.0,
+          "n_active": 3,
+          "max_weight": 0.7052945235085399
+        },
+        {
+          "kappa": 1.4318181818181819,
+          "expected_return": 0.008838268243443047,
+          "volatility": 0.06596907759725813,
+          "max_kkt": 1.734723475976807e-18,
+          "n_active": 3,
+          "max_weight": 0.7246106370732348
+        },
+        {
+          "kappa": 1.4659090909090908,
+          "expected_return": 0.008861571723072566,
+          "volatility": 0.06647891641343877,
+          "max_kkt": 3.3306690738754696e-16,
+          "n_active": 3,
+          "max_weight": 0.7439267506379288
+        },
+        {
+          "kappa": 1.5,
+          "expected_return": 0.008884875202702099,
+          "volatility": 0.06699673372327945,
+          "max_kkt": 2.220446049250313e-16,
+          "n_active": 3,
+          "max_weight": 0.763242864202625
+        }
+      ],
+      "capped": [
+        {
+          "kappa": 0.0,
+          "expected_return": 0.0035705596926407734,
+          "volatility": 0.03491431420903715,
+          "max_kkt": 8.482103908136196e-14,
+          "n_active": 10,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.03409090909090909,
+          "expected_return": 0.003664938900390152,
+          "volatility": 0.03494209568294266,
+          "max_kkt": 7.149836278586008e-14,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.06818181818181818,
+          "expected_return": 0.003746090788300803,
+          "volatility": 0.035070983023964004,
+          "max_kkt": 2.168404344971009e-19,
+          "n_active": 10,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.10227272727272727,
+          "expected_return": 0.004098387629507868,
+          "volatility": 0.035927005350803086,
+          "max_kkt": 2.168404344971009e-19,
+          "n_active": 10,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.13636363636363635,
+          "expected_return": 0.004544400723587444,
+          "volatility": 0.03738814980888144,
+          "max_kkt": 6.9787373579641154e-12,
+          "n_active": 11,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.17045454545454544,
+          "expected_return": 0.005045529989041273,
+          "volatility": 0.039390726293805814,
+          "max_kkt": 9.965639533211779e-12,
+          "n_active": 11,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.20454545454545453,
+          "expected_return": 0.005433532001060365,
+          "volatility": 0.04117849761169239,
+          "max_kkt": 1.0842021724855044e-19,
+          "n_active": 11,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.23863636363636365,
+          "expected_return": 0.005889244910507717,
+          "volatility": 0.0435663596477077,
+          "max_kkt": 9.975185499659645e-12,
+          "n_active": 11,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.2727272727272727,
+          "expected_return": 0.006369282121935884,
+          "volatility": 0.04628764339442459,
+          "max_kkt": 4.336808689942018e-19,
+          "n_active": 10,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.3068181818181818,
+          "expected_return": 0.006576582158016518,
+          "volatility": 0.047564286836353595,
+          "max_kkt": 3.7947076036992655e-19,
+          "n_active": 10,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.3409090909090909,
+          "expected_return": 0.006723236597423297,
+          "volatility": 0.04855258450712196,
+          "max_kkt": 2.710505431213761e-19,
+          "n_active": 10,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.375,
+          "expected_return": 0.006922579419564743,
+          "volatility": 0.04999478823898204,
+          "max_kkt": 2.981555974335137e-19,
+          "n_active": 10,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.40909090909090906,
+          "expected_return": 0.007042839488350441,
+          "volatility": 0.050929104426861556,
+          "max_kkt": 1.4230153513872246e-19,
+          "n_active": 10,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.44318181818181823,
+          "expected_return": 0.007088778587221417,
+          "volatility": 0.05130769215751379,
+          "max_kkt": 6.405986852087153e-14,
+          "n_active": 10,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.4772727272727273,
+          "expected_return": 0.00711556554642334,
+          "volatility": 0.05154962845441303,
+          "max_kkt": 2.6645352591003757e-14,
+          "n_active": 10,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.5113636363636364,
+          "expected_return": 0.00715578829041428,
+          "volatility": 0.0519344183150403,
+          "max_kkt": 0.0,
+          "n_active": 11,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.5454545454545454,
+          "expected_return": 0.007161091621618593,
+          "volatility": 0.051986890720366365,
+          "max_kkt": 1.0880185641326534e-14,
+          "n_active": 10,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.5795454545454546,
+          "expected_return": 0.007174453562900526,
+          "volatility": 0.05213313034105227,
+          "max_kkt": 0.0,
+          "n_active": 10,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.6136363636363636,
+          "expected_return": 0.007197920005670263,
+          "volatility": 0.05240098292978289,
+          "max_kkt": 3.2526065174565133e-19,
+          "n_active": 10,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.6477272727272727,
+          "expected_return": 0.007221386448439998,
+          "volatility": 0.05268266061610738,
+          "max_kkt": 1.1102230246251565e-16,
+          "n_active": 10,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.6818181818181818,
+          "expected_return": 0.007244852891209735,
+          "volatility": 0.05297794288107842,
+          "max_kkt": 2.168404344971009e-19,
+          "n_active": 10,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.7159090909090909,
+          "expected_return": 0.007268319333979472,
+          "volatility": 0.053286603560031495,
+          "max_kkt": 2.168404344971009e-19,
+          "n_active": 10,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.75,
+          "expected_return": 0.0072825061585640736,
+          "volatility": 0.05348073518149588,
+          "max_kkt": 1.6209256159527285e-14,
+          "n_active": 10,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.7840909090909091,
+          "expected_return": 0.007292509450642644,
+          "volatility": 0.05362358557391996,
+          "max_kkt": 2.3203661214665772e-14,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.8181818181818181,
+          "expected_return": 0.007292509450643126,
+          "volatility": 0.053623585573924326,
+          "max_kkt": 6.17284001691587e-14,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.8522727272727273,
+          "expected_return": 0.007292509450642629,
+          "volatility": 0.05362358557391983,
+          "max_kkt": 2.5757174171303632e-14,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.8863636363636365,
+          "expected_return": 0.00729250945064289,
+          "volatility": 0.053623585573922196,
+          "max_kkt": 2.020605904817785e-14,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.9204545454545454,
+          "expected_return": 0.00729250945064291,
+          "volatility": 0.053623585573922376,
+          "max_kkt": 2.375877272697835e-14,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.9545454545454546,
+          "expected_return": 0.0072925094506432545,
+          "volatility": 0.05362358557392549,
+          "max_kkt": 8.43769498715119e-14,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 0.9886363636363635,
+          "expected_return": 0.0072925094506425085,
+          "volatility": 0.05362358557391873,
+          "max_kkt": 4.707345624410664e-14,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 1.0227272727272727,
+          "expected_return": 0.00729250945064294,
+          "volatility": 0.05362358557392264,
+          "max_kkt": 2.886579864025407e-14,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 1.0568181818181819,
+          "expected_return": 0.0072925094506427895,
+          "volatility": 0.05362358557392129,
+          "max_kkt": 2.6645352591003757e-15,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 1.0909090909090908,
+          "expected_return": 0.007292509450642688,
+          "volatility": 0.053623585573920364,
+          "max_kkt": 1.5432100042289676e-14,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 1.125,
+          "expected_return": 0.007292509450642659,
+          "volatility": 0.05362358557392009,
+          "max_kkt": 2.0650148258027912e-14,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 1.1590909090909092,
+          "expected_return": 0.0072925094506427575,
+          "volatility": 0.05362358557392099,
+          "max_kkt": 3.219646771412954e-15,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 1.1931818181818181,
+          "expected_return": 0.007292509450642952,
+          "volatility": 0.05362358557392275,
+          "max_kkt": 3.108624468950438e-14,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 1.2272727272727273,
+          "expected_return": 0.007292509450642984,
+          "volatility": 0.05362358557392304,
+          "max_kkt": 3.6637359812630166e-14,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 1.2613636363636365,
+          "expected_return": 0.007292509450642758,
+          "volatility": 0.053623585573921,
+          "max_kkt": 2.886579864025407e-15,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 1.2954545454545454,
+          "expected_return": 0.007292509450642511,
+          "volatility": 0.053623585573918754,
+          "max_kkt": 4.6629367034256575e-14,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 1.3295454545454546,
+          "expected_return": 0.007292509450643209,
+          "volatility": 0.05362358557392508,
+          "max_kkt": 7.638334409421077e-14,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 1.3636363636363635,
+          "expected_return": 0.007292509450643082,
+          "volatility": 0.05362358557392393,
+          "max_kkt": 5.395683899678261e-14,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 1.3977272727272727,
+          "expected_return": 0.0072925094506428164,
+          "volatility": 0.05362358557392153,
+          "max_kkt": 7.327471962526033e-15,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 1.4318181818181819,
+          "expected_return": 0.007292509450642673,
+          "volatility": 0.05362358557392023,
+          "max_kkt": 1.7985612998927536e-14,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 1.4659090909090908,
+          "expected_return": 0.007292509450642737,
+          "volatility": 0.0536235855739208,
+          "max_kkt": 6.8833827526759706e-15,
+          "n_active": 9,
+          "max_weight": 0.12
+        },
+        {
+          "kappa": 1.5,
+          "expected_return": 0.007292509450642257,
+          "volatility": 0.05362358557391645,
+          "max_kkt": 9.137135492665038e-14,
+          "n_active": 9,
+          "max_weight": 0.12
+        }
+      ],
+      "max_kkt_long_only": 4.440892098500626e-16,
+      "max_kkt_capped": 9.975185499659645e-12
+    },
+    "resampling": {
+      "n_boot": 500,
+      "n_assets": 15,
+      "t_len": 120,
+      "true_opt": {
+        "expected_return": 0.006808199513605414,
+        "volatility": 0.052759606511738125,
+        "sharpe": 0.12904189329180657,
+        "hhi": 0.24308790039257008,
+        "n_active": 6,
+        "weights": [
+          0.0,
+          0.12643179422074136,
+          0.10157692652772264,
+          0.18937587638857595,
+          0.03704952337285641,
+          0.0,
+          0.0,
+          0.39673469573881265,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.148831183751291
+        ]
+      },
+      "plugin": {
+        "expected_return": 0.004606616274951422,
+        "volatility": 0.03943643591220684,
+        "sharpe": 0.11681117140521126,
+        "hhi": 0.8091812272109027,
+        "n_active": 2,
+        "weights": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.10681987129878427,
+          0.0,
+          0.8931801287011562
+        ],
+        "l1_to_true": 1.7023376324973585
+      },
+      "shrunk": {
+        "expected_return": 0.0030094120759685764,
+        "volatility": 0.03173780134711691,
+        "sharpe": 0.0948210634711139,
+        "hhi": 0.29426170094902354,
+        "n_active": 5,
+        "weights": [
+          0.25988290586602436,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.3159150881488647,
+          0.0,
+          0.0,
+          0.0,
+          0.055411795361684404,
+          0.0,
+          0.0,
+          0.017292357763223114,
+          0.3514978528602034
+        ],
+        "l1_to_true": 1.702337632497418
+      },
+      "resampled": {
+        "expected_return": 0.004827055774206689,
+        "volatility": 0.04364922013319623,
+        "sharpe": 0.11058744599506837,
+        "hhi": 0.22138212124045079,
+        "n_active": 14,
+        "weights": [
+          0.00001880982100157522,
+          0.027090017844888205,
+          0.004436039876063598,
+          0.07583281085119091,
+          0.1452904839735516,
+          0.03431996751143719,
+          0.02464659351910901,
+          0.0019465383202522714,
+          0.02467451203568356,
+          0.003526464625468475,
+          0.023463813360699748,
+          0.07891034563543549,
+          0.13824884053483152,
+          0.010964832627251137,
+          0.40662992946313586
+        ],
+        "l1_to_true": 1.4096277719669155
+      },
+      "boot_weight_dispersion": 0.514791808648675
+    },
+    "backtest": {
+      "n_worlds": 300,
+      "tc_levels": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "summary": {
+        "EqualWeight": {
+          "0.0": {
+            "ann_return": -0.008273430576762306,
+            "ann_vol": 0.30419628531051063,
+            "sharpe": -0.025951043045892692,
+            "sortino": -0.002532327907049494,
+            "max_drawdown": 0.7139231407134445,
+            "calmar": 0.018734973589289012,
+            "var_95": 0.15504142866831938,
+            "cvar_95": 0.19054836763798416,
+            "mean_turnover": 0.030346508015957566,
+            "mean_hhi": 0.06701682145778715,
+            "sharpe_se": 0.01799735326100906
+          },
+          "5.0": {
+            "ann_return": -0.008455509624858054,
+            "ann_vol": 0.30419687572075194,
+            "sharpe": -0.02655212525643068,
+            "sortino": -0.0033805722824407918,
+            "max_drawdown": 0.7141516894795535,
+            "calmar": 0.01844705826867957,
+            "var_95": 0.15505943443103165,
+            "cvar_95": 0.19056568305594665,
+            "mean_turnover": 0.030346508015957566,
+            "mean_hhi": 0.06701682145778715,
+            "sharpe_se": 0.017997491027789927
+          },
+          "20.0": {
+            "ann_return": -0.00900174676914529,
+            "ann_vol": 0.30419878853946375,
+            "sharpe": -0.028355343203723144,
+            "sortino": -0.005923834412475136,
+            "max_drawdown": 0.714836175624861,
+            "calmar": 0.017584678284773187,
+            "var_95": 0.15511307124337587,
+            "cvar_95": 0.19061766657671111,
+            "mean_turnover": 0.030346508015957566,
+            "mean_hhi": 0.06701682145778715,
+            "sharpe_se": 0.01799789835302802
+          }
+        },
+        "MinVarSample": {
+          "0.0": {
+            "ann_return": -0.020132032575379443,
+            "ann_vol": 0.263580811978578,
+            "sharpe": -0.07612330742166379,
+            "sortino": -0.0709299912316344,
+            "max_drawdown": 0.6765102243291988,
+            "calmar": -0.0021675902793352295,
+            "var_95": 0.13465752756542082,
+            "cvar_95": 0.16605746557957674,
+            "mean_turnover": 0.0743295041235727,
+            "mean_hhi": 0.34091853820903384,
+            "sharpe_se": 0.017950926776413422
+          },
+          "5.0": {
+            "ann_return": -0.020578009600120878,
+            "ann_vol": 0.2635833528354517,
+            "sharpe": -0.07781871582393392,
+            "sortino": -0.0732834120932242,
+            "max_drawdown": 0.6771279293467327,
+            "calmar": -0.0028922749532190304,
+            "var_95": 0.1346971914039134,
+            "cvar_95": 0.16609855005036558,
+            "mean_turnover": 0.0743295041235727,
+            "mean_hhi": 0.34091853820903384,
+            "sharpe_se": 0.017948134050926975
+          },
+          "20.0": {
+            "ann_return": -0.021915940674345186,
+            "ann_vol": 0.26359226133967917,
+            "sharpe": -0.08290441965009127,
+            "sortino": -0.08033208265274594,
+            "max_drawdown": 0.6789785944793584,
+            "calmar": -0.005056460008391811,
+            "var_95": 0.13481580445159302,
+            "cvar_95": 0.16622240008896585,
+            "mean_turnover": 0.0743295041235727,
+            "mean_hhi": 0.34091853820903384,
+            "sharpe_se": 0.017939735587990183
+          }
+        },
+        "MinVarShrink": {
+          "0.0": {
+            "ann_return": -0.019585201767663128,
+            "ann_vol": 0.2636747198969126,
+            "sharpe": -0.07375945555955184,
+            "sortino": -0.06746370518061737,
+            "max_drawdown": 0.6758937091961799,
+            "calmar": -0.00037841423720448906,
+            "var_95": 0.13451557806917336,
+            "cvar_95": 0.1662662520257632,
+            "mean_turnover": 0.06622673334766836,
+            "mean_hhi": 0.2631708475142827,
+            "sharpe_se": 0.018045619051075545
+          },
+          "5.0": {
+            "ann_return": -0.019982562167749136,
+            "ann_vol": 0.2636769088639326,
+            "sharpe": -0.07527084513264647,
+            "sortino": -0.06956244464624861,
+            "max_drawdown": 0.6764506071206985,
+            "calmar": -0.0010275886902275252,
+            "var_95": 0.13455419763917534,
+            "cvar_95": 0.16630283632839096,
+            "mean_turnover": 0.06622673334766836,
+            "mean_hhi": 0.2631708475142827,
+            "sharpe_se": 0.01804337237726549
+          },
+          "20.0": {
+            "ann_return": -0.02117464336800717,
+            "ann_vol": 0.2636843939616891,
+            "sharpe": -0.07980464995770824,
+            "sortino": -0.07584954656686936,
+            "max_drawdown": 0.6781353109393482,
+            "calmar": -0.002982765919341166,
+            "var_95": 0.13468129541720378,
+            "cvar_95": 0.16641446241427793,
+            "mean_turnover": 0.06622673334766836,
+            "mean_hhi": 0.2631708475142827,
+            "sharpe_se": 0.018036611671663243
+          }
+        },
+        "TangencyShrink": {
+          "0.0": {
+            "ann_return": -0.013614913865085503,
+            "ann_vol": 0.2810110856999077,
+            "sharpe": -0.05518541361653819,
+            "sortino": -0.04050125138474913,
+            "max_drawdown": 0.6959281554485267,
+            "calmar": 0.006653615650992479,
+            "var_95": 0.14067029763635586,
+            "cvar_95": 0.17645431035639256,
+            "mean_turnover": 0.11340300606636514,
+            "mean_hhi": 0.3034912494751989,
+            "sharpe_se": 0.018694686317157313
+          },
+          "5.0": {
+            "ann_return": -0.014295331901483693,
+            "ann_vol": 0.2810127011639647,
+            "sharpe": -0.05761386854662335,
+            "sortino": -0.043896793083683945,
+            "max_drawdown": 0.6967888319749882,
+            "calmar": 0.005571906821119671,
+            "var_95": 0.1407163957910725,
+            "cvar_95": 0.17650912731622542,
+            "mean_turnover": 0.11340300606636514,
+            "mean_hhi": 0.3034912494751989,
+            "sharpe_se": 0.01869171796153676
+          },
+          "20.0": {
+            "ann_return": -0.016336586010678264,
+            "ann_vol": 0.2810209391468869,
+            "sharpe": -0.06489843240755444,
+            "sortino": -0.05406032219766845,
+            "max_drawdown": 0.6993997800245645,
+            "calmar": 0.0023406670348188594,
+            "var_95": 0.14086438266556084,
+            "cvar_95": 0.1766757686262155,
+            "mean_turnover": 0.11340300606636514,
+            "mean_hhi": 0.3034912494751989,
+            "sharpe_se": 0.018682888926770263
+          }
+        },
+        "RiskParitySample": {
+          "0.0": {
+            "ann_return": -0.011263909232676854,
+            "ann_vol": 0.2948900889803218,
+            "sharpe": -0.036893810480313656,
+            "sortino": -0.01760071377606715,
+            "max_drawdown": 0.7060119887196289,
+            "calmar": 0.014173859519059254,
+            "var_95": 0.15050364853353884,
+            "cvar_95": 0.1849948930160983,
+            "mean_turnover": 0.03064430316594189,
+            "mean_hhi": 0.06983550641277529,
+            "sharpe_se": 0.01802410465582781
+          },
+          "5.0": {
+            "ann_return": -0.011447775051672505,
+            "ann_vol": 0.2948909051440188,
+            "sharpe": -0.03752047739051788,
+            "sortino": -0.018481931822393608,
+            "max_drawdown": 0.706247972078553,
+            "calmar": 0.013880422437011842,
+            "var_95": 0.15052102384437527,
+            "cvar_95": 0.1850126580592178,
+            "mean_turnover": 0.03064430316594189,
+            "mean_hhi": 0.06983550641277529,
+            "sharpe_se": 0.018023858001410792
+          },
+          "20.0": {
+            "ann_return": -0.011999372508659461,
+            "ann_vol": 0.29489350136934034,
+            "sharpe": -0.03940044038330049,
+            "sortino": -0.0211239924681297,
+            "max_drawdown": 0.706954500409075,
+            "calmar": 0.013001553423220428,
+            "var_95": 0.15057314977688455,
+            "cvar_95": 0.18506595318857633,
+            "mean_turnover": 0.03064430316594189,
+            "mean_hhi": 0.06983550641277529,
+            "sharpe_se": 0.018023112297957885
+          }
+        },
+        "RiskParityFactor": {
+          "0.0": {
+            "ann_return": -0.011285195774831846,
+            "ann_vol": 0.29472124647593473,
+            "sharpe": -0.03697893137844697,
+            "sortino": -0.0176832028784144,
+            "max_drawdown": 0.7058308430057275,
+            "calmar": 0.014166814242995427,
+            "var_95": 0.15041893065336537,
+            "cvar_95": 0.18488921444097056,
+            "mean_turnover": 0.030675402402589397,
+            "mean_hhi": 0.0699422947994949,
+            "sharpe_se": 0.018031697580392032
+          },
+          "5.0": {
+            "ann_return": -0.011469248189247383,
+            "ann_vol": 0.2947220589715585,
+            "sharpe": -0.03760662292182553,
+            "sortino": -0.018565851457138682,
+            "max_drawdown": 0.7060666591443993,
+            "calmar": 0.013873153861243201,
+            "var_95": 0.15043634450453205,
+            "cvar_95": 0.1849069744598215,
+            "mean_turnover": 0.030675402402589397,
+            "mean_hhi": 0.0699422947994949,
+            "sharpe_se": 0.018031447141598708
+          },
+          "20.0": {
+            "ann_return": -0.012021405432493993,
+            "ann_vol": 0.29472464473529236,
+            "sharpe": -0.03948965984572778,
+            "sortino": -0.021212198723708605,
+            "max_drawdown": 0.7067730931553817,
+            "calmar": 0.012993450783669662,
+            "var_95": 0.1504880854352505,
+            "cvar_95": 0.18496025451637424,
+            "mean_turnover": 0.030675402402589397,
+            "mean_hhi": 0.0699422947994949,
+            "sharpe_se": 0.018030690083695
+          }
+        },
+        "BlackLittermanView": {
+          "0.0": {
+            "ann_return": -0.009060339639314059,
+            "ann_vol": 0.28650164975999887,
+            "sharpe": -0.031046428563297195,
+            "sortino": -0.008837376387168234,
+            "max_drawdown": 0.6947681009321581,
+            "calmar": 0.01766299044725773,
+            "var_95": 0.14552959338123403,
+            "cvar_95": 0.1793372605496464,
+            "mean_turnover": 0.060221872365916355,
+            "mean_hhi": 0.09335886242724797,
+            "sharpe_se": 0.01823990164675268
+          },
+          "5.0": {
+            "ann_return": -0.009421670873509558,
+            "ann_vol": 0.2865017852927272,
+            "sharpe": -0.032313485198395504,
+            "sortino": -0.01061402240527399,
+            "max_drawdown": 0.6951840269106032,
+            "calmar": 0.017086424676567027,
+            "var_95": 0.14556099889842364,
+            "cvar_95": 0.17936859790914,
+            "mean_turnover": 0.060221872365916355,
+            "mean_hhi": 0.09335886242724797,
+            "sharpe_se": 0.018242033449004713
+          },
+          "20.0": {
+            "ann_return": -0.010505664576096052,
+            "ann_vol": 0.286502901224568,
+            "sharpe": -0.03611450509209469,
+            "sortino": -0.015937798117515875,
+            "max_drawdown": 0.6964425162791424,
+            "calmar": 0.015362099189268227,
+            "var_95": 0.14565932460815637,
+            "cvar_95": 0.1794635280416677,
+            "mean_turnover": 0.060221872365916355,
+            "mean_hhi": 0.09335886242724797,
+            "sharpe_se": 0.018248431350085238
+          }
+        },
+        "PcaFactorMinVar": {
+          "0.0": {
+            "ann_return": -0.01831210963883898,
+            "ann_vol": 0.2677350876222724,
+            "sharpe": -0.06774210066668247,
+            "sortino": -0.05797429518572077,
+            "max_drawdown": 0.6800449954152176,
+            "calmar": 0.0024839859134163918,
+            "var_95": 0.13607308653910957,
+            "cvar_95": 0.16862821790885069,
+            "mean_turnover": 0.0737190542717154,
+            "mean_hhi": 0.26582584692927547,
+            "sharpe_se": 0.018138235488326163
+          },
+          "5.0": {
+            "ann_return": -0.01875442396446927,
+            "ann_vol": 0.267737125381197,
+            "sharpe": -0.06939879225014992,
+            "sortino": -0.06028218285859421,
+            "max_drawdown": 0.6806611171740379,
+            "calmar": 0.001763251025409772,
+            "var_95": 0.1361200758607087,
+            "cvar_95": 0.16866721037682178,
+            "mean_turnover": 0.0737190542717154,
+            "mean_hhi": 0.26582584692927547,
+            "sharpe_se": 0.01813653882098492
+          },
+          "20.0": {
+            "ann_return": -0.02008136694136015,
+            "ann_vol": 0.2677444247800075,
+            "sharpe": -0.07436845676971511,
+            "sortino": -0.06719493408115114,
+            "max_drawdown": 0.6825122884064986,
+            "calmar": -0.0003880009659670191,
+            "var_95": 0.13625969884156214,
+            "cvar_95": 0.16878472532972805,
+            "mean_turnover": 0.0737190542717154,
+            "mean_hhi": 0.26582584692927547,
+            "sharpe_se": 0.0181314291094197
+          }
+        }
+      }
+    },
+    "attribution": {
+      "euler_error": 2.0816681711721685e-17,
+      "true_systematic_share": 0.9739212232490033,
+      "k_models": [
+        {
+          "factor_exposures": [
+            0.9265145846527708
+          ],
+          "systematic_var": 0.001461213735701495,
+          "idiosyncratic_var": 0.00007498129454820093,
+          "total_var": 0.001536195030249696,
+          "systematic_share": 0.9511902505399895,
+          "idiosyncratic_share": 0.04880974946001051,
+          "k_fit": 1
+        },
+        {
+          "factor_exposures": [
+            0.9233889620890773,
+            0.022209606617815663
+          ],
+          "systematic_var": 0.0014618589935241984,
+          "idiosyncratic_var": 0.00005968070775897311,
+          "total_var": 0.0015215397012831714,
+          "systematic_share": 0.960776108760986,
+          "idiosyncratic_share": 0.0392238912390141,
+          "k_fit": 2
+        },
+        {
+          "factor_exposures": [
+            0.9293830032566686,
+            0.03217858813179008,
+            -0.07712799876644683
+          ],
+          "systematic_var": 0.001466146071419102,
+          "idiosyncratic_var": 0.00004740805351517956,
+          "total_var": 0.0015135541249342815,
+          "systematic_share": 0.9686776622426779,
+          "idiosyncratic_share": 0.03132233775732204,
+          "k_fit": 3
+        }
+      ]
+    },
+    "stress": {
+      "scenarios": {
+        "MarketCrash3Sigma": {
+          "rp": {
+            "linear_pnl": -0.11971449786914826,
+            "quadratic_pnl": -0.0255119375,
+            "total_pnl": -0.14522643536914825,
+            "factor_exposure": [
+              0.9470134072187916,
+              -0.08266927655823444,
+              -0.12221266401402103
+            ]
+          },
+          "mv": {
+            "linear_pnl": -0.18612599571718214,
+            "quadratic_pnl": -0.0255119375,
+            "total_pnl": -0.21163793321718213,
+            "factor_exposure": [
+              1.0115499992324475,
+              0.695853490904822,
+              0.37747851984772807
+            ]
+          }
+        },
+        "Stagflation": {
+          "rp": {
+            "linear_pnl": -0.08756186384671802,
+            "quadratic_pnl": -0.0174883125,
+            "total_pnl": -0.10505017634671801,
+            "factor_exposure": [
+              0.9470134072187916,
+              -0.08266927655823444,
+              -0.12221266401402103
+            ]
+          },
+          "mv": {
+            "linear_pnl": -0.04309336763560041,
+            "quadratic_pnl": -0.0174883125,
+            "total_pnl": -0.06058168013560041,
+            "factor_exposure": [
+              1.0115499992324475,
+              0.695853490904822,
+              0.37747851984772807
+            ]
+          }
+        },
+        "FactorReversal": {
+          "rp": {
+            "linear_pnl": -0.06336483141844497,
+            "quadratic_pnl": -0.0137945,
+            "total_pnl": -0.07715933141844497,
+            "factor_exposure": [
+              0.9470134072187916,
+              -0.08266927655823444,
+              -0.12221266401402103
+            ]
+          },
+          "mv": {
+            "linear_pnl": -0.110752318705718,
+            "quadratic_pnl": -0.0137945,
+            "total_pnl": -0.124546818705718,
+            "factor_exposure": [
+              1.0115499992324475,
+              0.695853490904822,
+              0.37747851984772807
+            ]
+          }
+        }
+      },
+      "reverse_rp": {
+        "shock_df": [
+          -0.16239353812559354,
+          -0.021868065103305384,
+          -0.016209782716029793
+        ],
+        "achieved_pnl": -0.15,
+        "mahalanobis_sq": 13.214048634062507,
+        "mahalanobis_dist": 3.6351132904027224,
+        "theory_mahalanobis_sq": 13.21404863406251
+      },
+      "reverse_mv": {
+        "shock_df": [
+          -0.0963704019186191,
+          -0.05775276469238044,
+          -0.03266161236821097
+        ],
+        "achieved_pnl": -0.15000000000000002,
+        "mahalanobis_sq": 5.87340250756069,
+        "mahalanobis_dist": 2.4235103687751556,
+        "theory_mahalanobis_sq": 5.873402507560689
+      }
+    },
+    "robustness": {
+      "grs_gaussian_rej": {
+        "grs_rej_05": 0.04375,
+        "wald_rej_05": 0.22875,
+        "n_reps": 800
+      },
+      "grs_t4_rej": {
+        "grs_rej_05": 0.065,
+        "wald_rej_05": 0.23125,
+        "n_reps": 800
+      },
+      "portfolio_gaussian": {
+        "EqualWeight": {
+          "cvar_95": 0.08317947661198502,
+          "sharpe": 0.4017157047407741,
+          "max_drawdown": 0.28090490387485206
+        },
+        "MinVarShrink": {
+          "cvar_95": 0.06260290767226373,
+          "sharpe": 0.3053833644042417,
+          "max_drawdown": 0.2289654792685792
+        },
+        "RiskParitySample": {
+          "cvar_95": 0.07740136269420111,
+          "sharpe": 0.38168992948156905,
+          "max_drawdown": 0.26640308143159536
+        }
+      },
+      "portfolio_t4": {
+        "EqualWeight": {
+          "cvar_95": 0.09210804810482597,
+          "sharpe": 0.4064050256811576,
+          "max_drawdown": 0.2733964094445002
+        },
+        "MinVarShrink": {
+          "cvar_95": 0.06869855427786571,
+          "sharpe": 0.3402297588632301,
+          "max_drawdown": 0.2192081694746376
+        },
+        "RiskParitySample": {
+          "cvar_95": 0.08588505054966898,
+          "sharpe": 0.394801085537591,
+          "max_drawdown": 0.25825694367409674
+        }
+      }
+    },
+    "complexity": {
+      "rows": [
+        {
+          "n_assets": 10,
+          "invert_ms": 1.6550000291317701,
+          "rp_newton_ms": 2.132000052370131,
+          "qp_ms": 1.6729999333620071,
+          "lw_ms": 0.417000032030046
+        },
+        {
+          "n_assets": 25,
+          "invert_ms": 5.126000032760203,
+          "rp_newton_ms": 1.6339999856427312,
+          "qp_ms": 15.890000038780272,
+          "lw_ms": 1.6270000487565994
+        },
+        {
+          "n_assets": 50,
+          "invert_ms": 71.9200000166893,
+          "rp_newton_ms": 7.763999979943037,
+          "qp_ms": 37.06100000999868,
+          "lw_ms": 6.969999987632036
+        },
+        {
+          "n_assets": 100,
+          "invert_ms": 1043.0319999577478,
+          "rp_newton_ms": 38.83600002154708,
+          "qp_ms": 93.69699994567782,
+          "lw_ms": 51.44100007601082
+        },
+        {
+          "n_assets": 200,
+          "invert_ms": 16081.852999981493,
+          "rp_newton_ms": 270.96700004767627,
+          "qp_ms": 272.7129999548197,
+          "lw_ms": 396.8550000572577
+        }
+      ],
+      "slope_invert": 3.1720666052788324,
+      "slope_rp_newton": 1.703109801035735,
+      "slope_qp": 1.635919971839888,
+      "slope_lw": 2.3080278871222024
+    }
+  }
+}
