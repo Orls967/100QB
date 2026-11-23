@@ -3,6 +3,17 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 005d] — 2026-11-23 · Jump-Diffusion Merton: Seri Eksak, PIDE Crank–Nicolson, Kalibrasi & Risiko Ekor (Rust, Bonus)
+
+### Ditambahkan
+- Project Rust stable mandiri `projects/rust/day005d_merton_jump_diffusion/` (topik cadangan `ROADMAP 075` karena topik utama telah dikerjakan penuh di `day002b`; *zero external crates*, `xoshiro256++`, `std::thread::scope` deterministik blok tetap `64`, JSON 17-digit, 4 grafik SVG) pada data sintetis:
+  - **Bagian 1**: Seri eksak Merton (1976), *put-call parity*, dan simulasi MC paralel ($R=400\mathrm{k}$: `martingale_z = 0,49`, `max |call_z| = 1,10`, `max |put_z| = 0,75`).
+  - **Bagian 2**: Pemecah PIDE Crank–Nicolson + 4 *half-step* Rannacher dengan algoritma Thomas $O(N)$ dan integral lompatan *predictor-corrector* (`401x200`: `max_abs_err = 0,00303`, konvergensi `15,43x`).
+  - **Bagian 3**: *Implied volatility smile* ($T \in \{0{,}25; 1; 2\}$: *skew* `35,40%` di $K=80$ vs `22,55%` ATM) dan kalibrasi Nelder–Mead 4D (`price_rmse = 1,15e-8`, `214` iterasi).
+  - **Bagian 4**: Risiko ekor *put* OTM (`K=70` rasio `191,14x` BS) dan *short put* 1 bulan ($K=90$, $R=200\mathrm{k}$: `ES99 = 28,156` vs `4,017` BS).
+- Runner utama `day005d` selesai dalam `0,49s` pada `10` *worker* (`c1`–`c7 = tercapai` semua), `9` unit test + `2` integration test lolos.
+- Output `outputs/day005d/results.json`, 4 grafik SVG `outputs/figures/day005d_*.svg`, `projects/rust/day005d_merton_jump_diffusion/README.md`, serta [day005d_quant_merton-jump-diffusion.md](project-explanations/day005d_quant_merton-jump-diffusion.md).
+
 ## [Hari 005c] — 2026-11-23 · Perapihan dokumen day004j + Kriteria Kelly & Risiko Drawdown (Rust, Bonus)
 
 ### Diperbaiki (Bagian A — `day004j`)

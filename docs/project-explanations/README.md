@@ -45,6 +45,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `5a` (`day005a`) | `bonus` | `quant` | `rust` | [Model SABR: CEV eksak, ekspansi Hagan, kepadatan negatif, kalibrasi & delta Bartlett (Rust)](day005a_quant_sabr.md) |
 | `5b` (`day005b`) | `bonus` | `quant` | `rust` | [Harga opsi Eropa Black–Scholes & put-call parity (Rust)](day005b_quant_black-scholes.md) |
 | `5c` (`day005c`) | `bonus` | `quant` | `rust` | [Kriteria Kelly dan risiko drawdown: peluang sentuh eksak, Kelly fraksional, galat estimasi & ekor berat (Rust)](day005c_quant_kelly-drawdown.md) |
+| `5d` (`day005d`) | `bonus` | `quant` | `rust` | [Jump-diffusion Merton: seri eksak, PIDE Crank–Nicolson, kalibrasi smile & risiko ekor (Rust)](day005d_quant_merton-jump-diffusion.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 
