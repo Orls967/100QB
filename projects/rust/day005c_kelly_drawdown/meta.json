@@ -1,0 +1,10 @@
+{
+  "day": 5,
+  "session": "c",
+  "topic_no": null,
+  "type": "quant",
+  "language": "rust",
+  "topic": "Kriteria Kelly dan risiko drawdown: peluang sentuh eksak, Kelly fraksional dan galat estimasi",
+  "date": "2026-11-23",
+  "link": "projects/rust/day005c_kelly_drawdown"
+}
