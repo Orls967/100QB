@@ -3,6 +3,22 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 005h] — 2026-11-23 · Perbaikan day005g + Backtest, Statistik Sharpe, Bias Seleksi, Pengujian Ganda & PBO (Ruby, Bonus)
+
+### Diperbaiki (Bagian A — `day005g`)
+- `projects/ruby/day005g_mlmc_heston/`: melaporkan fakta terukur *speedup* MLMC Heston (`0,1837x` pada $\varepsilon = 0{,}01$, i.e. `5,44x` lebih lambat dari MC standar; `0,4978x` pada $\varepsilon = 0{,}005$ dalam `bin/run_extras`) bersama perbandingan kemiringan biaya terhadap prediksi teori Giles (asimtotik `2,172`, pra-asimtotik diskret `2,475`, terukur `2,471`) dan titik silang ekstrapolasi ($\varepsilon^* \approx 5{,}05\times 10^{-4}$..$1{,}59\times 10^{-3}$; kontrol Feller OK $\xi=0{,}25$ memberi `speedup = 2,557x`), memperketat ambang `c2`/`c3` ke nilai teori/Feller serta `c6` ke target literatur `>= 2,0x` (status jujur **`belum tercapai`** di `1,253x`/`1,216x` disertai diagnosis skema Euler tanpa koreksi kuadratik Milstein), dan menambah `11` tes unit (`21` tes, `34` asersi).
+
+### Ditambahkan (Bagian C — `day005h`)
+- Project Ruby murni mandiri `projects/ruby/day005h_backtest_overfitting/` ($\ge 3{,}3$, nol gem numerik, `SplitMix64`, `Process.fork` + `IO.pipe` + `Marshal` deterministik, JSON penuh, 6 grafik SVG):
+  - **Bagian 1**: Generator sintetis, pustaka `300` strategi kausal (`SMA`, `MOM`, `MRZ`), mesin backtest beserta invarian ekuitas/biaya/tanpa *look-ahead*, dan *anchor* eksak `AR(1)` (`z = 0,65`) & `GBM` *buy-and-hold* (`z = 0,55`).
+  - **Bagian 2**: Inferensi Sharpe ($R = 20\mathrm{k}$ MC Gaussian, `Student-t(5)`, `Lognormal(0,45)`), faktor koreksi autokorelasi Lo $\eta(q)$ ($q \in \{5, 21\}$), dan *stationary bootstrap* Politis–Romano (`AR(1)` $\phi=0{,}3$: cakupan `0,846 -> 0,914`).
+  - **Bagian 3**: $\mathbb{E}[\max Z_i]$ Gauss–Legendre 160-titik vs Euler–Mascheroni (`< 0,018` di $N=300$), penyusutan $N_{\mathrm{eff}} = 231{,}5$ dari korelasi pustaka ($\bar{\rho} = 0{,}229$), serta kalibrasi `DSR > 0,95` (`0,1%` lolos palsu vs `100%` uji naif di $R=2\mathrm{k}$).
+  - **Bagian 4**: Pengujian ganda (`Unadjusted`, `Bonferroni`, `Holm`, `Benjamini–Hochberg`, `Romano–Wolf`) di $R = 2\mathrm{k}$ ($N = 300, \pi_0 = 0{,}90, \alpha = 0{,}05$): `Bonf FWER = 0,041`, `BH FDR = 0,0405` (vs teori `0,045`), plus dependensi $\rho = 0{,}4$ & `bin/run_extras` `RW FWER = 0,046 / Power = 0,601`.
+  - **Bagian 5**: Enumerasi CSCV eksak seluruh `12.870` pembagian $\binom{16}{8}$ (*anchor* *noise* `0,464 +- 0,036` vs `0,50`, sinyal `0,000`, `0,462 +- 0,035` di $N=300$ `extras`), dan studi biaya $c \in \{0, 5, 20\}$ bps (runtuhnya `MOM(1)` digantikan `SMA(10,40)`).
+  - **Bagian 6**: Validasi label tumpang-tindih $h = 10$ (`Naive Shuffled K-Fold` bocor `+0,3741` vs `Purged + Embargoed` `-0,0037 +- 0,0095`, `z = 0,39`).
+- Runner utama `day005h` selesai dalam `20,62s` (`Ruby 4.0.9`, YJIT `ON`, `10` *worker*; `11/11` kriteria `tercapai`), `31` tes unit/integrasi (`13.163` asersi) dan `rubocop` (`26` berkas, `0` pelanggaran) lulus bersih.
+- Output `outputs/day005h/results.json`, 6 grafik SVG `outputs/figures/day005h_*.svg`, `projects/ruby/day005h_backtest_overfitting/README.md`, serta [day005h_quant_backtest-overfitting.md](project-explanations/day005h_quant_backtest-overfitting.md).
+
 ## [Hari 005g] — 2026-11-23 · Perbaikan day005f + Multilevel Monte Carlo (Giles) untuk CIR & Heston (Ruby, Bonus)
 
 ### Diperbaiki (Bagian A — `day005f`)

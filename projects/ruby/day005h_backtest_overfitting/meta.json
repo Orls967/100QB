@@ -1,0 +1,10 @@
+{
+  "day": 5,
+  "session": "h",
+  "topic_no": null,
+  "type": "quant",
+  "language": "ruby",
+  "topic": "Backtest dan overfitting: Sharpe, bias seleksi, pengujian ganda dan PBO",
+  "date": "2026-11-23",
+  "link": "projects/ruby/day005h_backtest_overfitting"
+}

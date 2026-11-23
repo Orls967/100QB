@@ -154,7 +154,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [docs/ROADMAP.md](docs/ROADMAP.md) · Riwayat: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 43/100 topik (43%)** · quant: 42 · sim: 1
+**Progres: 44/100 topik (44%)** · quant: 43 · sim: 1
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -201,6 +201,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 5e | bonus | `quant` | `ruby` | Kopula, ketergantungan ekor dan alokasi modal Euler | 2026-11-23 | [day005e_copula_tail_dependence](projects/ruby/day005e_copula_tail_dependence) |
 | 5f | bonus | `quant` | `ruby` | Valuasi tranche CDO: LHP Vasicek, rekursi ASB, base correlation & exponential twisting | 2026-11-23 | [day005f_cdo_tranche](projects/ruby/day005f_cdo_tranche) |
 | 5g | bonus | `quant` | `ruby` | Multilevel Monte Carlo (Giles) untuk CIR dan Heston: laju kuat, hukum kompleksitas & antithetic | 2026-11-23 | [day005g_mlmc_heston](projects/ruby/day005g_mlmc_heston) |
+| 5h | bonus | `quant` | `ruby` | Backtest dan overfitting: Sharpe, bias seleksi, pengujian ganda dan PBO | 2026-11-23 | [day005h_backtest_overfitting](projects/ruby/day005h_backtest_overfitting) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi
