@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+RubyVM::YJIT.enable if defined?(RubyVM::YJIT) && RubyVM::YJIT.respond_to?(:enable) && !RubyVM::YJIT.enabled?
+
+$LOAD_PATH.unshift(File.expand_path('../lib', __dir__))
+
+require 'cdo_tranche'
+
+t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+res = CdoTranche::Importance.compare_naive_vs_is(
+  attach: 0.30, detach: 1.00, n_paths: 400_000, seed: CdoTranche::MAIN_SEED
+)
+dt = Process.clock_gettime(Process::CLOCK_MONOTONIC) - t0
+
+puts format('=== day005f Extras (R=400,000 Super-Senior 30-100%%) selesai dalam %.2fs ===', dt)
+puts format('  Exact ASB=%<ex>.6e | IS=%<is>.6e ± %<se>.6e (z=%<z>+.2f) | VR=%<vr>.1fx',
+            ex: res[:exact_el], is: res[:is_el], se: res[:is_se], z: res[:is_z], vr: res[:variance_reduction])

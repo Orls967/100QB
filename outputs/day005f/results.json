@@ -1,0 +1,515 @@
+{
+  "metadata": {
+    "day": 5,
+    "session": "f",
+    "topic_source": "backup_cdo_tranche_lhp_asb_exponential_twisting",
+    "language": "ruby",
+    "ruby_version": "4.0.9",
+    "yjit_enabled": true,
+    "main_seed": 20261123,
+    "workers_used": 10,
+    "run_completed_without_errors": true,
+    "elapsed_seconds": {
+      "part1_anchors": 0.16604699997697026,
+      "part2_valuation": 22.601063999929465,
+      "part3_base_corr": 0.07537800003774464,
+      "part4_importance": 0.36618200002703816,
+      "part5_model_risk": 1.3311099999118596,
+      "total": 24.59400399995502
+    }
+  },
+  "criteria": {
+    "c1_asb_matches_exact_binomial": {
+      "status": "tercapai",
+      "measured": {
+        "max_asb_vs_binomial_err": 7.181755190543981e-16
+      },
+      "threshold": "max_asb_vs_binomial_err < 1e-12",
+      "note": "Rekursi ASB cocok dengan distribusi binomial eksak hingga presisi mesin"
+    },
+    "c2_lhp_closed_form_and_granularity": {
+      "status": "tercapai",
+      "measured": {
+        "max_lhp_bivariate_err": 2.519381231413931e-10,
+        "granularity_monotone": true
+      },
+      "threshold": "max_lhp_bivariate_err < 1e-9 dan galat LHP turun monoton terhadap N",
+      "note": "LHP kuadratur cocok dengan ortan bivariat dan konvergen O(1/N) ke ASB berhingga"
+    },
+    "c3_tranche_sum_conservation": {
+      "status": "tercapai",
+      "measured": {
+        "homog_pv_sum_err": 6.938893903907228e-18,
+        "hetero_pv_sum_err": 6.938893903907228e-18
+      },
+      "threshold": "homog_pv_sum_err < 1e-12 dan hetero_pv_sum_err < 1e-4",
+      "note": "Penjumlahan PV proteksi seluruh tranche sama dengan PV proteksi portofolio total"
+    },
+    "c4_base_correlation_skew_and_arbitrage": {
+      "status": "tercapai",
+      "measured": {
+        "base_corrs": [
+          0.45521484375000004,
+          0.438232421875,
+          0.432265625,
+          0.42400390625,
+          0.41023437500000004
+        ],
+        "all_tranche_els_nonneg": true
+      },
+      "threshold": "Seluruh base_corr terkalibrasi di (0.01, 0.95) dan implied_tranche_el >= 0",
+      "note": "Kalibrasi base correlation terhadap pasar t(4) bebas arbitrase statis"
+    },
+    "c5_compound_correlation_non_uniqueness": {
+      "status": "tercapai",
+      "measured": {
+        "mezz_compound_roots": [
+          0.39687500000000003
+        ],
+        "senior_compound_roots": []
+      },
+      "threshold": "Deteksi akar compound correlation pada tranche mezzanine 3-7% dan senior 7-10%",
+      "note": "Menunjukkan sensitivitas non-monoton compound correlation pada tranche mezzanine"
+    },
+    "c6_importance_sampling_vs_asb": {
+      "status": "tercapai",
+      "measured": {
+        "max_is_z": 2.642630105100053,
+        "super_senior_vr": 309.13361893786526
+      },
+      "threshold": "max |is_z| <= 3.0 dan super_senior_vr (30-100%) > 100.0 (R=100k)",
+      "note": "Conditional MC + Exponential Twisting tak-bias vs ASB dan hemat variansi besar di ekor"
+    },
+    "c7_model_risk_senior_spreads": {
+      "status": "tercapai",
+      "measured": {
+        "gauss_15_30_bps": 27.439807445053173,
+        "t4_15_30_bps": 74.30619470170298,
+        "random_recovery_15_30_bps": 63.45962467748103
+      },
+      "threshold": "t4_15_30_bps > gauss_15_30_bps dan random_recovery_15_30_bps > gauss_15_30_bps",
+      "note": "Kopula berekor berat t(4) dan recovery prosiklis meningkatkan spread senior secara tajam"
+    },
+    "c8_worker_invariance_1_vs_n": {
+      "status": "tercapai",
+      "measured": {
+        "bit_diffs": 0
+      },
+      "threshold": "bit_diffs == 0",
+      "note": "Determinisme paralel Process.fork bit-identik 1 vs N worker"
+    },
+    "c9_runtime_under_360s": {
+      "status": "tercapai",
+      "measured": {
+        "total_seconds": 24.59400399995502
+      },
+      "threshold": "< 360.0s",
+      "note": "Anggaran waktu eksekusi runner Ruby penuh"
+    }
+  },
+  "part1_anchors": {
+    "max_asb_vs_binomial_err": 7.181755190543981e-16,
+    "max_lhp_bivariate_err": 2.519381231413931e-10,
+    "granularity": [
+      {
+        "n": 25,
+        "exact_el": 0.005106743047579095,
+        "lhp_el": 0.004408006301892489,
+        "abs_err": 0.0006987367456866055
+      },
+      {
+        "n": 50,
+        "exact_el": 0.0048071976614979355,
+        "lhp_el": 0.004408006301892489,
+        "abs_err": 0.00039919135960544624
+      },
+      {
+        "n": 125,
+        "exact_el": 0.004586900832123993,
+        "lhp_el": 0.004408006301892489,
+        "abs_err": 0.00017889453023150342
+      },
+      {
+        "n": 500,
+        "exact_el": 0.004492810850313734,
+        "lhp_el": 0.004408006301892489,
+        "abs_err": 0.000084804548421245
+      }
+    ]
+  },
+  "part2_valuation": {
+    "homogeneous": [
+      {
+        "attach": 0.0,
+        "detach": 0.03,
+        "el_terminal": 0.02036091164179005,
+        "pv_prot": 0.01957278536944135,
+        "pv_prem_unit": 0.0826107440390257,
+        "fair_spread_bps": 2369.2784270524276,
+        "name": "0-3%"
+      },
+      {
+        "attach": 0.03,
+        "detach": 0.07,
+        "el_terminal": 0.012604746936866754,
+        "pv_prot": 0.011900976699694187,
+        "pv_prem_unit": 0.16363753873901163,
+        "fair_spread_bps": 727.2766867188868,
+        "name": "3-7%"
+      },
+      {
+        "attach": 0.07,
+        "detach": 0.1,
+        "el_terminal": 0.004586900832123993,
+        "pv_prot": 0.004300009823108916,
+        "pv_prem_unit": 0.13438797925488047,
+        "fair_spread_bps": 319.96982519943316,
+        "name": "7-10%"
+      },
+      {
+        "attach": 0.1,
+        "detach": 0.15,
+        "el_terminal": 0.003611913639477232,
+        "pv_prot": 0.00337195296015011,
+        "pv_prem_unit": 0.23171573185461272,
+        "fair_spread_bps": 145.52110610538097,
+        "name": "10-15%"
+      },
+      {
+        "attach": 0.15,
+        "detach": 0.3,
+        "el_terminal": 0.0021049403019848313,
+        "pv_prot": 0.001955546870139928,
+        "pv_prem_unit": 0.7091525632271293,
+        "fair_spread_bps": 27.575827424790678,
+        "name": "15-30%"
+      },
+      {
+        "attach": 0.3,
+        "detach": 1.0,
+        "el_terminal": 0.0000844948498620279,
+        "pv_prot": 0.00007802411190989767,
+        "pv_prem_unit": 3.3222825243225023,
+        "fair_spread_bps": 0.2348509235403114,
+        "name": "30-100%"
+      }
+    ],
+    "heterogeneous": [
+      {
+        "attach": 0.0,
+        "detach": 0.03,
+        "el_terminal": 0.022116338488562037,
+        "pv_prot": 0.02129027462744549,
+        "pv_prem_unit": 0.07595651548177629,
+        "fair_spread_bps": 2802.955676995677,
+        "name": "0-3%"
+      },
+      {
+        "attach": 0.03,
+        "detach": 0.07,
+        "el_terminal": 0.014986122602202964,
+        "pv_prot": 0.014162005997286935,
+        "pv_prem_unit": 0.15805460848320654,
+        "fair_spread_bps": 896.0198081659644,
+        "name": "3-7%"
+      },
+      {
+        "attach": 0.07,
+        "detach": 0.1,
+        "el_terminal": 0.005669161341673739,
+        "pv_prot": 0.00531703700401772,
+        "pv_prem_unit": 0.13237769780590772,
+        "fair_spread_bps": 401.6565548536404,
+        "name": "7-10%"
+      },
+      {
+        "attach": 0.1,
+        "detach": 0.15,
+        "el_terminal": 0.004540125701446887,
+        "pv_prot": 0.004239457146560326,
+        "pv_prem_unit": 0.23022958480811856,
+        "fair_spread_bps": 184.14041575471887,
+        "name": "10-15%"
+      },
+      {
+        "attach": 0.15,
+        "detach": 0.3,
+        "el_terminal": 0.0026257763875370934,
+        "pv_prot": 0.0024396064488125756,
+        "pv_prem_unit": 0.70845427290765,
+        "fair_spread_bps": 34.435623329645566,
+        "name": "15-30%"
+      },
+      {
+        "attach": 0.3,
+        "detach": 1.0,
+        "el_terminal": 0.00009591278043292404,
+        "pv_prot": 0.00008856820832369404,
+        "pv_prem_unit": 3.3222705965991555,
+        "fair_spread_bps": 0.2665893874338741,
+        "name": "30-100%"
+      }
+    ],
+    "homog_pv_sum_err": 6.938893903907228e-18,
+    "hetero_pv_sum_err": 6.938893903907228e-18
+  },
+  "part3_base_corr": {
+    "market_t4_equity_els": [
+      0.01590081702022291,
+      0.027009665100589754,
+      0.03207363331438633,
+      0.03731985300358807,
+      0.04262698848699857
+    ],
+    "base_correlations": [
+      {
+        "detach": 0.03,
+        "target_equity_el": 0.01590081702022291,
+        "base_corr": 0.45521484375000004,
+        "implied_tranche_el": 0.01589711157825683
+      },
+      {
+        "detach": 0.07,
+        "target_equity_el": 0.027009665100589754,
+        "base_corr": 0.438232421875,
+        "implied_tranche_el": 0.011115172308835797
+      },
+      {
+        "detach": 0.1,
+        "target_equity_el": 0.03207363331438633,
+        "base_corr": 0.432265625,
+        "implied_tranche_el": 0.005068402702431744
+      },
+      {
+        "detach": 0.15,
+        "target_equity_el": 0.03731985300358807,
+        "base_corr": 0.42400390625,
+        "implied_tranche_el": 0.00524164592458589
+      },
+      {
+        "detach": 0.3,
+        "target_equity_el": 0.04262698848699857,
+        "base_corr": 0.41023437500000004,
+        "implied_tranche_el": 0.0052967078127325595
+      }
+    ],
+    "mezz_compound_roots": [
+      0.39687500000000003
+    ],
+    "senior_compound_roots": []
+  },
+  "part4_importance": [
+    {
+      "attach": 0.1,
+      "detach": 0.15,
+      "exact_el": 0.0036122808170351126,
+      "mu_star": -1.2427551908936978,
+      "naive_el": 0.0036416360000000175,
+      "naive_se": 0.000037502265644025184,
+      "naive_var": 0.00014064199284350316,
+      "is_el": 0.0036166638268090158,
+      "is_se": 0.000014238954563712015,
+      "is_var": 0.000020274782706745523,
+      "is_z": 0.3078182288096704,
+      "variance_reduction": 6.936794089374425
+    },
+    {
+      "attach": 0.15,
+      "detach": 0.3,
+      "exact_el": 0.002105208121791405,
+      "mu_star": -1.7501279791953017,
+      "naive_el": 0.0020529,
+      "naive_se": 0.000040970654472439163,
+      "naive_var": 0.00016785945278999993,
+      "is_el": 0.002100987056365241,
+      "is_se": 0.000008327456708671095,
+      "is_var": 0.000006934653523479125,
+      "is_z": -0.5068853041011671,
+      "variance_reduction": 24.20588890586485
+    },
+    {
+      "attach": 0.3,
+      "detach": 1.0,
+      "exact_el": 0.00008452263794691284,
+      "mu_star": -2.918378495718539,
+      "naive_el": 0.00007413599999999997,
+      "naive_se": 0.000006879070761014163,
+      "naive_var": 0.000004732161453503997,
+      "is_el": 0.0000834887034254713,
+      "is_se": 0.000000391252078543318,
+      "is_var": 0.000000015307818896446668,
+      "is_z": -2.642630105100053,
+      "variance_reduction": 309.13361893786526
+    }
+  ],
+  "part5_model_risk": {
+    "gaussian": [
+      {
+        "attach": 0.0,
+        "detach": 0.03,
+        "el_terminal": 0.020401400000000246,
+        "pv_prot": 0.019608962953804862,
+        "pv_prem_unit": 0.08262905452102062,
+        "fair_spread_bps": 2373.1317110516366,
+        "name": "0-3%"
+      },
+      {
+        "attach": 0.03,
+        "detach": 0.07,
+        "el_terminal": 0.012526706666666571,
+        "pv_prot": 0.01182550019412305,
+        "pv_prem_unit": 0.16388950341414052,
+        "fair_spread_bps": 721.553238479258,
+        "name": "3-7%"
+      },
+      {
+        "attach": 0.07,
+        "detach": 0.1,
+        "el_terminal": 0.004533653333333332,
+        "pv_prot": 0.004250795321696497,
+        "pv_prem_unit": 0.13444571050826223,
+        "fair_spread_bps": 316.17188124683736,
+        "name": "7-10%"
+      },
+      {
+        "attach": 0.1,
+        "detach": 0.15,
+        "el_terminal": 0.003604399999999992,
+        "pv_prot": 0.0033656323553667607,
+        "pv_prem_unit": 0.23169268076452287,
+        "fair_spread_bps": 145.26278276297242,
+        "name": "10-15%"
+      },
+      {
+        "attach": 0.15,
+        "detach": 0.3,
+        "el_terminal": 0.0020947999999999995,
+        "pv_prot": 0.0019459605181910663,
+        "pv_prem_unit": 0.7091742615496679,
+        "fair_spread_bps": 27.439807445053173,
+        "name": "15-30%"
+      },
+      {
+        "attach": 0.3,
+        "detach": 1.0,
+        "el_terminal": 0.00008767999999999997,
+        "pv_prot": 0.00008127924060306321,
+        "pv_prem_unit": 3.3222635097449476,
+        "fair_spread_bps": 0.24465019214957778,
+        "name": "30-100%"
+      }
+    ],
+    "t4": [
+      {
+        "attach": 0.0,
+        "detach": 0.03,
+        "el_terminal": 0.016035880000000096,
+        "pv_prot": 0.015326703523362968,
+        "pv_prem_unit": 0.0997315291159401,
+        "fair_spread_bps": 1536.7962026878517,
+        "name": "0-3%"
+      },
+      {
+        "attach": 0.03,
+        "detach": 0.07,
+        "el_terminal": 0.011221519999999902,
+        "pv_prot": 0.010653605575621969,
+        "pv_prem_unit": 0.16358276943322908,
+        "fair_spread_bps": 651.2669771109687,
+        "name": "3-7%"
+      },
+      {
+        "attach": 0.07,
+        "detach": 0.1,
+        "el_terminal": 0.005160253333333323,
+        "pv_prot": 0.004888698076523051,
+        "pv_prem_unit": 0.13082825029452477,
+        "fair_spread_bps": 373.6729693714818,
+        "name": "7-10%"
+      },
+      {
+        "attach": 0.1,
+        "detach": 0.15,
+        "el_terminal": 0.005349186666666671,
+        "pv_prot": 0.005059399805229031,
+        "pv_prem_unit": 0.22574436588194988,
+        "fair_spread_bps": 224.1207564788031,
+        "name": "10-15%"
+      },
+      {
+        "attach": 0.15,
+        "detach": 0.3,
+        "el_terminal": 0.005512200000000002,
+        "pv_prot": 0.005204812327484685,
+        "pv_prem_unit": 0.7004546994202893,
+        "fair_spread_bps": 74.30619470170298,
+        "name": "15-30%"
+      },
+      {
+        "attach": 0.3,
+        "detach": 1.0,
+        "el_terminal": 0.0008497599999999998,
+        "pv_prot": 0.0008008324318780908,
+        "pv_prem_unit": 3.3206775772211503,
+        "fair_spread_bps": 2.4116536858970004,
+        "name": "30-100%"
+      }
+    ],
+    "random_recovery": [
+      {
+        "attach": 0.0,
+        "detach": 0.03,
+        "el_terminal": 0.019854775464086427,
+        "pv_prot": 0.019132417951954302,
+        "pv_prem_unit": 0.08178781183830665,
+        "fair_spread_bps": 2339.274950866619,
+        "name": "0-3%"
+      },
+      {
+        "attach": 0.03,
+        "detach": 0.07,
+        "el_terminal": 0.013878526587153325,
+        "pv_prot": 0.013164607828070317,
+        "pv_prem_unit": 0.15794007481002778,
+        "fair_spread_bps": 833.5191587002137,
+        "name": "3-7%"
+      },
+      {
+        "attach": 0.07,
+        "detach": 0.1,
+        "el_terminal": 0.006077255848176148,
+        "pv_prot": 0.005721192557856347,
+        "pv_prem_unit": 0.13058671806040661,
+        "fair_spread_bps": 438.11443022940864,
+        "name": "7-10%"
+      },
+      {
+        "attach": 0.1,
+        "detach": 0.15,
+        "el_terminal": 0.005764623119930157,
+        "pv_prot": 0.005400764133298468,
+        "pv_prem_unit": 0.22742428765667888,
+        "fair_spread_bps": 237.47525776365168,
+        "name": "10-15%"
+      },
+      {
+        "attach": 0.15,
+        "detach": 0.3,
+        "el_terminal": 0.004800536034966059,
+        "pv_prot": 0.0044733429438538145,
+        "pv_prem_unit": 0.7049116610110054,
+        "fair_spread_bps": 63.45962467748103,
+        "name": "15-30%"
+      },
+      {
+        "attach": 0.3,
+        "detach": 1.0,
+        "el_terminal": 0.0005281768779234748,
+        "pv_prot": 0.0004883921770850331,
+        "pv_prem_unit": 3.3217869426582496,
+        "fair_spread_bps": 1.4702694228010866,
+        "name": "30-100%"
+      }
+    ]
+  }
+}

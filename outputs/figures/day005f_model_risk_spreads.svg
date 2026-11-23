@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="500" viewBox="0 0 860 500">
+<rect width="860" height="500" fill="#ffffff"/>
+<text x="430" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#111827">Model Risk Fair Spread (bps): Gaussian vs t(4) vs Random Recovery</text>
+<rect x="82" y="48" width="748" height="388" fill="#f9fafb" stroke="#d1d5db"/>
+<text x="456" y="484" text-anchor="middle" font-size="12" fill="#374151">Indeks Tranche (1..6)</text>
+<text x="18" y="242" text-anchor="middle" font-size="12" fill="#374151" transform="rotate(-90 18 242)">Fair Spread (bps)</text>
+<text x="82" y="458" font-size="10" fill="#6b7280">0.7</text>
+<text x="830" y="458" text-anchor="end" font-size="10" fill="#6b7280">6.3</text>
+<text x="76" y="436" text-anchor="end" font-size="10" fill="#6b7280">-142</text>
+<text x="76" y="56" text-anchor="end" font-size="10" fill="#6b7280">2.52e+03</text>
+<polyline fill="none" stroke="#2563eb" stroke-width="2.3" points="122.07,68.79 255.64,309.91 389.21,369.09 522.79,394.04 656.36,411.24 789.93,415.21"/>
+<line x1="96" y1="30" x2="118" y2="30" stroke="#2563eb" stroke-width="2.5"/>
+<text x="124" y="34" font-size="11" fill="#1f2937">Gaussian</text>
+<polyline fill="none" stroke="#dc2626" stroke-width="2.3" points="122.07,190.89 255.64,320.17 389.21,360.7 522.79,382.53 656.36,404.4 789.93,414.9"/>
+<line x1="296" y1="30" x2="318" y2="30" stroke="#dc2626" stroke-width="2.5"/>
+<text x="324" y="34" font-size="11" fill="#1f2937">Student-t(4)</text>
+<polyline fill="none" stroke="#059669" stroke-width="2.3" stroke-dasharray="6,4" points="122.07,73.73 255.64,293.56 389.21,351.29 522.79,380.58 656.36,405.99 789.93,415.04"/>
+<line x1="496" y1="30" x2="518" y2="30" stroke="#059669" stroke-width="2.5" stroke-dasharray="6,4"/>
+<text x="524" y="34" font-size="11" fill="#1f2937">Random Recovery</text>
+</svg>
