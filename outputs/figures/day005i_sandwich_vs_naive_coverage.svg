@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="500" viewBox="0 0 880 500">
+<rect width="880" height="500" fill="#ffffff"/>
+<text x="440" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#111827">Cakupan 95% (T=2500): Norm Naif vs t(5) Naif (Merah) & Sandwich (Hijau)</text>
+<rect x="88" y="50" width="760" height="386" fill="#f9fafb" stroke="#d1d5db"/>
+<text x="468" y="484" text-anchor="middle" font-size="12" fill="#374151"></text>
+<text x="18" y="243" text-anchor="middle" font-size="12" fill="#374151" transform="rotate(-90 18 243)">Cakupan Empiris</text>
+<text x="82" y="436" text-anchor="end" font-size="10" fill="#6b7280">0</text>
+<text x="82" y="58" text-anchor="end" font-size="10" fill="#6b7280">1.07</text>
+<text x="88" y="450" font-size="10" fill="#6b7280">0</text>
+<text x="848" y="450" text-anchor="end" font-size="10" fill="#6b7280">3</text>
+<rect x="118.4" y="92.3" width="61.2" height="343.7" fill="#60a5fa"/>
+<rect x="182.6" y="159.9" width="61.2" height="276.1" fill="#ef4444"/>
+<rect x="246.8" y="104.9" width="61.2" height="331.1" fill="#16a34a"/>
+<text x="214.7" y="460" text-anchor="middle" font-size="10" fill="#374151">omega</text>
+<rect x="371.7" y="91.4" width="61.2" height="344.6" fill="#60a5fa"/>
+<rect x="435.9" y="176.2" width="61.2" height="259.8" fill="#ef4444"/>
+<rect x="500.1" y="108.5" width="61.2" height="327.5" fill="#16a34a"/>
+<text x="468.0" y="460" text-anchor="middle" font-size="10" fill="#374151">alpha</text>
+<rect x="625.1" y="92.3" width="61.2" height="343.7" fill="#60a5fa"/>
+<rect x="689.2" y="167.1" width="61.2" height="268.9" fill="#ef4444"/>
+<rect x="753.4" y="119.3" width="61.2" height="316.7" fill="#16a34a"/>
+<text x="721.3" y="460" text-anchor="middle" font-size="10" fill="#374151">beta</text>
+</svg>

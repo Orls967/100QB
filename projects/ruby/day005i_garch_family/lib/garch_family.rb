@@ -16,6 +16,16 @@ require_relative 'garch_family/inference'
 require_relative 'garch_family/mle'
 require_relative 'garch_family/innovation_study'
 require_relative 'garch_family/risk_backtest'
+require_relative 'garch_family/model_comparison'
+require_relative 'garch_family/dcc'
+require_relative 'garch_family/dcc_studies'
+require_relative 'garch_family/har_rv'
+require_relative 'garch_family/misspec_portfolio'
+require_relative 'garch_family/json_out'
+require_relative 'garch_family/svg'
+require_relative 'garch_family/figures'
+require_relative 'garch_family/criteria'
+require_relative 'garch_family/runner'
 
 module GarchFamily
   MAIN_SEED = 20_261_123

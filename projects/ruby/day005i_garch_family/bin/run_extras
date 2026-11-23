@@ -1,0 +1,49 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+RubyVM::YJIT.enable if defined?(RubyVM::YJIT) && RubyVM::YJIT.respond_to?(:enable) && !RubyVM::YJIT.enabled?
+
+$LOAD_PATH.unshift(File.expand_path('../lib', __dir__))
+
+require 'garch_family'
+
+t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+qmle_10k_norm = GarchFamily::Mle.run_qmle_cell(
+  n_obs: 10_000, n_reps: 150, true_dist: GarchFamily::Innovations::Normal.new,
+  stream_id: 950, seed: GarchFamily::MAIN_SEED, workers: nil
+)
+qmle_10k_t5 = GarchFamily::Mle.run_qmle_cell(
+  n_obs: 10_000, n_reps: 150, true_dist: GarchFamily::Innovations::StudentT.new(nu: 5.0),
+  stream_id: 951, seed: GarchFamily::MAIN_SEED, workers: nil
+)
+dcc_500 = GarchFamily::Dcc.mc_dcc_recovery(seed: GarchFamily::MAIN_SEED, workers: nil, n_reps: 400)
+rng_ex = GarchFamily::Rng::Sampler.new(GarchFamily::Rng.derive_seed(GarchFamily::MAIN_SEED, 952, 0))
+rets_ex = GarchFamily::GjrGarch11.new.simulate(
+  GarchFamily::ModelComparison::ASYM_TRUE, 6500, GarchFamily::Innovations::Normal.new, rng_ex
+)
+r_ex = rets_ex[:returns]
+fits_ex = GarchFamily::ModelComparison.fit_family(r_ex[0, 2500], GarchFamily::Innovations::Normal.new)
+oos_ex = GarchFamily::ModelComparison.evaluate_oos_models(fits_ex, r_ex[0, 2500], r_ex[2500..])
+dt = Process.clock_gettime(Process::CLOCK_MONOTONIC) - t0
+
+puts format('=== day005i Extras selesai dalam %.2fs ===', dt)
+puts format(
+  '  QMLE T=10k Normal (R=150): alpha RMSE=%<rmse>.5f | cov_sw=%<cov>.4f | conv=%<c>d/150',
+  rmse: qmle_10k_norm[:params][:alpha][:rmse], cov: qmle_10k_norm[:params][:alpha][:coverage_sandwich_95],
+  c: qmle_10k_norm[:n_converged]
+)
+puts format(
+  '  QMLE T=10k t(5)   (R=150): alpha cov_naive=%<cn>.4f -> cov_sw=%<cs>.4f | se_ratio=%<sr>.3f',
+  cn: qmle_10k_t5[:params][:alpha][:coverage_naive_95], cs: qmle_10k_t5[:params][:alpha][:coverage_sandwich_95],
+  sr: qmle_10k_t5[:params][:alpha][:mean_se_sandwich] / qmle_10k_t5[:params][:alpha][:mean_se_naive]
+)
+puts format(
+  '  DCC MC Recovery (R=400, T=2000): a=%<a>.4f +- %<sa>.4f | b=%<b>.4f +- %<sb>.4f | conv=%<c>d/400',
+  a: dcc_500[:a][:mean], sa: dcc_500[:a][:se_mean],
+  b: dcc_500[:b][:mean], sb: dcc_500[:b][:se_mean], c: dcc_500[:n_converged]
+)
+puts format(
+  '  OOS T=4000 Asym DGP DM(GARCH vs GJR): t=%<stat>.3f | p=%<pval>.5f (QLIKE %<q1>.5f vs %<q2>.5f)',
+  stat: oos_ex[:dm][:dm_stat], pval: oos_ex[:dm][:p_value],
+  q1: oos_ex[:qlike][:garch11], q2: oos_ex[:qlike][:gjr]
+)

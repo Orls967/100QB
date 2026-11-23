@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="500" viewBox="0 0 880 500">
+<rect width="880" height="500" fill="#ffffff"/>
+<text x="440" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#111827">Konvergensi Root-T QMLE (T = 500, 1000, 2500)</text>
+<rect x="88" y="50" width="760" height="386" fill="#f9fafb" stroke="#d1d5db"/>
+<text x="468" y="484" text-anchor="middle" font-size="12" fill="#374151">Panjang Sampel T</text>
+<text x="18" y="243" text-anchor="middle" font-size="12" fill="#374151" transform="rotate(-90 18 243)">RMSE Parameter</text>
+<text x="82" y="436" text-anchor="end" font-size="10" fill="#6b7280">0.00658</text>
+<text x="82" y="58" text-anchor="end" font-size="10" fill="#6b7280">0.168</text>
+<text x="88" y="450" font-size="10" fill="#6b7280">380</text>
+<text x="848" y="450" text-anchor="end" font-size="10" fill="#6b7280">2.62e+03</text>
+<polyline fill="none" stroke="#2563eb" stroke-width="2.2" points="128.71,356.03 298.36,391.93 807.29,415.32"/>
+<line x1="100" y1="32" x2="120" y2="32" stroke="#2563eb" stroke-width="2.5"/>
+<text x="126" y="36" font-size="11" fill="#1f2937">Norm RMSE(alpha)</text>
+<polyline fill="none" stroke="#dc2626" stroke-width="2.2" points="128.71,307.91 298.36,335.5 807.29,391.75"/>
+<line x1="305" y1="32" x2="325" y2="32" stroke="#dc2626" stroke-width="2.5"/>
+<text x="331" y="36" font-size="11" fill="#1f2937">t(5) QMLE RMSE(alpha)</text>
+<polyline fill="none" stroke="#16a34a" stroke-width="2.2" stroke-dasharray="6,4" points="128.71,70.68 298.36,261.41 807.29,371.78"/>
+<line x1="510" y1="32" x2="530" y2="32" stroke="#16a34a" stroke-width="2.5" stroke-dasharray="6,4"/>
+<text x="536" y="36" font-size="11" fill="#1f2937">Norm RMSE(beta)</text>
+</svg>

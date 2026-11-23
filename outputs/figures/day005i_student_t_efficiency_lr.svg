@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="500" viewBox="0 0 880 500">
+<rect width="880" height="500" fill="#ffffff"/>
+<text x="440" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#111827">Efisiensi Student-t MLE vs QMLE & Ukuran LR Campuran (T=2500)</text>
+<rect x="88" y="50" width="760" height="386" fill="#f9fafb" stroke="#d1d5db"/>
+<text x="468" y="484" text-anchor="middle" font-size="12" fill="#374151"></text>
+<text x="18" y="243" text-anchor="middle" font-size="12" fill="#374151" transform="rotate(-90 18 243)">Rasio MSE / Rejection Rate</text>
+<text x="82" y="436" text-anchor="end" font-size="10" fill="#6b7280">0</text>
+<text x="82" y="58" text-anchor="end" font-size="10" fill="#6b7280">2.77</text>
+<text x="88" y="450" font-size="10" fill="#6b7280">0</text>
+<text x="848" y="450" text-anchor="end" font-size="10" fill="#6b7280">4</text>
+<rect x="110.8" y="159.5" width="141.4" height="276.5" fill="#2563eb"/>
+<text x="183.0" y="460" text-anchor="middle" font-size="10" fill="#374151">Efisiensi omega</text>
+<rect x="300.8" y="91.4" width="141.4" height="344.6" fill="#2563eb"/>
+<text x="373.0" y="460" text-anchor="middle" font-size="10" fill="#374151">Efisiensi alpha</text>
+<rect x="490.8" y="147.3" width="141.4" height="288.7" fill="#2563eb"/>
+<text x="563.0" y="460" text-anchor="middle" font-size="10" fill="#374151">Efisiensi beta</text>
+<rect x="680.8" y="430.0" width="141.4" height="6.0" fill="#16a34a"/>
+<text x="753.0" y="460" text-anchor="middle" font-size="10" fill="#374151">Null LR Mix 5%</text>
+</svg>

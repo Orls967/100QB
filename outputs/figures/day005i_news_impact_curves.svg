@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="500" viewBox="0 0 880 500">
+<rect width="880" height="500" fill="#ffffff"/>
+<text x="440" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#111827">News Impact Curves pada DGP Asimetris (Leverage Negatif)</text>
+<rect x="88" y="50" width="760" height="386" fill="#f9fafb" stroke="#d1d5db"/>
+<text x="468" y="484" text-anchor="middle" font-size="12" fill="#374151">Kejutan eps_{t-1}</text>
+<text x="18" y="243" text-anchor="middle" font-size="12" fill="#374151" transform="rotate(-90 18 243)">Variansi Berikut h_t</text>
+<text x="82" y="436" text-anchor="end" font-size="10" fill="#6b7280">5.77e-05</text>
+<text x="82" y="58" text-anchor="end" font-size="10" fill="#6b7280">0.000226</text>
+<text x="88" y="450" font-size="10" fill="#6b7280">-0.0336</text>
+<text x="848" y="450" text-anchor="end" font-size="10" fill="#6b7280">0.0336</text>
+<polyline fill="none" stroke="#6b7280" stroke-width="2.2" stroke-dasharray="6,4" points="128.71,158.93 156.99,198.58 185.26,234.78 213.54,267.53 241.81,296.83 270.08,322.68 298.36,345.09 326.63,364.05 354.9,379.57 383.18,391.63 411.45,400.25 439.73,405.42 468.0,407.15 496.27,405.42 524.55,400.25 552.82,391.63 581.1,379.57 609.37,364.05 637.64,345.09 665.92,322.68 694.19,296.83 722.46,267.53 750.74,234.78 779.01,198.58 807.29,158.93"/>
+<line x1="100" y1="32" x2="120" y2="32" stroke="#6b7280" stroke-width="2.5" stroke-dasharray="6,4"/>
+<text x="126" y="36" font-size="11" fill="#1f2937">GARCH(1,1)</text>
+<polyline fill="none" stroke="#dc2626" stroke-width="2.2" points="128.71,70.68 156.99,124.26 185.26,173.18 213.54,217.44 241.81,257.04 270.08,291.98 298.36,322.27 326.63,347.89 354.9,368.86 383.18,385.17 411.45,396.81 439.73,403.8 468.0,406.13 496.27,405.18 524.55,402.35 552.82,397.61 581.1,390.99 609.37,382.47 637.64,372.07 665.92,359.76 694.19,345.57 722.46,329.48 750.74,311.5 779.01,291.63 807.29,269.87"/>
+<line x1="305" y1="32" x2="325" y2="32" stroke="#dc2626" stroke-width="2.5"/>
+<text x="331" y="36" font-size="11" fill="#1f2937">GJR-GARCH(1,1)</text>
+<polyline fill="none" stroke="#2563eb" stroke-width="2.2" points="128.71,179.37 156.99,208.47 185.26,235.39 213.54,260.3 241.81,283.34 270.08,304.66 298.36,324.38 326.63,342.63 354.9,359.51 383.18,375.13 411.45,389.58 439.73,402.95 468.0,415.32 496.27,408.43 524.55,401.24 552.82,393.72 581.1,385.86 609.37,377.64 637.64,369.06 665.92,360.09 694.19,350.72 722.46,340.92 750.74,330.68 779.01,319.99 807.29,308.81"/>
+<line x1="510" y1="32" x2="530" y2="32" stroke="#2563eb" stroke-width="2.5"/>
+<text x="536" y="36" font-size="11" fill="#1f2937">EGARCH(1,1)</text>
+</svg>
