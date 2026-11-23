@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="480" viewBox="0 0 820 480">
+<rect width="820" height="480" fill="#ffffff"/>
+<text x="410" y="30" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="bold" fill="#111827">Laju Pertumbuhan Log Biner g(f) (p = 0.55, b = 1)</text>
+<line x1="82" y1="410.0" x2="790.0" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="414.0" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">-0.0315</text>
+<line x1="82.0" y1="56" x2="82.0" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="82.0" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">0.010</text>
+<line x1="82" y1="339.2" x2="790.0" y2="339.2" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="343.2" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">-0.0237</text>
+<line x1="223.6" y1="56" x2="223.6" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="223.6" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">0.078</text>
+<line x1="82" y1="268.4" x2="790.0" y2="268.4" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="272.4" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">-0.0158</text>
+<line x1="365.2" y1="56" x2="365.2" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="365.2" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">0.146</text>
+<line x1="82" y1="197.6" x2="790.0" y2="197.6" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="201.6" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">-0.0080</text>
+<line x1="506.8" y1="56" x2="506.8" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="506.8" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">0.214</text>
+<line x1="82" y1="126.8" x2="790.0" y2="126.8" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="130.8" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">-0.0001</text>
+<line x1="648.4" y1="56" x2="648.4" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="648.4" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">0.282</text>
+<line x1="82" y1="56.0" x2="790.0" y2="56.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="74.0" y="60.0" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0.0077</text>
+<line x1="790.0" y1="56" x2="790.0" y2="410.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="790.0" y="428.0" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">0.350</text>
+<rect x="82" y="56" width="708" height="354" fill="none" stroke="#374151" stroke-width="1.2"/>
+<text x="436.0" y="464.0" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Fraksi taruhan f</text>
+<text x="20" y="233.0" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937" transform="rotate(-90 20 233.0)">g(f)</text>
+<polyline fill="none" stroke="#2563eb" stroke-width="2.2" points="82.00,117.05 102.82,109.38 123.65,102.60 144.47,96.73 165.29,91.75 186.12,87.68 206.94,84.50 227.76,82.23 248.59,80.87 269.41,80.41 290.24,80.87 311.06,82.24 331.88,84.54 352.71,87.75 373.53,91.90 394.35,96.99 415.18,103.03 436.00,110.01 456.82,117.96 477.65,126.87 498.47,136.77 519.29,147.65 540.12,159.54 560.94,172.44 581.76,186.37 602.59,201.34 623.41,217.36 644.24,234.45 665.06,252.63 685.88,271.91 706.71,292.32 727.53,313.87 748.35,336.58 769.18,360.48 790.00,385.59 "/>
+<polyline fill="none" stroke="#9ca3af" stroke-width="2.2" stroke-dasharray="6,4" points="82.00,125.63 102.82,125.63 123.65,125.63 144.47,125.63 165.29,125.63 186.12,125.63 206.94,125.63 227.76,125.63 248.59,125.63 269.41,125.63 290.24,125.63 311.06,125.63 331.88,125.63 352.71,125.63 373.53,125.63 394.35,125.63 415.18,125.63 436.00,125.63 456.82,125.63 477.65,125.63 498.47,125.63 519.29,125.63 540.12,125.63 560.94,125.63 581.76,125.63 602.59,125.63 623.41,125.63 644.24,125.63 665.06,125.63 685.88,125.63 706.71,125.63 727.53,125.63 748.35,125.63 769.18,125.63 790.00,125.63 "/>
+<line x1="96.0" y1="74.0" x2="118.0" y2="74.0" stroke="#2563eb" stroke-width="2.5"/>
+<text x="124.0" y="78.0" font-family="sans-serif" font-size="12" fill="#111827">g(f)</text>
+<line x1="161.2" y1="74.0" x2="183.2" y2="74.0" stroke="#9ca3af" stroke-width="2.5" stroke-dasharray="6,4"/>
+<text x="189.2" y="78.0" font-family="sans-serif" font-size="12" fill="#111827">g = 0</text>
+</svg>
