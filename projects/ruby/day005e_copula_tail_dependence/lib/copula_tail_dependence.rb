@@ -10,6 +10,9 @@ require_relative 'copula_tail_dependence/dependence'
 require_relative 'copula_tail_dependence/euler'
 require_relative 'copula_tail_dependence/fit'
 require_relative 'copula_tail_dependence/importance'
+require_relative 'copula_tail_dependence/json_out'
+require_relative 'copula_tail_dependence/svg'
+require_relative 'copula_tail_dependence/runner'
 
 module CopulaTailDependence
   MAIN_SEED = 20_261_123

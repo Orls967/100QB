@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+RubyVM::YJIT.enable if defined?(RubyVM::YJIT) && RubyVM::YJIT.respond_to?(:enable) && !RubyVM::YJIT.enabled?
+
+$LOAD_PATH.unshift(File.expand_path('../lib', __dir__))
+
+require 'copula_tail_dependence'
+
+t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+mc_g = CopulaTailDependence::Euler.mc_euler_es(
+  copula: :gaussian, n_paths: 1_000_000, seed: CopulaTailDependence::MAIN_SEED
+)
+ex = CopulaTailDependence::Euler.gaussian_exact
+dt = Process.clock_gettime(Process::CLOCK_MONOTONIC) - t0
+
+puts format('=== day005e Extras (R=1,000,000 Euler Gaussian) selesai dalam %.2fs ===', dt)
+ex[:es_contribs].each_with_index do |c, i|
+  z = (mc_g[:contribs][i] - c) / mc_g[:contrib_ses][i]
+  puts format('  Aset %<idx>d: exact=%<ex>.6f, mc=%<mc>.6f ± %<se>.6f (z=%<z>+.2f)',
+              idx: i + 1, ex: c, mc: mc_g[:contribs][i], se: mc_g[:contrib_ses][i], z: z)
+end

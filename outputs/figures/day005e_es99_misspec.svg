@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="500" viewBox="0 0 860 500">
+<rect width="860" height="500" fill="#ffffff"/>
+<text x="430" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#111827">ES99 Portofolio (1:Gauss, 2:t4, 3:Norm+t4, 4:t4+Gauss)</text>
+<rect x="82" y="48" width="748" height="388" fill="#f9fafb" stroke="#d1d5db"/>
+<text x="456" y="484" text-anchor="middle" font-size="12" fill="#374151">Spesifikasi Model (1..4)</text>
+<text x="18" y="242" text-anchor="middle" font-size="12" fill="#374151" transform="rotate(-90 18 242)">ES99</text>
+<text x="82" y="458" font-size="10" fill="#6b7280">0.82</text>
+<text x="830" y="458" text-anchor="end" font-size="10" fill="#6b7280">4.18</text>
+<text x="76" y="436" text-anchor="end" font-size="10" fill="#6b7280">1.96</text>
+<text x="76" y="56" text-anchor="end" font-size="10" fill="#6b7280">3.78</text>
+<polyline fill="none" stroke="#dc2626" stroke-width="2.3" points="122.07,415.21 344.69,379.86 567.31,381.92 789.93,68.79"/>
+<line x1="96" y1="30" x2="118" y2="30" stroke="#dc2626" stroke-width="2.5"/>
+<text x="124" y="34" font-size="11" fill="#1f2937">ES99 Portofolio</text>
+</svg>

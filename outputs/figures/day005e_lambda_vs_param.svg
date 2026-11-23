@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="500" viewBox="0 0 860 500">
+<rect width="860" height="500" fill="#ffffff"/>
+<text x="430" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#111827">Koefisien Ketergantungan Ekor vs Parameter</text>
+<rect x="82" y="48" width="748" height="388" fill="#f9fafb" stroke="#d1d5db"/>
+<text x="456" y="484" text-anchor="middle" font-size="12" fill="#374151">Parameter (rho / skala)</text>
+<text x="18" y="242" text-anchor="middle" font-size="12" fill="#374151" transform="rotate(-90 18 242)">lambda</text>
+<text x="82" y="458" font-size="10" fill="#6b7280">-0.001</text>
+<text x="830" y="458" text-anchor="end" font-size="10" fill="#6b7280">0.951</text>
+<text x="76" y="436" text-anchor="end" font-size="10" fill="#6b7280">-0.0556</text>
+<text x="76" y="56" text-anchor="end" font-size="10" fill="#6b7280">0.981</text>
+<polyline fill="none" stroke="#2563eb" stroke-width="2.3" stroke-dasharray="6,4" points="122.07,415.21 161.36,415.21 200.64,415.21 239.93,415.21 279.21,415.21 318.5,415.21 357.79,415.21 397.07,415.21 436.36,415.21 475.64,415.21 514.93,415.21 554.21,415.21 593.5,415.21 632.79,415.21 672.07,415.21 711.36,415.21 750.64,415.21 789.93,415.21"/>
+<line x1="96" y1="30" x2="118" y2="30" stroke="#2563eb" stroke-width="2.5" stroke-dasharray="6,4"/>
+<text x="124" y="34" font-size="11" fill="#1f2937">Gaussian</text>
+<polyline fill="none" stroke="#dc2626" stroke-width="2.3" points="122.07,382.76 161.36,378.16 200.64,373.09 239.93,367.52 279.21,361.41 318.5,354.69 357.79,347.32 397.07,339.22 436.36,330.31 475.64,320.49 514.93,309.63 554.21,297.59 593.5,284.15 632.79,269.03 672.07,251.86 711.36,232.03 750.64,208.56 789.93,179.56"/>
+<line x1="286" y1="30" x2="308" y2="30" stroke="#dc2626" stroke-width="2.5"/>
+<text x="314" y="34" font-size="11" fill="#1f2937">Student-t (df=4)</text>
+<polyline fill="none" stroke="#059669" stroke-width="2.3" points="122.07,414.96 161.36,403.52 200.64,373.55 239.93,336.56 279.21,300.05 318.5,266.73 357.79,237.17 397.07,211.2 436.36,188.41 475.64,168.36 514.93,150.64 554.21,134.91 593.5,120.87 632.79,108.27 672.07,96.93 711.36,86.65 750.64,77.31 789.93,68.79"/>
+<line x1="476" y1="30" x2="498" y2="30" stroke="#059669" stroke-width="2.5"/>
+<text x="504" y="34" font-size="11" fill="#1f2937">Clayton (lambda_L)</text>
+</svg>

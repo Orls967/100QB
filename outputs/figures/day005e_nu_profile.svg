@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="500" viewBox="0 0 860 500">
+<rect width="860" height="500" fill="#ffffff"/>
+<text x="430" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#111827">Profil Log-Likelihood Kopula Student-t terhadap nu</text>
+<rect x="82" y="48" width="748" height="388" fill="#f9fafb" stroke="#d1d5db"/>
+<text x="456" y="484" text-anchor="middle" font-size="12" fill="#374151">Derajat Kebebasan nu</text>
+<text x="18" y="242" text-anchor="middle" font-size="12" fill="#374151" transform="rotate(-90 18 242)">Log-Likelihood</text>
+<text x="82" y="458" font-size="10" fill="#6b7280">0.85</text>
+<text x="830" y="458" text-anchor="end" font-size="10" fill="#6b7280">31.6</text>
+<text x="76" y="436" text-anchor="end" font-size="10" fill="#6b7280">283</text>
+<text x="76" y="56" text-anchor="end" font-size="10" fill="#6b7280">343</text>
+<polyline fill="none" stroke="#2563eb" stroke-width="2.3" points="122.07,106.94 134.21,71.33 158.5,68.79 207.07,124.12 304.21,226.64 789.93,415.21"/>
+<line x1="96" y1="30" x2="118" y2="30" stroke="#2563eb" stroke-width="2.5"/>
+<text x="124" y="34" font-size="11" fill="#1f2937">Profile LogLik</text>
+</svg>

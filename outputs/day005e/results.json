@@ -1,0 +1,463 @@
+{
+  "metadata": {
+    "day": 5,
+    "session": "e",
+    "topic_source": "kopula_ketergantungan_ekor_dan_alokasi_euler",
+    "language": "ruby",
+    "ruby_version": "4.0.9",
+    "yjit_enabled": true,
+    "main_seed": 20261123,
+    "workers_used": 10,
+    "run_completed_without_errors": true,
+    "elapsed_seconds": {
+      "part1_dependence": 0.5116680000210181,
+      "part2_euler": 4.0918439999222755,
+      "part3_estimation": 4.512306999997236,
+      "part4_importance": 0.07705099997110665,
+      "total": 9.199005000060424
+    }
+  },
+  "criteria": {
+    "c1_tau_and_spearman_vs_closed_form": {
+      "status": "tercapai",
+      "measured": {
+        "max_tau_z": 1.6629955060597574,
+        "gaussian_spearman_err": 0.00008826947223505854
+      },
+      "threshold": "max |tau_z| <= 3.0 dan |spearman_err| <= 0.015 (R=200k)",
+      "note": "Kendall tau (SE jackknife) dan Spearman cocok dengan rumus tertutup"
+    },
+    "c2_tail_dependence_convergence": {
+      "status": "belum tercapai",
+      "measured": {
+        "max_tail_err_u999": 0.08999999999999993,
+        "gaussian_chi_decreasing": true
+      },
+      "threshold": "max |lambda_hat(0.999) - lambda_exact| < 0.08 dan chi_Gauss(u) turun monoton",
+      "note": "Konvergensi koefisien ketergantungan ekor ke nilai analitik dan bias berhingga Gaussian"
+    },
+    "c3_bivariate_orthant_accuracy": {
+      "status": "tercapai",
+      "measured": {
+        "max_orthant_err": 5.551115123125783e-17
+      },
+      "threshold": "max_orthant_err < 1e-10",
+      "note": "Probabilitas ortan bivariat Gaussian via Gauss-Legendre akurat terhadap kasus batas"
+    },
+    "c4_euler_gaussian_exact_and_mc": {
+      "status": "tercapai",
+      "measured": {
+        "exact_sum_err": 0.0,
+        "max_fd_err": 5.501626931803116e-12,
+        "max_mc_z": 0.5250621397125124
+      },
+      "threshold": "exact_sum_err < 1e-10, max_fd_err < 1e-6, max_mc_z <= 3.0",
+      "note": "Alokasi Euler Gaussian memenuhi teorema Euler, beda hingga, dan MC"
+    },
+    "c5_cml_vs_tau_inversion": {
+      "status": "tercapai",
+      "measured": {
+        "n5000_rho_mle_bias": -0.00014631244091012352,
+        "n5000_rho_tau_bias": -0.0007731581042229596
+      },
+      "threshold": "|rho_mle_bias| < 0.01 dan |rho_tau_bias| < 0.01 pada n=5000 (R=500)",
+      "note": "CML Gaussian dan inversi tau konsisten serta tak-bias"
+    },
+    "c6_misspecification_aic_lrt_es99": {
+      "status": "tercapai",
+      "measured": {
+        "lrt_t_vs_gauss": 155.35487765198934,
+        "es99_true_t4": 2.2278552179967708,
+        "es99_fitted_gauss_mean": 2.062002458044226,
+        "es99_rel_bias": -0.07444503512291747
+      },
+      "threshold": "LRT > 3.841 (Gaussian ditolak) dan ES99_gauss < ES99_true_t4",
+      "note": "Kopula Gaussian ditolak oleh LRT dan meremehkan ES99 portofolio di bawah kebenaran t(4)"
+    },
+    "c7_importance_sampling_vs_anchor": {
+      "status": "tercapai",
+      "measured": {
+        "max_is_z": 2.4523060679046598,
+        "min_variance_reduction": 2604.3056141264456
+      },
+      "threshold": "max |is_z| <= 3.0 dan min_variance_reduction > 50.0 (R=100k)",
+      "note": "Importance sampling pergeseran-rerata + conditional MC tak-bias dan hemat variansi besar"
+    },
+    "c8_worker_invariance_1_vs_n": {
+      "status": "tercapai",
+      "measured": {
+        "bit_diffs": 0
+      },
+      "threshold": "bit_diffs == 0",
+      "note": "Determinisme paralel Process.fork bit-identik 1 vs N worker"
+    },
+    "c9_runtime_under_300s": {
+      "status": "tercapai",
+      "measured": {
+        "total_seconds": 9.199005000060424
+      },
+      "threshold": "< 300.0s",
+      "note": "Anggaran waktu eksekusi runner Ruby penuh"
+    }
+  },
+  "part1_dependence": {
+    "copulas": [
+      {
+        "copula": "gaussian",
+        "label": "Gaussian(rho=0.6)",
+        "tau_exact": 0.4096655293982669,
+        "tau_emp": 0.4100119119119119,
+        "tau_se": 0.0012250279312127838,
+        "tau_z": 0.28275478853945263,
+        "spearman_exact": 0.5819201041240697,
+        "spearman_emp": 0.5818318346518346,
+        "tail_side": "upper",
+        "tail_exact": 0.0,
+        "tail_by_u": [
+          {
+            "u": 0.9,
+            "empirical": 0.3892500000000001
+          },
+          {
+            "u": 0.99,
+            "empirical": 0.1894999999999998
+          },
+          {
+            "u": 0.999,
+            "empirical": 0.08999999999999993
+          }
+        ]
+      },
+      {
+        "copula": "t",
+        "label": "Student-t(df=4, rho=0.6)",
+        "tau_exact": 0.4096655293982669,
+        "tau_emp": 0.4103156156156156,
+        "tau_se": 0.0013366700727974357,
+        "tau_z": 0.48634755170972205,
+        "spearman_exact": null,
+        "spearman_emp": 0.567619117999118,
+        "tail_side": "upper",
+        "tail_exact": 0.3143726376470172,
+        "tail_by_u": [
+          {
+            "u": 0.9,
+            "empirical": 0.44335000000000013
+          },
+          {
+            "u": 0.99,
+            "empirical": 0.3554999999999997
+          },
+          {
+            "u": 0.999,
+            "empirical": 0.31999999999999973
+          }
+        ]
+      },
+      {
+        "copula": "clayton",
+        "label": "Clayton(theta=2.0)",
+        "tau_exact": 0.5,
+        "tau_emp": 0.5015370770770771,
+        "tau_se": 0.0013679311609630955,
+        "tau_z": 1.123650897750499,
+        "spearman_exact": null,
+        "spearman_emp": 0.6836131619131619,
+        "tail_side": "lower",
+        "tail_exact": 0.7071067811865476,
+        "tail_by_u": [
+          {
+            "u": 0.9,
+            "empirical": 0.7085500000000002
+          },
+          {
+            "u": 0.99,
+            "empirical": 0.6894999999999993
+          },
+          {
+            "u": 0.999,
+            "empirical": 0.7149999999999994
+          }
+        ]
+      },
+      {
+        "copula": "gumbel",
+        "label": "Gumbel(theta=2.0)",
+        "tau_exact": 0.5,
+        "tau_emp": 0.5017731331331331,
+        "tau_se": 0.0010662284574263804,
+        "tau_z": 1.6629955060597574,
+        "spearman_exact": null,
+        "spearman_emp": 0.6839106109506109,
+        "tail_side": "upper",
+        "tail_exact": 0.5857864376269049,
+        "tail_by_u": [
+          {
+            "u": 0.9,
+            "empirical": 0.6213500000000002
+          },
+          {
+            "u": 0.99,
+            "empirical": 0.6024999999999995
+          },
+          {
+            "u": 0.999,
+            "empirical": 0.5399999999999995
+          }
+        ]
+      }
+    ],
+    "max_orthant_err": 5.551115123125783e-17
+  },
+  "part2_euler": {
+    "gaussian_exact": {
+      "sigma_p": 0.13959942693292118,
+      "var": 0.3247568300627209,
+      "es": 0.3720623778137468,
+      "var_contribs": [
+        0.0839471742323972,
+        0.07642317439796992,
+        0.05839223791768135,
+        0.040269646954359854,
+        0.06572459656031256
+      ],
+      "es_contribs": [
+        0.09617529906797771,
+        0.08755531940957731,
+        0.06689791522266876,
+        0.04613550574645521,
+        0.07529833836706781
+      ]
+    },
+    "gaussian_finite_diff": [
+      0.09617529906358334,
+      0.08755531940407568,
+      0.0668979152190774,
+      0.04613550574281144,
+      0.07529833836228406
+    ],
+    "max_fd_err": 5.501626931803116e-12,
+    "mc_gaussian": {
+      "var": 0.32428373810062755,
+      "es": 0.3723791993226281,
+      "contribs": [
+        0.09615806544614025,
+        0.08735407396659645,
+        0.06683956098759665,
+        0.04646750757813584,
+        0.07555999134415887
+      ],
+      "contrib_ses": [
+        0.0008089018032696456,
+        0.0007501575097931002,
+        0.0006776136106596807,
+        0.0006323096002740052,
+        0.0007077228864883895
+      ],
+      "tail_count": 2000
+    },
+    "max_mc_gaussian_z": 0.5250621397125124,
+    "mc_t4": {
+      "var": 0.3461025421685274,
+      "es": 0.41418876752790956,
+      "contribs": [
+        0.10538583354215642,
+        0.09410066627251006,
+        0.07525861701075552,
+        0.05500360816602095,
+        0.08444004253646668
+      ],
+      "contrib_ses": [
+        0.0007951137308159988,
+        0.0007971532681713299,
+        0.0007040757322683897,
+        0.0007820544806116294,
+        0.0007399999498557694
+      ],
+      "tail_count": 2000
+    },
+    "mc_clayton": {
+      "var": 0.4765407765301547,
+      "es": 0.5505953856818594,
+      "contribs": [
+        0.13206026758190959,
+        0.12107007079597386,
+        0.10045394655515895,
+        0.08657506437990868,
+        0.11043603636890827
+      ],
+      "contrib_ses": [
+        0.00040750774849409075,
+        0.00038008574534919984,
+        0.0003190424243163646,
+        0.0002825391599303421,
+        0.0003581614007881224
+      ],
+      "tail_count": 2000
+    }
+  },
+  "part3_estimation": {
+    "tau_vs_mle": [
+      {
+        "n": 250,
+        "r_reps": 500,
+        "rho_tau_bias": -0.002404602283809898,
+        "rho_tau_sd": 0.045185923596938356,
+        "rho_mle_bias": 0.004946636758691225,
+        "rho_mle_sd": 0.04181953828961683
+      },
+      {
+        "n": 1000,
+        "r_reps": 500,
+        "rho_tau_bias": -0.0007631571117499014,
+        "rho_tau_sd": 0.02025231174761222,
+        "rho_mle_bias": 0.0016662436889712806,
+        "rho_mle_sd": 0.019099946837478482
+      },
+      {
+        "n": 5000,
+        "r_reps": 500,
+        "rho_tau_bias": -0.0007731581042229596,
+        "rho_tau_sd": 0.009589725982470891,
+        "rho_mle_bias": -0.00014631244091012352,
+        "rho_mle_sd": 0.00891125257007491
+      }
+    ],
+    "misspecification": {
+      "single_sample": {
+        "gaussian": {
+          "rho": 0.4824247775515838,
+          "loglik": 262.41669251699017,
+          "aic": -522.8333850339803
+        },
+        "t_best": {
+          "df": 4.0,
+          "rho": 0.4933009269504313,
+          "loglik": 340.09413134298484,
+          "aic": -676.1882626859697
+        },
+        "t_profiles": [
+          {
+            "df": 2.5,
+            "rho": 0.4589976056371479,
+            "loglik": 334.1640070479052,
+            "aic": -664.3280140958104
+          },
+          {
+            "df": 3.0,
+            "rho": 0.4750962307735989,
+            "loglik": 339.69796250112086,
+            "aic": -675.3959250022417
+          },
+          {
+            "df": 4.0,
+            "rho": 0.4933009269504313,
+            "loglik": 340.09413134298484,
+            "aic": -676.1882626859697
+          },
+          {
+            "df": 6.0,
+            "rho": 0.5066081227705205,
+            "loglik": 331.49392665060304,
+            "aic": -658.9878533012061
+          },
+          {
+            "df": 10.0,
+            "rho": 0.5099849179379828,
+            "loglik": 315.56232137989105,
+            "aic": -627.1246427597821
+          },
+          {
+            "df": 30.0,
+            "rho": 0.49931916279693545,
+            "loglik": 286.25533239839115,
+            "aic": -568.5106647967823
+          },
+          {
+            "rho": 0.4824247775515838,
+            "loglik": 262.41669251699017,
+            "aic": -522.8333850339803,
+            "df": "Infinity"
+          }
+        ],
+        "clayton": {
+          "theta": 0.7335268906247593,
+          "loglik": 231.41063803089946,
+          "aic": -460.8212760617989
+        },
+        "lrt_t_vs_gauss": 155.35487765198934,
+        "gauss_rejected_at_5pct": true
+      },
+      "es99_true_t4": 2.2278552179967708,
+      "es99_fitted_gauss_mean": 2.062002458044226,
+      "es99_fitted_gauss_sd": 0.04814610103755477,
+      "es99_rel_bias": -0.07444503512291747
+    },
+    "marginal_vs_copula_es99": {
+      "t4_marginal_gaussian_copula": 3.687087974821233,
+      "normal_marginal_t4_copula": 2.2181778033556223
+    }
+  },
+  "part4_importance": [
+    {
+      "d": 2,
+      "a": -3.0,
+      "rho": 0.5,
+      "exact": 0.00008188966183219207,
+      "mu_star": -3.1689435733398397,
+      "naive_mean": 0.00011,
+      "naive_se": 0.000033164423709752596,
+      "naive_var": 0.0001099879,
+      "is_mean": 0.00008156208790669033,
+      "is_se": 0.00000013357791255706975,
+      "is_var": 0.0000000017843058723104172,
+      "is_z": -2.4523060679046598,
+      "variance_reduction": 61641.84162975467
+    },
+    {
+      "d": 2,
+      "a": -3.0,
+      "rho": 0.8,
+      "exact": 0.00037209239626781606,
+      "mu_star": -3.3276202510063193,
+      "naive_mean": 0.00028,
+      "naive_se": 0.00005290761759898096,
+      "naive_var": 0.00027992159999999997,
+      "is_mean": 0.00037115501567608475,
+      "is_se": 0.000001036745675149135,
+      "is_var": 0.00000010748415949404357,
+      "is_z": -0.9041567418127636,
+      "variance_reduction": 2604.3056141264456
+    },
+    {
+      "d": 5,
+      "a": -3.0,
+      "rho": 0.5,
+      "exact": 0.0000018991681507546196,
+      "mu_star": -4.182572295284073,
+      "naive_mean": 0.00001,
+      "naive_se": 0.000009999949999874999,
+      "naive_var": 0.0000099999,
+      "is_mean": 0.0000018920617878843348,
+      "is_se": 0.000000004399796468011026,
+      "is_var": 1.93582089599223e-12,
+      "is_z": -1.615157183281537,
+      "variance_reduction": 5165715.496047698
+    },
+    {
+      "d": 5,
+      "a": -3.0,
+      "rho": 0.8,
+      "exact": 0.00008830308627232156,
+      "mu_star": -3.7459520076523023,
+      "naive_mean": 0.00009,
+      "naive_se": 0.000029998649969623634,
+      "naive_var": 0.00008999190000000001,
+      "is_mean": 0.0000885112868909387,
+      "is_se": 0.0000002988427366735909,
+      "is_var": 0.000000008930698126256118,
+      "is_z": 0.696689573033029,
+      "variance_reduction": 10076.692631164542
+    }
+  ]
+}
