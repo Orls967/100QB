@@ -3,6 +3,30 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 005c] — 2026-11-23 · Perapihan dokumen day004j + Kriteria Kelly & Risiko Drawdown (Rust, Bonus)
+
+### Diperbaiki (Bagian A — `day004j`)
+- `docs/project-explanations/day004j_quant_deep-hedging.md`: mengklarifikasi ketidakabsahan pembandingan delta cabang *entropic* ($\lambda = 10$) terhadap delta BS beserta perbandingan $\rho_{10}(\mathrm{NN}_{\mathrm{ent}}) = 0{,}000329$ vs $\rho_{10}(\Delta_{\mathrm{BS}}) = 0{,}000159$, merinci pembagian waktu runner (`986,90s` vs `1305,62s`: `part2 359s`, `part3 591s`, `part4 35s`) serta saran perbaikan anggaran, dan menandai eksponen skala pita (`1,7131`, rasio `0,1300`) sebagai FAKTA sedangkan dugaan `tanh` sebagai HIPOTESIS.
+
+### Ditambahkan (Bagian C — `day005c`)
+- Project Rust stable mandiri `projects/rust/day005c_kelly_drawdown/` (*zero external crates*, `xoshiro256++`, `std::thread::scope` deterministik blok tetap `64`, JSON 17-digit, 7 grafik SVG) pada data sintetis:
+  - **Bagian 1**: Kelly biner diskret ($p=0{,}55, b=1$: $f^* = 0{,}10$, $f_{\mathrm{be}} = 0{,}198668$), simulasi $N=1000, R=100{,}000$ (`max_z_log = 2,07`), serta perbandingan terhadap aproksimasi kontinu.
+  - **Bagian 2**: Peluang sentuh GBM eksak horizon tak hingga ($P_\infty(0{,}5 \mid f^*) = 0{,}257028$; kasus $r=0$: $P=x$) dan hingga, serta estimator jembatan Brownian tanpa bias pada `72` kombinasi ($R=10^6$: `72/72` dalam `3 SE`, `max |z| = 2,80`).
+  - **Bagian 3**: Kelly fraksional $c(2-c)$ (`max_err = 4,44e-16`), peta $(c, T)$, dan akar numerik vs tertutup (`diff = 1,11e-16`).
+  - **Bagian 4**: Kerugian galat estimasi $1/(2T_{\mathrm{est}})$ (`max |z| = 1,41`, invarian terhadap $\mu,\sigma$), penyusutan optimal $c^* = 0{,}2381$ (`+0,07561 ± 0,00036` vs plug-in penuh; peluang sentuh 20-thn `5,82%` vs `53,71%`), dan ekor berat Student-$t(\nu=4)$ (`g(2f*) = 0,02408 < 0,03000`, `ruin = 0,387%`).
+- Runner utama `day005c` selesai dalam `50,47s` pada `10` *worker* (`c1, c3, c4, c5, c7, c8 = tercapai`, `c2` & `c6 = belum tercapai` dilaporkan dengan diagnosis).
+- Output `outputs/day005c/results.json`, 7 grafik SVG `outputs/figures/day005c_*.svg`, `projects/rust/day005c_kelly_drawdown/README.md`, serta [day005c_quant_kelly-drawdown.md](project-explanations/day005c_quant_kelly-drawdown.md).
+
+## [Hari 005b] — 2026-11-23 · Harga Opsi Eropa Black–Scholes & Put-Call Parity (Rust, Bonus)
+
+### Ditambahkan
+- Project Rust stable mandiri `projects/rust/day005b_black_scholes/` (*edition 2021*, tanpa crate eksternal, deterministik):
+  - Fungsi harga opsi Eropa *call* & *put* Black–Scholes (termasuk *dividend yield* kontinu $q$) dan residual *put-call parity* di `src/lib.rs`.
+  - Pendekatan CDF normal standar via rumus rasional Abramowitz & Stegun (7.1.26) dengan galat $\Phi(x) \le 7{,}5 \times 10^{-8}$.
+  - Validasi input tanpa *panic* (`BsError`) serta penanganan batas $T = 0$ dan $\sigma = 0$ tanpa pembagian nol.
+  - Tiga tes unit (kasus acuan $S=100, K=100, r=0{,}05, q=0, \sigma=0{,}20, T=1$; *put-call parity*; validasi & kasus batas) dan contoh CLI di `src/main.rs`.
+- Dokumentasi `projects/rust/day005b_black_scholes/README.md` serta [day005b_quant_black-scholes.md](project-explanations/day005b_quant_black-scholes.md).
+
 ## [Hari 005a] — 2026-11-23 · Perbaikan day004h/day004j/day004k + Model SABR (Rust, Bonus)
 
 ### Diperbaiki (Bagian A — `day004h`, `day004j`, `day004k`)

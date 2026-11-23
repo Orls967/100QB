@@ -154,7 +154,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [docs/ROADMAP.md](docs/ROADMAP.md) · Riwayat: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 37/100 topik (37%)** · quant: 36 · sim: 1
+**Progres: 39/100 topik (39%)** · quant: 38 · sim: 1
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -195,6 +195,8 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 4j | bonus | `quant` | `rust` | Deep hedging dari nol: jaringan saraf, risiko entropik, biaya transaksi dan pasar tak lengkap | 2026-11-22 | [day004j_deep_hedging](projects/rust/day004j_deep_hedging) |
 | 4k | bonus | `quant` | `rust` | AMM: impermanent loss, LVR, biaya dan likuiditas terkonsentrasi | 2026-11-22 | [day004k_amm_lvr](projects/rust/day004k_amm_lvr) |
 | 5a | bonus | `quant` | `rust` | SABR: CEV eksak, ekspansi Hagan, kepadatan negatif, kalibrasi dan delta Bartlett | 2026-11-23 | [day005a_sabr](projects/rust/day005a_sabr) |
+| 5b | bonus | `quant` | `rust` | Harga opsi Eropa Black-Scholes & put-call parity | 2026-11-23 | [day005b_black_scholes](projects/rust/day005b_black_scholes) |
+| 5c | bonus | `quant` | `rust` | Kriteria Kelly dan risiko drawdown: peluang sentuh eksak, Kelly fraksional dan galat estimasi | 2026-11-23 | [day005c_kelly_drawdown](projects/rust/day005c_kelly_drawdown) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi

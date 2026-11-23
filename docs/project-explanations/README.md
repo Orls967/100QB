@@ -43,6 +43,8 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `4j` (`day004j`) | `bonus` | `quant` | `rust` | [Deep hedging dari nol: jaringan saraf, risiko entropik, biaya transaksi & pasar tak lengkap (Rust)](day004j_quant_deep-hedging.md) |
 | `4k` (`day004k`) | `bonus` | `quant` | `rust` | [AMM: impermanent loss, LVR, biaya & likuiditas terkonsentrasi (Rust)](day004k_quant_amm-lvr.md) |
 | `5a` (`day005a`) | `bonus` | `quant` | `rust` | [Model SABR: CEV eksak, ekspansi Hagan, kepadatan negatif, kalibrasi & delta Bartlett (Rust)](day005a_quant_sabr.md) |
+| `5b` (`day005b`) | `bonus` | `quant` | `rust` | [Harga opsi Eropa Black–Scholes & put-call parity (Rust)](day005b_quant_black-scholes.md) |
+| `5c` (`day005c`) | `bonus` | `quant` | `rust` | [Kriteria Kelly dan risiko drawdown: peluang sentuh eksak, Kelly fraksional, galat estimasi & ekor berat (Rust)](day005c_quant_kelly-drawdown.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 
