@@ -29,7 +29,7 @@ module MlmcHeston
       t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       p1, t1 = timed { run_part1_anchors }
       p2, t2 = timed { run_part2_rates }
-      p3, t3 = timed { run_part3_complexity }
+      p3, t3 = timed { run_part3_complexity(p2) }
       p4, t4 = timed { run_part4_antithetic }
       bit_diffs = check_worker_invariance
       tot = Process.clock_gettime(Process::CLOCK_MONOTONIC) - t0
@@ -95,13 +95,15 @@ module MlmcHeston
       }
     end
 
-    def run_part3_complexity
+    def run_part3_complexity(p2)
       {
         gbm_milstein: Complexity.compare_mlmc_vs_standard(
-          model: :gbm, params: GBM_BASE.merge(scheme: :milstein), seed: @seed, workers: @workers
+          model: :gbm, params: GBM_BASE.merge(scheme: :milstein), seed: @seed, workers: @workers,
+          rate_est: p2[:gbm_milstein]
         ),
         heston_european: Complexity.compare_mlmc_vs_standard(
-          model: :heston, params: HESTON_BASE.merge(scheme: :euler), seed: @seed, workers: @workers
+          model: :heston, params: HESTON_BASE.merge(scheme: :euler), seed: @seed, workers: @workers,
+          rate_est: p2[:heston_feller_violated]
         ),
         heston_asian: Complexity.compare_mlmc_vs_standard(
           model: :heston, params: HESTON_BASE.merge(scheme: :euler, payoff_type: :asian),

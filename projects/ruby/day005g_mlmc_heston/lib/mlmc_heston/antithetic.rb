@@ -28,6 +28,28 @@ module MlmcHeston
       { level: level, var_standard: v_std, var_antithetic: v_ant, reduction_ratio: v_std / [v_ant, 1.0e-18].max }
     end
 
+    # Diagnostik tambahan: kopel antitetik GBM dengan skema Milstein vs Euler untuk menunjukkan bahwa
+    # pertukaran inkremen butuh skema dengan koreksi kuadratik simetris agar variansi level anjlok tajam.
+    def gbm_antithetic_check(params, strike, maturity, level:, scheme:, n_paths: 6_000, seed: MAIN_SEED,
+                             workers: nil, n0: 4)
+      chunks = Parallel.map_chunks(n_items: n_paths, workers: workers, chunk_size: 2_000) do |cidx, len|
+        rng = Rng::Sampler.new(Rng.derive_seed(seed, 850 + level + (scheme == :milstein ? 10 : 0), cidx))
+        s = [0.0, 0.0, 0.0, 0.0]
+        len.times do
+          y_std, y_ant = draw_gbm_antithetic_pair(params, strike, maturity, level, n0, rng, scheme)
+          s[0] += y_std
+          s[1] += y_std * y_std
+          s[2] += y_ant
+          s[3] += y_ant * y_ant
+        end
+        s
+      end
+      v_std = var_from_sums(chunks.sum(0.0) { |c| c[0] }, chunks.sum(0.0) { |c| c[1] }, n_paths)
+      v_ant = var_from_sums(chunks.sum(0.0) { |c| c[2] }, chunks.sum(0.0) { |c| c[3] }, n_paths)
+      { level: level, scheme: scheme.to_s, var_standard: v_std, var_antithetic: v_ant,
+        reduction_ratio: v_std / [v_ant, 1.0e-18].max }
+    end
+
     def draw_antithetic_pair(params, strike, maturity, level, n0, rng)
       n_f = n0 * (2**level)
       dt_f = maturity / n_f
@@ -58,6 +80,31 @@ module MlmcHeston
       [pf1 - pc, (0.5 * (pf1 + pf2)) - pc]
     end
     private_class_method :draw_antithetic_pair
+
+    def draw_gbm_antithetic_pair(params, strike, maturity, level, n0, rng, scheme)
+      n_f = n0 * (2**level)
+      dt_f = maturity / n_f
+      sqrt_dt_f = Math.sqrt(dt_f)
+      dw = Array.new(n_f) { sqrt_dt_f * rng.next_normal }
+      pf1 = run_gbm_path(params, strike, maturity, dt_f, dw, scheme)
+      pf2 = run_gbm_path(params, strike, maturity, dt_f, Array.new(n_f) { |i| dw[i ^ 1] }, scheme)
+      dw_c = Array.new(n_f / 2) { |j| dw[2 * j] + dw[(2 * j) + 1] }
+      pc = run_gbm_path(params, strike, maturity, 2.0 * dt_f, dw_c, scheme)
+      [pf1 - pc, (0.5 * (pf1 + pf2)) - pc]
+    end
+    private_class_method :draw_gbm_antithetic_pair
+
+    def run_gbm_path(params, strike, maturity, dt, dw, scheme)
+      s = params.fetch(:spot)
+      rate = params.fetch(:rate)
+      sigma = params.fetch(:sigma)
+      dw.each do |d|
+        mil = scheme == :milstein ? 0.5 * sigma * sigma * s * ((d * d) - dt) : 0.0
+        s += (rate * s * dt) + (sigma * s * d) + mil
+      end
+      Math.exp(-rate * maturity) * [s - strike, 0.0].max
+    end
+    private_class_method :run_gbm_path
 
     def run_heston_path(params, strike, maturity, dt, dw1, dw2)
       x = Math.log(params.fetch(:spot))

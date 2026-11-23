@@ -10,11 +10,11 @@
     "workers_used": 10,
     "run_completed_without_errors": true,
     "elapsed_seconds": {
-      "part1_anchors": 0.014407000038772821,
-      "part2_rates": 1.0400520000839606,
-      "part3_complexity": 67.02420499990694,
-      "part4_antithetic": 0.19845700007863343,
-      "total": 72.14082900003996
+      "part1_anchors": 0.015146999969147146,
+      "part2_rates": 1.0808170000091195,
+      "part3_complexity": 69.20507599995472,
+      "part4_antithetic": 0.20418500003870577,
+      "total": 74.50241499999538
     }
   },
   "criteria": {
@@ -35,17 +35,18 @@
         "gbm_milstein_beta": 1.9450645186740594,
         "gbm_milstein_alpha": 0.9740587411587853
       },
-      "threshold": "gbm_milstein_beta > 1.5 dan gbm_milstein_beta > gbm_euler_beta",
-      "note": "Skema Milstein mencapai peluruhan variansi orde ~2 vs orde ~1 Euler"
+      "threshold": "|gbm_milstein_beta - 2.0| < 0.15, |gbm_euler_beta - 1.0| < 0.15, |gbm_milstein_alpha - 1.0| < 0.15",
+      "note": "Skema Milstein cocok dengan teori orde kuat beta=2 & alpha=1 vs Euler beta=1"
     },
     "c3_heston_full_truncation_rates_feller_effect": {
       "status": "tercapai",
       "measured": {
         "feller_ok_beta": 1.2761368474775807,
-        "feller_violated_beta": 0.820989217498101
+        "feller_violated_beta": 0.820989217498101,
+        "beta_drop_feller_violation": 0.45514762997947966
       },
-      "threshold": "beta_strong > 0.7 pada rezim Feller terpenuhi dan Feller dilanggar",
-      "note": "Full-truncation Euler menjaga laju kuat pada rezim Feller terpenuhi maupun dilanggar"
+      "threshold": "feller_ok_beta >= 1.0, 0.5 <= feller_violated_beta <= 0.95, dan penurunan (ok - violated) >= 0.35",
+      "note": "Rezim Feller terpenuhi menjaga beta >= 1 sedangkan pelanggaran Feller menjatuhkan beta < 1"
     },
     "c4_mlmc_matches_exact_anchors": {
       "status": "tercapai",
@@ -64,22 +65,31 @@
       "status": "tercapai",
       "measured": {
         "gbm_milstein_slope": 1.8758437598832196,
+        "gbm_giles_asymptotic_slope": 2.0,
+        "gbm_eps001_speedup": 14.902746101143636,
         "heston_mlmc_slope": 2.4714911270477495,
+        "heston_giles_asymptotic_slope": 2.1723669675631663,
+        "heston_giles_preasymptotic_slope": 2.47540035722457,
+        "heston_beta_var": 0.8425678739666277,
+        "heston_alpha_bias": 1.0385445948992396,
         "std_mc_slope": 2.9999900891677505,
-        "heston_eps001_speedup": 0.18368033878631893
+        "heston_eps001_speedup": 0.18368033878631893,
+        "heston_v1_to_v0_ratio": 0.32551084673172764,
+        "heston_crossover_eps_extrapolated": 0.0005049941927398403
       },
-      "threshold": "gbm_milstein_slope < 2.4, heston_mlmc_slope < 2.6, std_mc_slope > 2.7",
-      "note": "Hukum kompleksitas Giles: biaya MLMC ~ eps^-2..2.4 vs MC standar ~ eps^-3"
+      "threshold": "|gbm_slope - 2| < 0.20, |heston_slope - preasymp| < 0.15, |heston_slope - asymp| < 0.35, |std - 3| < 0.10",
+      "note": "Kemiringan cocok dengan prediksi Giles; pada eps=0.01 MLMC Heston masih 5.4x lebih lambat dari MC standar"
     },
     "c6_antithetic_level_variance_reduction": {
-      "status": "tercapai",
+      "status": "belum tercapai",
       "measured": {
         "level3_var_standard": 13.511045230157224,
         "level3_var_antithetic": 10.783153922899531,
-        "level3_reduction_ratio": 1.2529771277274115
+        "level3_reduction_ratio": 1.2529771277274115,
+        "level4_reduction_ratio": 1.2156601401943896
       },
-      "threshold": "level3_reduction_ratio > 1.0",
-      "note": "Koppel antitetik Giles-Szpruch menekan variansi level Heston"
+      "threshold": "level3_reduction_ratio >= 2.0 dan level4_reduction_ratio >= 2.0 (benchmark Giles-Szpruch)",
+      "note": "Euler full-truncation tanpa koreksi Milstein hanya ~1.25x (< 2.0x): suku kuadratik diagonal tak hilang"
     },
     "c7_worker_invariance_1_vs_n": {
       "status": "tercapai",
@@ -92,7 +102,7 @@
     "c8_runtime_under_360s": {
       "status": "tercapai",
       "measured": {
-        "total_seconds": 72.14082900003996
+        "total_seconds": 74.50241499999538
       },
       "threshold": "< 360.0s",
       "note": "Anggaran waktu eksekusi runner Ruby penuh"
@@ -293,7 +303,8 @@
             0.0033753720967304407
           ],
           "std_mc_cost": 533000.0,
-          "speedup": 1.4333968008089413
+          "speedup": 1.4333968008089413,
+          "giles_formula_cost": 270492.35531840415
         },
         {
           "eps": 0.04,
@@ -314,7 +325,8 @@
             0.0008148019230229405
           ],
           "std_mc_cost": 4264000.0,
-          "speedup": 3.2066901302529858
+          "speedup": 3.2066901302529858,
+          "giles_formula_cost": 1110053.5765766788
         },
         {
           "eps": 0.02,
@@ -337,7 +349,8 @@
             0.00018344198808339766
           ],
           "std_mc_cost": 34112000.0,
-          "speedup": 6.908821060886416
+          "speedup": 6.908821060886416,
+          "giles_formula_cost": 4525709.612649987
         },
         {
           "eps": 0.01,
@@ -360,11 +373,19 @@
             0.00018344198808339766
           ],
           "std_mc_cost": 272895808.0,
-          "speedup": 14.902746101143636
+          "speedup": 14.902746101143636,
+          "giles_formula_cost": 18080160.694635198
         }
       ],
       "mlmc_cost_slope": 1.8758437598832196,
-      "std_mc_cost_slope": 2.9999996954910895
+      "std_mc_cost_slope": 2.9999996954910895,
+      "beta_var_levels": 2.011730535141337,
+      "beta_rate_part2": 1.9450645186740594,
+      "alpha_bias_part2": 0.9740587411587853,
+      "giles_asymptotic_slope": 2.0,
+      "giles_preasymptotic_slope": 2.021554231607416,
+      "v1_to_v0_ratio": 0.00005700906409386829,
+      "crossover_eps_extrapolated": 0.11129011831069953
     },
     "heston_european": {
       "rows": [
@@ -389,7 +410,8 @@
             7.503418914901594
           ],
           "std_mc_cost": 302056.0,
-          "speedup": 0.0682595152393883
+          "speedup": 0.0682595152393883,
+          "giles_formula_cost": 4452000.09751438
         },
         {
           "eps": 0.04,
@@ -414,7 +436,8 @@
             4.003439820725561
           ],
           "std_mc_cost": 2416400.0,
-          "speedup": 0.08961079898388682
+          "speedup": 0.08961079898388682,
+          "giles_formula_cost": 27023416.189503964
         },
         {
           "eps": 0.02,
@@ -439,7 +462,8 @@
             4.06628343483261
           ],
           "std_mc_cost": 19331168.0,
-          "speedup": 0.17930910227462626
+          "speedup": 0.17930910227462626,
+          "giles_formula_cost": 108517970.00121863
         },
         {
           "eps": 0.01,
@@ -468,11 +492,19 @@
             1.1895032018610703
           ],
           "std_mc_cost": 154649216.0,
-          "speedup": 0.18368033878631893
+          "speedup": 0.18368033878631893,
+          "giles_formula_cost": 853494167.1856413
         }
       ],
       "mlmc_cost_slope": 2.4714911270477495,
-      "std_mc_cost_slope": 2.9999900891677505
+      "std_mc_cost_slope": 2.9999900891677505,
+      "beta_var_levels": 0.8425678739666277,
+      "beta_rate_part2": 0.820989217498101,
+      "alpha_bias_part2": 1.0385445948992396,
+      "giles_asymptotic_slope": 2.1723669675631663,
+      "giles_preasymptotic_slope": 2.47540035722457,
+      "v1_to_v0_ratio": 0.32551084673172764,
+      "crossover_eps_extrapolated": 0.0005049941927398403
     },
     "heston_asian": {
       "rows": [
@@ -499,7 +531,8 @@
             0.9963976359007534
           ],
           "std_mc_cost": 155352.0,
-          "speedup": 0.06239637555427029
+          "speedup": 0.06239637555427029,
+          "giles_formula_cost": 2290157.0323079256
         },
         {
           "eps": 0.04,
@@ -526,7 +559,8 @@
             0.5293495231742393
           ],
           "std_mc_cost": 1242784.0,
-          "speedup": 0.09817329595095506
+          "speedup": 0.09817329595095506,
+          "giles_formula_cost": 12601587.493285608
         },
         {
           "eps": 0.02,
@@ -555,7 +589,8 @@
             0.2695475588785826
           ],
           "std_mc_cost": 9942240.0,
-          "speedup": 0.15018380531379832
+          "speedup": 0.15018380531379832,
+          "giles_formula_cost": 66681224.13010081
         },
         {
           "eps": 0.01,
@@ -584,11 +619,19 @@
             0.27896046761449456
           ],
           "std_mc_cost": 79537728.0,
-          "speedup": 0.2987579996486019
+          "speedup": 0.2987579996486019,
+          "giles_formula_cost": 268704292.38416237
         }
       ],
       "mlmc_cost_slope": 2.2608203213615368,
-      "std_mc_cost_slope": 2.999985953760951
+      "std_mc_cost_slope": 2.999985953760951,
+      "beta_var_levels": 0.978957963132909,
+      "beta_rate_part2": 0.978957963132909,
+      "alpha_bias_part2": 1.0,
+      "giles_asymptotic_slope": 2.021042036867091,
+      "giles_preasymptotic_slope": 2.302696219741657,
+      "v1_to_v0_ratio": 0.26450422751021285,
+      "crossover_eps_extrapolated": 0.0017667647471426295
     }
   },
   "part4_antithetic": [

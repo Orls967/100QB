@@ -7,11 +7,11 @@ Proyek **Ruby murni ($\ge 3.3$, nol gem numerik)** menggunakan **topik cadangan*
 1. **Identitas Teleskopik MLMC (Giles, 2008)**: Untuk estimasi $\mathbb{E}[P_L]$ pada grid paling halus $L$:
    $$\mathbb{E}[P_L] = \mathbb{E}[P_0] + \sum_{\ell=1}^L \mathbb{E}[P_\ell - P_{\ell-1}],$$
    di mana $(P_\ell, P_{\ell-1})$ disimulasikan dengan inkremen Brown yang sama ($\Delta W_j^c = \Delta W_{2j}^f + \Delta W_{2j+1}^f$).
-2. **Alokasi Sampel Optimal & Teorema Kompleksitas**: Dengan variansi level $V_\ell = \operatorname{Var}(P_\ell - P_{\ell-1}) \propto 2^{-\beta \ell}$ dan biaya per jalur $C_\ell \propto 2^{\gamma \ell}$ ($\gamma = 1$), alokasi optimal $N_\ell \propto \varepsilon^{-2}\sqrt{V_\ell / C_\ell}$ menghasilkan total kompleksitas:
-   - $\beta > 1$ (GBM Milstein, $\beta \approx 1{,}95$): $O(\varepsilon^{-2})$.
-   - $\beta = 1$ (GBM Euler, $\beta \approx 0{,}98$): $O(\varepsilon^{-2}(\ln \varepsilon)^2)$.
-   - $\beta < 1$ (Heston *Full-Truncation* saat kondisi Feller $2\kappa\theta \ge \xi^2$ dilanggar, $\beta \approx 0{,}82$): $O(\varepsilon^{-2 - (1-\beta)/\alpha})$.
-3. **Koppel Antitetik Giles–Szpruch**: Menukar pasangan inkremen halus $(\Delta W_{2k}, \Delta W_{2k+1})$ menghasilkan dua jalur halus dengan rata-rata yang lebih dekat ke jalur kasar, menekan variansi level Heston tanpa koreksi *Lévy area*.
+2. **Alokasi Sampel Optimal & Teorema Kompleksitas**: Dengan variansi level $V_\ell = \operatorname{Var}(P_\ell - P_{\ell-1}) \propto 2^{-\beta \ell}$, bias lemah $2^{-\alpha\ell}$, dan biaya per jalur $C_\ell \propto 2^{\gamma \ell}$ ($\gamma = 1$), alokasi optimal $N_\ell \propto \varepsilon^{-2}\sqrt{V_\ell / C_\ell}$ memprediksi kompleksitas asimtotik:
+   - $\beta > 1$ (GBM Milstein, $\beta = 1{,}945$): $O(\varepsilon^{-2})$.
+   - $\beta = 1$ (GBM Euler, $\beta = 0{,}982$): $O(\varepsilon^{-2}(\ln \varepsilon)^2)$.
+   - $\beta < 1$ (Heston *Full-Truncation* saat kondisi Feller dilanggar, $\beta = 0{,}821$, $\alpha = 1{,}039$): $O(\varepsilon^{-2 - (1-\beta)/\alpha}) = O(\varepsilon^{-2{,}172})$ asimtotik, atau kemiringan pra-asimtotik diskret `2,475` pada $\varepsilon \in [0{,}01, 0{,}08]$.
+3. **Koppel Antitetik Giles–Szpruch**: Menukar pasangan inkremen halus $(\Delta W_{2k}, \Delta W_{2k+1})$ meniadakan kesalahan *Lévy area* antar-koordinat pada skema *multi-dimensional Milstein*, namun pada Euler *full-truncation* suku kuadratik diagonal belum kompensasi sehingga reduksi level hanya `1,253x` (`belum tercapai` vs target literatur `>= 2,0x`).
 
 ## Instalasi, Lint, Test & Eksekusi
 
@@ -29,18 +29,18 @@ bundle exec ruby bin/run_extras
 - [lib/mlmc_heston/rng.rb](lib/mlmc_heston/rng.rb) & [parallel.rb](lib/mlmc_heston/parallel.rb) — `SplitMix64`, Box–Muller normal, dan `Process.fork` + `IO.pipe` + `Marshal` deterministik.
 - [lib/mlmc_heston/special.rb](lib/mlmc_heston/special.rb) & [heston_cf.rb](lib/mlmc_heston/heston_cf.rb) — `norm_cdf`, `bs_call`, Gauss–Legendre, aritmetika kompleks (`cexp`, `clog`, `csqrt`), dan Heston *little trap* CF + Gil–Pelaez.
 - [lib/mlmc_heston/simulators.rb](lib/mlmc_heston/simulators.rb) — Momen CIR eksak dan simulator terkopel GBM (Euler/Milstein) & Heston (*Full-Truncation* European/Asian).
-- [lib/mlmc_heston/mlmc.rb](lib/mlmc_heston/mlmc.rb), [complexity.rb](lib/mlmc_heston/complexity.rb), [antithetic.rb](lib/mlmc_heston/antithetic.rb) — Regresi laju $(\alpha, \beta)$, MLMC adaptif, studi kompleksitas vs MC standar, dan *antithetic coupling*.
+- [lib/mlmc_heston/mlmc.rb](lib/mlmc_heston/mlmc.rb), [complexity.rb](lib/mlmc_heston/complexity.rb), [antithetic.rb](lib/mlmc_heston/antithetic.rb) — Regresi laju $(\alpha, \beta)$, MLMC adaptif, prediksi teori Giles + titik silang, dan *antithetic coupling*.
 - [lib/mlmc_heston/runner.rb](lib/mlmc_heston/runner.rb), [criteria.rb](lib/mlmc_heston/criteria.rb), [figures.rb](lib/mlmc_heston/figures.rb), [json_out.rb](lib/mlmc_heston/json_out.rb), [svg.rb](lib/mlmc_heston/svg.rb) — Runner, kriteria `c1`–`c8`, dan 5 grafik SVG.
-- [test/test_core.rb](test/test_core.rb) & [test/test_studies.rb](test/test_studies.rb) — `10` tes unit + integrasi (`15` asersi).
+- [test/test_core.rb](test/test_core.rb) & [test/test_studies.rb](test/test_studies.rb) — `21` tes unit + integrasi (`34` asersi).
 
-## Ringkasan Hasil (`MAIN_SEED = 20261123`, Ruby `4.0.9`, YJIT `ON`, `10` worker, `72,14s`)
+## Ringkasan Hasil (`MAIN_SEED = 20261123`, Ruby `4.0.9`, YJIT `ON`, `10` worker, `74,50s`)
 
 | Bagian | Metrik Utama | Hasil Terukur |
 |---|---|---|
 | 1. Anchor Tertutup | BS ($\xi=0$), paritas, konvergensi CF | `xi_zero_err = 4,26e-14`, `parity_err = 7,11e-15`, `cf_quad_err = 8,23e-10` |
 | 2. Laju Kuat ($\beta$) | GBM & Heston (Feller OK vs dilanggar) | `GBM Euler = 0,982`, `GBM Milstein = 1,945`, `Heston Feller OK = 1,276`, `Feller dilanggar = 0,821` |
-| 3. Kompleksitas & Akurasi | $\ln(\text{Cost})$ vs $\ln(1/\varepsilon)$ | `GBM Milstein slope = 1,876` (`14,9x` speedup), `Heston MLMC = 2,471` vs `Std MC = 3,000`; `z <= 0,65` |
-| 4. Antithetic Giles–Szpruch | Pengurangan variansi $\ell = 3$ | `13,51 -> 10,78` (`1,253x`) |
+| 3. Kompleksitas & Speedup | Terukur vs Teori Giles & titik silang | `GBM slope = 1,876` (teori `2,000`, speedup **`14,90x`**); `Heston slope = 2,471` (pra-asimtotik `2,475`, asimtotik `2,172`) vs `Std MC = 3,000`, namun pada $\varepsilon=0{,}01$ **MLMC Heston justru `5,44x` lebih lambat** (`speedup = 0,1837x`) dan di $\varepsilon=0{,}005$ masih **`0,4978x`** (*crossover* ekstrapolasi $\varepsilon^* \approx 5{,}05\times 10^{-4}$..$1{,}59\times 10^{-3}$) |
+| 4. Antithetic Giles–Szpruch | Pengurangan variansi $\ell = 3, 4$ | `l=3: 1,253x`, `l=4: 1,216x` (**`belum tercapai`** terhadap target `>= 2,0x` karena Euler tanpa suku kuadratik Milstein) |
 
 Artefak keluaran: [results.json](../../../outputs/day005g/results.json), 5 grafik SVG `outputs/figures/day005g_*.svg`, dan dokumen penjelasan [day005g_quant_mlmc-heston.md](../../../docs/project-explanations/day005g_quant_mlmc-heston.md).
 

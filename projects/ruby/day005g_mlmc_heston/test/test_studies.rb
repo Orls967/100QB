@@ -57,4 +57,48 @@ class TestStudies < Minitest::Test
     )
     assert_operator res[:reduction_ratio], :>, 1.0
   end
+
+  def test_telescoping_expectation_identity_gbm
+    params = GBM_BASE.merge(scheme: :milstein)
+    sum_levels = (0..3).sum(0.0) do |l|
+      MlmcHeston::Mlmc.level_stats(model: :gbm, params: params, level: l, n_paths: 4_000,
+                                   seed: 101, workers: 2)[:mean_y]
+    end
+    fine = MlmcHeston::Mlmc.level_stats(model: :gbm, params: params, level: 3, n_paths: 4_000, seed: 101, workers: 2)
+    assert_in_delta fine[:sum_pf] / 4_000.0, sum_levels, 0.25
+  end
+
+  def test_telescoping_expectation_identity_heston
+    params = HESTON_BASE.merge(scheme: :euler)
+    sum_levels = (0..2).sum(0.0) do |l|
+      MlmcHeston::Mlmc.level_stats(model: :heston, params: params, level: l, n_paths: 4_000,
+                                   seed: 102, workers: 2)[:mean_y]
+    end
+    hc = MlmcHeston::HestonCf.call_price(HESTON_BASE, 100.0, 1.0)
+    assert_in_delta hc, sum_levels, 0.35
+  end
+
+  def test_level_kurtosis_finite_and_bounded
+    rng = MlmcHeston::Rng::Sampler.new(303)
+    ys = Array.new(2_000) { MlmcHeston::Simulators.heston_coupled_pair(HESTON_BASE, 100.0, 1.0, 2, scheme: :euler, payoff_type: :european, rng: rng)[1] }
+    m = ys.sum(0.0) / ys.length
+    m2 = ys.sum(0.0) { |y| (y - m)**2 } / ys.length
+    m4 = ys.sum(0.0) { |y| (y - m)**4 } / ys.length
+    kurt = m4 / (m2 * m2)
+    assert_operator kurt, :>, 1.0
+    assert_operator kurt, :<, 50.0
+  end
+
+  def test_giles_theoretical_slope_prediction_formula
+    assert_in_delta 2.0, MlmcHeston::Complexity.giles_asymptotic_slope(1.9, 1.0), 1.0e-12
+    assert_in_delta 2.2, MlmcHeston::Complexity.giles_asymptotic_slope(0.8, 1.0), 1.0e-12
+  end
+
+  def test_antithetic_pair_symmetry_at_zero_vol_of_vol
+    p_det = HESTON_BASE.merge(xi: 0.0)
+    res = MlmcHeston::Antithetic.heston_antithetic_var(
+      p_det, 100.0, 1.0, level: 2, n_paths: 1_000, seed: 44, workers: 1
+    )
+    assert_operator res[:var_antithetic], :<, res[:var_standard]
+  end
 end

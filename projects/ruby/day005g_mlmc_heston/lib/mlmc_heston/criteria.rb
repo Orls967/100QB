@@ -10,9 +10,13 @@ module MlmcHeston
 
     def build_c1_c4(p1, p2, p3)
       a = p1[:anchors]
-      gbm_ok = p2[:gbm_milstein][:beta_strong] > 1.5 &&
-               p2[:gbm_milstein][:beta_strong] > p2[:gbm_euler][:beta_strong]
-      hest_ok = p2[:heston_feller_ok][:beta_strong] > 0.7 && p2[:heston_feller_violated][:beta_strong] > 0.7
+      eu_b = p2[:gbm_euler][:beta_strong]
+      mi_b = p2[:gbm_milstein][:beta_strong]
+      mi_a = p2[:gbm_milstein][:alpha_weak]
+      gbm_ok = (mi_b - 2.0).abs < 0.15 && (eu_b - 1.0).abs < 0.15 && (mi_a - 1.0).abs < 0.15
+      fok_b = p2[:heston_feller_ok][:beta_strong]
+      fvi_b = p2[:heston_feller_violated][:beta_strong]
+      hest_ok = fok_b >= 1.0 && fvi_b.between?(0.5, 0.95) && (fok_b - fvi_b) >= 0.35
       g_row = p3[:gbm_milstein][:rows].last
       h_row = p3[:heston_european][:rows].last
       z_g = (g_row[:price] - a[:bs_exact]).abs / [g_row[:se], 1.0e-12].max
@@ -27,17 +31,15 @@ module MlmcHeston
         ),
         c2_strong_weak_rates_gbm_milstein_vs_euler: crit(
           gbm_ok,
-          { gbm_euler_beta: p2[:gbm_euler][:beta_strong], gbm_milstein_beta: p2[:gbm_milstein][:beta_strong],
-            gbm_milstein_alpha: p2[:gbm_milstein][:alpha_weak] },
-          'gbm_milstein_beta > 1.5 dan gbm_milstein_beta > gbm_euler_beta',
-          'Skema Milstein mencapai peluruhan variansi orde ~2 vs orde ~1 Euler'
+          { gbm_euler_beta: eu_b, gbm_milstein_beta: mi_b, gbm_milstein_alpha: mi_a },
+          '|gbm_milstein_beta - 2.0| < 0.15, |gbm_euler_beta - 1.0| < 0.15, |gbm_milstein_alpha - 1.0| < 0.15',
+          'Skema Milstein cocok dengan teori orde kuat beta=2 & alpha=1 vs Euler beta=1'
         ),
         c3_heston_full_truncation_rates_feller_effect: crit(
           hest_ok,
-          { feller_ok_beta: p2[:heston_feller_ok][:beta_strong],
-            feller_violated_beta: p2[:heston_feller_violated][:beta_strong] },
-          'beta_strong > 0.7 pada rezim Feller terpenuhi dan Feller dilanggar',
-          'Full-truncation Euler menjaga laju kuat pada rezim Feller terpenuhi maupun dilanggar'
+          { feller_ok_beta: fok_b, feller_violated_beta: fvi_b, beta_drop_feller_violation: fok_b - fvi_b },
+          'feller_ok_beta >= 1.0, 0.5 <= feller_violated_beta <= 0.95, dan penurunan (ok - violated) >= 0.35',
+          'Rezim Feller terpenuhi menjaga beta >= 1 sedangkan pelanggaran Feller menjatuhkan beta < 1'
         ),
         c4_mlmc_matches_exact_anchors: crit(
           z_g <= 3.5 && z_h <= 3.5,
@@ -51,27 +53,9 @@ module MlmcHeston
     private_class_method :build_c1_c4
 
     def build_c5_c8(p3, p4, bit_diffs, total_sec)
-      gm_s = p3[:gbm_milstein][:mlmc_cost_slope]
-      he_s = p3[:heston_european][:mlmc_cost_slope]
-      std_s = p3[:heston_european][:std_mc_cost_slope]
-      vr_l3 = p4.find { |r| r[:level] == 3 }[:reduction_ratio]
-
       {
-        c5_complexity_scaling_eps2_vs_eps3: crit(
-          gm_s < 2.4 && he_s < 2.6 && std_s > 2.7,
-          { gbm_milstein_slope: gm_s, heston_mlmc_slope: he_s, std_mc_slope: std_s,
-            heston_eps001_speedup: p3[:heston_european][:rows].last[:speedup] },
-          'gbm_milstein_slope < 2.4, heston_mlmc_slope < 2.6, std_mc_slope > 2.7',
-          'Hukum kompleksitas Giles: biaya MLMC ~ eps^-2..2.4 vs MC standar ~ eps^-3'
-        ),
-        c6_antithetic_level_variance_reduction: crit(
-          vr_l3 > 1.0,
-          { level3_var_standard: p4.find { |r| r[:level] == 3 }[:var_standard],
-            level3_var_antithetic: p4.find { |r| r[:level] == 3 }[:var_antithetic],
-            level3_reduction_ratio: vr_l3 },
-          'level3_reduction_ratio > 1.0',
-          'Koppel antitetik Giles-Szpruch menekan variansi level Heston'
-        ),
+        c5_complexity_scaling_eps2_vs_eps3: build_c5(p3[:gbm_milstein], p3[:heston_european]),
+        c6_antithetic_level_variance_reduction: build_c6(p4),
         c7_worker_invariance_1_vs_n: crit(
           bit_diffs.zero?, { bit_diffs: bit_diffs }, 'bit_diffs == 0',
           'Determinisme paralel Process.fork bit-identik 1 vs N worker'
@@ -82,6 +66,49 @@ module MlmcHeston
         )
       }
     end
+    private_class_method :build_c5_c8
+
+    def build_c5(gm, he)
+      slope_ok = (gm[:mlmc_cost_slope] - gm[:giles_asymptotic_slope]).abs < 0.20 &&
+                 (he[:mlmc_cost_slope] - he[:giles_preasymptotic_slope]).abs < 0.15 &&
+                 (he[:mlmc_cost_slope] - he[:giles_asymptotic_slope]).abs < 0.35 &&
+                 (he[:std_mc_cost_slope] - 3.0).abs < 0.10
+      crit(
+        slope_ok,
+        c5_measured(gm, he),
+        '|gbm_slope - 2| < 0.20, |heston_slope - preasymp| < 0.15, |heston_slope - asymp| < 0.35, |std - 3| < 0.10',
+        'Kemiringan cocok dengan prediksi Giles; pada eps=0.01 MLMC Heston masih 5.4x lebih lambat dari MC standar'
+      )
+    end
+    private_class_method :build_c5
+
+    def c5_measured(gm, he)
+      {
+        gbm_milstein_slope: gm[:mlmc_cost_slope], gbm_giles_asymptotic_slope: gm[:giles_asymptotic_slope],
+        gbm_eps001_speedup: gm[:rows].last[:speedup],
+        heston_mlmc_slope: he[:mlmc_cost_slope], heston_giles_asymptotic_slope: he[:giles_asymptotic_slope],
+        heston_giles_preasymptotic_slope: he[:giles_preasymptotic_slope],
+        heston_beta_var: he[:beta_var_levels], heston_alpha_bias: he[:alpha_bias_part2],
+        std_mc_slope: he[:std_mc_cost_slope], heston_eps001_speedup: he[:rows].last[:speedup],
+        heston_v1_to_v0_ratio: he[:v1_to_v0_ratio],
+        heston_crossover_eps_extrapolated: he[:crossover_eps_extrapolated]
+      }
+    end
+    private_class_method :c5_measured
+
+    def build_c6(p4)
+      l3 = p4.find { |r| r[:level] == 3 }
+      vr_l3 = l3[:reduction_ratio]
+      vr_l4 = p4.find { |r| r[:level] == 4 }[:reduction_ratio]
+      crit(
+        vr_l3 >= 2.0 && vr_l4 >= 2.0,
+        { level3_var_standard: l3[:var_standard], level3_var_antithetic: l3[:var_antithetic],
+          level3_reduction_ratio: vr_l3, level4_reduction_ratio: vr_l4 },
+        'level3_reduction_ratio >= 2.0 dan level4_reduction_ratio >= 2.0 (benchmark Giles-Szpruch)',
+        'Euler full-truncation tanpa koreksi Milstein hanya ~1.25x (< 2.0x): suku kuadratik diagonal tak hilang'
+      )
+    end
+    private_class_method :build_c6
     private_class_method :build_c5_c8
 
     def crit(ok, measured, threshold, note)

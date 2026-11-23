@@ -49,7 +49,7 @@ Seluruh eksperimen dijalankan oleh [Runner](../../projects/ruby/day005g_mlmc_hes
 - [lib/mlmc_heston/complexity.rb](../../projects/ruby/day005g_mlmc_heston/lib/mlmc_heston/complexity.rb): `compare_mlmc_vs_standard` menyapu $\varepsilon \in \{0{,}08; 0{,}04; 0{,}02; 0{,}01\}$ dan membandingkan kemiringan biaya log-log MLMC vs MC standar.
 - [lib/mlmc_heston/antithetic.rb](../../projects/ruby/day005g_mlmc_heston/lib/mlmc_heston/antithetic.rb): `heston_antithetic_var` mengimplementasikan kopel antitetik Giles–Szpruch dengan menukar pasangan inkremen halus $(\Delta W_{2k}, \Delta W_{2k+1})$.
 - [lib/mlmc_heston/runner.rb](../../projects/ruby/day005g_mlmc_heston/lib/mlmc_heston/runner.rb), [criteria.rb](../../projects/ruby/day005g_mlmc_heston/lib/mlmc_heston/criteria.rb), [figures.rb](../../projects/ruby/day005g_mlmc_heston/lib/mlmc_heston/figures.rb), [json_out.rb](../../projects/ruby/day005g_mlmc_heston/lib/mlmc_heston/json_out.rb), [svg.rb](../../projects/ruby/day005g_mlmc_heston/lib/mlmc_heston/svg.rb): Orkestrator, evaluator kriteria `c1`–`c8`, dan penulis JSON/SVG.
-- [test/test_core.rb](../../projects/ruby/day005g_mlmc_heston/test/test_core.rb) & [test/test_studies.rb](../../projects/ruby/day005g_mlmc_heston/test/test_studies.rb): `10` tes unit + integrasi (`15` asersi).
+- [test/test_core.rb](../../projects/ruby/day005g_mlmc_heston/test/test_core.rb) & [test/test_studies.rb](../../projects/ruby/day005g_mlmc_heston/test/test_studies.rb): `21` tes unit + integrasi (`34` asersi).
 
 ---
 
@@ -84,49 +84,53 @@ flowchart TD
 
 ## 6. Output yang Ditargetkan
 1. **Validasi Anchor (`c1`, `c4`)**: Heston CF cocok dengan Black–Scholes saat $\xi = 0$ (`< 1e-10`), *put-call parity* (`< 1e-12`), konvergensi kuadratur CF (`< 1e-8`), dan estimator MLMC adaptif pada $\varepsilon = 0{,}01$ cocok dengan BS serta Heston CF dalam `3,5 SE`.
-2. **Laju Kuat & Efek Feller (`c2`–`c3`)**: GBM Milstein mencapai $\beta > 1{,}5$ (lebih tinggi dari GBM Euler), dan Heston *Full-Truncation* menjaga $\beta > 0{,}7$ baik saat Feller terpenuhi ($\xi = 0{,}25$) maupun dilanggar ($\xi = 0{,}50$).
-3. **Hukum Kompleksitas (`c5`)**: Kemiringan biaya log-log `gbm_milstein_slope < 2,4` ($\approx 2{,}0$), `heston_mlmc_slope < 2,6`, jauh di bawah `std_mc_slope > 2,7` ($\approx 3{,}0$).
-4. **Antitetik, Determinisme & Runtime (`c6`–`c8`)**: Variansi level 3 turun (`reduction_ratio > 1,0`), `bit_diffs == 0` (`1` vs `10` *worker*), dan runtime `< 360s`.
+2. **Laju Teoritis Kuat & Efek Feller (`c2`–`c3`)**: Pada GBM, skema Milstein cocok dengan teori orde kuat $\beta = 2{,}0 \pm 0{,}15$ dan lemah $\alpha = 1{,}0 \pm 0{,}15$, sedangkan Euler $\beta = 1{,}0 \pm 0{,}15$. Pada Heston *Full-Truncation*, rezim Feller terpenuhi menjaga $\beta \ge 1{,}0$ sedangkan pelanggaran Feller menjatuhkan $\beta$ ke rentang $[0{,}5;\ 0{,}95]$ dengan penurunan $\ge 0{,}35$.
+3. **Hukum Kompleksitas vs Prediksi Giles (`c5`)**: Menguji kemiringan biaya log-log terukur terhadap prediksi Teorema Giles (baik eksponen asimtotik $2$ untuk $\beta > 1$ maupun $2 + (1-\beta)/\alpha$ untuk $\beta < 1$ beserta kurva pra-asimtotik diskret) sambil melaporkan *speedup* empiris apa adanya (termasuk fakta jika belum ada penghematan absolut di $\varepsilon = 0{,}01$).
+4. **Antitetik Target Literatur, Determinisme & Runtime (`c6`–`c8`)**: Target literatur Giles–Szpruch rasio reduksi variansi level 3 & 4 minimal `2,0x` (dengan pelaporan `belum tercapai` jika tidak tercapai oleh skema Euler murni), `bit_diffs == 0` (`1` vs `10` *worker*), dan runtime `< 360s`.
 
 ---
 
 ## 7. Status Pencapaian
 
-Seluruh runner utama selesai dalam **`72,14s`** (`Ruby 4.0.9`, `YJIT: ON`, `10` *worker*; `part1 = 0,01s`, `part2 = 1,04s`, `part3 = 67,02s`, `part4 = 0,20s`) dengan `run_completed_without_errors = true` dan seluruh **`8` kriteria berstatus `tercapai`**:
+Seluruh runner utama selesai dalam **`74,50s`** (`Ruby 4.0.9`, `YJIT: ON`, `10` *worker*; `part1 = 0,02s`, `part2 = 1,08s`, `part3 = 69,21s`, `part4 = 0,20s`) dengan `run_completed_without_errors = true`, **`7/8` kriteria `tercapai`** dan **`1` kriteria (`c6`) berstatus `belum tercapai`** (dilaporkan jujur beserta diagnosis):
 
 | Kriteria | Status | Nilai Terukur | Ambang A Priori |
 |---|---|---|---|
 | `c1_anchors_bs_cir_and_heston_cf` | `tercapai` | `xi_zero_bs_err = 4,26e-14`, `parity_err = 7,11e-15`, `cf_quad_err = 8,23e-10` | `xi_zero_bs_err < 1e-10, parity_err < 1e-12, cf_quad_err < 1e-8` |
-| `c2_strong_weak_rates_gbm_milstein_vs_euler` | `tercapai` | `gbm_euler_beta = 0,982`, `gbm_milstein_beta = 1,945`, `alpha = 0,974` | `gbm_milstein_beta > 1.5 dan gbm_milstein_beta > gbm_euler_beta` |
-| `c3_heston_full_truncation_rates_feller_effect` | `tercapai` | `feller_ok_beta = 1,276`, `feller_violated_beta = 0,821` | `beta_strong > 0.7 pada rezim Feller terpenuhi dan Feller dilanggar` |
+| `c2_strong_weak_rates_gbm_milstein_vs_euler` | `tercapai` | `gbm_euler_beta = 0,982`, `gbm_milstein_beta = 1,945`, `alpha = 0,974` | `\|gbm_milstein_beta - 2.0\| < 0.15, \|gbm_euler_beta - 1.0\| < 0.15, \|gbm_milstein_alpha - 1.0\| < 0.15` |
+| `c3_heston_full_truncation_rates_feller_effect` | `tercapai` | `feller_ok_beta = 1,276`, `feller_violated_beta = 0,821`, `drop = 0,455` | `feller_ok_beta >= 1.0, 0.5 <= feller_violated_beta <= 0.95, dan penurunan (ok - violated) >= 0.35` |
 | `c4_mlmc_matches_exact_anchors` | `tercapai` | `GBM = 10,450 vs 10,451 (z = 0,10)`, `Heston = 8,200 vs 8,195 (z = 0,65)` | `gbm_z <= 3.5 dan heston_z <= 3.5 pada eps = 0.01` |
-| `c5_complexity_scaling_eps2_vs_eps3` | `tercapai` | `gbm_milstein_slope = 1,876`, `heston_mlmc_slope = 2,471`, `std_mc_slope = 3,000` | `gbm_milstein_slope < 2.4, heston_mlmc_slope < 2.6, std_mc_slope > 2.7` |
-| `c6_antithetic_level_variance_reduction` | `tercapai` | `level3: 13,511 -> 10,783 (ratio = 1,253x)` | `level3_reduction_ratio > 1.0` |
+| `c5_complexity_scaling_eps2_vs_eps3` | `tercapai` | `gbm = 1,876` (teori `2,000`, `speedup = 14,90x`), `heston = 2,471` (pra-asimtotik `2,475`, asimtotik `2,172`, `beta_var = 0,843`), `std = 3,000`, **`heston_eps001_speedup = 0,1837x`** (`5,44x` lebih lambat!), `v1/v0 = 0,3255`, `cx ≈ 5,05e-4` | `\|gbm_slope - 2\| < 0.20, \|heston_slope - preasymp\| < 0.15, \|heston_slope - asymp\| < 0.35, \|std - 3\| < 0.10` |
+| `c6_antithetic_level_variance_reduction` | `belum tercapai` | `level3: 13,511 -> 10,783 (ratio = 1,253x)`, `level4_ratio = 1,216x` | `level3_reduction_ratio >= 2.0 dan level4_reduction_ratio >= 2.0 (benchmark Giles-Szpruch)` |
 | `c7_worker_invariance_1_vs_n` | `tercapai` | `bit_diffs = 0` (`1` vs `10` *worker*) | `bit_diffs == 0` |
-| `c8_runtime_under_360s` | `tercapai` | `total_seconds = 72,14s` | `< 360.0s` |
+| `c8_runtime_under_360s` | `tercapai` | `total_seconds = 74,50s` | `< 360.0s` |
 
 ### Rincian Hasil Terukur dan Interpretasi Kuantitatif
-- **Bagian 1 (Anchor Tertutup)**: Harga Black–Scholes eksak tercatat `10,45058`, sedangkan harga Heston CF tercatat `8,19503`. Pada batas $\xi = 0$, Heston CF cocok dengan Black–Scholes hingga galat `4,263e-14`, *put-call parity* terpenuhi hingga `7,105e-15`, dan selisih kuadratur antara 96-titik vs 160-titik hanya `8,232e-10`. Ketiga angka ini mengonfirmasi bahwa implementasi aritmetika kompleks murni Ruby (`cexp`, `clog`, `csqrt`) dan formulasi *little trap* bebas dari *branch-cut jump* maupun ketidakstabilan numerik.
+- **Bagian 1 (Anchor Tertutup)**: Harga Black–Scholes eksak tercatat `10,45058`, sedangkan harga Heston CF tercatat `8,19503`. Pada batas $\xi = 0$, Heston CF cocok dengan Black–Scholes hingga galat `4,263e-14`, *put-call parity* terpenuhi hingga `7,105e-15`, dan selisih kuadratur 96-titik vs 128-titik hanya `8,232e-10`.
 - **Bagian 2 (Laju Kuat $\beta$ & Lemah $\alpha$)**:
-  - `GBM Euler`: $\beta = 0{,}9816$ ($V_1 = 0{,}688 \to V_5 = 0{,}046$), tepat sesuai teori $\beta = 1$ untuk diskretisasi Euler–Maruyama tanpa suku koreksi Itô.
-  - `GBM Milstein`: $\beta = 1{,}9451$ ($V_1 = 0{,}0115 \to V_5 = 0{,}000049$), $\alpha = 0{,}9741$. Lonjakan $\beta$ dari $\approx 1$ ke $\approx 2$ inilah yang mengubah rezim kompleksitas dari $\varepsilon^{-2}(\ln\varepsilon)^2$ menjadi $\varepsilon^{-2}$ murni.
-  - `Heston Full-Truncation (Feller OK, xi=0.25)`: $\beta = 1{,}2761$. Karena $2\kappa\theta = 0{,}12 > \xi^2 = 0{,}0625$, proses variansi $v_t$ tidak pernah menyentuh batas nol sehingga sifat keteraturan tetap terjaga di atas $\gamma = 1$.
-  - `Heston Full-Truncation (Feller Violated, xi=0.50)`: $\beta = 0{,}8210$ ($V_1 = 38{,}97 \to V_5 = 3{,}97$). Ketika $\xi^2 = 0{,}25 > 0{,}12$, $v_t$ sering melintasi nol dan dipotong oleh $v_n^+ = \max(v_n, 0)$, yang menurunkan kelancaran koefisien difusi $\sqrt{v_t}$ dan memangkas $\beta$ ke bawah $1$.
-- **Bagian 3 (Kompleksitas Biaya $\varepsilon \in \{0{,}08;\ 0{,}04;\ 0{,}02;\ 0{,}01\}$)**:
-  - `GBM Milstein`: Biaya MLMC tumbuh dari `3,72e5` ($\varepsilon=0{,}08$) ke `1,83e7` ($\varepsilon=0{,}01$), kemiringan log-log **`1,8758`** (`speedup = 14,90x` dibanding MC standar `2,73e8` dengan kemiringan **`3,0000`**). Harga estimasi pada $\varepsilon=0{,}01$ adalah `10,4499` vs eksak `10,4506` (`z = 0,102`).
-  - `Heston European`: Biaya MLMC tumbuh dari `4,43e6` ($\varepsilon=0{,}08$) ke `8,42e8` ($\varepsilon=0{,}01$), kemiringan log-log **`2,4715`**—jauh lebih landai daripada **`3,0000`** milik MC standar, konsisten dengan prediksi teori $2 + (\gamma-\beta)/\alpha \approx 2{,}2\text{--}2{,}5$ saat $\beta = 0{,}8210$. Harga estimasi pada $\varepsilon=0{,}01$ adalah `8,1997` vs Heston CF `8,1950` (`z = 0,649`). Pada $\varepsilon=0{,}01$, `speedup` absolut masih `0,184x` karena konstanta variansi level kasar ($V_0 = 120$, $V_1 = 38{,}97$) besar, namun kemiringan `2,4715` vs `3,0000` menjamin *crossover* terjadi pada $\varepsilon$ yang lebih kecil.
-- **Bagian 4 (Antitetik Giles–Szpruch)**: Pada $\ell = 1..4$, kopel antitetik menekan variansi level Heston secara konsisten seiring penyempitan langkah waktu; pada $\ell = 3$, variansi turun dari `13,5110` menjadi `10,7832` (**`1,2530x`** pengurangan variansi) tanpa simulasi *Lévy area* eksplisit.
-- **Determinisme & Paralelisme**: Perbandingan langsung antara `1` *worker* dan `10` *worker* menghasilkan `bit_diffs = 0`, membuktikan bahwa pemisahan *chunk* deterministik dengan *seed* turunan `SplitMix64` menghilangkan *race condition* maupun ketergantungan urutan reduksi titik-ambang.
+  - `GBM Euler`: $\beta = 0{,}9816$ (dalam `0,018` dari prediksi $\beta = 1{,}0$).
+  - `GBM Milstein`: $\beta = 1{,}9451$, $\alpha = 0{,}9741$ (keduanya dalam `0,055` dari prediksi $(2{,}0;\ 1{,}0)$).
+  - `Heston Full-Truncation (Feller OK, xi=0.25)`: $\beta = 1{,}2761 \ge 1{,}0$ ($2\kappa\theta = 0{,}12 > \xi^2 = 0{,}0625$).
+  - `Heston Full-Truncation (Feller Violated, xi=0.50)`: $\beta = 0{,}8210 \in [0{,}5;\ 0{,}95]$, penurunan sebesar `0,4551` dibanding rezim Feller OK akibat persentuhan batas $v_t = 0$.
+- **Bagian 3 (Kompleksitas Biaya vs Prediksi Teori Giles & Fakta Speedup Heston)**:
+  - `GBM Milstein`: Biaya MLMC tumbuh dengan kemiringan log-log **`1,8758`** vs teori asimtotik **`2,0000`**, langsung menghasilkan ***speedup* nyata `14,90x`** pada $\varepsilon = 0{,}01$ (`1,83e7` vs `2,73e8` langkah) karena rasio variansi $V_1/V_0 \approx 5{,}7 \times 10^{-5}$.
+  - `Heston European (Feller dilanggar, xi=0.50)`: Dengan $\beta_{\mathrm{var}} = 0{,}8426$ (regresi `vars[1..7]` di $\varepsilon=0{,}01$; atau `0,8210` di Bagian 2) dan $\alpha_{\mathrm{bias}} = 1{,}0385$, Teorema Giles memprediksi eksponen asimtotik $2 + (1 - 0{,}8210)/1{,}0385 =$ **`2,1724`** dan kemiringan formula pra-asimtotik diskret $\hat{C}_{\mathrm{Giles}}(\varepsilon)$ sebesar **`2,4754`**, hampir identik dengan kemiringan terukur **`2,4715`** (selisih hanya `0,004`!) vs MC standar **`3,0000`**.
+  - **FAKTA SPEEDUP HESTON**: Pada seluruh rentang utama $\varepsilon \in \{0{,}08;\ 0{,}04;\ 0{,}02;\ 0{,}01\}$, **MLMC Heston TIDAK menghasilkan penghematan waktu sama sekali**: `speedup` bergerak dari `0,0683x` ($\varepsilon=0{,}08$) $\to$ `0,0896x` ($\varepsilon=0{,}04$) $\to$ `0,1793x` ($\varepsilon=0{,}02$) $\to$ **`0,1837x`** ($\varepsilon=0{,}01$, yaitu **`5,44x` LEBIH LAMBAT** dari MC standar: biaya `8,42e8` vs `1,55e8`). Eksekusi `bin/run_extras` hingga $\varepsilon = 0{,}005$ tetap menunjukkan `speedup = 0,4978x` (`2,01x` lebih lambat; harga `8,1977 +- 0,0035` vs eksak `8,1950`). Titik silang (*crossover*) baru diprediksi lewat ekstrapolasi log-linear pada $\varepsilon^* \approx$ **`5,05e-4`** (fit `[0,08..0,01]`) atau **`1,59e-3`** (fit `[0,04..0,005]`).
+  - **Eksperimen Kontrol Feller OK di `run_extras` (`xi = 0,25`)**: Pada $\xi = 0{,}25$ (`beta_strong = 1,276 > 1`), `Heston Feller OK` mencapai kemiringan `2,151`, *crossover* di $\varepsilon^* \approx$ **`2,79e-2`**, dan ***speedup* positif `2,5572x`** sudah pada $\varepsilon = 0{,}01$.
+- **Bagian 4 (Antitetik Giles–Szpruch — Diagnosis `belum tercapai`)**:
+  - Pada $\ell = 3$ dan $\ell = 4$, kopel antitetik Euler *full-truncation* hanya mengurangi variansi sebesar **`1,2530x`** dan **`1,2157x`**, jauh di bawah benchmark literatur Giles–Szpruch **`>= 2,0x`**. Diagnosis matematis: skema Euler yang dipakai tidak menyertakan suku koreksi kuadratik Milstein ($\frac{1}{2}\sigma^2((\Delta W)^2 - \Delta t)$), sehingga pada selisih kasar-halus tetap tertinggal suku error diagonal $2\Delta W^{(1)}\Delta W^{(2)}$ dan kesalahan *drift/truncation* $v_n^+ = \max(v_n, 0)$ yang simetris terhadap pertukaran $\Delta W^{(1)} \leftrightarrow \Delta W^{(2)}$. Sebagai kontrol di `run_extras`, GBM 1D Milstein memberi rasio antitetik `1,00x` (`0,000831` vs `0,000831`) karena dalam 1 dimensi skema Milstein sudah eksak terhadap orde pertama (nol *Lévy area* non-komutatif).
+- **Determinisme & Paralelisme**: `bit_diffs = 0` antara `1` dan `10` *worker*.
 
 ---
 
 ## 8. Pemisahan Fakta vs Hipotesis
-- **FAKTA**:
-  1. Seluruh `8` kriteria (`c1`–`c8`), `10` tes unit/integrasi (`15` asersi), dan `bundle exec rubocop` (`20` berkas, `0` pelanggaran tanpa melonggarkan metrik) lulus bersih setelah suntingan final.
-  2. Pelanggaran kondisi Feller ($2\kappa\theta = 0{,}12 < \xi^2 = 0{,}25$) menurunkan laju kuat $\beta$ Heston *Full-Truncation* dari `1,276` menjadi `0,821`, yang secara langsung menaikkan eksponen kompleksitas MLMC dari $\sim 2{,}0$ menjadi `2,471`.
-  3. Pada percobaan awal `HestonCf.char_fn`, cabang $\xi = 0$ yang mengembalikan $\exp(i u r T)$ tanpa suku variansi $-\frac{1}{2}\bar{v}T(u^2 + iu)$ menghasilkan harga `2,095` alih-alih `8,916`; setelah suku variansi deterministik $\bar{v}$ ditambahkan, galat turun ke `4,26e-14`.
+- **FAKTA & HASIL PERINTAH**:
+  1. Pada Heston rezim Feller dilanggar ($\xi = 0{,}50$), MLMC *Full-Truncation Euler* memiliki `heston_eps001_speedup = 0,1837` (**`5,44x` lebih lambat** dari MC standar pada $\varepsilon = 0{,}01$) dan masih `0,4978x` (`2,01x` lebih lambat) pada $\varepsilon = 0{,}005$ dalam `bin/run_extras`.
+  2. Kemiringan terukur `2,4715` cocok dengan prediksi pra-asimtotik diskret Teorema Giles `2,4754` (selisih `0,004`) dan konsisten dengan prediksi asimtotik `2,1724` saat $\beta_{\mathrm{var}} = 0{,}8210 < 1$; pengontrolan parameter menjadi $\xi = 0{,}25$ (Feller terpenuhi, $\beta = 1{,}2761$) di `run_extras` menaikkan *speedup* di $\varepsilon = 0{,}01$ menjadi **`2,5572x`** (`crossover ≈ 0,0279`).
+  3. Kriteria `c6_antithetic_level_variance_reduction` berstatus **`belum tercapai`** karena Euler *full-truncation* Heston hanya mencapai reduksi `1,253x` ($\ell=3$) dan `1,216x` ($\ell=4$) vs ambang a priori literatur `>= 2,0x`.
+  4. Seluruh `21` tes unit/integrasi (`34` asersi) dan `bundle exec rubocop` (`20` berkas, `0` pelanggaran) lulus bersih setelah suntingan final.
 - **HIPOTESIS**:
-  1. Untuk Heston pada rezim Feller dilanggar ($\beta = 0{,}821$), titik silang (*crossover*) di mana biaya absolut MLMC menjadi lebih murah daripada MC standar (`speedup > 1`) berada pada $\varepsilon$ yang lebih kecil ($\varepsilon \lesssim 10^{-3}$) dibandingkan $\varepsilon = 0{,}01$, kecuali jika digabungkan dengan skema *implicit/splitting* CIR atau *antithetic Milstein* untuk menaikkan $\beta > 1$.
+  1. Ekstrapolasi titik silang $\varepsilon^* \approx 5{,}05 \times 10^{-4}$..$1{,}59 \times 10^{-3}$ mengasumsikan log-linearitas berlanjut hingga level $L \ge 9$, dan penggantian skema dasar Heston ke *multi-dimensional Milstein* (di area $v_t > 0$) bersama skema *implicit/QE* diprediksi dapat mengangkat reduksi antitetik ke $\ge 2{,}0\times$ serta menggeser *crossover* lebih dekat ke $\varepsilon \sim 10^{-2}$.
 
 ---
 
@@ -145,8 +149,8 @@ Seluruh runner utama selesai dalam **`72,14s`** (`Ruby 4.0.9`, `YJIT: ON`, `10` 
 ---
 
 ## 10. Kesimpulan, Batasan, dan Deviasi dari Prompt
-1. **Kesimpulan**: Proyek `day005g` dalam Ruby murni (`4.0.9`, YJIT `ON`) berhasil mengeksekusi seluruh studi MLMC dalam `72,14s` dengan `8/8` kriteria `tercapai`, `10` tes unit/integrasi (`15` asersi), serta `rubocop` (`20` berkas, `0` pelanggaran) lulus bersih. Hasil empiris mengonfirmasi hukum kompleksitas Giles secara langsung: GBM Milstein mencapai kemiringan biaya `1,876` ($\sim \varepsilon^{-2}$, *speedup* `14,90x` pada $\varepsilon=0{,}01$), sedangkan Heston *Full-Truncation* di bawah pelanggaran Feller mencapai kemiringan `2,471` dibanding `3,000` milik Monte Carlo standar.
-2. **Batasan**: Studi kompleksitas menyapu $\varepsilon$ hingga `0,01` di `bin/run` (dan `0,005` di `bin/run_extras`) agar anggaran waktu tetap di bawah 6 menit di Ruby; implementasi Heston memakai *Full-Truncation Euler* dan bukan skema *exact/QE* di level dasar.
+1. **Kesimpulan**: Proyek `day005g` dalam Ruby murni (`4.0.9`, YJIT `ON`) berhasil mengeksekusi seluruh studi MLMC dalam `74,50s` dengan `7/8` kriteria `tercapai` dan `1` kriteria (`c6`) **`belum tercapai`** (dilaporkan jujur beserta diagnosis), `21` tes unit/integrasi (`34` asersi), serta `rubocop` (`20` berkas, `0` pelanggaran) lulus bersih. Hasil empiris mengonfirmasi prediksi Teorema Giles secara kuantitatif: GBM Milstein mencapai kemiringan biaya `1,876` (teori `2,000`, *speedup* `14,90x` pada $\varepsilon=0{,}01$), sedangkan Heston *Full-Truncation* di bawah pelanggaran Feller mencapai kemiringan `2,471` (cocok dengan prediksi pra-asimtotik diskret `2,475` dan asimtotik `2,172`) dibanding `3,000` MC standar, namun pada $\varepsilon \in [0{,}005;\ 0{,}08]$ **MLMC Heston masih `2,0x`–`5,4x` lebih lambat dari MC standar** (*crossover* ekstrapolasi di $\varepsilon^* \approx 5{,}05 \times 10^{-4}$..$1{,}59 \times 10^{-3}$).
+2. **Batasan**: Studi kompleksitas menyapu $\varepsilon$ hingga `0,01` di `bin/run` (dan `0,005` + kontrol Feller OK $\xi=0{,}25$ di `bin/run_extras`); implementasi Heston memakai *Full-Truncation Euler* (tanpa koreksi kuadratik Milstein) sehingga reduksi antitetik hanya `1,253x` vs benchmark literatur `>= 2,0x`.
 3. **Deviasi dari Prompt**:
    - **Pemakaian Topik Cadangan (Langkah 0.6)**: Topik utama (*model suku bunga Hull–White: struktur afin, Jamshidian, pohon trinomial, Bermudan swaption, LSM & kalibrasi*) telah dikerjakan penuh pada sesi [`day002i`](day002i_quant_hull-white.md) (C++20), sehingga sesuai aturan Langkah 0.6 proyek ini menggunakan **topik cadangan**: **Multilevel Monte Carlo (Giles) untuk CIR/Heston dengan skema Milstein & Full-Truncation Euler** dalam Ruby murni, tanpa mencentang `docs/ROADMAP.md`.
 

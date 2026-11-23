@@ -12,9 +12,9 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 - Project Ruby murni mandiri `projects/ruby/day005g_mlmc_heston/` (topik cadangan sesuai Langkah 0.6 karena Hull–White telah dikerjakan penuh di `day002i`; nol gem numerik, `SplitMix64`, `Process.fork` + `IO.pipe` + `Marshal` deterministik, JSON penuh, 5 grafik SVG):
   - **Bagian 1**: Validasi *anchor* Heston CF (*little trap* + Gil–Pelaez 96-titik: batas BS $\xi=0$ galat `4,26e-14`, *put-call parity* `7,11e-15`, konvergensi kuadratur `8,23e-10`) dan momen eksak CIR.
   - **Bagian 2**: Regresi laju kuat $\beta$ & lemah $\alpha$: GBM Euler (`0,982`) vs Milstein (`1,945`), Heston *Full-Truncation* Feller OK (`1,276`) vs Feller dilanggar (`0,821`).
-  - **Bagian 3**: Hukum kompleksitas Giles ($\varepsilon \in \{0{,}08..0{,}01\}$): kemiringan biaya log-log `GBM Milstein = 1,876` (*speedup* `14,90x`), `Heston MLMC = 2,471` vs `Std MC = 3,000`, serta kecocokan harga dalam `0,65 SE`.
-  - **Bagian 4**: *Antithetic coupling* Giles–Szpruch pada Heston (`level 3` rasio `1,253x`).
-- Runner utama `day005g` selesai dalam `72,14s` (`Ruby 4.0.9`, YJIT `ON`, `10` *worker*; `c1`–`c8 = tercapai` semua), `10` tes unit/integrasi (`15` asersi) dan `rubocop` lulus bersih.
+  - **Bagian 3**: Hukum kompleksitas Giles ($\varepsilon \in \{0{,}08..0{,}01\}$): kemiringan biaya log-log `GBM Milstein = 1,876` (teori `2,000`, *speedup* `14,90x`), `Heston MLMC = 2,471` (pra-asimtotik Giles `2,475`, asimtotik `2,172`) vs `Std MC = 3,000`, dengan fakta terukur Heston `speedup = 0,1837x` (`5,44x` lebih lambat pada $\varepsilon=0{,}01$; *crossover* ekstrapolasi $\varepsilon^* \approx 5{,}05 \times 10^{-4}$..$1{,}59 \times 10^{-3}$), serta kecocokan harga dalam `0,65 SE`.
+  - **Bagian 4**: *Antithetic coupling* Giles–Szpruch pada Heston (`level 3` = `1,253x`, `level 4` = `1,216x`, status `belum tercapai` terhadap target literatur `>= 2,0x` karena skema dasar Euler *full-truncation* tanpa suku kuadratik Milstein).
+- Runner utama `day005g` selesai dalam `74,50s` (`Ruby 4.0.9`, YJIT `ON`, `10` *worker*; `7/8` `tercapai`, `c6 = belum tercapai`), `21` tes unit/integrasi (`34` asersi) dan `rubocop` lulus bersih.
 - Output `outputs/day005g/results.json`, 5 grafik SVG `outputs/figures/day005g_*.svg`, `projects/ruby/day005g_mlmc_heston/README.md`, serta [day005g_quant_mlmc-heston.md](project-explanations/day005g_quant_mlmc-heston.md).
 
 ## [Hari 005f] — 2026-11-23 · Perbaikan day005e + Valuasi Tranche CDO: LHP Vasicek, Rekursi ASB & Exponential Twisting (Ruby, Bonus)
