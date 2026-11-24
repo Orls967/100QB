@@ -1,0 +1,146 @@
+In file included from src/v3_batched.cpp:1:
+In file included from src/variants.hpp:2:
+src/common.hpp:92:9: remark: the cost-model indicates that vectorization is not beneficial [-Rpass-missed=loop-vectorize]
+   92 |         for (int i = 0; i < g.nx; ++i)
+      |         ^
+src/common.hpp:92:9: remark: the cost-model indicates that interleaving is not beneficial [-Rpass-missed=loop-vectorize]
+In file included from src/v3_batched.cpp:1:
+src/variants.hpp:84:13: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+   84 |             for (int i = ib; i < ie; ++i) gj[i] -= c * gn[i];
+      |             ^
+src/variants.hpp:77:17: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+   77 |                 for (int i = ib; i < ie; ++i) gj[i] = (gj[i] - l * gp[i]) * inv;
+      |                 ^
+src/variants.hpp:67:13: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+   67 |             for (int i = ib; i < ie; ++i) g0[i] = (g0[i] - f0 * g1[i]) * inv0;
+      |             ^
+src/variants.hpp:67:13: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+src/v3_batched.cpp:17:13: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+   17 |             for (int i = 0; i < nx; ++i) U[size_t(j) * ld + i] -= 0.5 * A2[size_t(j) * ld + i];
+      |             ^
+In file included from src/v3_batched.cpp:1:
+src/variants.hpp:13:5: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+   13 |     for (int i = nx - 2; i >= 0; --i) row[i] -= xcp[i] * row[i + 1];
+      |     ^
+src/variants.hpp:11:5: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+   11 |     for (int i = 1; i < nx - 1; ++i) row[i] = (row[i] - xl * row[i - 1]) * xinv[i];
+      |     ^
+src/variants.hpp:48:5: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+   48 |     for (int i = 0; i < nx; ++i) {
+      |     ^
+src/variants.hpp:48:5: remark: the cost-model indicates that vectorization is not beneficial [-Rpass-missed=loop-vectorize]
+src/variants.hpp:48:5: remark: the cost-model indicates that interleaving is not beneficial [-Rpass-missed=loop-vectorize]
+src/variants.hpp:84:13: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+   84 |             for (int i = ib; i < ie; ++i) gj[i] -= c * gn[i];
+      |             ^
+src/variants.hpp:77:17: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+   77 |                 for (int i = ib; i < ie; ++i) gj[i] = (gj[i] - l * gp[i]) * inv;
+      |                 ^
+src/variants.hpp:67:13: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+   67 |             for (int i = ib; i < ie; ++i) g0[i] = (g0[i] - f0 * g1[i]) * inv0;
+      |             ^
+src/variants.hpp:67:13: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+src/v3_batched.cpp:12:13: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+   12 |             for (int i = 0; i < nx; ++i) Y[size_t(j) * ld + i] -= 0.5 * A2[size_t(j) * ld + i];
+      |             ^
+In file included from src/v3_batched.cpp:1:
+In file included from src/variants.hpp:2:
+src/common.hpp:98:5: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+   98 |     for (int j = 0; j < g.nv; ++j) std::memcpy(dst + size_t(j) * g.nx, src + size_t(j) * g.ld, size_t(g.nx) * sizeof(double));
+      |     ^
+In file included from src/v3_batched.cpp:1:
+src/variants.hpp:24:5: remark: the cost-model indicates that vectorization is not beneficial [-Rpass-missed=loop-vectorize]
+   24 |     for (int i = 0; i < nx; ++i) {
+      |     ^
+src/variants.hpp:24:5: remark: the cost-model indicates that interleaving is not beneficial [-Rpass-missed=loop-vectorize]
+src/variants.hpp:11:5: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+   11 |     for (int i = 1; i < nx - 1; ++i) row[i] = (row[i] - xl * row[i - 1]) * xinv[i];
+      |     ^
+src/variants.hpp:13:5: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+   13 |     for (int i = nx - 2; i >= 0; --i) row[i] -= xcp[i] * row[i + 1];
+      |     ^
+In file included from src/v3_batched.cpp:1:
+In file included from src/variants.hpp:2:
+In file included from src/common.hpp:2:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/algorithm:1810:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/for_each.h:16:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ranges/movable_box.h:23:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/optional:1294:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/memory:937:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/ranges_uninitialized_algorithms.h:22:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/uninitialized_algorithms.h:14:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/move.h:41:5: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+   41 |     while (__first != __last) {
+      |     ^
+In file included from src/v4_fused.cpp:1:
+In file included from src/variants.hpp:2:
+src/common.hpp:92:9: remark: the cost-model indicates that vectorization is not beneficial [-Rpass-missed=loop-vectorize]
+   92 |         for (int i = 0; i < g.nx; ++i)
+      |         ^
+src/common.hpp:92:9: remark: the cost-model indicates that interleaving is not beneficial [-Rpass-missed=loop-vectorize]
+In file included from src/v4_fused.cpp:1:
+src/variants.hpp:84:13: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+   84 |             for (int i = ib; i < ie; ++i) gj[i] -= c * gn[i];
+      |             ^
+src/variants.hpp:75:17: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+   75 |                 for (int i = ib; i < ie; ++i) gj[i] = ((gj[i] - 0.5 * aj[i]) - l * gp[i]) * inv;
+      |                 ^
+src/variants.hpp:65:13: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+   65 |             for (int i = ib; i < ie; ++i) g0[i] = ((g0[i] - 0.5 * a0[i]) - f0 * (g1[i] - 0.5 * a1[i])) * inv0;
+      |             ^
+src/variants.hpp:13:5: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+   13 |     for (int i = nx - 2; i >= 0; --i) row[i] -= xcp[i] * row[i + 1];
+      |     ^
+src/variants.hpp:11:5: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+   11 |     for (int i = 1; i < nx - 1; ++i) row[i] = (row[i] - xl * row[i - 1]) * xinv[i];
+      |     ^
+src/variants.hpp:48:5: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+   48 |     for (int i = 0; i < nx; ++i) {
+      |     ^
+src/variants.hpp:48:5: remark: the cost-model indicates that vectorization is not beneficial [-Rpass-missed=loop-vectorize]
+src/variants.hpp:48:5: remark: the cost-model indicates that interleaving is not beneficial [-Rpass-missed=loop-vectorize]
+src/v4_fused.cpp:14:13: remark: vectorized loop (vectorization width: 2, interleaved count: 2) [-Rpass=loop-vectorize]
+   14 |             for (int j = jb; j < std::min(nv, jb + opt.tile); ++j) eval_p3_row(prob, j, Y, W, A1, U);
+      |             ^
+In file included from src/v4_fused.cpp:1:
+src/variants.hpp:84:13: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+   84 |             for (int i = ib; i < ie; ++i) gj[i] -= c * gn[i];
+      |             ^
+src/variants.hpp:75:17: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+   75 |                 for (int i = ib; i < ie; ++i) gj[i] = ((gj[i] - 0.5 * aj[i]) - l * gp[i]) * inv;
+      |                 ^
+src/variants.hpp:65:13: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+   65 |             for (int i = ib; i < ie; ++i) g0[i] = ((g0[i] - 0.5 * a0[i]) - f0 * (g1[i] - 0.5 * a1[i])) * inv0;
+      |             ^
+src/v4_fused.cpp:11:13: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+   11 |             for (int j = jb; j < std::min(nv, jb + opt.tile); ++j) eval_p1_row(prob, j, U, Y, W, A1, A2);
+      |             ^
+In file included from src/v4_fused.cpp:1:
+In file included from src/variants.hpp:2:
+src/common.hpp:98:5: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+   98 |     for (int j = 0; j < g.nv; ++j) std::memcpy(dst + size_t(j) * g.nx, src + size_t(j) * g.ld, size_t(g.nx) * sizeof(double));
+      |     ^
+In file included from src/v4_fused.cpp:1:
+src/variants.hpp:24:5: remark: the cost-model indicates that vectorization is not beneficial [-Rpass-missed=loop-vectorize]
+   24 |     for (int i = 0; i < nx; ++i) {
+      |     ^
+src/variants.hpp:24:5: remark: the cost-model indicates that interleaving is not beneficial [-Rpass-missed=loop-vectorize]
+src/variants.hpp:11:5: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+   11 |     for (int i = 1; i < nx - 1; ++i) row[i] = (row[i] - xl * row[i - 1]) * xinv[i];
+      |     ^
+src/variants.hpp:13:5: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+   13 |     for (int i = nx - 2; i >= 0; --i) row[i] -= xcp[i] * row[i + 1];
+      |     ^
+In file included from src/v4_fused.cpp:1:
+In file included from src/variants.hpp:2:
+In file included from src/common.hpp:2:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/algorithm:1810:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/for_each.h:16:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ranges/movable_box.h:23:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/optional:1294:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/memory:937:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/ranges_uninitialized_algorithms.h:22:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/uninitialized_algorithms.h:14:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/move.h:41:5: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+   41 |     while (__first != __last) {
+      |     ^
