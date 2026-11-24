@@ -1,0 +1,367 @@
+{
+  "session": "day006e",
+  "date": "2026-11-24",
+  "seed": 20261124,
+  "run_completed_without_errors": true,
+  "environment": {
+    "python": "3.11.18",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "matplotlib": "3.11.2",
+    "arch": "arm64",
+    "cpu_cores": 10
+  },
+  "timing": {
+    "total_notebook_sec": 318.23,
+    "gaussian_50d_sec": 1.793,
+    "sv_ncp_sec": 26.156,
+    "sv_cp_sec": 57.623,
+    "sbc_200reps_sec": 136.91
+  },
+  "reproducibility": {
+    "numerical_sha256": "aaff5c7979c0fe0c84a068926d19ebb88b2454b4187cdd086740ad7cc2c5deed",
+    "run1_elapsed_sec": 295.46,
+    "latest_elapsed_sec": 318.23,
+    "two_consecutive_runs_identical": true
+  },
+  "sv_synthetic_posterior": {
+    "T": 1000,
+    "true_params": {
+      "mu": -9.0,
+      "phi": 0.97,
+      "sigma_eta": 0.25
+    },
+    "ncp_diagnostics": {
+      "mu": {
+        "split_rhat": 1.0033,
+        "ess_bulk": 3209.2659,
+        "ess_tail": 1502.8887
+      },
+      "phi": {
+        "split_rhat": 1.004,
+        "ess_bulk": 1047.8162,
+        "ess_tail": 436.5829
+      },
+      "sigma_eta": {
+        "split_rhat": 1.0033,
+        "ess_bulk": 1441.0224,
+        "ess_tail": 2217.3034
+      }
+    },
+    "cp_diagnostics": {
+      "mu": {
+        "split_rhat": 1.0015,
+        "ess_bulk": 3862.8569,
+        "ess_tail": 2195.772
+      },
+      "phi": {
+        "split_rhat": 1.0573,
+        "ess_bulk": 66.1629,
+        "ess_tail": 426.0538
+      },
+      "sigma_eta": {
+        "split_rhat": 1.1436,
+        "ess_bulk": 23.2084,
+        "ess_tail": 58.6081
+      }
+    },
+    "ncp_divergences": 15,
+    "cp_divergences": 0,
+    "ncp_ebfmi": [
+      0.9631,
+      0.9436,
+      0.903,
+      0.983
+    ],
+    "cp_ebfmi": [
+      0.0511,
+      0.0666,
+      0.0396,
+      0.0935
+    ],
+    "ncp_tree_depths": {
+      "3": 6,
+      "4": 3,
+      "5": 117,
+      "6": 3874
+    },
+    "ess_per_sec_ncp": {
+      "mu": 122.697,
+      "phi": 40.06,
+      "sigma_eta": 55.093
+    },
+    "ess_per_sec_cp": {
+      "mu": 67.037,
+      "phi": 1.148,
+      "sigma_eta": 0.403
+    },
+    "latent_h_coverage_90": 0.905
+  },
+  "sbc": {
+    "replications": 200,
+    "T": 250,
+    "L_ranks": 99,
+    "simultaneous_band_99": 0.11,
+    "median_min_ess": 408.75,
+    "divergent_replications": 139,
+    "parameters": {
+      "mu": {
+        "chi2_stat": 43.6,
+        "p_value": 0.0011,
+        "max_abs_ecdf_diff": 0.05,
+        "within_99_simult_band": true,
+        "hist_20bins": [
+          11,
+          8,
+          7,
+          9,
+          5,
+          19,
+          3,
+          8,
+          15,
+          17,
+          6,
+          15,
+          3,
+          18,
+          8,
+          9,
+          7,
+          14,
+          8,
+          10
+        ]
+      },
+      "phi": {
+        "chi2_stat": 16.6,
+        "p_value": 0.6169,
+        "max_abs_ecdf_diff": 0.055,
+        "within_99_simult_band": true,
+        "hist_20bins": [
+          14,
+          7,
+          10,
+          16,
+          8,
+          10,
+          9,
+          13,
+          13,
+          6,
+          6,
+          9,
+          13,
+          11,
+          14,
+          10,
+          8,
+          7,
+          9,
+          7
+        ]
+      },
+      "sigma_eta": {
+        "chi2_stat": 14.4,
+        "p_value": 0.7599,
+        "max_abs_ecdf_diff": 0.055,
+        "within_99_simult_band": true,
+        "hist_20bins": [
+          12,
+          9,
+          9,
+          12,
+          6,
+          10,
+          11,
+          10,
+          5,
+          8,
+          10,
+          10,
+          7,
+          15,
+          12,
+          12,
+          14,
+          12,
+          11,
+          5
+        ]
+      }
+    }
+  },
+  "regime_application": {
+    "T": 500,
+    "rolling_origins": 30,
+    "vol_coverage_90": 0.886,
+    "mean_lps_sv": 2.49554,
+    "mean_lps_ewma": 2.53479,
+    "cumulative_lps_diff_sv_minus_ewma": -1.1773,
+    "rmse_vol_sv": 0.011066,
+    "rmse_vol_ewma": 0.009379
+  },
+  "efficiency": {
+    "grad_python_loop_us": {
+      "median": 291.06,
+      "mad": 5.23
+    },
+    "grad_resolvent_lfilter_us": {
+      "median": 32.77,
+      "mad": 0.96
+    },
+    "grad_speedup": 8.88,
+    "components_us": {
+      "forward_resolvent": {
+        "median_us": 3.823,
+        "mad_us": 0.016
+      },
+      "likelihood_exp": {
+        "median_us": 3.412,
+        "mad_us": 0.029
+      },
+      "backward_adjoint": {
+        "median_us": 4.045,
+        "mad_us": 0.069
+      }
+    },
+    "ablation": [
+      {
+        "config": "Fixed eps=0.025, M=I",
+        "median_min_ess_per_s": 57.84,
+        "mad_min_ess_per_s": 5.68,
+        "median_eps": 0.025
+      },
+      {
+        "config": "Fixed eps=0.11, M=I",
+        "median_min_ess_per_s": 16.84,
+        "mad_min_ess_per_s": 12.87,
+        "median_eps": 0.11
+      },
+      {
+        "config": "DualAvg eps, M=I",
+        "median_min_ess_per_s": 100.06,
+        "mad_min_ess_per_s": 10.53,
+        "median_eps": 0.05
+      },
+      {
+        "config": "DualAvg eps + Diag M",
+        "median_min_ess_per_s": 119.34,
+        "mad_min_ess_per_s": 8.8,
+        "median_eps": 0.08728
+      }
+    ]
+  },
+  "figures": {
+    "traces_acf": [
+      "outputs/figures/day006e_traces_acf.png",
+      "outputs/figures/day006e_traces_acf.svg"
+    ],
+    "pair_posterior": [
+      "outputs/figures/day006e_pair_posterior.png",
+      "outputs/figures/day006e_pair_posterior.svg"
+    ],
+    "centered_vs_ncp": [
+      "outputs/figures/day006e_centered_vs_ncp.png",
+      "outputs/figures/day006e_centered_vs_ncp.svg"
+    ],
+    "sbc_ecdf": [
+      "outputs/figures/day006e_sbc_ecdf.png",
+      "outputs/figures/day006e_sbc_ecdf.svg"
+    ],
+    "sv_latent_path": [
+      "outputs/figures/day006e_sv_latent_path.png",
+      "outputs/figures/day006e_sv_latent_path.svg"
+    ],
+    "efficiency": [
+      "outputs/figures/day006e_efficiency.png",
+      "outputs/figures/day006e_efficiency.svg"
+    ]
+  },
+  "criteria": {
+    "c1_analytic_grad_vs_fd": {
+      "status": "tercapai",
+      "measured": 9.577e-09,
+      "threshold": "maks galat relatif gradien analitik vs selisih hingga terpusat <= 1e-6"
+    },
+    "c2_leapfrog_reversible_and_order2": {
+      "status": "tercapai",
+      "measured": {
+        "reversibility_err": 4.441e-16,
+        "energy_slope": 1.9985,
+        "symplectic_det_err": 1.594e-10
+      },
+      "threshold": "reversibilitas maju-balik <= 1e-9 dan kemiringan log-log galat energi dalam [1.95, 2.05]"
+    },
+    "c3_nuts_gaussian_50d": {
+      "status": "tercapai",
+      "measured": {
+        "max_mean_z": 2.8759,
+        "max_diag_cov_rel_err": 0.0642,
+        "median_ess_per_sec": 1819.6
+      },
+      "threshold": "maks |mean_hat - mean| <= 4 SE (ESS) dan galat relatif variansi diagonal <= 0.15"
+    },
+    "c4_sv_synthetic_convergence": {
+      "status": "sebagian",
+      "measured": {
+        "max_split_rhat": 1.004,
+        "min_ess_bulk": 1047.8,
+        "divergences": 15
+      },
+      "threshold": "split-Rhat < 1.01 untuk (mu, phi, sigma_eta), ESS bulk >= 400, divergensi == 0"
+    },
+    "c5_sv_latent_h_coverage_90": {
+      "status": "tercapai",
+      "measured": 0.905,
+      "threshold": "liputan kredibel 90% jalur laten h_t berada dalam [0.85, 0.95]"
+    },
+    "c6_sbc_uniformity": {
+      "status": "sebagian",
+      "measured": {
+        "mu": {
+          "p_value": 0.0011,
+          "within_band": true
+        },
+        "phi": {
+          "p_value": 0.6169,
+          "within_band": true
+        },
+        "sigma_eta": {
+          "p_value": 0.7599,
+          "within_band": true
+        }
+      },
+      "threshold": "p-value chi-kuadrat > 0.01 untuk ketiga parameter dan ECDF-diff dalam pita simultan 99%"
+    },
+    "c7_ncp_beats_centered_ess_per_sec": {
+      "status": "tercapai",
+      "measured": {
+        "min_ess_s_ncp": 40.06,
+        "min_ess_s_cp": 0.4,
+        "ratio_sigma_eta": 136.8
+      },
+      "threshold": "ESS/detik parameterisasi non-terpusat > terpusat pada seri SV yang sama"
+    },
+    "c8_clean_reproducible_under_10min": {
+      "status": "tercapai",
+      "measured": {
+        "elapsed_sec": 318.23,
+        "run1_sec": 295.46,
+        "two_runs_identical": true,
+        "sha256_prefix": "aaff5c7979c0fe0c"
+      },
+      "threshold": "notebook berjalan bersih <= 600 detik dan dua eksekusi menghasilkan angka identik"
+    },
+    "c9_unit_asserts_pass": {
+      "status": "tercapai",
+      "measured": "seluruh assert c1, c2, c3, c5, c7, c10 lulus",
+      "threshold": "seluruh sel uji assert lulus tanpa pengecualian"
+    },
+    "c10_figures_valid": {
+      "status": "tercapai",
+      "measured": 6,
+      "threshold": "6 pasang grafik PNG+SVG di outputs/figures/day006e_* ada, tak kosong, dan SVG valid XML"
+    }
+  }
+}
