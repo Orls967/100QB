@@ -1,0 +1,10 @@
+{
+  "day": 6,
+  "session": "d",
+  "topic_no": null,
+  "type": "sim",
+  "language": "cpp",
+  "topic": "Solver PDE Heston 2D ADI Craig–Sneyd (C++): Tangga Optimasi Terukur & Roofline",
+  "date": "2026-11-24",
+  "link": "projects/cpp/day006d_heston_adi_cpp"
+}

@@ -3,6 +3,17 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 006d] — 2026-11-24 · Rekayasa Performa Solver PDE Heston 2D ADI Craig–Sneyd: Tangga Optimasi Terukur & Roofline (C++20, Bonus)
+
+### Diperbaiki (Bagian A — `day006c`)
+- Menjalankan ulang tes penuh (`cargo test --release` 4/4, `go test` 3/3, `unittest` 4/4) dan pipeline `run_all.sh` (`3` detik, exit `0`) pada `projects/rust/day006c_percolation_polyglot/`, menghasilkan 5 pasang grafik `outputs/figures/day006c_perc_*.{png,svg}` dan memperbarui `outputs/day006c/results.json` serta [day006c_sim_percolation-polyglot.md](project-explanations/day006c_sim_percolation-polyglot.md) (`c1`–`c7` `tercapai`, sementara `timing` `789` detik dan `c_wall_clock = belum tercapai` dipertahankan utuh beserta `rerun_note`).
+
+### Ditambahkan (Bagian C — `day006d`)
+- Proyek C++20 murni `projects/cpp/day006d_heston_adi_cpp/` (`899` baris C++ di `src/` + `tests/`, nol pustaka eksternal, `-O3 -std=c++20 -fno-fast-math -ffp-contract=off` serta biner pembanding `-mcpu=native`):
+  - **Kuadratur Semi-Analitik & Akurasi PDE**: Gauss–Legendre 16-titik komposit (200 panel) untuk Gil–Pelaez (*call* & *put*) dan Lewis ($\mathrm{Im}(z) = -1/2$) dengan fungsi karakteristik Heston *little trap* (paritas `4,55e-13` Set A dan `1,71e-13` Set B; cocok dengan `qb100` Python `8,802660962859`); solver ADI Craig–Sneyd $\theta = 1/2$ mencapai galat `2,54e-3` pada `401×201, M=200` (`6,07e-4` pada `801×401, M=400`) dengan orde konvergensi 3-level `2,28` pada rezim Feller dilanggar (Set A) dan `2,01` pada Set B (`8/8` unit test lulus).
+  - **Tangga Optimasi `V0`–`V5` & Analisis Roofline**: Pada `801×401, M=200` di Apple M4 (`STREAM triad` 10T `86,34 GB/s`, puncak register tanpa FMA 10T `90,83 GFLOP/s`), waktu median turun dari `3,2755 ± 0,0282 s` (`50,99 ns`/sel-langkah, `V0`) menjadi `0,2622 ± 0,0214 s` (`4,08 ns`/sel-langkah, `12,98 GFLOP/s`, `V5` `T=10`, **speedup `12,49×`**; `13,33×` pada `401×201`) dengan medan akhir **identik bit-demi-bit** dari `V2` hingga `V5` (`T ∈ {1, 2, 4, 10}`) maupun pada `-mcpu=native`, disertai pelaporan jujur regresi `V2` vs `V1` (`0,856×`) ketika *working set* melampaui cache L2 `16 MiB` (`12,48 MiB` → `17,48 MiB`).
+- Output `outputs/day006d/results.json` (`9/9` kriteria `c1`–`c9` `tercapai`), CSV mentah + laporan vektorisasi, 6 pasang grafik PNG+SVG `outputs/figures/day006d_*.{png,svg}`, `projects/cpp/day006d_heston_adi_cpp/README.md`, dan [day006d_sim_heston-adi-cpp.md](project-explanations/day006d_sim_heston-adi-cpp.md).
+
 ## [Hari 006c] — 2026-11-24 · Perkolasi Bond Kisi Persegi Poliglot: Newman–Ziff, Dualitas-Diri Eksak & Orkestrator Deterministik (Python + Rust + Go, Bonus 10 Menit)
 
 ### Diperbaiki (Tahap 1 — `day006b`)
@@ -11,10 +22,10 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 ### Ditambahkan (Tahap 2 — `day006c`)
 - Proyek poliglot `projects/rust/day006c_percolation_polyglot/` (Rust murni `#![forbid(unsafe_code)]` tanpa *crate* `percolate`, orkestrator Go pustaka standar `orchestrate`, serta modul Python `percolation.py`, `finalize.py`, `test_percolation.py`):
   - **Inti Rust & Orkestrator Go Terverifikasi**: Union-Find ganda dengan simpul maya kiri–kanan, Fisher–Yates `Xoshiro256Pp`, serta kolam pekerja pipa JSON deterministik (`cargo clippy`, `cargo test --release` `4/4` termasuk enumerasi eksak $2 \times 3$ `64/128 = 1/2`, `go vet`, dan `go test` `3/3` termasuk invarian `1` vs `4` *worker* lulus pada menit `7:31`).
-  - **Disiplin Kunci Waktu (`LOCK` 9:00)**: Eksekusi pipeline penuh `run_all.sh` dihentikan secara patuh saat `dl.sh` mengunci pada menit ke-9; status jujur dicatat pada `outputs/day006c/results.json` dan [day006c_sim_percolation-polyglot.md](project-explanations/day006c_sim_percolation-polyglot.md)
+  - **Disiplin Kunci Waktu (`LOCK` 9:00)**: Eksekusi pipeline penuh `run_all.sh` dihentikan secara patuh saat `dl.sh` mengunci pada menit ke-9; status jujur dicatat pada `outputs/day006c/results.json` dan [day006c_sim_percolation-polyglot.md](project-explanations/day006c_sim_percolation-polyglot.md) (`c7 = tercapai`, `c1`–`c2 = sebagian`, `c3`–`c6 = belum diketahui`, `c_wall_clock = belum tercapai`).
 
 ### Diperbaiki (rerun pasca-sesi — day006d Bagian A)
-- Menjalankan ulang seluruh tes (`cargo test --release` 4/4, `go test` 3/3, `unittest` 4/4) dan `run_all.sh` penuh (`3` detik, exit `0`), menghasilkan 5 pasang grafik `outputs/figures/day006c_perc_*.{png,svg}` dan memperbarui `outputs/day006c/results.json`: `c1`–`c7` `tercapai` (`\hat{\nu} = 1,3406 \pm 0,0079`, `\hat{D} = 1,8678 \pm 0,0077`, maks `|Z| = 1,4839` di $p=1/2$), sementara `timing` (`789` detik) dan `c_wall_clock = belum tercapai` dipertahankan dari sesi asli beserta `rerun_note`. (`c7 = tercapai`, `c1`–`c2 = sebagian`, `c3`–`c6 = belum diketahui`, `c_wall_clock = belum tercapai`).
+- Menjalankan ulang seluruh tes (`cargo test --release` 4/4, `go test` 3/3, `unittest` 4/4) dan `run_all.sh` penuh (`3` detik, exit `0`), menghasilkan 5 pasang grafik `outputs/figures/day006c_perc_*.{png,svg}` dan memperbarui `outputs/day006c/results.json`: `c1`–`c7` `tercapai` (`\hat{\nu} = 1,3406 \pm 0,0079`, `\hat{D} = 1,8678 \pm 0,0077`, maks `|Z| = 1,4839` di $p=1/2$), sementara `timing` (`789` detik) dan `c_wall_clock = belum tercapai` dipertahankan dari sesi asli beserta `rerun_note`.
 
 ## [Hari 006b] — 2026-11-24 · Self-Avoiding Walk (SAW) Poliglot di Kisi Persegi: Enumerasi Eksak, Pivot Monte Carlo & Eksponen Kritis (Python + Rust + Go, Bonus 10 Menit)
 

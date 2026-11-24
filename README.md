@@ -154,7 +154,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [docs/ROADMAP.md](docs/ROADMAP.md) · Riwayat: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 49/100 topik (49%)** · quant: 45 · sim: 4
+**Progres: 50/100 topik (50%)** · quant: 45 · sim: 5
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -207,6 +207,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 6a | bonus | `sim` | `python+rust+go` | Self-Avoiding Walk (SAW) Poliglot: Enumerasi Eksak, Eksponen Kritis & Pivot Monte Carlo | 2026-11-24 | [day006a_saw_polyglot](projects/rust/day006a_saw_polyglot) |
 | 6b | bonus | `sim` | `python+rust+go` | Self-Avoiding Walk (SAW) Poliglot: Enumerasi Eksak, Pivot Monte Carlo & Eksponen Kritis | 2026-11-24 | [day006b_saw_polyglot](projects/rust/day006b_saw_polyglot) |
 | 6c | bonus | `sim` | `python+rust+go` | Perkolasi Bond Kisi Persegi Poliglot: Newman-Ziff, Dualitas-Diri Eksak & Eksponen Kritis | 2026-11-24 | [day006c_percolation_polyglot](projects/rust/day006c_percolation_polyglot) |
+| 6d | bonus | `sim` | `cpp` | Solver PDE Heston 2D ADI Craig–Sneyd (C++): Tangga Optimasi Terukur & Roofline | 2026-11-24 | [day006d_heston_adi_cpp](projects/cpp/day006d_heston_adi_cpp) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi
