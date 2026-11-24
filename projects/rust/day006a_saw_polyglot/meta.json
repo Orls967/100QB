@@ -1,0 +1,10 @@
+{
+  "day": 6,
+  "session": "a",
+  "topic_no": null,
+  "type": "sim",
+  "language": "python+rust+go",
+  "topic": "Self-Avoiding Walk (SAW) Poliglot: Enumerasi Eksak, Eksponen Kritis & Pivot Monte Carlo",
+  "date": "2026-11-24",
+  "link": "projects/rust/day006a_saw_polyglot"
+}
