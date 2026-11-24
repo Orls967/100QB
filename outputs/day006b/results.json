@@ -6,9 +6,13 @@
   "timing": {
     "t0_epoch": 1795506051,
     "t0_wita": "2026-11-24 15:40:51 WITA",
-    "finished_epoch": 1795506471,
-    "finished_wita": "2026-11-24 15:47:51 WITA",
-    "elapsed_seconds": 420
+    "pipeline_finished_epoch": 1795506471,
+    "pipeline_finished_wita": "2026-11-24 15:47:51 WITA",
+    "pipeline_elapsed_seconds": 420,
+    "finished_epoch": 1795506717,
+    "finished_wita": "2026-11-24 15:51:57 WITA",
+    "elapsed_seconds": 666,
+    "note": "420 detik hanya waktu pipeline komputasi; sesi penuh hingga git push selesai di 666 detik (T0 15:40:51 -> push 15:51:57 WITA)."
   },
   "enumeration": {
     "nmax": 18,
@@ -95,20 +99,20 @@
   ],
   "figures": {
     "saw_samples": [
-      "/Users/orl123456/Documents/Dummy/100QB/outputs/figures/day006b_saw_samples.png",
-      "/Users/orl123456/Documents/Dummy/100QB/outputs/figures/day006b_saw_samples.svg"
+      "outputs/figures/day006b_saw_samples.png",
+      "outputs/figures/day006b_saw_samples.svg"
     ],
     "saw_scaling": [
-      "/Users/orl123456/Documents/Dummy/100QB/outputs/figures/day006b_saw_scaling.png",
-      "/Users/orl123456/Documents/Dummy/100QB/outputs/figures/day006b_saw_scaling.svg"
+      "outputs/figures/day006b_saw_scaling.png",
+      "outputs/figures/day006b_saw_scaling.svg"
     ],
     "saw_ratio": [
-      "/Users/orl123456/Documents/Dummy/100QB/outputs/figures/day006b_saw_ratio.png",
-      "/Users/orl123456/Documents/Dummy/100QB/outputs/figures/day006b_saw_ratio.svg"
+      "outputs/figures/day006b_saw_ratio.png",
+      "outputs/figures/day006b_saw_ratio.svg"
     ],
     "saw_endpoint_heatmap": [
-      "/Users/orl123456/Documents/Dummy/100QB/outputs/figures/day006b_saw_endpoint_heatmap.png",
-      "/Users/orl123456/Documents/Dummy/100QB/outputs/figures/day006b_saw_endpoint_heatmap.svg"
+      "outputs/figures/day006b_saw_endpoint_heatmap.png",
+      "outputs/figures/day006b_saw_endpoint_heatmap.svg"
     ]
   },
   "criteria": {
@@ -167,11 +171,13 @@
       "threshold": "1 vs N worker identik"
     },
     "c10_ten_minute_wall_clock": {
-      "status": "tercapai",
+      "status": "belum tercapai",
       "measured": {
         "t0": 1795506051,
-        "finished": 1795506471,
-        "elapsed_sec": 420
+        "finished": 1795506717,
+        "elapsed_sec": 666,
+        "pipeline_elapsed_sec": 420,
+        "note": "420 detik hanya waktu pipeline komputasi; sesi sebenarnya selesai di 666 detik (T0 15:40:51 -> push 15:51:57 WITA)."
       },
       "threshold": "<= 600 detik dari T0 dl.sh"
     }

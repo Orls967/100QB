@@ -154,7 +154,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [docs/ROADMAP.md](docs/ROADMAP.md) · Riwayat: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 46/100 topik (46%)** · quant: 45 · sim: 1
+**Progres: 48/100 topik (48%)** · quant: 45 · sim: 3
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -204,6 +204,8 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 5h | bonus | `quant` | `ruby` | Backtest dan overfitting: Sharpe, bias seleksi, pengujian ganda dan PBO | 2026-11-23 | [day005h_backtest_overfitting](projects/ruby/day005h_backtest_overfitting) |
 | 5i | bonus | `quant` | `ruby` | Keluarga GARCH, QMLE Sandwich, MLE Student-t, VaR/ES, DCC, HAR-RV & salah spesifikasi | 2026-11-23 | [day005i_garch_family](projects/ruby/day005i_garch_family) |
 | 5j | bonus | `quant` | `ruby` | Model Faktor, PCA BBP, GRS, Fama-MacBeth Shanken, Risk Parity, Black-Litterman, Markowitz QP & Backtest Portofolio | 2026-11-23 | [day005j_factor_portfolio_lab](projects/ruby/day005j_factor_portfolio_lab) |
+| 6a | bonus | `sim` | `python+rust+go` | Self-Avoiding Walk (SAW) Poliglot: Enumerasi Eksak, Eksponen Kritis & Pivot Monte Carlo | 2026-11-24 | [day006a_saw_polyglot](projects/rust/day006a_saw_polyglot) |
+| 6b | bonus | `sim` | `python+rust+go` | Self-Avoiding Walk (SAW) Poliglot: Enumerasi Eksak, Pivot Monte Carlo & Eksponen Kritis | 2026-11-24 | [day006b_saw_polyglot](projects/rust/day006b_saw_polyglot) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi

@@ -32,6 +32,7 @@ cargo test --release --manifest-path projects/rust/day006b_saw_polyglot/rust/Car
 | Eksponen entropik $\hat{\gamma}$ ($n \in [11, 18]$) | `1,38338 ± 0,09593` | $\|\hat{\gamma} - 1,34375\| < 0,08$ | `tercapai` |
 | Eksponen metrik Flory $\hat{\nu}$ ($N \in \{50,100,200,400\}$) | `0,74468 ± 0,00102` | $\|\hat{\nu} - 0,75\| < 0,03$ | `tercapai` |
 | Validitas sampel pivot $N = 300$ | `100 / 100` valid | `0` tabrakan diri | `tercapai` |
+| Waktu dinding sesi penuh (`c10_ten_minute_wall_clock`) | `666 detik` (`420 detik` pipeline komputasi) | `<= 600 detik` dari `T0` (`15:40:51` → push `15:51:57` WITA) | `belum tercapai` |
 
 ## Artefak Keluaran & Visualisasi
 

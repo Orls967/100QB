@@ -84,13 +84,16 @@ def fit_scaling(ns: list[int], r2s: list[float]) -> dict[str, float]:
     return {"nu_hat": 0.5 * b1, "nu_se": 0.5 * se1, "amp_hat": math.exp(b0), "amp_se": math.exp(b0) * se0}
 
 
+REPO_ROOT = Path(__file__).resolve().parents[4]
+
+
 def save_both(fig: plt.Figure, fig_dir: Path, stem: str) -> list[str]:
     fig_dir.mkdir(parents=True, exist_ok=True)
     paths = [fig_dir / f"{stem}.png", fig_dir / f"{stem}.svg"]
     fig.savefig(paths[0], dpi=150, bbox_inches="tight")
     fig.savefig(paths[1], bbox_inches="tight")
     plt.close(fig)
-    return [f"outputs/figures/{p.name}" for p in paths]
+    return [p.resolve().relative_to(REPO_ROOT).as_posix() if p.resolve().is_relative_to(REPO_ROOT) else p.as_posix() for p in paths]
 
 
 def make_figures(data: dict, rfit: dict, sfit: dict, fig_dir: Path, prefix: str = "day006b") -> dict[str, list[str]]:
@@ -160,6 +163,8 @@ def check_figures(figs: dict[str, list[str]]) -> bool:
     for paths in figs.values():
         for p_str in paths:
             p = Path(p_str)
+            if not p.is_absolute() and not p.exists():
+                p = REPO_ROOT / p
             if not p.exists() or p.stat().st_size == 0:
                 return False
             if p.suffix == ".svg":
