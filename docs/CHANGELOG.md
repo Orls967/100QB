@@ -3,6 +3,14 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 006e] — 2026-11-24 · HMC/NUTS dari Nol untuk Volatilitas Stokastik Bayesian, Kontras Funnel & Kalibrasi SBC (Notebook Python, Bonus)
+
+### Ditambahkan (`day006e`)
+- Notebook tereksekusi penuh `days/day006e_sim_bayesian-sv-nuts.ipynb` (NumPy + SciPy murni tanpa pustaka MCMC eksternal; diverifikasi berjalan bersih dua kali berturut-turut dari nol dalam `295,5 s` dan `318,2 s` dengan sidik jari numerik `SHA-256` identik persis):
+  - **Model SV Non-Terpusat, Gradien Adjoin Resolven & Multinomial NUTS**: Transformasi tanpa batas + log-Jacobian eksak, *backpropagation* manual lewat operator adjoin resolven AR(1) (`8,88×` lebih cepat via `lfilter` vs loop Python; galat FD `9,58e-9`), integrator *leapfrog* simplektik (`4,44e-16` reversibilitas, kemiringan energi `1,9985`), *dual averaging* + matriks massa diagonal berjendela ala Stan, dan Multinomial NUTS dengan kriteria *generalized U-turn* serta pencabangan progresif terbias (`1819,6 ESS/s` pada Gaussian 50-D).
+  - **Diagnostik *Neal's Funnel*, SBC 200 Replikasi & Aplikasi Rezim**: Pada SV sintetis $T = 1000$, parameterisasi non-terpusat mencapai `split-Rhat <= 1,0040`, `ESS bulk >= 1047,8`, liputan jalur $h_t$ 90% sebesar `90,5%`, dan lonjakan efisiensi `136,8×` pada $\sigma_\eta$ atas parameterisasi terpusat (`c4 = sebagian` jujur karena `15/4000` divergensi di ekor $\phi \to 1$); pada `200` replikasi SBC ($T=250, L=99$), seluruh kurva ECDF-diff berada di dalam pita simultan 99% (`<= 0,055 < 0,110`; $\chi^2_{19}$ lulus pada $\phi$ `p=0,6169` dan $\sigma_\eta$ `p=0,7599`, `mu` `p=0,0011` → `c6 = sebagian`), dilengkapi evaluasi *log predictive score* 1-langkah di 30 jendela lonjakan 4-rezim vs EWMA ($\lambda = 0{,}94$) dan tabel ablasi $(\varepsilon, M)$.
+- Output `outputs/day006e/results.json` (`8/10` kriteria `tercapai`, `2/10` `sebagian` sebagai temuan jujur), 6 pasang grafik PNG+SVG `outputs/figures/day006e_*.{png,svg}`, dan [day006e_sim_bayesian-sv-nuts.md](project-explanations/day006e_sim_bayesian-sv-nuts.md).
+
 ## [Hari 006d] — 2026-11-24 · Rekayasa Performa Solver PDE Heston 2D ADI Craig–Sneyd: Tangga Optimasi Terukur & Roofline (C++20, Bonus)
 
 ### Diperbaiki (Bagian A — `day006c`)

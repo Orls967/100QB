@@ -55,6 +55,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `6b` (`day006b`) | `bonus` | `sim` | `python+rust+go` | [Self-Avoiding Walk (SAW) Poliglot: Enumerasi Eksak, Pivot Monte Carlo & Eksponen Kritis](day006b_sim_saw-polyglot.md) |
 | `6c` (`day006c`) | `bonus` | `sim` | `python+rust+go` | [Perkolasi Bond Kisi Persegi Poliglot: Newman–Ziff, Dualitas-Diri Eksak & Eksponen Kritis](day006c_sim_percolation-polyglot.md) |
 | `6d` (`day006d`) | `bonus` | `sim` | `cpp` | [Solver PDE Heston 2D ADI Craig–Sneyd: Tangga Optimasi Terukur & Roofline (C++20)](day006d_sim_heston-adi-cpp.md) |
+| `6e` (`day006e`) | `bonus` | `sim` | `python` | [HMC/NUTS dari Nol untuk Volatilitas Stokastik Bayesian & Kalibrasi SBC (Notebook)](day006e_sim_bayesian-sv-nuts.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 
