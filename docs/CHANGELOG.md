@@ -3,6 +3,16 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 006c] — 2026-11-24 · Perkolasi Bond Kisi Persegi Poliglot: Newman–Ziff, Dualitas-Diri Eksak & Orkestrator Deterministik (Python + Rust + Go, Bonus 10 Menit)
+
+### Diperbaiki (Tahap 1 — `day006b`)
+- `outputs/day006b/results.json`, `docs/project-explanations/day006b_sim_saw-polyglot.md`, `projects/rust/day006b_saw_polyglot/py/saw_analysis.py`, dan `README.md`: mengganti path absolut menjadi relatif, menetapkan `c10_ten_minute_wall_clock = belum tercapai` (`666` detik sesi penuh vs `420` detik pipeline komputasi), menambah poin landasan teori bertautan kode relatif (`12` poin), serta memperbarui tabel progres `README.md`.
+
+### Ditambahkan (Tahap 2 — `day006c`)
+- Proyek poliglot `projects/rust/day006c_percolation_polyglot/` (Rust murni `#![forbid(unsafe_code)]` tanpa *crate* `percolate`, orkestrator Go pustaka standar `orchestrate`, serta modul Python `percolation.py`, `finalize.py`, `test_percolation.py`):
+  - **Inti Rust & Orkestrator Go Terverifikasi**: Union-Find ganda dengan simpul maya kiri–kanan, Fisher–Yates `Xoshiro256Pp`, serta kolam pekerja pipa JSON deterministik (`cargo clippy`, `cargo test --release` `4/4` termasuk enumerasi eksak $2 \times 3$ `64/128 = 1/2`, `go vet`, dan `go test` `3/3` termasuk invarian `1` vs `4` *worker* lulus pada menit `7:31`).
+  - **Disiplin Kunci Waktu (`LOCK` 9:00)**: Eksekusi pipeline penuh `run_all.sh` dihentikan secara patuh saat `dl.sh` mengunci pada menit ke-9; status jujur dicatat pada `outputs/day006c/results.json` dan [day006c_sim_percolation-polyglot.md](project-explanations/day006c_sim_percolation-polyglot.md) (`c7 = tercapai`, `c1`–`c2 = sebagian`, `c3`–`c6 = belum diketahui`, `c_wall_clock = belum tercapai`).
+
 ## [Hari 006b] — 2026-11-24 · Self-Avoiding Walk (SAW) Poliglot di Kisi Persegi: Enumerasi Eksak, Pivot Monte Carlo & Eksponen Kritis (Python + Rust + Go, Bonus 10 Menit)
 
 ### Ditambahkan (`day006b`)

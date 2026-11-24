@@ -1,0 +1,60 @@
+{
+  "session": "day006c",
+  "date": "2026-11-24",
+  "seed": 20261124,
+  "run_completed_without_errors": false,
+  "note": "Kunci waktu dl.sh (LOCK >= 540 detik) aktif sebelum run_all.sh dieksekusi; sesuai aturan penghentian keras, eksekusi pipeline penuh dan pembuatan grafik tidak dipaksakan setelah menit ke-9. Hanya tes kompilasi/unit Rust (4/4) dan Go (3/3) pada menit 7:31 yang telah terverifikasi.",
+  "criteria": {
+    "c1_exact_self_dual_half": {
+      "status": "sebagian",
+      "measured": {
+        "rust_2x3_exact_crossing_subsets": "64/128 = 1/2 (terverifikasi di cargo test --release)",
+        "python_3x4_fraction": "belum dijalankan (LOCK 9:00)"
+      },
+      "threshold": "P(1/2) == 1/2 eksak hanya pada L x (L+1)"
+    },
+    "c2_nz_vs_exact_small_lattice": {
+      "status": "sebagian",
+      "measured": {
+        "rust_2x3_nz_40k_at_half": "|P_hat(1/2) - 0.5| < 0.01 lulus di cargo test",
+        "python_9pt_grid": "belum dijalankan (LOCK 9:00)"
+      },
+      "threshold": "maks |Z| <= 3 SE di 9 titik p kisi kecil"
+    },
+    "c3_pcross_half_all_L": {
+      "status": "belum diketahui",
+      "measured": null,
+      "threshold": "|P_cross(1/2) - 0.5| <= 3 SE untuk tiap L in {16,32,64,128}"
+    },
+    "c4_nu_hat": {
+      "status": "belum diketahui",
+      "measured": null,
+      "threshold": "|nu_hat - 4/3| < 0.15"
+    },
+    "c5_fractal_dim_D_hat": {
+      "status": "belum diketahui",
+      "measured": null,
+      "threshold": "|D_hat - 91/48| < 0.06"
+    },
+    "c6_figures_valid": {
+      "status": "belum diketahui",
+      "measured": 0,
+      "threshold": "PNG+SVG ada, tak kosong, XML valid"
+    },
+    "c7_worker_invariance": {
+      "status": "tercapai",
+      "measured": "1 vs 4 worker bit-identik pada L={8,16} (TestDeterministicReductionOrder PASS 0.31s)",
+      "threshold": "1 vs N worker identik"
+    },
+    "c_wall_clock": {
+      "status": "belum tercapai",
+      "measured": 789,
+      "threshold": "elapsed_sec <= 570"
+    }
+  },
+  "timing": {
+    "t0_epoch": 1795507603,
+    "finalize_epoch": 1795508392,
+    "elapsed_sec": 789
+  }
+}

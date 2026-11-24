@@ -53,6 +53,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `5i` (`day005i`) | `bonus` | `quant` | `ruby` | [Keluarga GARCH, QMLE Sandwich, Student-t MLE, VaR/ES, DCC, HAR-RV dan salah spesifikasi (Ruby)](day005i_quant_garch-family.md) |
 | `5j` (`day005j`) | `bonus` | `quant` | `ruby` | [Model Faktor, PCA BBP, GRS, Fama-MacBeth Shanken, Risk Parity, Black-Litterman, Markowitz QP & Backtest Portofolio (Ruby)](day005j_quant_factor-portfolio-lab.md) |
 | `6b` (`day006b`) | `bonus` | `sim` | `python+rust+go` | [Self-Avoiding Walk (SAW) Poliglot: Enumerasi Eksak, Pivot Monte Carlo & Eksponen Kritis](day006b_sim_saw-polyglot.md) |
+| `6c` (`day006c`) | `bonus` | `sim` | `python+rust+go` | [Perkolasi Bond Kisi Persegi Poliglot: Newman–Ziff, Dualitas-Diri Eksak & Eksponen Kritis](day006c_sim_percolation-polyglot.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 
