@@ -1,0 +1,8 @@
+[package]
+name = "percolate"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "percolate"
+path = "src/main.rs"

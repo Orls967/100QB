@@ -1,0 +1,10 @@
+{
+  "day": 6,
+  "session": "c",
+  "topic_no": null,
+  "type": "sim",
+  "language": "python+rust+go",
+  "topic": "Perkolasi Bond Kisi Persegi Poliglot: Newman-Ziff, Dualitas-Diri Eksak & Eksponen Kritis",
+  "date": "2026-11-24",
+  "link": "projects/rust/day006c_percolation_polyglot"
+}
