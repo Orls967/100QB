@@ -9,7 +9,8 @@ T0_FILE="${T0_FILE:-${TMPDIR:-/tmp}/day006_t0}"
 
 cargo build --release --manifest-path "$PROJ/rust/Cargo.toml"
 (cd "$PROJ/go" && go build -o "$PROJ/rust/target/release/orchestrate" .)
-timeout 60 "$PROJ/rust/target/release/orchestrate" \
+"$PY" -c 'import subprocess,sys; subprocess.run(sys.argv[2:], timeout=int(sys.argv[1]), check=True)' 60 \
+  "$PROJ/rust/target/release/orchestrate" \
   --saw-bin "$PROJ/rust/target/release/saw" \
   --nmax 18 --k 7 --heatmap-n 14 --seed 20261124 \
   --out "$PROJ/rust/target/go_out.json"

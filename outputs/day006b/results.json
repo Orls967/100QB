@@ -1,0 +1,179 @@
+{
+  "session": "day006b",
+  "date": "2026-11-24",
+  "seed": 20261124,
+  "run_completed_without_errors": true,
+  "timing": {
+    "t0_epoch": 1795506051,
+    "t0_wita": "2026-11-24 15:40:51 WITA",
+    "finished_epoch": 1795506471,
+    "finished_wita": "2026-11-24 15:47:51 WITA",
+    "elapsed_seconds": 420
+  },
+  "enumeration": {
+    "nmax": 18,
+    "prefix_k": 7,
+    "num_tasks": 543,
+    "counts": [
+      1,
+      4,
+      12,
+      36,
+      100,
+      284,
+      780,
+      2172,
+      5916,
+      16268,
+      44100,
+      120292,
+      324932,
+      881500,
+      2374444,
+      6416596,
+      17245332,
+      46466676,
+      124658732
+    ],
+    "py_bf_n12": [
+      1,
+      4,
+      12,
+      36,
+      100,
+      284,
+      780,
+      2172,
+      5916,
+      16268,
+      44100,
+      120292,
+      324932
+    ],
+    "mismatches": []
+  },
+  "exponents": {
+    "mu_hat": 2.6289980060434743,
+    "mu_se": 0.01760391544462079,
+    "gamma_hat": 1.3833772777308768,
+    "gamma_se": 0.09592647489187349,
+    "slope": 1.0078980987168507,
+    "nu_hat": 0.7446839918961743,
+    "nu_se": 0.0010171767835901507,
+    "amp_hat": 0.8185015999035097,
+    "amp_se": 0.00834562105175534
+  },
+  "pivots": [
+    {
+      "n": 50,
+      "seed": 3581075490168808916,
+      "r2_mean": 277.50022,
+      "r2_se": 1.5496522921,
+      "acc": 0.458685
+    },
+    {
+      "n": 100,
+      "seed": 11360722436083435139,
+      "r2_mean": 778.3404,
+      "r2_se": 5.8706058627,
+      "acc": 0.3981
+    },
+    {
+      "n": 200,
+      "seed": 3433864020468155261,
+      "r2_mean": 2196.41795,
+      "r2_se": 17.4516193349,
+      "acc": 0.347595
+    },
+    {
+      "n": 400,
+      "seed": 11975656961931856621,
+      "r2_mean": 6131.44712,
+      "r2_se": 45.3451011211,
+      "acc": 0.301675
+    }
+  ],
+  "figures": {
+    "saw_samples": [
+      "/Users/orl123456/Documents/Dummy/100QB/outputs/figures/day006b_saw_samples.png",
+      "/Users/orl123456/Documents/Dummy/100QB/outputs/figures/day006b_saw_samples.svg"
+    ],
+    "saw_scaling": [
+      "/Users/orl123456/Documents/Dummy/100QB/outputs/figures/day006b_saw_scaling.png",
+      "/Users/orl123456/Documents/Dummy/100QB/outputs/figures/day006b_saw_scaling.svg"
+    ],
+    "saw_ratio": [
+      "/Users/orl123456/Documents/Dummy/100QB/outputs/figures/day006b_saw_ratio.png",
+      "/Users/orl123456/Documents/Dummy/100QB/outputs/figures/day006b_saw_ratio.svg"
+    ],
+    "saw_endpoint_heatmap": [
+      "/Users/orl123456/Documents/Dummy/100QB/outputs/figures/day006b_saw_endpoint_heatmap.png",
+      "/Users/orl123456/Documents/Dummy/100QB/outputs/figures/day006b_saw_endpoint_heatmap.svg"
+    ]
+  },
+  "criteria": {
+    "c1_bruteforce_matches_rust_n12": {
+      "status": "tercapai",
+      "measured": 324932,
+      "threshold": "persis n<=12 (c12=324932)"
+    },
+    "c2_go_matches_rust_single_all_n": {
+      "status": "tercapai",
+      "measured": 124658732,
+      "threshold": "Go == Rust n<= 18"
+    },
+    "c3_memory_sequence_a001411": {
+      "status": "tercapai",
+      "measured": 0,
+      "threshold": "0 ketidakcocokan n=1..18"
+    },
+    "c4_mu_hat": {
+      "status": "tercapai",
+      "measured": {
+        "val": 2.628998,
+        "se": 0.017604
+      },
+      "threshold": "|mu_hat - 2.638| < 0.03"
+    },
+    "c5_gamma_hat": {
+      "status": "tercapai",
+      "measured": {
+        "val": 1.383377,
+        "se": 0.095926
+      },
+      "threshold": "|gamma_hat - 1.34375| < 0.08"
+    },
+    "c6_nu_hat": {
+      "status": "tercapai",
+      "measured": {
+        "val": 0.744684,
+        "se": 0.001017
+      },
+      "threshold": "|nu_hat - 0.75| < 0.03"
+    },
+    "c7_sample_walks_valid": {
+      "status": "tercapai",
+      "measured": 100,
+      "threshold": "100 jalan N=300 valid (0 tabrakan)"
+    },
+    "c8_figures_valid": {
+      "status": "tercapai",
+      "measured": 4,
+      "threshold": "PNG+SVG ada, tak kosong, XML valid"
+    },
+    "c9_worker_invariance": {
+      "status": "tercapai",
+      "measured": 10,
+      "threshold": "1 vs N worker identik"
+    },
+    "c10_ten_minute_wall_clock": {
+      "status": "tercapai",
+      "measured": {
+        "t0": 1795506051,
+        "finished": 1795506471,
+        "elapsed_sec": 420
+      },
+      "threshold": "<= 600 detik dari T0 dl.sh"
+    }
+  }
+}

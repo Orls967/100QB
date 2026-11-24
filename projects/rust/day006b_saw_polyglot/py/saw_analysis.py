@@ -90,7 +90,7 @@ def save_both(fig: plt.Figure, fig_dir: Path, stem: str) -> list[str]:
     fig.savefig(paths[0], dpi=150, bbox_inches="tight")
     fig.savefig(paths[1], bbox_inches="tight")
     plt.close(fig)
-    return [p.as_posix() for p in paths]
+    return [f"outputs/figures/{p.name}" for p in paths]
 
 
 def make_figures(data: dict, rfit: dict, sfit: dict, fig_dir: Path, prefix: str = "day006b") -> dict[str, list[str]]:
