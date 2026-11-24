@@ -11,7 +11,10 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 ### Ditambahkan (Tahap 2 — `day006c`)
 - Proyek poliglot `projects/rust/day006c_percolation_polyglot/` (Rust murni `#![forbid(unsafe_code)]` tanpa *crate* `percolate`, orkestrator Go pustaka standar `orchestrate`, serta modul Python `percolation.py`, `finalize.py`, `test_percolation.py`):
   - **Inti Rust & Orkestrator Go Terverifikasi**: Union-Find ganda dengan simpul maya kiri–kanan, Fisher–Yates `Xoshiro256Pp`, serta kolam pekerja pipa JSON deterministik (`cargo clippy`, `cargo test --release` `4/4` termasuk enumerasi eksak $2 \times 3$ `64/128 = 1/2`, `go vet`, dan `go test` `3/3` termasuk invarian `1` vs `4` *worker* lulus pada menit `7:31`).
-  - **Disiplin Kunci Waktu (`LOCK` 9:00)**: Eksekusi pipeline penuh `run_all.sh` dihentikan secara patuh saat `dl.sh` mengunci pada menit ke-9; status jujur dicatat pada `outputs/day006c/results.json` dan [day006c_sim_percolation-polyglot.md](project-explanations/day006c_sim_percolation-polyglot.md) (`c7 = tercapai`, `c1`–`c2 = sebagian`, `c3`–`c6 = belum diketahui`, `c_wall_clock = belum tercapai`).
+  - **Disiplin Kunci Waktu (`LOCK` 9:00)**: Eksekusi pipeline penuh `run_all.sh` dihentikan secara patuh saat `dl.sh` mengunci pada menit ke-9; status jujur dicatat pada `outputs/day006c/results.json` dan [day006c_sim_percolation-polyglot.md](project-explanations/day006c_sim_percolation-polyglot.md)
+
+### Diperbaiki (rerun pasca-sesi — day006d Bagian A)
+- Menjalankan ulang seluruh tes (`cargo test --release` 4/4, `go test` 3/3, `unittest` 4/4) dan `run_all.sh` penuh (`3` detik, exit `0`), menghasilkan 5 pasang grafik `outputs/figures/day006c_perc_*.{png,svg}` dan memperbarui `outputs/day006c/results.json`: `c1`–`c7` `tercapai` (`\hat{\nu} = 1,3406 \pm 0,0079`, `\hat{D} = 1,8678 \pm 0,0077`, maks `|Z| = 1,4839` di $p=1/2$), sementara `timing` (`789` detik) dan `c_wall_clock = belum tercapai` dipertahankan dari sesi asli beserta `rerun_note`. (`c7 = tercapai`, `c1`–`c2 = sebagian`, `c3`–`c6 = belum diketahui`, `c_wall_clock = belum tercapai`).
 
 ## [Hari 006b] — 2026-11-24 · Self-Avoiding Walk (SAW) Poliglot di Kisi Persegi: Enumerasi Eksak, Pivot Monte Carlo & Eksponen Kritis (Python + Rust + Go, Bonus 10 Menit)
 

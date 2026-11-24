@@ -2,55 +2,251 @@
   "session": "day006c",
   "date": "2026-11-24",
   "seed": 20261124,
-  "run_completed_without_errors": false,
-  "note": "Kunci waktu dl.sh (LOCK >= 540 detik) aktif sebelum run_all.sh dieksekusi; sesuai aturan penghentian keras, eksekusi pipeline penuh dan pembuatan grafik tidak dipaksakan setelah menit ke-9. Hanya tes kompilasi/unit Rust (4/4) dan Go (3/3) pada menit 7:31 yang telah terverifikasi.",
+  "run_completed_without_errors": true,
+  "self_dual_discovery": {
+    "chosen_orientation": "rows=L, cols=L+1 (left-right crossing)",
+    "shapes": {
+      "2x3": {
+        "n_bonds": 7,
+        "p_half": "1/2",
+        "is_half": true,
+        "counts": [
+          0,
+          0,
+          2,
+          12,
+          23,
+          19,
+          7,
+          1
+        ]
+      },
+      "3x2": {
+        "n_bonds": 7,
+        "p_half": "7/8",
+        "is_half": false,
+        "counts": [
+          0,
+          3,
+          15,
+          31,
+          34,
+          21,
+          7,
+          1
+        ]
+      },
+      "2x2": {
+        "n_bonds": 4,
+        "p_half": "3/4",
+        "is_half": false,
+        "counts": [
+          0,
+          2,
+          5,
+          4,
+          1
+        ]
+      },
+      "3x4": {
+        "n_bonds": 17,
+        "p_half": "1/2",
+        "is_half": true,
+        "counts": [
+          0,
+          0,
+          0,
+          3,
+          50,
+          379,
+          1703,
+          5006,
+          10070,
+          14240,
+          14442,
+          10673,
+          5809,
+          2330,
+          677,
+          136,
+          17,
+          1
+        ]
+      },
+      "4x3": {
+        "n_bonds": 17,
+        "p_half": "201/256",
+        "is_half": false,
+        "counts": [
+          0,
+          0,
+          4,
+          66,
+          490,
+          2160,
+          6304,
+          12924,
+          19329,
+          21645,
+          18476,
+          12146,
+          6156,
+          2378,
+          680,
+          136,
+          17,
+          1
+        ]
+      }
+    }
+  },
+  "small_lattice_check": {
+    "shape": "3x4",
+    "samples": 15000,
+    "max_z_9pts": 0.4968372957266544
+  },
+  "lattices": [
+    {
+      "L": 16,
+      "n_bonds": 511,
+      "samples": 20000,
+      "p_half": 0.5045778699677042,
+      "se_half": 0.0035355339059327377,
+      "z_half": 1.2948171590215387,
+      "dp_half": 7.945692836047787,
+      "mean_largest": 129.87175,
+      "se_largest": 0.28430046622697447
+    },
+    {
+      "L": 32,
+      "n_bonds": 2047,
+      "samples": 20000,
+      "p_half": 0.4958994614604443,
+      "se_half": 0.0035355339059327377,
+      "z_half": 1.1598074431346528,
+      "dp_half": 13.156890411187808,
+      "mean_largest": 465.1902,
+      "se_largest": 1.07488714347042
+    },
+    {
+      "L": 64,
+      "n_bonds": 8191,
+      "samples": 20000,
+      "p_half": 0.4975565870894502,
+      "se_half": 0.0035355339059327377,
+      "z_half": 0.6911015353154035,
+      "dp_half": 22.290412595214395,
+      "mean_largest": 1703.0011,
+      "se_largest": 4.03376837150319
+    },
+    {
+      "L": 128,
+      "n_bonds": 32767,
+      "samples": 6000,
+      "p_half": 0.5095785223316438,
+      "se_half": 0.006454972243679028,
+      "z_half": 1.4838982988692913,
+      "dp_half": 37.353439123033596,
+      "mean_largest": 6307.314,
+      "se_largest": 28.027897406187584
+    }
+  ],
+  "exponents": {
+    "slope_inv_nu": 0.7459593217251808,
+    "slope_se": 0.0043988706476797415,
+    "nu_hat": 1.3405556722413485,
+    "nu_se": 0.007905164298456937,
+    "d_hat": 1.8677785374390155,
+    "d_se": 0.007693680146659644,
+    "exact_d": 1.8958333333333333
+  },
+  "worker_invariance": {
+    "workers": 8,
+    "invariant": true
+  },
+  "figures": {
+    "perc_cluster": [
+      "outputs/figures/day006c_perc_cluster.png",
+      "outputs/figures/day006c_perc_cluster.svg"
+    ],
+    "perc_crossing_curves": [
+      "outputs/figures/day006c_perc_crossing_curves.png",
+      "outputs/figures/day006c_perc_crossing_curves.svg"
+    ],
+    "perc_collapse": [
+      "outputs/figures/day006c_perc_collapse.png",
+      "outputs/figures/day006c_perc_collapse.svg"
+    ],
+    "perc_derivative_scaling": [
+      "outputs/figures/day006c_perc_derivative_scaling.png",
+      "outputs/figures/day006c_perc_derivative_scaling.svg"
+    ],
+    "perc_largest_cluster": [
+      "outputs/figures/day006c_perc_largest_cluster.png",
+      "outputs/figures/day006c_perc_largest_cluster.svg"
+    ]
+  },
   "criteria": {
     "c1_exact_self_dual_half": {
-      "status": "sebagian",
+      "status": "tercapai",
       "measured": {
-        "rust_2x3_exact_crossing_subsets": "64/128 = 1/2 (terverifikasi di cargo test --release)",
-        "python_3x4_fraction": "belum dijalankan (LOCK 9:00)"
+        "2x3": "1/2",
+        "3x4": "1/2",
+        "3x2": "7/8"
       },
       "threshold": "P(1/2) == 1/2 eksak hanya pada L x (L+1)"
     },
     "c2_nz_vs_exact_small_lattice": {
-      "status": "sebagian",
-      "measured": {
-        "rust_2x3_nz_40k_at_half": "|P_hat(1/2) - 0.5| < 0.01 lulus di cargo test",
-        "python_9pt_grid": "belum dijalankan (LOCK 9:00)"
-      },
-      "threshold": "maks |Z| <= 3 SE di 9 titik p kisi kecil"
+      "status": "tercapai",
+      "measured": 0.4968,
+      "threshold": "maks |Z| <= 3 SE di 9 titik p kisi 3x4"
     },
     "c3_pcross_half_all_L": {
-      "status": "belum diketahui",
-      "measured": null,
-      "threshold": "|P_cross(1/2) - 0.5| <= 3 SE untuk tiap L in {16,32,64,128}"
+      "status": "tercapai",
+      "measured": 1.4839,
+      "threshold": "|P_cross(1/2) - 0.5| <= 3 SE untuk tiap L"
     },
     "c4_nu_hat": {
-      "status": "belum diketahui",
-      "measured": null,
+      "status": "tercapai",
+      "measured": {
+        "nu_hat": 1.340556,
+        "se": 0.007905,
+        "slope": 0.745959
+      },
       "threshold": "|nu_hat - 4/3| < 0.15"
     },
     "c5_fractal_dim_D_hat": {
-      "status": "belum diketahui",
-      "measured": null,
+      "status": "tercapai",
+      "measured": {
+        "d_hat": 1.867779,
+        "se": 0.007694
+      },
       "threshold": "|D_hat - 91/48| < 0.06"
     },
     "c6_figures_valid": {
-      "status": "belum diketahui",
-      "measured": 0,
-      "threshold": "PNG+SVG ada, tak kosong, XML valid"
+      "status": "tercapai",
+      "measured": 5,
+      "threshold": "5 pasang PNG+SVG ada, tak kosong, XML valid"
     },
     "c7_worker_invariance": {
       "status": "tercapai",
-      "measured": "1 vs 4 worker bit-identik pada L={8,16} (TestDeterministicReductionOrder PASS 0.31s)",
-      "threshold": "1 vs N worker identik"
+      "measured": 8,
+      "threshold": "1 vs N worker identik bit-demi-bit"
     },
     "c_wall_clock": {
       "status": "belum tercapai",
       "measured": 789,
       "threshold": "elapsed_sec <= 570"
     }
+  },
+  "note": "Kunci waktu dl.sh (LOCK >= 540 detik) aktif sebelum run_all.sh dieksekusi; sesuai aturan penghentian keras, eksekusi pipeline penuh dan pembuatan grafik tidak dipaksakan setelah menit ke-9. Hanya tes kompilasi/unit Rust (4/4) dan Go (3/3) pada menit 7:31 yang telah terverifikasi.",
+  "rerun_note": "Pipeline run_all.sh serta rangkaian tes Rust, Go, dan Python dijalankan ulang pada 2026-11-24 dalam sesi day006d Bagian A setelah sesi 10 menit day006c berakhir. Blok timing (789 detik) dan kriteria c_wall_clock (belum tercapai) dipertahankan apa adanya dari sesi asli; durasi rerun (3 detik) tidak dihitung ke c_wall_clock.",
+  "rerun_tests": {
+    "rust_cargo_test_release": "4/4 passed (lib) + 0/0 (bin)",
+    "go_vet_and_test": "3/3 passed (0.385s)",
+    "python_unittest": "4/4 passed (0.428s)",
+    "run_all_exit_code": 0,
+    "run_all_duration_sec": 3
   },
   "timing": {
     "t0_epoch": 1795507603,
