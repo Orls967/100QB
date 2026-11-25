@@ -1,0 +1,149 @@
+{
+  "session": "day007a",
+  "date": "2026-11-25",
+  "run_completed_without_errors": true,
+  "environment": {
+    "arch": "arm64",
+    "cpu_cores": 10,
+    "compiler": "Apple clang version 16.0.0 (clang-1600.0.26.6)",
+    "python": "3.11.18"
+  },
+  "measurements": {
+    "lam_r4_1e7": 1.004446514658667,
+    "lam_r4_dyadic_x05": 1.386294361119864,
+    "feigenbaum_delta8": 4.669191001637783,
+    "feigenbaum_r_inf": 3.569945671887573,
+    "lorenz_lam1": 0.909681353060445,
+    "lorenz_lam2": -0.0008338271054921288,
+    "lorenz_lam3": -14.57550796840745,
+    "lorenz_sum_lam": -13.66666044245249,
+    "lorenz_d_ky": 2.062354432375523,
+    "rk4_ratio_12": 37.30118370253605,
+    "rk4_ratio_24": 14.82903509995056,
+    "sep_slope": 0.935903940230503,
+    "ln2_exact": 0.6931471805599453,
+    "liouville_sum_exact": -13.666666666666666,
+    "feigenbaum_table": [
+      {
+        "n": 1,
+        "period": 2,
+        "R_n": 3.23606797749979,
+        "delta_n": 0.0
+      },
+      {
+        "n": 2,
+        "period": 4,
+        "R_n": 3.498561699327702,
+        "delta_n": 0.0
+      },
+      {
+        "n": 3,
+        "period": 8,
+        "R_n": 3.554640862768826,
+        "delta_n": 4.680770998010624
+      },
+      {
+        "n": 4,
+        "period": 16,
+        "R_n": 3.566667379856268,
+        "delta_n": 4.662959611114699
+      },
+      {
+        "n": 5,
+        "period": 32,
+        "R_n": 3.569243531637111,
+        "delta_n": 4.668403925915087
+      },
+      {
+        "n": 6,
+        "period": 64,
+        "R_n": 3.569795293749944,
+        "delta_n": 4.668953740980993
+      },
+      {
+        "n": 7,
+        "period": 128,
+        "R_n": 3.569913465422347,
+        "delta_n": 4.669157181387804
+      },
+      {
+        "n": 8,
+        "period": 256,
+        "R_n": 3.569938774233308,
+        "delta_n": 4.669191001637783
+      }
+    ]
+  },
+  "figures": {
+    "day007a_bifurcation": [
+      "outputs/figures/day007a_bifurcation.svg",
+      "outputs/figures/day007a_bifurcation.png"
+    ],
+    "day007a_lorenz_attractor": [
+      "outputs/figures/day007a_lorenz_attractor.svg"
+    ],
+    "day007a_lorenz_lyapunov_convergence": [
+      "outputs/figures/day007a_lorenz_lyapunov_convergence.svg"
+    ],
+    "day007a_separation_growth": [
+      "outputs/figures/day007a_separation_growth.svg"
+    ]
+  },
+  "criteria": {
+    "c1_logistic_r4_ln2": {
+      "status": "belum tercapai",
+      "measured": {
+        "lambda_r4": 1.004447,
+        "abs_err": 0.311299
+      },
+      "threshold": "|lambda_hat(4) - ln 2| <= 0.005 pada 1e7 iterasi"
+    },
+    "c2_feigenbaum_delta8_rinf": {
+      "status": "tercapai",
+      "measured": {
+        "delta_8": 4.669191,
+        "r_inf": 3.5699457
+      },
+      "threshold": "|delta_8 - 4.6692| <= 0.02 dan |r_inf - 3.569946| <= 1e-4"
+    },
+    "c3_lorenz_liouville_sum": {
+      "status": "tercapai",
+      "measured": {
+        "sum_lambda": -13.66666,
+        "abs_err": 6e-06
+      },
+      "threshold": "|sum(lambda_i) + 13.6667| <= 0.02"
+    },
+    "c4_lorenz_lam1_lam2": {
+      "status": "tercapai",
+      "measured": {
+        "lambda_1": 0.90968,
+        "lambda_2": -0.00083
+      },
+      "threshold": "|lambda_1 - 0.9056| <= 0.05 dan |lambda_2| <= 0.03"
+    },
+    "c5_kaplan_yorke_dim": {
+      "status": "tercapai",
+      "measured": 2.06235,
+      "threshold": "|D_KY - 2.06| <= 0.03"
+    },
+    "c6_rk4_order4": {
+      "status": "belum tercapai",
+      "measured": {
+        "ratio_dt_dt2": 37.3012,
+        "ratio_dt2_dt4": 14.829
+      },
+      "threshold": "rasio galat RK4 dalam [12, 20]"
+    },
+    "c7_svg_valid": {
+      "status": "tercapai",
+      "measured": 4,
+      "threshold": "berkas SVG ada, tidak kosong, dan valid XML"
+    },
+    "c_wall_clock": {
+      "status": "belum diketahui",
+      "measured": null,
+      "threshold": "elapsed_sec <= 570 detik (diisi oleh finalize.py)"
+    }
+  }
+}
