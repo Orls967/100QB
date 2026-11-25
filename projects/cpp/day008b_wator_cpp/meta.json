@@ -1,0 +1,10 @@
+{
+  "day": 8,
+  "session": "b",
+  "topic_no": null,
+  "type": "sim",
+  "language": "cpp",
+  "topic": "Simulasi Wa-Tor di C++20 (Ikan vs Hiu), Fit Lotka–Volterra RK4 & Efek Ukuran Hingga",
+  "date": "2026-11-26",
+  "link": "projects/cpp/day008b_wator_cpp"
+}
