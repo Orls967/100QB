@@ -1,0 +1,10 @@
+{
+  "day": 7,
+  "session": "a",
+  "topic_no": null,
+  "type": "sim",
+  "language": "cpp",
+  "topic": "Kekacauan Deterministik (C++): Eksponen Lyapunov Peta Logistik & Lorenz, Konstanta Feigenbaum, dan Dimensi Kaplan–Yorke",
+  "date": "2026-11-25",
+  "link": "projects/cpp/day007a_chaos_lyapunov_cpp"
+}
