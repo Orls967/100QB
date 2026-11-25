@@ -3,6 +3,13 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 008b] — 2026-11-26 · Simulasi Wa-Tor (Ikan vs Hiu) di C++20, Fit Lotka–Volterra RK4 & Efek Ukuran Hingga
+
+### Ditambahkan (`day008b`)
+- Proyek C++20 murni `projects/cpp/day008b_wator_cpp/` (`438` baris sumber di `src/`, `4/4` tes unit lulus, paralel `std::thread` untuk 40 replika):
+  - **Wa-Tor 200×200 (5000 langkah)**: Pembaruan 2-fase acak Fisher–Yates dengan invarian lulus tiap langkah (`c1`), determinisme bit-identik (`c2`), osilasi periode `99` langkah (`acf = 0,6902`, `c3`), serta fit OLS ke model kontinu Lotka–Volterra RK4 berperiode `88,46` (`rasio = 1,119 <= 2,0`, `c4`).
+  - **Efek Ukuran Hingga & SVG Mandiri**: Proporsi kepunahan (40 replika, Wilson 95%) turun dari `1,00` ($W=20, 40$) menjadi `0,65` ($W=80$) dan `0,10` ($W=160$, `c5`), disertai 4 berkas SVG mandiri `outputs/figures/day008b_*.svg` (`c6`), `outputs/day008b/results.json`, dan [day008b_sim_wator-cpp.md](project-explanations/day008b_sim_wator-cpp.md).
+
 ## [Hari 008a] — 2026-11-26 · Model Ising 2D Lintas Tiga Bahasa (C11, C++20, Python): Metropolis, Wolff, Swendsen–Wang, FSS & Paritas Bit-Identik
 
 ### Diperbaiki (Bagian A — `day006e`)

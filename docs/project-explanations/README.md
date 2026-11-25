@@ -58,6 +58,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `6e` (`day006e`) | `bonus` | `sim` | `python` | [HMC/NUTS dari Nol untuk Volatilitas Stokastik Bayesian & Kalibrasi SBC (Notebook)](day006e_sim_bayesian-sv-nuts.md) |
 | `7a` (`day007a`) | `bonus` | `sim` | `cpp` | [Kekacauan Deterministik: Eksponen Lyapunov Peta Logistik & Lorenz, Konstanta Feigenbaum & Dimensi Kaplan–Yorke (C++20)](day007a_sim_chaos-lyapunov-cpp.md) |
 | `8a` (`day008a`) | `bonus` | `sim` | `c+cpp+python` | [Model Ising 2D Lintas Tiga Bahasa: Metropolis, Wolff, Swendsen–Wang, FSS & Paritas Bit-Identik](day008a_sim_ising-trilingual.md) |
+| `8b` (`day008b`) | `bonus` | `sim` | `cpp` | [Simulasi Wa-Tor (Ikan vs Hiu) di C++20, Fit Lotka–Volterra RK4 & Efek Ukuran Hingga](day008b_sim_wator-cpp.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 
