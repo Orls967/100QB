@@ -1,0 +1,10 @@
+{
+  "day": 8,
+  "session": "a",
+  "topic_no": null,
+  "type": "sim",
+  "language": "c+cpp+python",
+  "topic": "Model Ising 2D Lintas Tiga Bahasa (C, C++, Python): Metropolis, Wolff, Swendsen–Wang, FSS & Paritas Bit-Identik",
+  "date": "2026-11-26",
+  "link": "projects/c/day008a_ising_trilingual"
+}
