@@ -57,6 +57,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `6d` (`day006d`) | `bonus` | `sim` | `cpp` | [Solver PDE Heston 2D ADI Craig–Sneyd: Tangga Optimasi Terukur & Roofline (C++20)](day006d_sim_heston-adi-cpp.md) |
 | `6e` (`day006e`) | `bonus` | `sim` | `python` | [HMC/NUTS dari Nol untuk Volatilitas Stokastik Bayesian & Kalibrasi SBC (Notebook)](day006e_sim_bayesian-sv-nuts.md) |
 | `7a` (`day007a`) | `bonus` | `sim` | `cpp` | [Kekacauan Deterministik: Eksponen Lyapunov Peta Logistik & Lorenz, Konstanta Feigenbaum & Dimensi Kaplan–Yorke (C++20)](day007a_sim_chaos-lyapunov-cpp.md) |
+| `8a` (`day008a`) | `bonus` | `sim` | `c+cpp+python` | [Model Ising 2D Lintas Tiga Bahasa: Metropolis, Wolff, Swendsen–Wang, FSS & Paritas Bit-Identik](day008a_sim_ising-trilingual.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 

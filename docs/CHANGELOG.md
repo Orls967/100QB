@@ -3,6 +3,18 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 008a] — 2026-11-26 · Model Ising 2D Lintas Tiga Bahasa (C11, C++20, Python): Metropolis, Wolff, Swendsen–Wang, FSS & Paritas Bit-Identik
+
+### Diperbaiki (Bagian A — `day006e`)
+- Menambahkan eksperimen tindak lanjut SBC `target_accept = 0.95` pada `days/day006e_sim_bayesian-sv-nuts.ipynb` dan mengeksekusi ulang bersih dua kali (`533,2 s <= 600 s`, `SHA-256` identik `f6033b51f2b4dbb8...`): replikasi berdivergensi turun dari `139/200` ke `76/200`, p-nilai $\chi^2_{19}$ menjadi `mu = 0,6838`, `phi = 0,1047`, `sigma_eta = 0,2943` (subset tanpa divergensi `n=124` `mu p=0,2624` dilabeli bias seleksi `HIPOTESIS`, bukan koreksi), serta memisahkan `FAKTA` vs `HIPOTESIS` pada [day006e_sim_bayesian-sv-nuts.md](project-explanations/day006e_sim_bayesian-sv-nuts.md).
+
+### Ditambahkan (Bagian C — `day008a`)
+- Proyek tiga bahasa `projects/c/day008a_ising_trilingual/` (`SPEC.md`, `c/`, `cpp/`) dan notebook `days/day008a_sim_ising-trilingual.ipynb` (`14/14` kriteria `c1`–`c14` `tercapai`):
+  - **Paritas Bit-Identik & RNG Lintas Bahasa**: `SplitMix64` + `xoshiro256++` + `FNV-1a` menghasilkan `0` selisih pada 3000 langkah dan hash akhir identik di C, C++, dan Python untuk Metropolis (`7458071e0380ee91`), Wolff (`52911df0a1ba8509`), dan Swendsen–Wang (`50d1e256b6df3e61`).
+  - **Anchor Eksak & Paralelisme**: Enumerasi $L=4, 5$ cocok hingga `2,92e-16`; hasil `1, 2, 4, 8` *thread* (`pthread` / `std::thread`) identik bit-demi-bit; Onsager (AGM) pada $T \in \{2{,}0, 2{,}6, 3{,}2\}$ dan Yang pada $T < T_c$ semuanya dalam $\le 1\text{ SE}$.
+  - **Finite-Size Scaling & Kecepatan**: Perpotongan Binder $U_4$ dalam $\le 0{,}0047$ dari $T_c = 2{,}269185$, $\hat{\gamma}/\hat{\nu} = 1{,}7682 \pm 0{,}0061$, $\hat{\beta}/\hat{\nu} = 0{,}1122 \pm 0{,}0030$, $\hat{z}_{\text{Metropolis}} = 1{,}8625$, $\hat{z}_{\text{Wolff}} = 0{,}4118$, $\hat{z}_{\text{SW}} = 0{,}1998$; kecepatan C/C++/Python terukur median $\pm$ MAD (7 ulang).
+- Output `outputs/day008a/results.json`, 8 pasang grafik PNG+SVG `outputs/figures/day008a_*.{png,svg}`, `projects/c/day008a_ising_trilingual/README.md`, dan [day008a_sim_ising-trilingual.md](project-explanations/day008a_sim_ising-trilingual.md).
+
 ## [Hari 007a] — 2026-11-25 · Kekacauan Deterministik: Eksponen Lyapunov Peta Logistik & Lorenz, Konstanta Feigenbaum & Dimensi Kaplan–Yorke (C++20, Bonus 10 Menit)
 
 ### Ditambahkan (`day007a`)
