@@ -56,6 +56,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `6c` (`day006c`) | `bonus` | `sim` | `python+rust+go` | [Perkolasi Bond Kisi Persegi Poliglot: Newman–Ziff, Dualitas-Diri Eksak & Eksponen Kritis](day006c_sim_percolation-polyglot.md) |
 | `6d` (`day006d`) | `bonus` | `sim` | `cpp` | [Solver PDE Heston 2D ADI Craig–Sneyd: Tangga Optimasi Terukur & Roofline (C++20)](day006d_sim_heston-adi-cpp.md) |
 | `6e` (`day006e`) | `bonus` | `sim` | `python` | [HMC/NUTS dari Nol untuk Volatilitas Stokastik Bayesian & Kalibrasi SBC (Notebook)](day006e_sim_bayesian-sv-nuts.md) |
+| `7a` (`day007a`) | `bonus` | `sim` | `cpp` | [Kekacauan Deterministik: Eksponen Lyapunov Peta Logistik & Lorenz, Konstanta Feigenbaum & Dimensi Kaplan–Yorke (C++20)](day007a_sim_chaos-lyapunov-cpp.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 

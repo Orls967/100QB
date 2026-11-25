@@ -3,6 +3,14 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 007a] — 2026-11-25 · Kekacauan Deterministik: Eksponen Lyapunov Peta Logistik & Lorenz, Konstanta Feigenbaum & Dimensi Kaplan–Yorke (C++20, Bonus 10 Menit)
+
+### Ditambahkan (`day007a`)
+- Proyek C++20 murni `projects/cpp/day007a_chaos_lyapunov_cpp/` (nol pustaka eksternal, `-O3 -std=c++20 -Wall -Wextra -Werror -fno-fast-math -ffp-contract=off`, `4/4` tes unit lulus):
+  - **Peta Logistik & Feigenbaum**: Sapuan $\lambda(r)$ pada `1600` titik $r \in [2{,}5, 4{,}0]$ (`200.000` iterasi pasca-transien), pencarian akar Newton siklus superstabil $n = 1\dots 8$ menghasilkan $\delta_8 = 4{,}669191$ dan $r_\infty = 3{,}5699457$ (`c2 = tercapai`), serta dokumentasi jujur perangkap titik tetap $x = 0$ ($\ln 4 = 1{,}386294$) pada orbit *binary64* $10^7$ iterasi di $r = 4$ ($\hat{\lambda}(4) = 1{,}004447$, `c1 = belum tercapai` sebagai temuan artefak *floating-point*).
+  - **Spektrum Lyapunov Lorenz & Dimensi Kaplan–Yorke**: Integrasi RK4 persamaan variasional 12-komponen + ortonormalisasi Gram–Schmidt Benettin ($T = 2000, \Delta t = 0{,}005$) menghasilkan $(\lambda_1, \lambda_2, \lambda_3) = (0{,}90968, -0{,}00083, -14{,}57551)$, jumlah kontraksi Liouville $\sum \lambda_i = -13{,}666660$ (`err = 6,2e-6` terhadap $-41/3$, `c3 = tercapai`, `c4 = tercapai`), dimensi Kaplan–Yorke $D_{\mathrm{KY}} = 2{,}06235$ (`c5 = tercapai`), dan pertumbuhan pemisahan $\delta_0 = 10^{-9}$ berkemiringan `0,9359`.
+- Output `outputs/day007a/results.json`, CSV ringkasan, 4 berkas SVG mandiri `outputs/figures/day007a_*.svg` (+ PNG bifurkasi), `projects/cpp/day007a_chaos_lyapunov_cpp/README.md`, dan [day007a_sim_chaos-lyapunov-cpp.md](project-explanations/day007a_sim_chaos-lyapunov-cpp.md).
+
 ## [Hari 006e] — 2026-11-24 · HMC/NUTS dari Nol untuk Volatilitas Stokastik Bayesian, Kontras Funnel & Kalibrasi SBC (Notebook Python, Bonus)
 
 ### Ditambahkan (`day006e`)

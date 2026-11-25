@@ -141,9 +141,14 @@
       "threshold": "berkas SVG ada, tidak kosong, dan valid XML"
     },
     "c_wall_clock": {
-      "status": "belum diketahui",
-      "measured": null,
-      "threshold": "elapsed_sec <= 570 detik (diisi oleh finalize.py)"
+      "status": "tercapai",
+      "measured": 514,
+      "threshold": "elapsed_sec <= 570 detik sejak T0"
     }
+  },
+  "timing": {
+    "t0_epoch": 1795620786,
+    "finalize_epoch": 1795621300,
+    "elapsed_sec": 514
   }
 }
