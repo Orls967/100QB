@@ -12,16 +12,17 @@
     "cpu_cores": 10
   },
   "timing": {
-    "total_notebook_sec": 318.23,
-    "gaussian_50d_sec": 1.793,
-    "sv_ncp_sec": 26.156,
-    "sv_cp_sec": 57.623,
-    "sbc_200reps_sec": 136.91
+    "total_notebook_sec": 533.2,
+    "gaussian_50d_sec": 2.575,
+    "sv_ncp_sec": 40.81,
+    "sv_cp_sec": 81.337,
+    "sbc_200reps_sec": 153.003,
+    "sbc_095_200reps_sec": 163.435
   },
   "reproducibility": {
-    "numerical_sha256": "aaff5c7979c0fe0c84a068926d19ebb88b2454b4187cdd086740ad7cc2c5deed",
+    "numerical_sha256": "f6033b51f2b4dbb8a5463f7fdfa3f78acd174e665f1595f9e0e0041fb10cfaca",
     "run1_elapsed_sec": 295.46,
-    "latest_elapsed_sec": 318.23,
+    "latest_elapsed_sec": 533.2,
     "two_consecutive_runs_identical": true
   },
   "sv_synthetic_posterior": {
@@ -86,16 +87,129 @@
       "6": 3874
     },
     "ess_per_sec_ncp": {
-      "mu": 122.697,
-      "phi": 40.06,
-      "sigma_eta": 55.093
+      "mu": 78.64,
+      "phi": 25.676,
+      "sigma_eta": 35.311
     },
     "ess_per_sec_cp": {
-      "mu": 67.037,
-      "phi": 1.148,
-      "sigma_eta": 0.403
+      "mu": 47.492,
+      "phi": 0.813,
+      "sigma_eta": 0.285
     },
     "latent_h_coverage_90": 0.905
+  },
+  "sbc_target_accept_095": {
+    "target_accept": 0.95,
+    "replications": 200,
+    "T": 250,
+    "L_ranks": 99,
+    "median_min_ess": 413.15,
+    "divergent_replications": 76,
+    "non_divergent_replications": 124,
+    "parameters": {
+      "mu": {
+        "chi2_stat": 15.6,
+        "p_value": 0.6838,
+        "max_abs_ecdf_diff": 0.065,
+        "within_99_simult_band": true,
+        "hist_20bins": [
+          11,
+          8,
+          8,
+          9,
+          10,
+          12,
+          4,
+          6,
+          14,
+          11,
+          13,
+          14,
+          10,
+          12,
+          10,
+          7,
+          13,
+          9,
+          13,
+          6
+        ]
+      },
+      "phi": {
+        "chi2_stat": 27.0,
+        "p_value": 0.1047,
+        "max_abs_ecdf_diff": 0.065,
+        "within_99_simult_band": true,
+        "hist_20bins": [
+          14,
+          10,
+          13,
+          10,
+          10,
+          7,
+          6,
+          18,
+          13,
+          3,
+          11,
+          10,
+          7,
+          12,
+          17,
+          7,
+          9,
+          10,
+          7,
+          6
+        ]
+      },
+      "sigma_eta": {
+        "chi2_stat": 21.8,
+        "p_value": 0.2943,
+        "max_abs_ecdf_diff": 0.045,
+        "within_99_simult_band": true,
+        "hist_20bins": [
+          13,
+          8,
+          11,
+          4,
+          10,
+          12,
+          15,
+          3,
+          10,
+          8,
+          7,
+          13,
+          9,
+          10,
+          12,
+          10,
+          15,
+          15,
+          8,
+          7
+        ]
+      }
+    },
+    "non_divergent_subset_selection_bias_hypothesis": {
+      "note": "HIPOTESIS (bias seleksi, BUKAN koreksi SBC): menyaring replikasi berdivergensi membuang ekor phi mendekati 1",
+      "n_replications": 124,
+      "parameters": {
+        "mu": {
+          "chi2_stat": 22.4516,
+          "p_value": 0.2624
+        },
+        "phi": {
+          "chi2_stat": 20.1935,
+          "p_value": 0.383
+        },
+        "sigma_eta": {
+          "chi2_stat": 18.9032,
+          "p_value": 0.4631
+        }
+      }
+    }
   },
   "sbc": {
     "replications": 200,
@@ -203,51 +317,51 @@
   },
   "efficiency": {
     "grad_python_loop_us": {
-      "median": 291.06,
-      "mad": 5.23
+      "median": 267.04,
+      "mad": 1.49
     },
     "grad_resolvent_lfilter_us": {
-      "median": 32.77,
-      "mad": 0.96
+      "median": 31.86,
+      "mad": 0.3
     },
-    "grad_speedup": 8.88,
+    "grad_speedup": 8.38,
     "components_us": {
       "forward_resolvent": {
-        "median_us": 3.823,
-        "mad_us": 0.016
+        "median_us": 3.844,
+        "mad_us": 0.026
       },
       "likelihood_exp": {
-        "median_us": 3.412,
-        "mad_us": 0.029
+        "median_us": 3.392,
+        "mad_us": 0.008
       },
       "backward_adjoint": {
-        "median_us": 4.045,
-        "mad_us": 0.069
+        "median_us": 4.007,
+        "mad_us": 0.003
       }
     },
     "ablation": [
       {
         "config": "Fixed eps=0.025, M=I",
-        "median_min_ess_per_s": 57.84,
-        "mad_min_ess_per_s": 5.68,
+        "median_min_ess_per_s": 58.69,
+        "mad_min_ess_per_s": 5.31,
         "median_eps": 0.025
       },
       {
         "config": "Fixed eps=0.11, M=I",
-        "median_min_ess_per_s": 16.84,
-        "mad_min_ess_per_s": 12.87,
+        "median_min_ess_per_s": 17.16,
+        "mad_min_ess_per_s": 13.21,
         "median_eps": 0.11
       },
       {
         "config": "DualAvg eps, M=I",
-        "median_min_ess_per_s": 100.06,
-        "mad_min_ess_per_s": 10.53,
+        "median_min_ess_per_s": 98.76,
+        "mad_min_ess_per_s": 12.12,
         "median_eps": 0.05
       },
       {
         "config": "DualAvg eps + Diag M",
-        "median_min_ess_per_s": 119.34,
-        "mad_min_ess_per_s": 8.8,
+        "median_min_ess_per_s": 119.01,
+        "mad_min_ess_per_s": 3.6,
         "median_eps": 0.08728
       }
     ]
@@ -298,7 +412,7 @@
       "measured": {
         "max_mean_z": 2.8759,
         "max_diag_cov_rel_err": 0.0642,
-        "median_ess_per_sec": 1819.6
+        "median_ess_per_sec": 1266.9
       },
       "threshold": "maks |mean_hat - mean| <= 4 SE (ESS) dan galat relatif variansi diagonal <= 0.15"
     },
@@ -337,19 +451,19 @@
     "c7_ncp_beats_centered_ess_per_sec": {
       "status": "tercapai",
       "measured": {
-        "min_ess_s_ncp": 40.06,
-        "min_ess_s_cp": 0.4,
-        "ratio_sigma_eta": 136.8
+        "min_ess_s_ncp": 25.68,
+        "min_ess_s_cp": 0.29,
+        "ratio_sigma_eta": 123.8
       },
       "threshold": "ESS/detik parameterisasi non-terpusat > terpusat pada seri SV yang sama"
     },
     "c8_clean_reproducible_under_10min": {
       "status": "tercapai",
       "measured": {
-        "elapsed_sec": 318.23,
+        "elapsed_sec": 533.2,
         "run1_sec": 295.46,
         "two_runs_identical": true,
-        "sha256_prefix": "aaff5c7979c0fe0c"
+        "sha256_prefix": "f6033b51f2b4dbb8"
       },
       "threshold": "notebook berjalan bersih <= 600 detik dan dua eksekusi menghasilkan angka identik"
     },
