@@ -1,0 +1,411 @@
+{
+  "session": "day008a",
+  "date": "2026-11-26",
+  "master_seed": 20261126,
+  "run_completed_without_errors": true,
+  "environment": {
+    "python": "3.11.18",
+    "arch": "arm64",
+    "cpu_cores": 10,
+    "cc": "Apple clang 16.0.0 (-std=c11 -O3 -fno-fast-math -ffp-contract=off)",
+    "cxx": "Apple clang 16.0.0 (-std=c++20 -O3 -fno-fast-math -ffp-contract=off)"
+  },
+  "workload": {
+    "c_cpp": "L in {8,16,32,64,128}, 36 T in [1.8, 3.4]; Metropolis 2^18 (L<=64) / 2^16 (L=128); Wolff 2^17 (L<=64) / 2^15 (L=128); SW 2^17 (L<=64) / 2^14 (L=128)",
+    "python_notebook": "Wolff only: L in {8,16,32} (36 T, 600/500/300 meas), L=64 (12 T rapat, 150 meas), L=128 tidak dijalankan di notebook",
+    "python_sim_sec": 13.75,
+    "total_notebook_sec": 17.13
+  },
+  "reproducibility": {
+    "numerical_sha256": "551871e2fc28ee3114ededba4d988292244ebce5f6a818f9b889b8d7c0f51b05",
+    "two_runs_identical": true
+  },
+  "parity": {
+    "metropolis": {
+      "steps": 3000,
+      "diff_c_cpp": 0,
+      "diff_c_py": 0,
+      "diff_cpp_py": 0,
+      "c_hash": "7458071e0380ee91",
+      "cpp_hash": "7458071e0380ee91",
+      "py_hash": "7458071e0380ee91",
+      "bit_identical": true
+    },
+    "wolff": {
+      "steps": 3000,
+      "diff_c_cpp": 0,
+      "diff_c_py": 0,
+      "diff_cpp_py": 0,
+      "c_hash": "52911df0a1ba8509",
+      "cpp_hash": "52911df0a1ba8509",
+      "py_hash": "52911df0a1ba8509",
+      "bit_identical": true
+    },
+    "sw": {
+      "steps": 3000,
+      "diff_c_cpp": 0,
+      "diff_c_py": 0,
+      "diff_cpp_py": 0,
+      "c_hash": "50d1e256b6df3e61",
+      "cpp_hash": "50d1e256b6df3e61",
+      "py_hash": "50d1e256b6df3e61",
+      "bit_identical": true
+    }
+  },
+  "exact_anchors": {
+    "tc_exact": 2.269185314213022,
+    "e_tc_extrapolated_invL2": -1.426869,
+    "e_tc_exact": -1.414214,
+    "onsager": {
+      "2.0": {
+        "T": 2.0,
+        "e_sim": -1.745577,
+        "e_err": 0.000106,
+        "e_onsager": -1.745565,
+        "z_score": 0.116,
+        "within_4se": true
+      },
+      "2.6": {
+        "T": 2.6,
+        "e_sim": -1.026033,
+        "e_err": 0.004961,
+        "e_onsager": -1.028294,
+        "z_score": 0.456,
+        "within_4se": true
+      },
+      "3.2": {
+        "T": 3.2,
+        "e_sim": -0.737463,
+        "e_err": 0.008128,
+        "e_onsager": -0.745148,
+        "z_score": 0.946,
+        "within_4se": true
+      }
+    },
+    "yang": {
+      "T2.0_L128": {
+        "T": 2.0,
+        "abs_m_sim": 0.911323,
+        "abs_m_err": 5.3e-05,
+        "m_yang": 0.911319,
+        "z_score": 0.065,
+        "within_4se": true
+      },
+      "T2.1_L64": {
+        "T": 2.066667,
+        "abs_m_sim": 0.885413,
+        "abs_m_err": 7.7e-05,
+        "m_yang": 0.88549,
+        "z_score": 0.991,
+        "within_4se": true
+      }
+    }
+  },
+  "fss": {
+    "binder_crossings": {
+      "8_16": {
+        "T_cross": 2.264444,
+        "abs_err": 0.004741,
+        "within_0.01": true
+      },
+      "16_32": {
+        "T_cross": 2.26686,
+        "abs_err": 0.002325,
+        "within_0.01": true
+      },
+      "32_64": {
+        "T_cross": 2.268691,
+        "abs_err": 0.000494,
+        "within_0.01": true
+      },
+      "64_128": {
+        "T_cross": 2.267882,
+        "abs_err": 0.001303,
+        "within_0.01": true
+      }
+    },
+    "gamma_over_nu": {
+      "hat": 1.7682,
+      "se": 0.0061
+    },
+    "beta_over_nu": {
+      "hat": 0.1122,
+      "se": 0.003
+    },
+    "dynamic_exponents_z": {
+      "metropolis": {
+        "z_hat": 1.8625,
+        "se": 0.1105,
+        "taus": [
+          3.01,
+          10.214,
+          43.799,
+          205.63,
+          426.52
+        ]
+      },
+      "wolff": {
+        "z_hat": 0.4118,
+        "se": 0.0191,
+        "taus": [
+          1.558,
+          2.215,
+          2.94,
+          3.926,
+          4.878
+        ]
+      },
+      "sw": {
+        "z_hat": 0.1998,
+        "se": 0.0258,
+        "taus": [
+          2.479,
+          2.906,
+          3.562,
+          4.054,
+          4.195
+        ]
+      }
+    }
+  },
+  "speed_ns_per_spin_update": {
+    "c_metropolis_table": {
+      "median_ns": 6.603,
+      "mad_ns": 0.057
+    },
+    "c_metropolis_computed": {
+      "median_ns": 3.476,
+      "mad_ns": 0.015
+    },
+    "c_wolff": {
+      "median_ns": 7.856,
+      "mad_ns": 0.173
+    },
+    "c_sw": {
+      "median_ns": 19.752,
+      "mad_ns": 0.099
+    },
+    "cpp_metropolis_table": {
+      "median_ns": 6.524,
+      "mad_ns": 0.011
+    },
+    "cpp_metropolis_computed": {
+      "median_ns": 4.799,
+      "mad_ns": 0.028
+    },
+    "cpp_metropolis_constexpr32": {
+      "median_ns": 4.588,
+      "mad_ns": 0.011
+    },
+    "cpp_wolff": {
+      "median_ns": 8.331,
+      "mad_ns": 0.144
+    },
+    "cpp_sw": {
+      "median_ns": 18.845,
+      "mad_ns": 0.079
+    },
+    "python_metropolis": {
+      "median_ns": 867.063,
+      "mad_ns": 106.049
+    },
+    "python_wolff": {
+      "median_ns": 20.352,
+      "mad_ns": 5.787
+    },
+    "python_sw": {
+      "median_ns": 1661.784,
+      "mad_ns": 101.074
+    }
+  },
+  "code_lines": {
+    "projects/c/day008a_ising_trilingual/c/rng.h": 80,
+    "projects/c/day008a_ising_trilingual/c/ising.h": 64,
+    "projects/c/day008a_ising_trilingual/c/ising.c": 393,
+    "projects/c/day008a_ising_trilingual/c/main.c": 414,
+    "projects/c/day008a_ising_trilingual/c/test_c.c": 108,
+    "projects/c/day008a_ising_trilingual/cpp/rng.hpp": 81,
+    "projects/c/day008a_ising_trilingual/cpp/ising.hpp": 63,
+    "projects/c/day008a_ising_trilingual/cpp/ising.cpp": 254,
+    "projects/c/day008a_ising_trilingual/cpp/main.cpp": 308,
+    "projects/c/day008a_ising_trilingual/cpp/test_cpp.cpp": 69
+  },
+  "figures": {
+    "snapshots": [
+      "outputs/figures/day008a_snapshots.png",
+      "outputs/figures/day008a_snapshots.svg"
+    ],
+    "energy_mag": [
+      "outputs/figures/day008a_energy_mag.png",
+      "outputs/figures/day008a_energy_mag.svg"
+    ],
+    "binder_crossing": [
+      "outputs/figures/day008a_binder_crossing.png",
+      "outputs/figures/day008a_binder_crossing.svg"
+    ],
+    "chi_scaling": [
+      "outputs/figures/day008a_chi_scaling.png",
+      "outputs/figures/day008a_chi_scaling.svg"
+    ],
+    "tau_scaling": [
+      "outputs/figures/day008a_tau_scaling.png",
+      "outputs/figures/day008a_tau_scaling.svg"
+    ],
+    "data_collapse": [
+      "outputs/figures/day008a_data_collapse.png",
+      "outputs/figures/day008a_data_collapse.svg"
+    ],
+    "speed_comparison": [
+      "outputs/figures/day008a_speed_comparison.png",
+      "outputs/figures/day008a_speed_comparison.svg"
+    ],
+    "parity_table": [
+      "outputs/figures/day008a_parity_table.png",
+      "outputs/figures/day008a_parity_table.svg"
+    ]
+  },
+  "criteria": {
+    "c1_parity_bit_identical": {
+      "status": "tercapai",
+      "measured": "0 selisih di 3 algoritma & 3 bahasa"
+    },
+    "c2_exact_enumeration": {
+      "status": "tercapai",
+      "measured": {
+        "max_rel_err": 2.92e-16,
+        "l4_sim_z": 0.805
+      }
+    },
+    "c3_thread_invariance": {
+      "status": "tercapai",
+      "measured": "identik untuk 1, 2, 4, 8 thread di C dan C++"
+    },
+    "c4_onsager_energy": {
+      "status": "tercapai",
+      "measured": {
+        "2.0": {
+          "T": 2.0,
+          "e_sim": -1.745577,
+          "e_err": 0.000106,
+          "e_onsager": -1.745565,
+          "z_score": 0.116,
+          "within_4se": true
+        },
+        "2.6": {
+          "T": 2.6,
+          "e_sim": -1.026033,
+          "e_err": 0.004961,
+          "e_onsager": -1.028294,
+          "z_score": 0.456,
+          "within_4se": true
+        },
+        "3.2": {
+          "T": 3.2,
+          "e_sim": -0.737463,
+          "e_err": 0.008128,
+          "e_onsager": -0.745148,
+          "z_score": 0.946,
+          "within_4se": true
+        }
+      }
+    },
+    "c5_yang_magnetization": {
+      "status": "tercapai",
+      "measured": {
+        "T2.0_L128": {
+          "T": 2.0,
+          "abs_m_sim": 0.911323,
+          "abs_m_err": 5.3e-05,
+          "m_yang": 0.911319,
+          "z_score": 0.065,
+          "within_4se": true
+        },
+        "T2.1_L64": {
+          "T": 2.066667,
+          "abs_m_sim": 0.885413,
+          "abs_m_err": 7.7e-05,
+          "m_yang": 0.88549,
+          "z_score": 0.991,
+          "within_4se": true
+        }
+      }
+    },
+    "c6_binder_crossing": {
+      "status": "tercapai",
+      "measured": {
+        "8_16": {
+          "T_cross": 2.264444,
+          "abs_err": 0.004741,
+          "within_0.01": true
+        },
+        "16_32": {
+          "T_cross": 2.26686,
+          "abs_err": 0.002325,
+          "within_0.01": true
+        },
+        "32_64": {
+          "T_cross": 2.268691,
+          "abs_err": 0.000494,
+          "within_0.01": true
+        },
+        "64_128": {
+          "T_cross": 2.267882,
+          "abs_err": 0.001303,
+          "within_0.01": true
+        }
+      }
+    },
+    "c7_gamma_over_nu": {
+      "status": "tercapai",
+      "measured": 1.7682
+    },
+    "c8_beta_over_nu": {
+      "status": "tercapai",
+      "measured": 0.1122
+    },
+    "c9_dynamic_exponent": {
+      "status": "tercapai",
+      "measured": {
+        "metropolis": 1.8625,
+        "wolff": 0.4118,
+        "sw": 0.1998
+      }
+    },
+    "c10_notebook_reproducible": {
+      "status": "tercapai",
+      "measured": {
+        "sha256_prefix": "551871e2fc28ee31",
+        "two_runs_identical": true
+      }
+    },
+    "c11_all_tests_pass": {
+      "status": "tercapai",
+      "measured": "make test C/C++ dan seluruh assert notebook lulus"
+    },
+    "c12_figures_valid": {
+      "status": "tercapai",
+      "measured": 8
+    },
+    "c13_code_size_reported": {
+      "status": "tercapai",
+      "measured": 414
+    },
+    "c14_speed_comparison": {
+      "status": "tercapai",
+      "measured": {
+        "c_metropolis_table": 6.603,
+        "c_metropolis_computed": 3.476,
+        "c_wolff": 7.856,
+        "c_sw": 19.752,
+        "cpp_metropolis_table": 6.524,
+        "cpp_metropolis_computed": 4.799,
+        "cpp_metropolis_constexpr32": 4.588,
+        "cpp_wolff": 8.331,
+        "cpp_sw": 18.845,
+        "python_metropolis": 867.063,
+        "python_wolff": 20.352,
+        "python_sw": 1661.784
+      }
+    }
+  }
+}
