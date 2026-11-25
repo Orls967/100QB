@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420">
+<rect width="720" height="420" fill="#ffffff"/>
+<text x="360" y="24" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="bold">Skala Waktu Log-Log: Cell List O(N) vs Brute Force O(N^2)</text>
+<rect x="75" y="40" width="610" height="325" fill="none" stroke="#cccccc"/>
+<polyline fill="none" stroke="#d62728" stroke-width="2" points="75.0,189.0 142.8,170.4 210.6,150.0 278.3,127.4 346.1,102.6 413.9,74.1 "/>
+<polyline fill="none" stroke="#1f77b4" stroke-width="2" points="75.0,228.6 142.8,226.9 210.6,227.0 278.3,226.0 346.1,223.4 413.9,221.1 549.4,218.4 685.0,214.0 "/>
+<circle cx="75.0" cy="228.6" r="3.5" fill="#1f77b4"/>
+<circle cx="75.0" cy="189.0" r="3.5" fill="#d62728"/>
+<circle cx="142.8" cy="226.9" r="3.5" fill="#1f77b4"/>
+<circle cx="142.8" cy="170.4" r="3.5" fill="#d62728"/>
+<circle cx="210.6" cy="227.0" r="3.5" fill="#1f77b4"/>
+<circle cx="210.6" cy="150.0" r="3.5" fill="#d62728"/>
+<circle cx="278.3" cy="226.0" r="3.5" fill="#1f77b4"/>
+<circle cx="278.3" cy="127.4" r="3.5" fill="#d62728"/>
+<circle cx="346.1" cy="223.4" r="3.5" fill="#1f77b4"/>
+<circle cx="346.1" cy="102.6" r="3.5" fill="#d62728"/>
+<circle cx="413.9" cy="221.1" r="3.5" fill="#1f77b4"/>
+<circle cx="413.9" cy="74.1" r="3.5" fill="#d62728"/>
+<circle cx="549.4" cy="218.4" r="3.5" fill="#1f77b4"/>
+<circle cx="685.0" cy="214.0" r="3.5" fill="#1f77b4"/>
+<text x="110" y="65" font-family="sans-serif" font-size="12" fill="#d62728">Brute Force (~N^2)</text>
+<text x="110" y="85" font-family="sans-serif" font-size="12" fill="#1f77b4">Cell List (~N)</text>
+<text x="380" y="398" text-anchor="middle" font-family="sans-serif" font-size="12">log10(N) [500 .. 256000]</text>
+</svg>
