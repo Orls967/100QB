@@ -154,7 +154,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [docs/ROADMAP.md](docs/ROADMAP.md) · Riwayat: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 55/100 topik (55%)** · quant: 45 · sim: 10
+**Progres: 56/100 topik (56%)** · quant: 45 · sim: 11
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -213,6 +213,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 8a | bonus | `sim` | `python` | Model Ising 2D Lintas Tiga Bahasa (C, C++, Python): Metropolis, Wolff, Swendsen–Wang, FSS & Paritas Bit-Identik | 2026-11-26 | [day008a_sim_ising-trilingual.ipynb](days/day008a_sim_ising-trilingual.ipynb) |
 | 8a | bonus | `sim` | `c+cpp+python` | Model Ising 2D Lintas Tiga Bahasa (C, C++, Python): Metropolis, Wolff, Swendsen–Wang, FSS & Paritas Bit-Identik | 2026-11-26 | [day008a_ising_trilingual](projects/c/day008a_ising_trilingual) |
 | 8b | bonus | `sim` | `cpp` | Simulasi Wa-Tor di C++20 (Ikan vs Hiu), Fit Lotka–Volterra RK4 & Efek Ukuran Hingga | 2026-11-26 | [day008b_wator_cpp](projects/cpp/day008b_wator_cpp) |
+| 8c | bonus | `sim` | `cpp` | Model Vicsek (Aktif-Materi) di C++20 dengan Cell List O(N) vs Brute Force O(N^2) | 2026-11-26 | [day008c_vicsek_cpp](projects/cpp/day008c_vicsek_cpp) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi

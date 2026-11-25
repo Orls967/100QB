@@ -59,6 +59,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `7a` (`day007a`) | `bonus` | `sim` | `cpp` | [Kekacauan Deterministik: Eksponen Lyapunov Peta Logistik & Lorenz, Konstanta Feigenbaum & Dimensi Kaplan–Yorke (C++20)](day007a_sim_chaos-lyapunov-cpp.md) |
 | `8a` (`day008a`) | `bonus` | `sim` | `c+cpp+python` | [Model Ising 2D Lintas Tiga Bahasa: Metropolis, Wolff, Swendsen–Wang, FSS & Paritas Bit-Identik](day008a_sim_ising-trilingual.md) |
 | `8b` (`day008b`) | `bonus` | `sim` | `cpp` | [Simulasi Wa-Tor (Ikan vs Hiu) di C++20, Fit Lotka–Volterra RK4 & Efek Ukuran Hingga](day008b_sim_wator-cpp.md) |
+| `8c` (`day008c`) | `bonus` | `sim` | `cpp` | [Model Vicsek (Aktif-Materi) di C++20 dengan Cell List O(N) vs Brute Force O(N^2)](day008c_sim_vicsek-cpp.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 

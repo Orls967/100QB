@@ -3,6 +3,17 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 008c] — 2026-11-26 · Model Vicsek (Aktif-Materi) di C++20 dengan Cell List O(N) vs Brute Force O(N^2)
+
+### Diperbaiki (Bagian A — `day008a`)
+- Menghapus path absolut pada sel keluaran `days/day008a_sim_ising-trilingual.ipynb` menjadi path relatif `outputs/figures` (`35f7a2c`).
+
+### Ditambahkan (Bagian C — `day008c`)
+- Proyek C++20 murni `projects/cpp/day008c_vicsek_cpp/` (`427` baris sumber di `src/`, `5/5` tes unit lulus, paralel `std::thread`):
+  - **Paritas & Skala**: Cell list cocok bit-identik (`0` selisih) dengan brute force pada `N=1000, 500 langkah` (`c1`), dan lebih cepat `108×` pada `N=16000` dengan kemiringan log–log `1,0745` vs `2,0518` (`c5`, `c6`).
+  - **Kurva $\phi(\eta)$ & Temuan Jujur**: Turun monoton (`c4`), titik tengah $\phi=0{,}5$ bergeser `2,887 -> 2,611 -> 2,281` untuk `L=16,32,64`; `c3` berstatus `belum tercapai` karena $L=64$ pada $\eta=0$ hanya mencapai $\phi=0{,}7471$ dalam 2000 langkah termalisasi.
+  - **Output**: 4 SVG mandiri `outputs/figures/day008c_*.svg`, `outputs/day008c/results.json`, dan [day008c_sim_vicsek-cpp.md](project-explanations/day008c_sim_vicsek-cpp.md).
+
 ## [Hari 008b] — 2026-11-26 · Simulasi Wa-Tor (Ikan vs Hiu) di C++20, Fit Lotka–Volterra RK4 & Efek Ukuran Hingga
 
 ### Ditambahkan (`day008b`)
