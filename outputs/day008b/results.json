@@ -1,0 +1,117 @@
+{
+  "session": "day008b",
+  "date": "2026-11-26",
+  "master_seed": 20261126,
+  "run_completed_without_errors": true,
+  "environment": {
+    "arch": "arm64",
+    "cpu_cores": 10,
+    "cxx": "Apple clang 16.0.0 (-O3 -std=c++20 -Wall -Wextra -Werror -fno-fast-math -ffp-contract=off)",
+    "python": "3.11.18"
+  },
+  "default_params": {
+    "W": 200,
+    "H": 200,
+    "fish_breed": 3,
+    "shark_breed": 10,
+    "shark_init_energy": 5,
+    "fish_energy": 3,
+    "init_fish": 0.3,
+    "init_shark": 0.05,
+    "steps": 5000
+  },
+  "lotka_volterra_fit": {
+    "a": 0.1240434961,
+    "b": 2.709065345e-05,
+    "c": 0.04066983836,
+    "d": 7.522160454e-06,
+    "sim_period": 99,
+    "acf_peak": 0.690241,
+    "lv_period": 88.462,
+    "period_ratio": 1.1191
+  },
+  "extinction_by_size": [
+    {
+      "W": 20,
+      "n_reps": 40,
+      "n_extinct": 40,
+      "prop": 1.0,
+      "wilson_lo": 0.912378,
+      "wilson_hi": 1.0
+    },
+    {
+      "W": 40,
+      "n_reps": 40,
+      "n_extinct": 40,
+      "prop": 1.0,
+      "wilson_lo": 0.912378,
+      "wilson_hi": 1.0
+    },
+    {
+      "W": 80,
+      "n_reps": 40,
+      "n_extinct": 26,
+      "prop": 0.65,
+      "wilson_lo": 0.495059,
+      "wilson_hi": 0.778655
+    },
+    {
+      "W": 160,
+      "n_reps": 40,
+      "n_extinct": 4,
+      "prop": 0.1,
+      "wilson_lo": 0.03958,
+      "wilson_hi": 0.230518
+    }
+  ],
+  "figures": {
+    "timeseries": "outputs/figures/day008b_timeseries.svg",
+    "phase_portrait": "outputs/figures/day008b_phase_portrait.svg",
+    "snapshots": "outputs/figures/day008b_snapshots.svg",
+    "extinction_size": "outputs/figures/day008b_extinction_size.svg"
+  },
+  "criteria": {
+    "c1_invariants_all_steps": {
+      "status": "tercapai",
+      "measured": true,
+      "threshold": "jumlah sel == hitungan, tidak ada tumpang tindih, energi hiu >= 1"
+    },
+    "c2_bit_identical_determinism": {
+      "status": "tercapai",
+      "measured": true,
+      "threshold": "dua eksekusi dengan seed sama identik bit-demi-bit (test_wator)"
+    },
+    "c3_oscillation_detected": {
+      "status": "tercapai",
+      "measured": 0.6902,
+      "threshold": "puncak kedua ACF > 0.2 pada parameter baku"
+    },
+    "c4_period_vs_lv_factor2": {
+      "status": "tercapai",
+      "measured": {
+        "sim_period": 99,
+        "lv_period": 88.46,
+        "ratio": 1.119
+      },
+      "threshold": "periode simulasi vs LV dalam faktor 2"
+    },
+    "c5_extinction_decreases_with_size": {
+      "status": "tercapai",
+      "measured": {
+        "W20": 1.0,
+        "W160": 0.1
+      },
+      "threshold": "proporsi kepunahan W=160 <= W=20"
+    },
+    "c6_svg_valid": {
+      "status": "tercapai",
+      "measured": 4,
+      "threshold": "4 SVG ada, tak kosong, valid XML"
+    },
+    "c7_tests_pass": {
+      "status": "tercapai",
+      "measured": "4/4 tes unit C++ lulus",
+      "threshold": "make test keluar dengan kode 0"
+    }
+  }
+}
