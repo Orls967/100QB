@@ -3,6 +3,15 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 009b] — 2026-11-27 · Genetika Populasi (Ruby Murni, 65 Tahap)
+
+### Ditambahkan (`day009b`)
+- Proyek Ruby stdlib murni `projects/ruby/day009b_popgen_ruby/` (tanpa gem eksternal, lolos bersih `ruby -w` di bawah `ruby 4.0.9`, total **5.156 baris Ruby** di `bin/popgen` + 24 berkas `lib/popgen/*.rb`, **20/23** kriteria `tercapai`, **3** `belum tercapai` jujur (`c8`, `c9`, `c14`), `vacuous_flags = []`):
+  - **Sampler Eksak & Rantai Markov `Rational` (`S01`–`S10`)**: SplitMix64 → `Random.new(seed)` deterministik; Binomial dua cabang (inversi $np<10$ + BTPE Kachitvichyanukul–Schmeiser 1988 $np\ge 10$) tervalidasi di 12 pasangan $(n,p)$ (`min chi2 p = 0.0803`, `c18`), Multinomial/Poisson Knuth+PTRS/Eksponensial; matriks transisi WF `Rational` vs `Float` cocok hingga `1.776e-13` (`c1`).
+  - **Dinamika Forward WF, Moran & Seleksi (`S11`–`S30`)**: Peluruhan heterozigositas $N \in \{50, 200\}$ (`max z = 1.55`, `c4`); fiksasi netral (`max z = 1.19`, `c2`), waktu fiksasi vs rantai (`max z = 1.38`) & difusi (`8.87%`, `c5`); proses Moran tertutup `1.11e-15`, arah $r>1/r<1$ (`>= 35.4 SE`), kontrol `r=1` (`c3`); seleksi $N=2000$ (`max z = 2.74`, `c11`); stasioner $N=20$ mutasi+seleksi (`TV = 0.01426 <= 0.02932`, `c16`).
+  - **Koalesen Kingman, Pulau, Sapuan, LD, ARG-Lite & Inbreeding (`S31`–`S65`)**: $T_{\text{MRCA}}, L, S, \mathrm{Var}(S)$ untuk $n \in \{5,20,100\}$ (`max z = 1.95`, `c6`); SFS Wald $\chi^2$ `p = 0.2875` (`c7`); Tajima's $D$ (`mean_D = -0.1064`, `Var(D) = 0.7949`, `c8` `belum tercapai`); partisi Ewens $n=6$ `p = 0.8164` & $\mathbb{E}[K_n]$ (`max z = 2.11`), namun $\mathbb{E}[H]$ pada $\theta=0.5$ `42.87%` (`c9` `belum tercapai`); model pulau $F_{ST}$ (`min step = 12.4 SE`, kontrol $M=80$ `-0.0001`, `c10`); sapuan selektif (`43.9 SE`, pemulihan `>= 7.9 SE`, `c12`); peluruhan LD & $\sigma_d^2$ vs Ohta–Kimura (`20.11% <= 25%`, `c13`); ARG-lite marginal `max z = 1.49` & ekor $\rho=8 \to 32$ `2.7 SE` (`c14` `belum tercapai`); HWE (`min p = 0.2014`) & *selfing* (`z = 0.45`, `c15`).
+  - **Determinisme & Optimasi (`S62`–`S65`)**: 2× `rake run` identik `711328ecfbfdb734` dan `workers = 1, 2, 4` identik bit demi bit `8e12879dfcfa8dc0` (`c17`); tangga optimasi `V0..V4` (`[1.50, 0.05, 0.87, 2.09, 0.87, 2.07, 2.50]` ms, `c23`), kompresi delta+RLE *lossless* hingga `7.50x`, `109` CSV + `45` SVG valid XML `outputs/figures/day009b_*.svg` + `outputs/day009b/results.json` (`155` berkas), serta [day009b_sim_popgen-ruby.md](project-explanations/day009b_sim_popgen-ruby.md).
+
 ## [Hari 009a] — 2026-11-27 · Dinamika Molekuler Fluida Lennard-Jones (C11, 60 Tahap)
 
 ### Ditambahkan (`day009a`)

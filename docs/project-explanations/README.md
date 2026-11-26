@@ -68,6 +68,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `8i` (`day008i`) | `bonus` | `sim` | `c` | [Tumpukan Pasir Abelian (Sandpile C11 ≤ 999 Baris): Grup Sandpile, Elemen Identitas Fraktal & SOC](day008i_sim_sandpile-c.md) |
 | `8j` (`day008j`) | `bonus` | `sim` | `rust` | [Diagonalisasi Eksak Rantai Spin-½ Heisenberg/XXZ (Rust ≤ 499 Baris): Lanczos, Keterikatan & Penskalaan CFT](day008j_sim_heisenberg-ed-rust.md) |
 | `9a` (`day009a`) | `bonus` | `sim` | `c` | [Dinamika Molekuler Fluida Lennard-Jones (C11, 60 Tahap): Integrator Simplektik, Daftar Tetangga, Termostat, Termodinamika, Transport & Pelelehan](day009a_sim_md-lj-c.md) |
+| `9b` (`day009b`) | `bonus` | `sim` | `ruby` | [Genetika Populasi (Ruby Murni, 65 Tahap): Wright–Fisher, Moran, Rantai Markov Rational, Koalesen Kingman, Pulau, Sapuan Selektif & ARG-Lite](day009b_sim_popgen-ruby.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 
