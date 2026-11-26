@@ -1,0 +1,2 @@
+ok,h_rng,inv_ok,tot_arr,tot_done
+1,3df66645d51ba189,1,929,795
