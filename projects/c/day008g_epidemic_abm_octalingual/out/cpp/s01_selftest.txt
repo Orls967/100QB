@@ -1,0 +1,2 @@
+ok,h_rng,inv_ok,tot_trans
+1,3df66645d51ba189,1,86
