@@ -2,12 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-static void fmt_i128(i128 v, char *buf) {
+void fmt_i128(i128 v, char *buf) {
     if (v == 0) { strcpy(buf, "0"); return; }
-    int neg = v < 0;
+    int neg = v < 0, p = 0;
     __extension__ unsigned __int128 u = neg ? (unsigned __int128)(-v) : (unsigned __int128)v;
     char tmp[48];
-    int p = 0;
     while (u > 0) { tmp[p++] = (char)('0' + (u % 10)); u /= 10; }
     if (neg) tmp[p++] = '-';
     for (int i = 0; i < p; i++) buf[i] = tmp[p - 1 - i];
@@ -35,10 +34,7 @@ static i128 bareiss_laplacian_det(int n, int *ovf_out) {
                 i128 p1 = 0, p2 = 0, df = 0;
                 if (__builtin_mul_overflow(piv, a[i][j], &p1) ||
                     __builtin_mul_overflow(a[i][k], a[k][j], &p2) ||
-                    __builtin_sub_overflow(p1, p2, &df)) {
-                    *ovf_out = 1;
-                    return -1;
-                }
+                    __builtin_sub_overflow(p1, p2, &df)) { *ovf_out = 1; return -1; }
                 a[i][j] = df / prev;
             }
         }
@@ -49,8 +45,7 @@ static i128 bareiss_laplacian_det(int n, int *ovf_out) {
 
 void compute_identity(int n, int32_t *e_out) {
     int m = n * n;
-    Grid g;
-    grid_init(&g, n);
+    Grid g; grid_init(&g, n);
     for (int i = 0; i < m; i++) g.z[i] = 6;
     stabilize_det(&g);
     for (int i = 0; i < m; i++) g.z[i] = 6 - g.z[i];
@@ -60,7 +55,7 @@ void compute_identity(int n, int32_t *e_out) {
 }
 
 static int check_d4_symmetry(int n, const int32_t *e) {
-    for (int r = 0; r < n; r++) {
+    for (int r = 0; r < n; r++)
         for (int c = 0; c < n; c++) {
             int32_t v = e[r * n + c];
             if (e[r * n + (n - 1 - c)] != v || e[(n - 1 - r) * n + c] != v ||
@@ -68,7 +63,6 @@ static int check_d4_symmetry(int n, const int32_t *e) {
                 e[c * n + (n - 1 - r)] != v || e[(n - 1 - c) * n + r] != v ||
                 e[(n - 1 - c) * n + (n - 1 - r)] != v) return 0;
         }
-    }
     return 1;
 }
 
@@ -78,30 +72,24 @@ int cmd_abelian(Metrics *m, const char *out_dir) {
     Rng rng_init, rng_ord;
     rng_seed(&rng_init, MASTER_SEED ^ 0xA11CEULL);
     rng_seed(&rng_ord, MASTER_SEED ^ 0xB0B55ULL);
-    char path[128];
-    snprintf(path, sizeof(path), "%s/abelian_check.csv", out_dir);
+    char path[128]; snprintf(path, sizeof(path), "%s/abelian_check.csv", out_dir);
     FILE *fp = fopen(path, "w");
     if (fp) fprintf(fp, "n,configs,orders_per_cfg,mismatches,digest_fnv1a\n");
     for (int idx = 0; idx < 3; idx++) {
         int n = ns[idx], sz = n * n, n_mis = 0;
         int32_t *init_z = (int32_t *)malloc((size_t)sz * sizeof(int32_t));
-        Grid gd, gr;
-        grid_init(&gd, n);
-        grid_init(&gr, n);
+        Grid gd, gr; grid_init(&gd, n); grid_init(&gr, n);
         uint64_t sub_dig = fnv1a_init();
         for (int c = 0; c < 200; c++) {
             for (int i = 0; i < sz; i++) init_z[i] = rng_int(&rng_init, 0, 9);
-            grid_clear(&gd);
-            memcpy(gd.z, init_z, (size_t)sz * sizeof(int32_t));
+            grid_clear(&gd); memcpy(gd.z, init_z, (size_t)sz * sizeof(int32_t));
             stabilize_det(&gd);
             uint64_t h_ref = grid_state_hash(&gd);
-            grid_clear(&gr);
-            memcpy(gr.z, init_z, (size_t)sz * sizeof(int32_t));
+            grid_clear(&gr); memcpy(gr.z, init_z, (size_t)sz * sizeof(int32_t));
             stabilize_waves(&gr);
             if (grid_state_hash(&gr) != h_ref) n_mis++;
             for (int o = 0; o < 100; o++) {
-                grid_clear(&gr);
-                memcpy(gr.z, init_z, (size_t)sz * sizeof(int32_t));
+                grid_clear(&gr); memcpy(gr.z, init_z, (size_t)sz * sizeof(int32_t));
                 stabilize_rand(&gr, &rng_ord);
                 if (grid_state_hash(&gr) != h_ref) n_mis++;
             }
@@ -111,32 +99,24 @@ int cmd_abelian(Metrics *m, const char *out_dir) {
         }
         mis += n_mis;
         if (fp) fprintf(fp, "%d,200,100,%d,%016llx\n", n, n_mis, (unsigned long long)sub_dig);
-        grid_free(&gd);
-        grid_free(&gr);
-        free(init_z);
+        grid_free(&gd); grid_free(&gr); free(init_z);
     }
     if (fp) fclose(fp);
-    m->abelian_configs = tot_cfg;
-    m->abelian_orders = 100;
-    m->abelian_mismatches = mis;
-    m->abelian_digest = digest;
+    m->abelian_configs = tot_cfg; m->abelian_orders = 100;
+    m->abelian_mismatches = mis; m->abelian_digest = digest;
     return mis == 0 ? 0 : 1;
 }
 
 int cmd_group(Metrics *m, const char *out_dir) {
     m->safe_det_n = 0;
     for (int n = 2; n <= 7; n++) {
-        int ov = 0;
-        i128 dv = bareiss_laplacian_det(n, &ov);
+        int ov = 0; i128 dv = bareiss_laplacian_det(n, &ov);
         if (n <= 6) { m->det_val[n] = dv; m->det_ovf[n] = ov; }
         if (!ov && dv > 0) m->safe_det_n = n;
     }
     for (int n = 2; n <= 3; n++) {
-        int sz = n * n, tot = 1 << (2 * sz);
-        Grid g;
-        grid_init(&g, n);
-        int32_t stk[16];
-        uint8_t deg[16];
+        int sz = n * n, tot = 1 << (2 * sz), stk[16]; uint8_t deg[16];
+        Grid g; grid_init(&g, n);
         int64_t cnt = 0;
         for (int mask = 0; mask < tot; mask++) {
             for (int i = 0; i < sz; i++) g.z[i] = (mask >> (2 * i)) & 3;
@@ -145,8 +125,7 @@ int cmd_group(Metrics *m, const char *out_dir) {
         if (n == 2) m->bf_n2 = cnt; else m->bf_n3 = cnt;
         grid_free(&g);
     }
-    char path[128], dbuf[48];
-    snprintf(path, sizeof(path), "%s/group_order.csv", out_dir);
+    char path[128], dbuf[48]; snprintf(path, sizeof(path), "%s/group_order.csv", out_dir);
     FILE *fp = fopen(path, "w");
     if (fp) {
         fprintf(fp, "n,det_bareiss,i128_overflow,brute_force,match_bf\n");
@@ -163,19 +142,15 @@ int cmd_group(Metrics *m, const char *out_dir) {
     int32_t *stk = (int32_t *)malloc((size_t)sz * sizeof(int32_t));
     uint8_t *deg = (uint8_t *)malloc((size_t)sz * sizeof(uint8_t));
     compute_identity(n_id, e);
-    Grid g, gr;
-    grid_init(&g, n_id);
-    grid_init(&gr, n_id);
+    Grid g, gr; grid_init(&g, n_id); grid_init(&gr, n_id);
     memcpy(g.z, e, (size_t)sz * sizeof(int32_t));
     m->id_recurrent = is_recurrent(&g, stk, deg);
     m->id_d4_ok = check_d4_symmetry(n_id, e);
     for (int i = 0; i < sz; i++) g.z[i] = e[i] + e[i];
     stabilize_det(&g);
     m->id_ee_ok = (memcmp(g.z, e, (size_t)sz * sizeof(int32_t)) == 0);
-    Rng rng;
-    rng_seed(&rng, MASTER_SEED ^ 0x1DE17ULL);
-    m->id_er_tested = 200;
-    m->id_er_ok = 0;
+    Rng rng; rng_seed(&rng, MASTER_SEED ^ 0x1DE17ULL);
+    m->id_er_tested = 200; m->id_er_ok = 0;
     for (int k = 0; k < 200; k++) {
         do {
             for (int i = 0; i < sz; i++) gr.z[i] = rng_int(&rng, 0, 9);
@@ -203,9 +178,8 @@ int cmd_group(Metrics *m, const char *out_dir) {
 
     m->ord_tested = 0; m->ord_div_ok = 0;
     for (int n = 2; n <= 4; n++) {
-        int s = n * n;
+        int s = n * n, en[16], stkn[16]; uint8_t degn[16];
         int64_t grp_ord = (int64_t)m->det_val[n];
-        int32_t en[16], stkn[16]; uint8_t degn[16];
         compute_identity(n, en);
         Grid ga, gc; grid_init(&ga, n); grid_init(&gc, n);
         for (int t = 0; t < 5; t++) {
@@ -217,8 +191,7 @@ int cmd_group(Metrics *m, const char *out_dir) {
             int64_t ord = 1;
             while (memcmp(gc.z, en, (size_t)s * sizeof(int32_t)) != 0 && ord <= grp_ord) {
                 for (int i = 0; i < s; i++) gc.z[i] += ga.z[i];
-                stabilize_det(&gc);
-                ord++;
+                stabilize_det(&gc); ord++;
             }
             m->ord_tested++;
             if (ord <= grp_ord && (grp_ord % ord) == 0) m->ord_div_ok++;
@@ -228,25 +201,15 @@ int cmd_group(Metrics *m, const char *out_dir) {
     return 0;
 }
 
-/*
- * Hand derivation for n=2 reduced Laplacian L = 4I_4 - A(C_4):
- * L = [[4,-1,-1,0],[-1,4,0,-1],[-1,0,4,-1],[0,-1,-1,4]].
- * Adjacency of 4-cycle C_4 has eigenvalues {2, 0, 0, -2}, so L has eigenvalues
- * {4-2, 4-0, 4-0, 4-(-2)} = {2, 4, 4, 6}, hence det(L) = 2 * 4 * 4 * 6 = 192.
- */
+/* Hand n=2: L = 4I_4 - A(C_4) = [[4,-1,-1,0],[-1,4,0,-1],[-1,0,4,-1],[0,-1,-1,4]].
+ * eig(A(C_4)) = {2, 0, 0, -2} => eig(L) = {2, 4, 4, 6} => det(L) = 2*4*4*6 = 192. */
 int cmd_selftest(Metrics *m) {
-    const int64_t HAND_DET_N2 = 192;
     int ovf2 = 0, ovf3 = 0;
-    i128 d2 = bareiss_laplacian_det(2, &ovf2);
-    i128 d3 = bareiss_laplacian_det(3, &ovf3);
-    if (ovf2 || d2 != HAND_DET_N2 || ovf3) return 1;
-
-    int32_t e3[9], stk[9];
-    uint8_t deg[9];
+    i128 d2 = bareiss_laplacian_det(2, &ovf2), d3 = bareiss_laplacian_det(3, &ovf3);
+    if (ovf2 || d2 != 192 || ovf3) return 1;
+    int32_t e3[9], stk[9]; uint8_t deg[9];
     compute_identity(3, e3);
-    Grid g, gr;
-    grid_init(&g, 3);
-    grid_init(&gr, 3);
+    Grid g, gr; grid_init(&g, 3); grid_init(&gr, 3);
     int64_t rec_cnt = 0;
     for (int mask = 0; mask < (1 << 18); mask++) {
         for (int i = 0; i < 9; i++) gr.z[i] = (mask >> (2 * i)) & 3;
@@ -258,19 +221,12 @@ int cmd_selftest(Metrics *m) {
         }
     }
     if (rec_cnt != (int64_t)d3) return 3;
-
-    /* Hand toppling: 16 grains at center (1,1) of empty 3x3 -> z=[2,1,2,1,0,1,2,1,2],
-     * odom=[0,1,0,1,5,1,0,1,0], sink=4. */
-    grid_clear(&g);
-    g.z[4] = 16;
-    stabilize_det(&g);
+    grid_clear(&g); g.z[4] = 16; stabilize_det(&g);
     const int32_t exp_z[9] = {2, 1, 2, 1, 0, 1, 2, 1, 2};
     const int64_t exp_o[9] = {0, 1, 0, 1, 5, 1, 0, 1, 0};
     if (memcmp(g.z, exp_z, sizeof(exp_z)) != 0 ||
         memcmp(g.odom, exp_o, sizeof(exp_o)) != 0 || g.sink != 4) return 4;
-    grid_free(&g);
-    grid_free(&gr);
-    m->selftest_ok = 1;
+    grid_free(&g); grid_free(&gr); m->selftest_ok = 1;
     printf("selftest OK: det(n=2)=192, det(n=3)=%lld, e+r=r for all %lld recurrent configs, hand 3x3 OK\n",
            (long long)d3, (long long)rec_cnt);
     return 0;

@@ -12,7 +12,7 @@ CORES = $(shell sysctl -n hw.ncpu 2>/dev/null || nproc 2>/dev/null || echo 1)
 all: build/sandpile
 
 build/sandpile: $(SRCS) $(HDRS) Makefile
-	@mkdir -p build out
+	@mkdir -p build out ../../../outputs/day008i ../../../outputs/figures
 	$(CC) $(CFLAGS) $(SRCS) -o build/sandpile -lm
 
 test: build/sandpile

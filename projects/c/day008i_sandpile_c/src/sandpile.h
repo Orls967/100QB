@@ -5,63 +5,34 @@
 #include <stdio.h>
 
 #define MASTER_SEED 20261126ULL
+__extension__ typedef __int128 i128;
 
-typedef struct {
-    uint64_t s[4];
-} Rng;
+typedef struct { uint64_t s[4]; } Rng;
 
 typedef struct {
     int n;
-    int32_t *z;
-    int64_t *odom;
-    int64_t sink;
-    int32_t *q_a;
-    int32_t *q_b;
-    uint64_t *stamp_a;
-    uint64_t *stamp_b;
-    uint64_t cur_stamp;
+    int32_t *z, *q_a, *q_b;
+    int64_t *odom, sink;
+    uint64_t *stamp_a, *stamp_b, cur_stamp;
 } Grid;
 
 typedef struct {
     int64_t size;
-    int32_t area;
-    int32_t dur;
+    int32_t area, dur;
 } Aval;
 
-__extension__ typedef __int128 i128;
-
 typedef struct {
-    int abelian_configs;
-    int abelian_orders;
-    int abelian_mismatches;
+    int abelian_configs, abelian_orders, abelian_mismatches;
     uint64_t abelian_digest;
     i128 det_val[7];
-    int det_ovf[7];
-    int safe_det_n;
-    int64_t bf_n2;
-    int64_t bf_n3;
-    int id_recurrent;
-    int id_d4_ok;
-    int id_ee_ok;
-    int id_er_tested;
-    int id_er_ok;
-    int ord_tested;
-    int ord_div_ok;
-    int64_t mass_max_diff;
-    double rad_slope;
-    double rad_se;
-    double tau_64, tau_64_se;
-    double tau_128, tau_128_se;
-    double tau_win_lo, tau_win_hi;
-    double tail_64, tail_128;
-    int64_t soc_aval_64, soc_aval_128;
-    int64_t warmup_64, warmup_128;
-    double h_mean_ctr, h_mean_se, h_mean_full;
-    double h_p[4], h_p_se[4];
-    int selftest_ok;
-    int svgs_written;
-    double bench_med, bench_mad;
-    int64_t bench_topples;
+    int det_ovf[7], safe_det_n;
+    int64_t bf_n2, bf_n3;
+    int id_recurrent, id_d4_ok, id_ee_ok, id_er_tested, id_er_ok;
+    int ord_tested, ord_div_ok, selftest_ok, svgs_written;
+    int64_t mass_max_diff, soc_aval_64, soc_aval_128, warmup_64, warmup_128, bench_topples;
+    double rad_slope, rad_se, tau_64, tau_64_se, tau_128, tau_128_se;
+    double tau_win_lo, tau_win_hi, tail_64, tail_128;
+    double h_mean_ctr, h_mean_se, h_mean_full, h_p[4], h_p_se[4], bench_med, bench_mad;
 } Metrics;
 
 void rng_seed(Rng *r, uint64_t seed);
@@ -79,6 +50,7 @@ Aval stabilize_waves(Grid *g);
 void stabilize_rand(Grid *g, Rng *rng);
 int is_recurrent(const Grid *g, int32_t *stk, uint8_t *deg);
 void compute_identity(int n, int32_t *e_out);
+void fmt_i128(i128 v, char *buf);
 
 int cmd_selftest(Metrics *m);
 int cmd_abelian(Metrics *m, const char *out_dir);
