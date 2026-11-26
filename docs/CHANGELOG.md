@@ -3,6 +3,14 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 008d] — 2026-11-26 · Jalan Acak Kisi Pólya Lintas 8 Bahasa (12 Tahap Identik: C, C++, Rust, Go, Ruby, Python, TS, ipynb)
+
+### Ditambahkan (`day008d`)
+- Proyek oktalingual `projects/c/day008d_lattice_walks_octalingual/` dan notebook `days/day008d_sim_lattice-walks-octalingual.ipynb` dengan 12 tahap (`s01`–`s12`) yang identik di **8 bahasa** (**10/10** kriteria `c1`–`c10` `tercapai`):
+  - **Paritas Bit-Identik & Anchor Eksak**: `0` selisih pada `s01` dan `s02` di seluruh 8 bahasa; `39/39` MSD, `12/12` peluang kembali, dan `6/6` Gambler's Ruin berada dalam $\le 4\text{ SE}$ di setiap bahasa; renewal eksak $F_3(10^4) = 0{,}337668$ (`0,00287` dari konstanta Watson `0,340537`).
+  - **Kecepatan (`ns/langkah` median, `d=2`)**: Rust `1,683`, C++ `1,715`, C `1,719`, Go `23,696`, TS (`node --experimental-strip-types`) `34,213`, ipynb `565,98`, Python `570,43`, Ruby `956,90`.
+  - **Output**: `24` SVG per bahasa + `3` pasang grafik gabungan PNG+SVG `outputs/figures/day008d_*.{png,svg}`, `outputs/day008d/results.json`, dan [day008d_sim_lattice-walks-octalingual.md](project-explanations/day008d_sim_lattice-walks-octalingual.md).
+
 ## [Hari 008c] — 2026-11-26 · Model Vicsek (Aktif-Materi) di C++20 dengan Cell List O(N) vs Brute Force O(N^2)
 
 ### Diperbaiki (Bagian A — `day008a`)
