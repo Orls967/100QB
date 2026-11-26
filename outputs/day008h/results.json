@@ -1,0 +1,265 @@
+{
+  "day": "day008h",
+  "topic": "Airport Terminal Queueing Network ABM with Exact DTMC Validation",
+  "run_completed_without_errors": true,
+  "machine": {
+    "system": "Darwin",
+    "machine": "arm64",
+    "python": "3.11.18"
+  },
+  "languages": {
+    "c": {
+      "days": 365,
+      "sw_days": 3,
+      "toolchain": "Apple clang 16.0.0 (-std=c11)",
+      "total_sec": 1.431,
+      "files_count": 101,
+      "loc": 1587,
+      "bench_med": 58489802.43,
+      "bench_mad": 266294.85
+    },
+    "cpp": {
+      "days": 365,
+      "sw_days": 3,
+      "toolchain": "Apple clang 16.0.0 (-std=c++20)",
+      "total_sec": 1.37,
+      "files_count": 101,
+      "loc": 1229,
+      "bench_med": 61274322.78,
+      "bench_mad": 980903.15
+    },
+    "rust": {
+      "days": 365,
+      "sw_days": 3,
+      "toolchain": "rustc 1.93.1",
+      "total_sec": 1.497,
+      "files_count": 101,
+      "loc": 1066,
+      "bench_med": 57707509.88,
+      "bench_mad": 593554.98
+    },
+    "go": {
+      "days": 365,
+      "sw_days": 3,
+      "toolchain": "go1.27.4",
+      "total_sec": 1.634,
+      "files_count": 101,
+      "loc": 2032,
+      "bench_med": 50610420.35,
+      "bench_mad": 1484836.91
+    },
+    "ruby": {
+      "days": 7,
+      "sw_days": 1,
+      "toolchain": "ruby 4.0.9",
+      "total_sec": 78.805,
+      "files_count": 101,
+      "loc": 988,
+      "bench_med": 331158.9,
+      "bench_mad": 1362.18
+    },
+    "py": {
+      "days": 7,
+      "sw_days": 1,
+      "toolchain": "python 3.11.18",
+      "total_sec": 46.982,
+      "files_count": 101,
+      "loc": 1535,
+      "bench_med": 542078.26,
+      "bench_mad": 4914.13
+    },
+    "ts": {
+      "days": 60,
+      "sw_days": 3,
+      "toolchain": "node v24.21.0 (--experimental-strip-types)",
+      "total_sec": 18.525,
+      "files_count": 101,
+      "loc": 1699,
+      "bench_med": 3419734.95,
+      "bench_mad": 17675.13
+    },
+    "ipynb": {
+      "days": 3,
+      "sw_days": 1,
+      "toolchain": "python 3.11.18 (ipynb)",
+      "total_sec": 49.472,
+      "files_count": 101,
+      "loc": 915,
+      "bench_med": 566865.17,
+      "bench_mad": 2406.97
+    }
+  },
+  "parity": {
+    "c": {
+      "s01_selftest.txt": true,
+      "s05_queue_script.csv": true,
+      "s06_bag_script.csv": true,
+      "s40_parity.csv": true
+    },
+    "cpp": {
+      "s01_selftest.txt": true,
+      "s05_queue_script.csv": true,
+      "s06_bag_script.csv": true,
+      "s40_parity.csv": true
+    },
+    "rust": {
+      "s01_selftest.txt": true,
+      "s05_queue_script.csv": true,
+      "s06_bag_script.csv": true,
+      "s40_parity.csv": true
+    },
+    "go": {
+      "s01_selftest.txt": true,
+      "s05_queue_script.csv": true,
+      "s06_bag_script.csv": true,
+      "s40_parity.csv": true
+    },
+    "ruby": {
+      "s01_selftest.txt": true,
+      "s05_queue_script.csv": true,
+      "s06_bag_script.csv": true,
+      "s40_parity.csv": true
+    },
+    "py": {
+      "s01_selftest.txt": true,
+      "s05_queue_script.csv": true,
+      "s06_bag_script.csv": true,
+      "s40_parity.csv": true
+    },
+    "ts": {
+      "s01_selftest.txt": true,
+      "s05_queue_script.csv": true,
+      "s06_bag_script.csv": true,
+      "s40_parity.csv": true
+    },
+    "ipynb": {
+      "s01_selftest.txt": true,
+      "s05_queue_script.csv": true,
+      "s06_bag_script.csv": true,
+      "s40_parity.csv": true
+    }
+  },
+  "vacuous_flags": [],
+  "criteria": {
+    "c1_bit_parity": {
+      "status": "tercapai",
+      "measured": "8/8 bahasa identik 0-byte pada s01,s05,s06,s40",
+      "threshold": "8/8 identik"
+    },
+    "c2_dtmc_exact": {
+      "status": "tercapai",
+      "measured": "max_rel_diff=0.00e+00, s09_rel_err=1.74e-11",
+      "threshold": "< 1e-10 & < 1e-9"
+    },
+    "c3_single_val": {
+      "status": "tercapai",
+      "measured": "C: 9/9 dalam 3 SE (semua 8 bahasa >= 8/9)",
+      "threshold": ">= 90% dalam 3 SE"
+    },
+    "c4_tandem_val": {
+      "status": "tercapai",
+      "measured": "C: 4/4 dalam 3 SE (8/8 bahasa 4/4)",
+      "threshold": ">= 90% dalam 3 SE"
+    },
+    "c5_invariants": {
+      "status": "tercapai",
+      "measured": "0 pelanggaran & little_diff=0 pada 8/8 bahasa",
+      "threshold": "0 pelanggaran"
+    },
+    "c6_replay_det": {
+      "status": "tercapai",
+      "measured": "8/8 bahasa match=1",
+      "threshold": "match=1"
+    },
+    "c7_replay_indep": {
+      "status": "tercapai",
+      "measured": "8/8 bahasa max_diff=0",
+      "threshold": "max_diff=0"
+    },
+    "c8_calibration": {
+      "status": "tercapai",
+      "measured": "C max_util=0.6284, loss=0.1133",
+      "threshold": "util in [0.55,0.92], loss < 0.15"
+    },
+    "c9_util_little": {
+      "status": "belum tercapai",
+      "measured": "max_u_diff=6.72e-04, max_little_rel=1.29e-16",
+      "threshold": "< 1e-4"
+    },
+    "c10_neg_controls": {
+      "status": "tercapai",
+      "measured": "8/8 bahasa 3/3 kontrol negatif ok=1",
+      "threshold": "semua ok=1"
+    },
+    "c11_metamorphic": {
+      "status": "belum tercapai",
+      "measured": "S26 match=1, S27 max_diff=0.025043, S28 min_mono=1.00",
+      "threshold": "S26=1, S27<0.02, S28>=0.95"
+    },
+    "c12_sweeps_dir": {
+      "status": "belum tercapai",
+      "measured": "z_srv=35.5, z_biz=7.0, z_econ=0.8, z_brk=3.0, z_blt=7.4",
+      "threshold": "semua >= 3 SE & non-hampa"
+    },
+    "c13_crn_ratio": {
+      "status": "belum tercapai",
+      "measured": "C var_ratio=1.2264",
+      "threshold": ">= 2.0x"
+    },
+    "c14_ci_overlap": {
+      "status": "tercapai",
+      "measured": "8/8 bahasa CI tumpang tindih",
+      "threshold": "overlap"
+    },
+    "c15_branches": {
+      "status": "sebagian",
+      "measured": "C s_main zero_branches=['BELT_BLOCK'] (BELT_BLOCK terpicu di s32)",
+      "threshold": "15/15 cabang >= 1"
+    },
+    "c16_100_files": {
+      "status": "tercapai",
+      "measured": "101 berkas/bahasa identik di 8/8 bahasa",
+      "threshold": ">= 100 berkas"
+    },
+    "c17_all_ran": {
+      "status": "tercapai",
+      "measured": "8/8 bahasa selesai",
+      "threshold": "8/8 selesai"
+    },
+    "c18_selftest": {
+      "status": "tercapai",
+      "measured": "8/8 bahasa ok=1",
+      "threshold": "8/8 ok=1"
+    },
+    "c19_svgs": {
+      "status": "tercapai",
+      "measured": "8/8 bahasa 12 SVG valid XML",
+      "threshold": ">= 12 SVG/bahasa"
+    },
+    "c20_anti_vacuous": {
+      "status": "tercapai",
+      "measured": "vacuous_flags=0",
+      "threshold": "0 flags"
+    },
+    "c21_compress": {
+      "status": "tercapai",
+      "measured": "8/8 bahasa roundtrip_ok=1",
+      "threshold": "roundtrip_ok=1"
+    },
+    "c22_bench_loc": {
+      "status": "tercapai",
+      "measured": "C 58489802+-266295 slot-pax/s (1587 LOC)",
+      "threshold": "dilaporkan dengan MAD & LOC"
+    }
+  },
+  "figures": [
+    "outputs/figures/day008h_dtmc_validation.png",
+    "outputs/figures/day008h_hourly_utilization.png",
+    "outputs/figures/day008h_station_queues.png",
+    "outputs/figures/day008h_sweeps_effect.png",
+    "outputs/figures/day008h_ensemble_ci.png",
+    "outputs/figures/day008h_tornado_sensitivity.png",
+    "outputs/figures/day008h_parity_matrix.png",
+    "outputs/figures/day008h_benchmark_loc.png"
+  ]
+}
