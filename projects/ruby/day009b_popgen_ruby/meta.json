@@ -1,0 +1,10 @@
+{
+  "day": 9,
+  "session": "b",
+  "topic_no": null,
+  "type": "sim",
+  "language": "ruby",
+  "topic": "Genetika Populasi (Ruby Stdlib, 60 Tahap): Wright-Fisher, Moran, Rantai Markov Rational, Koalesen Kingman, Pulau, Sapuan Selektif & ARG-Lite",
+  "date": "2026-11-27",
+  "link": "projects/ruby/day009b_popgen_ruby"
+}

@@ -1,0 +1,32 @@
+# frozen_string_literal: true
+
+require 'rbconfig'
+
+RUBY_BIN = RbConfig.ruby
+LIB_FILES = Dir['bin/popgen', 'lib/**/*.rb'].sort
+
+desc 'Run the single built-in selftest suite'
+task :selftest do
+  sh "#{RUBY_BIN} -w -Ilib bin/popgen selftest"
+end
+
+task default: :selftest
+
+desc 'Run all 60 stages (use SCALE=small for fast smoke run, WORKERS=1|2|4)'
+task :run do
+  scale = ENV.fetch('SCALE', 'full')
+  workers = ENV.fetch('WORKERS', '4')
+  lines = `wc -l #{LIB_FILES.join(' ')}`.lines.last.to_i
+  ruby_ver = `#{RUBY_BIN} -v`.strip
+  arch = `uname -m`.strip
+  cores = `sysctl -n hw.ncpu 2>/dev/null || nproc 2>/dev/null || echo 4`.strip
+  sh "#{RUBY_BIN} -w -Ilib bin/popgen all --scale #{scale} --workers #{workers} --lines #{lines} --ruby \"#{ruby_ver}\" --arch \"#{arch}\" --cores #{cores}"
+end
+
+desc 'Count Ruby source lines and verify 5000..8000'
+task :lines do
+  system("wc -l #{LIB_FILES.join(' ')}")
+  total = `wc -l #{LIB_FILES.join(' ')}`.lines.last.to_i
+  puts "Total Ruby lines (bin/popgen + lib/**/*.rb): #{total}"
+  abort("Line count #{total} outside [5000, 8000]") unless total.between?(5000, 8000)
+end

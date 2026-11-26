@@ -1,0 +1,4 @@
+# frozen_string_literal: true
+
+# Stdlib-only project (no external runtime or test gems required).
+source 'https://rubygems.org'

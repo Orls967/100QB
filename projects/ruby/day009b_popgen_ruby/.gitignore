@@ -1,0 +1,4 @@
+.DS_Store
+out/large_*.csv
+out/large_*.json
+tmp/
