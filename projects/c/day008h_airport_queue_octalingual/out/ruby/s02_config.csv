@@ -1,0 +1,6 @@
+key,value
+master_seed,20261126
+slots_per_day,8640
+parity_days,3
+arr_scale_bp,19000
+belt_cap,3
