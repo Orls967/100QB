@@ -1,0 +1,218 @@
+{
+  "session": "day009c",
+  "project_path": "projects/cpp/day009c_lbm_cpp",
+  "scale": "full",
+  "master_seed": 20261127,
+  "threads": 4,
+  "run_completed_without_errors": true,
+  "machine": {
+    "arch": "arm64",
+    "cores": 10,
+    "compiler": "Apple clang version 16.0.0 (clang-1600.0.26.6)"
+  },
+  "code_metrics": {
+    "cpp_lines": 6367,
+    "stages_completed": 65,
+    "total_output_files": 156,
+    "csv_files": 107,
+    "svg_files": 48,
+    "csv_total_bytes": 76405,
+    "svg_total_bytes": 2036782,
+    "total_elapsed_sec": 113.77803012
+  },
+  "determinism": {
+    "combined_deterministic_csv_fnv1a": "5562910a5be3645a",
+    "threads_1_2_4_8_identical": true,
+    "two_runs_identical": true,
+    "thread_hash_1": "c31b194e69b752bb",
+    "thread_hash_2": "c31b194e69b752bb",
+    "thread_hash_4": "c31b194e69b752bb",
+    "thread_hash_8": "c31b194e69b752bb"
+  },
+  "criteria_summary": {
+    "total": 22,
+    "tercapai": 18,
+    "sebagian": 0,
+    "lainnya": 4
+  },
+  "criteria": {
+    "c1": {
+      "status": "tercapai",
+      "measured": "max_rel_dm=6.540344e-13, max_rel_dp=3.466074e-15",
+      "threshold": "rel_drift <= 1e-12 over 1e4 steps"
+    },
+    "c2": {
+      "status": "tercapai",
+      "measured": "max_rel_err=0.34728870%",
+      "threshold": "rel_err <= 0.5% across 4 ops x 4 tau"
+    },
+    "c12": {
+      "status": "tercapai",
+      "measured": "survived BGK=22/25, TRT=15, MRT=25",
+      "threshold": "BGK ratio in (0, 1) and TRT/MRT survive >= BGK"
+    },
+    "c9": {
+      "status": "belum tercapai",
+      "measured": "u0=0_err=7.312283e-04, u0=0.15_BGK=6.687667e-02, TRT=6.784987e-02, ratio=0.98565666",
+      "threshold": "error grows with wind (ctrl u0=0) & BGK/TRT >= 2"
+    },
+    "c3": {
+      "status": "tercapai",
+      "measured": "order=2.01073576+-0.10224210, decay_rel_128=6.374927e-05, mono_viol=0",
+      "threshold": "order in [1.8,2.2], decay_128 <= 1%, violations == 0"
+    },
+    "c8": {
+      "status": "tercapai",
+      "measured": "exponent_p=1.80044873+-0.02209574",
+      "threshold": "p in [1.7, 2.3]"
+    },
+    "c4": {
+      "status": "tercapai",
+      "measured": "TRT_var=1.888576e-11, TRT_L2=1.909985e-11, BGK_var=2.916667e-03 (ratio=1.544373e+08x)",
+      "threshold": "TRT var<=1e-6 & L2<=1e-3; BGK var>=10x TRT"
+    },
+    "c5": {
+      "status": "tercapai",
+      "measured": "max_linear_err=1.318806e-13",
+      "threshold": "max_linear_err <= 1e-10"
+    },
+    "c6": {
+      "status": "tercapai",
+      "measured": "rel_dp_err=1.14694382% (dp=1.333333e-03)",
+      "threshold": "pressure drop within 2% of Hagen-Poiseuille"
+    },
+    "c7": {
+      "status": "tercapai",
+      "measured": "max_cs_rel=2.031236e-02%, all_damped=true",
+      "threshold": "cs within 1% & consistent damping >=3 resolutions"
+    },
+    "c10": {
+      "status": "belum tercapai",
+      "measured": "Re100=(0.61649447,0.73665084) dist=0.00235883 res=2.040901e-06; Re400=(0.55799288,0.60823949) eddies=2; Re1000=(0.53694941,0.56900119) eddies=2",
+      "threshold": "Re100 dist<=0.03 of (0.6172,0.7344) & res<=1e-9; Re400/1000 rho_min>0"
+    },
+    "c11": {
+      "status": "belum tercapai",
+      "measured": "Re20: Cd=2.67088146, Lr/D=1.34886085; Re100: St=0.19381473; Bouzidi<=0.5x=0/3",
+      "threshold": "Cd in [1.8,2.6], Lr/D in [0.6,1.2], St in [0.14,0.20], Bouzidi<=0.5x in >=3 res"
+    },
+    "c13": {
+      "status": "tercapai",
+      "measured": "3D_shear_rel=0.29288134%, duct_L2=0.02091202%",
+      "threshold": "3D shear <= 0.5% & square duct <= 2%"
+    },
+    "c14": {
+      "status": "tercapai",
+      "measured": "2D_push_pull_aa=identical, 3D=identical, AoS_SoA_Tile=identical",
+      "threshold": "bit-identical after 1000 steps (2D & 3D) and across layouts"
+    },
+    "c15": {
+      "status": "tercapai",
+      "measured": "1/2/4/8_threads=c31b194e69b752bb (identical=true)",
+      "threshold": "thread 1/2/4/8 bit-identical"
+    },
+    "c17": {
+      "status": "tercapai",
+      "measured": "MLUPS=[34.89497616,33.86375710,82.24114654,14.82004877,105.76826476,210.33990953,277.42184282], copy_bw=134.02044990GB/s, best_frac=0.14903974",
+      "threshold": "V0..V6 median+-MAD >=5 repeats + roofline bw fraction"
+    },
+    "c18": {
+      "status": "belum tercapai",
+      "measured": "slope=0.81463427+-0.23725803",
+      "threshold": "log-log slope in [0.9, 1.15] for N >= 256^2"
+    },
+    "c16": {
+      "status": "tercapai",
+      "measured": "det_csv_hash=a9354208075cce87, internal_2x=true",
+      "threshold": "2x full runs identical FNV-1a CSV hash"
+    },
+    "c19": {
+      "status": "tercapai",
+      "measured": "total_files=156, valid_svg=48",
+      "threshold": ">= 150 files & >= 40 valid XML SVGs"
+    },
+    "c20": {
+      "status": "tercapai",
+      "measured": "selftest_exit=0",
+      "threshold": "selftest exits 0"
+    },
+    "c21": {
+      "status": "tercapai",
+      "measured": "vacuous_flags_count=0",
+      "threshold": "vacuous_flags == []"
+    },
+    "c22": {
+      "status": "tercapai",
+      "measured": "cpp_lines=6367, stages=65, elapsed=113.77803012s",
+      "threshold": "cpp_lines in [6000, 9000] & stage timings"
+    }
+  },
+  "vacuous_flags": [],
+  "stages": [
+    {"id": "S01", "name": "lattice_weights", "elapsed_sec": 0.00015600, "files": 1},
+    {"id": "S02", "name": "isotropy_order4", "elapsed_sec": 0.00016133, "files": 2},
+    {"id": "S03", "name": "moments_recovery", "elapsed_sec": 8.350000e-05, "files": 1},
+    {"id": "S04", "name": "equilibrium_positivity", "elapsed_sec": 0.00018417, "files": 2},
+    {"id": "S05", "name": "mrt_orthogonality", "elapsed_sec": 4.529100e-05, "files": 1},
+    {"id": "S06", "name": "opp_table", "elapsed_sec": 4.545900e-05, "files": 1},
+    {"id": "S07", "name": "single_cell_fixtures", "elapsed_sec": 8.820800e-05, "files": 1},
+    {"id": "S08", "name": "conservation_1e4", "elapsed_sec": 2.21310975, "files": 5},
+    {"id": "S09", "name": "shear_BGK", "elapsed_sec": 0.91628717, "files": 1},
+    {"id": "S10", "name": "shear_TRT", "elapsed_sec": 1.07333646, "files": 2},
+    {"id": "S11", "name": "shear_MRT", "elapsed_sec": 1.10246217, "files": 1},
+    {"id": "S12", "name": "shear_Regularized", "elapsed_sec": 1.01374775, "files": 2},
+    {"id": "S13", "name": "stability_map", "elapsed_sec": 6.53699721, "files": 2},
+    {"id": "S14", "name": "stability_summary", "elapsed_sec": 0.00018100, "files": 2},
+    {"id": "S15", "name": "galilean_invariance", "elapsed_sec": 4.11584333, "files": 2},
+    {"id": "S16", "name": "galilean_summary", "elapsed_sec": 6.566600e-05, "files": 1},
+    {"id": "S17", "name": "tg2d_convergence", "elapsed_sec": 1.20838100, "files": 2},
+    {"id": "S18", "name": "tg2d_energy_trace", "elapsed_sec": 0.00022063, "files": 2},
+    {"id": "S19", "name": "tg2d_profile", "elapsed_sec": 6.879200e-05, "files": 1},
+    {"id": "S20", "name": "ma_scaling", "elapsed_sec": 0.13558771, "files": 2},
+    {"id": "S21", "name": "poiseuille_trt", "elapsed_sec": 6.68433058, "files": 1},
+    {"id": "S22", "name": "poiseuille_bgk_ctrl", "elapsed_sec": 5.14170346, "files": 2},
+    {"id": "S23", "name": "poiseuille_profiles", "elapsed_sec": 0.00034200, "files": 2},
+    {"id": "S24", "name": "couette_flow", "elapsed_sec": 0.94981825, "files": 2},
+    {"id": "S25", "name": "zou_he_channel", "elapsed_sec": 4.99665758, "files": 2},
+    {"id": "S26", "name": "zou_he_pressure", "elapsed_sec": 0.00029817, "files": 2},
+    {"id": "S27", "name": "acoustic_speed", "elapsed_sec": 0.20509658, "files": 2},
+    {"id": "S28", "name": "acoustic_damping", "elapsed_sec": 0.00018417, "files": 2},
+    {"id": "S29", "name": "cavity_re100_conv", "elapsed_sec": 0.00058225, "files": 2},
+    {"id": "S30", "name": "cavity_re100_centerlines", "elapsed_sec": 0.00035467, "files": 2},
+    {"id": "S31", "name": "cavity_re100_map", "elapsed_sec": 0.00311967, "files": 2},
+    {"id": "S32", "name": "cavity_re400", "elapsed_sec": 0.00318338, "files": 2},
+    {"id": "S33", "name": "cavity_re1000", "elapsed_sec": 0.00517062, "files": 2},
+    {"id": "S34", "name": "cavity_summary", "elapsed_sec": 0.00023454, "files": 2},
+    {"id": "S35", "name": "cylinder_re20_drag", "elapsed_sec": 6.87596400, "files": 2},
+    {"id": "S36", "name": "cylinder_re20_wake", "elapsed_sec": 0.00401967, "files": 2},
+    {"id": "S37", "name": "cylinder_re100_shedding", "elapsed_sec": 15.01845704, "files": 2},
+    {"id": "S39", "name": "cylinder_re100_map", "elapsed_sec": 0.00372554, "files": 2},
+    {"id": "S38", "name": "bouzidi_vs_staircase", "elapsed_sec": 43.67270096, "files": 2},
+    {"id": "S40", "name": "cylinder_summary", "elapsed_sec": 0.00014796, "files": 2},
+    {"id": "S41", "name": "d3q19_shear_visc", "elapsed_sec": 2.78750621, "files": 1},
+    {"id": "S42", "name": "d3q19_shear_trace", "elapsed_sec": 0.00024742, "files": 2},
+    {"id": "S43", "name": "d3q19_square_duct", "elapsed_sec": 2.05758246, "files": 2},
+    {"id": "S44", "name": "d3q19_duct_map", "elapsed_sec": 0.00089367, "files": 2},
+    {"id": "S45", "name": "tg3d_early_decay", "elapsed_sec": 0.50248258, "files": 2},
+    {"id": "S46", "name": "tg3d_summary", "elapsed_sec": 0.00021967, "files": 2},
+    {"id": "S47", "name": "scheme_parity_2d", "elapsed_sec": 0.34533708, "files": 1},
+    {"id": "S48", "name": "scheme_parity_3d", "elapsed_sec": 1.01398746, "files": 1},
+    {"id": "S49", "name": "layout_parity", "elapsed_sec": 0.35338946, "files": 1},
+    {"id": "S50", "name": "tile_size_sweep", "elapsed_sec": 0.21222808, "files": 2},
+    {"id": "S51", "name": "thread_parity", "elapsed_sec": 0.11834258, "files": 1},
+    {"id": "S52", "name": "thread_scaling", "elapsed_sec": 0.34124375, "files": 2},
+    {"id": "S53", "name": "scheme_long_conservation", "elapsed_sec": 0.63027721, "files": 1},
+    {"id": "S54", "name": "parity_matrix", "elapsed_sec": 0.00018862, "files": 2},
+    {"id": "S55", "name": "ladder_v0_v1", "elapsed_sec": 1.10534308, "files": 1},
+    {"id": "S56", "name": "ladder_v2_v3", "elapsed_sec": 1.50825392, "files": 1},
+    {"id": "S57", "name": "ladder_v4_v6", "elapsed_sec": 0.37095400, "files": 2},
+    {"id": "S58", "name": "roofline_summary", "elapsed_sec": 6.208300e-05, "files": 2},
+    {"id": "S59", "name": "cell_time_scaling", "elapsed_sec": 0.47990237, "files": 2},
+    {"id": "S60", "name": "scaling_fit", "elapsed_sec": 0.00020533, "files": 2},
+    {"id": "S61", "name": "determinism_check", "elapsed_sec": 0.03971842, "files": 2},
+    {"id": "S62", "name": "delta_rle_compression", "elapsed_sec": 0.02453483, "files": 3},
+    {"id": "S63", "name": "parametric_diagnostics", "elapsed_sec": 0.00053100, "files": 7},
+    {"id": "S64", "name": "catalog_and_summary", "elapsed_sec": 0.00145346, "files": 31},
+    {"id": "S65", "name": "manifest_and_json", "elapsed_sec": 1.708000e-06, "files": 7}
+  ]
+}

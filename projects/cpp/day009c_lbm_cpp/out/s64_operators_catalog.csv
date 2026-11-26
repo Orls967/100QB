@@ -1,0 +1,5 @@
+operator,free_params,wall_exactness
+BGK,1_tau,tau_dependent_slip
+TRT,2_tau_plus_Lambda,exact_Lambda_3_16
+MRT,9_or_19_moments,tunable_bulk_and_flux
+Regularized,proj_Pi1_neq,filtered_ghost_modes

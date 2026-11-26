@@ -1,0 +1,7 @@
+boundary,order,role
+Periodic,spectral,homogeneous_tests
+HalfWay_BB,2nd_with_TRT,channel_cavity_duct
+FullWay_BB,1st,comparison_mode
+ZouHe_Vel_Pres,2nd_flat,inlet_outlet_channel
+Guo_Forcing,2nd_exact,body_force_poiseuille
+Bouzidi_Linear,2nd_curved,cylinder_drag_lift

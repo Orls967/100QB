@@ -1,0 +1,23 @@
+id,status,measured
+c1,tercapai,max_rel_dm=6.540344e-13, max_rel_dp=3.466074e-15
+c2,tercapai,max_rel_err=0.34728870%
+c12,tercapai,survived BGK=22/25, TRT=15, MRT=25
+c9,belum tercapai,u0=0_err=7.312283e-04, u0=0.15_BGK=6.687667e-02, TRT=6.784987e-02, ratio=0.98565666
+c3,tercapai,order=2.01073576+-0.10224210, decay_rel_128=6.374927e-05, mono_viol=0
+c8,tercapai,exponent_p=1.80044873+-0.02209574
+c4,tercapai,TRT_var=1.888576e-11, TRT_L2=1.909985e-11, BGK_var=2.916667e-03 (ratio=1.544373e+08x)
+c5,tercapai,max_linear_err=1.318806e-13
+c6,tercapai,rel_dp_err=1.14694382% (dp=1.333333e-03)
+c7,tercapai,max_cs_rel=2.031236e-02%, all_damped=true
+c10,belum tercapai,Re100=(0.61649447,0.73665084) dist=0.00235883 res=2.040901e-06; Re400=(0.55799288,0.60823949) eddies=2; Re1000=(0.53694941,0.56900119) eddies=2
+c11,belum tercapai,Re20: Cd=2.67088146, Lr/D=1.34886085; Re100: St=0.19381473; Bouzidi<=0.5x=0/3
+c13,tercapai,3D_shear_rel=0.29288134%, duct_L2=0.02091202%
+c14,tercapai,2D_push_pull_aa=identical, 3D=identical, AoS_SoA_Tile=identical
+c15,tercapai,1/2/4/8_threads=c31b194e69b752bb (identical=true)
+c17,tercapai,MLUPS=[34.89497616,33.86375710,82.24114654,14.82004877,105.76826476,210.33990953,277.42184282], copy_bw=134.02044990GB/s, best_frac=0.14903974
+c18,belum tercapai,slope=0.81463427+-0.23725803
+c16,tercapai,det_csv_hash=a9354208075cce87, internal_2x=true
+c19,tercapai,total_files=156, valid_svg=48
+c20,tercapai,selftest_exit=0
+c21,tercapai,vacuous_flags_count=0
+c22,tercapai,cpp_lines=6367, stages=65, elapsed=113.77803012s

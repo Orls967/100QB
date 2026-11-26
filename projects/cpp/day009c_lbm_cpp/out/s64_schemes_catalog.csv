@@ -1,0 +1,4 @@
+scheme,grids,bytes_per_cell_d2q9
+two_grid_push,2,144
+two_grid_pull,2,144
+aa_pattern,1_in_place,72
