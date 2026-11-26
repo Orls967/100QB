@@ -1,1 +1,1 @@
-{"lang":"rust","N":100000,"days":180,"N_sw":1000,"toolchain":"rustc 1.93.1","total_sec":0.326}
+{"lang":"rust","N":100000,"days":180,"N_sw":1000,"toolchain":"rustc 1.93.1","total_sec":0.367}

@@ -15,7 +15,7 @@ figures/layer_attack.svg,1,523,b82286b72919b63c
 figures/offspring_dist.svg,1,515,d54ee7dd00bf38f4
 figures/rt_series.svg,1,1134,513488bd9de4091a
 figures/sweep_heatmap.svg,1,456,a49894da2e1d3d3d
-figures/vaccine_effect.svg,1,457,cfa057d15b24f753
+figures/vaccine_effect.svg,1,461,fc9feac205399dcc
 figures/variant_share.svg,1,1123,92378b5f7753ca24
 generation_interval.csv,564,3280,f7ffb9e56f50c7f4
 hospital_cap_nointerv.csv,181,1572,8f00821ef2db0cf0
@@ -62,10 +62,10 @@ s31_branches.csv,22,268,54d7cfbf500f9eb0
 s32_vacuous_check.csv,3,39,5ec7ca6f62840613
 s33_replay.csv,2,118,8d65677822e45285
 s34_parity.csv,2,122,820e6d2cc260be9a
-s35_bench.csv,2,73,8435bbc812194a23
+s35_bench.csv,2,73,d11afcb667025550
 s36_sizes.csv,2,43,3297804474052a21
 s37_replay_counts.csv,2,19,c5dbe732b5633cd1
-s39_summary.json,1,95,7dc347c85bd760eb
+s39_summary.json,1,95,d789cea77ea081f0
 tests.csv,181,1372,328f33d520af720f
 transmissions_log.csv,564,11594,4e301a7cb88f7749
 transmissions_log_nointerv.csv,68199,1420445,a983a9abc93c22c4

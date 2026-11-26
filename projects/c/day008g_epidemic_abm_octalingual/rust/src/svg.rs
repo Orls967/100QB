@@ -32,7 +32,7 @@ pub fn write_s38_svgs(s_no: &Sim, s_main: &Sim, out_dir: &str) {
     write_bar_svg(out_dir, "layer_attack.svg", "Rust Infections by Layer (HH/SW/Comm)", &[s_main.layer_inf[0] as f64, s_main.layer_inf[1] as f64, s_main.layer_inf[2] as f64], "#2ca02c");
     write_bar_svg(out_dir, "offspring_dist.svg", "Rust Infections by Age Group", &[s_main.age_inf[0] as f64, s_main.age_inf[1] as f64, s_main.age_inf[2] as f64], "#8c564b");
     write_bar_svg(out_dir, "sweep_heatmap.svg", "Rust No-Interv vs Interv Total Infections", &[s_no.total_trans as f64, s_main.total_trans as f64], "#e377c2");
-    write_bar_svg(out_dir, "vaccine_effect.svg", "Rust Vaccine Doses & Blocked Transmissions", &[s_main.branches[18] as f64, s_main.branches[3] as f64], "#17becf");
+    write_bar_svg(out_dir, "vaccine_effect.svg", "Rust Vaccine Doses &amp; Blocked Transmissions", &[s_main.branches[18] as f64, s_main.branches[3] as f64], "#17becf");
     write_bar_svg(out_dir, "variant_share.svg", "Rust Variant 1 Daily Incidence", &ens, "#bcbd22");
     write_bar_svg(out_dir, "ensemble_band.svg", "Rust Final Recovered vs Deaths", &[s_main.daily_cnt[d_cnt - 1][ST_R as usize] as f64, s_main.daily_cnt[d_cnt - 1][ST_D as usize] as f64], "#7f7f7f");
 }

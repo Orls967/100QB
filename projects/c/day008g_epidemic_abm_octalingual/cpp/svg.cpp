@@ -37,7 +37,7 @@ void write_s38_svgs(Sim &s_no, Sim &s_main, const char *out_dir) {
     double cmp[2] = {static_cast<double>(s_no.total_trans), static_cast<double>(s_main.total_trans)};
     write_bar_svg(out_dir, "sweep_heatmap.svg", "C++20 No-Interv vs Interv Total Infections", cmp, 2, "#e377c2");
     double vax[2] = {static_cast<double>(s_main.branches[BR_VAX_DOSE]), static_cast<double>(s_main.branches[BR_FAIL_VAX])};
-    write_bar_svg(out_dir, "vaccine_effect.svg", "C++20 Vaccine Doses & Blocked Transmissions", vax, 2, "#17becf");
+    write_bar_svg(out_dir, "vaccine_effect.svg", "C++20 Vaccine Doses &amp; Blocked Transmissions", vax, 2, "#17becf");
     write_bar_svg(out_dir, "variant_share.svg", "C++20 Variant 1 Daily Incidence", ens, 12, "#bcbd22");
     double outc[2] = {static_cast<double>(s_main.daily_cnt[D - 1][ST_R]), static_cast<double>(s_main.daily_cnt[D - 1][ST_D])};
     write_bar_svg(out_dir, "ensemble_band.svg", "C++20 Final Recovered vs Deaths", outc, 2, "#7f7f7f");
