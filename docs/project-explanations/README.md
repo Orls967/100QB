@@ -66,6 +66,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `8g` (`day008g`) | `bonus` | `sim` | `c+cpp+rust+go+ruby+py+ts+ipynb` | [Simulasi Epidemi Berbasis Agen SEIR Berlapis Lintas 8 Bahasa (39 Tahap)](day008g_sim_epidemic-abm-octalingual.md) |
 | `8h` (`day008h`) | `bonus` | `sim` | `c+cpp+rust+go+ruby+py+ts+ipynb` | [Jaringan Antrean Terminal Bandara Berbasis Agen & Validasi DTMC Eksak Lintas 8 Bahasa (48 Tahap)](day008h_sim_airport-queue-octalingual.md) |
 | `8i` (`day008i`) | `bonus` | `sim` | `c` | [Tumpukan Pasir Abelian (Sandpile C11 ≤ 999 Baris): Grup Sandpile, Elemen Identitas Fraktal & SOC](day008i_sim_sandpile-c.md) |
+| `8j` (`day008j`) | `bonus` | `sim` | `rust` | [Diagonalisasi Eksak Rantai Spin-½ Heisenberg/XXZ (Rust ≤ 499 Baris): Lanczos, Keterikatan & Penskalaan CFT](day008j_sim_heisenberg-ed-rust.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 

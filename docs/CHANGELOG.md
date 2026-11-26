@@ -3,6 +3,15 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 008j] — 2026-11-26 · Diagonalisasi Eksak Rantai Spin-½ Heisenberg/XXZ (Rust ≤ 499 Baris): Lanczos, Keterikatan & Penskalaan CFT
+
+### Ditambahkan (`day008j`)
+- Proyek Rust 2021 murni `projects/rust/day008j_heisenberg_ed_rust/` tanpa *crate* eksternal dengan total **494 baris** pasca-`cargo fmt` (`Cargo.toml`: 7, `src/main.rs`: 487; $\le 499$ baris, **12/13** kriteria `tercapai` dan `c7_marshall` + sub-cek `sum_r` bertanda `belum dijalankan` per aturan pangkas batas baris, `vacuous_flags = []`):
+  - **Lanczos *On-the-Fly* & Validasi Silang**: konvergensi hingga $N=24$ ($\dim S^z=0 = 2\,704\,156$) dalam maksimal `92` iterasi; selisih maksimum terhadap diagonalisasi Jacobi dense untuk semua $N \le 12, \Delta \in \{0,0.5,1,2\}$ sebesar `4.09e-14` (`c1`); selisih terhadap solusi eksak fermion bebas Jordan–Wigner ($\Delta=0, N=4..24$) sebesar `7.99e-15` (`c2`).
+  - **Identitas & CFT**: $|\langle S_{\text{tot}}^2 \rangle| \le 4.47\times 10^{-11}$, selisih $\langle S_0\cdot S_1\rangle - E_0/N \le 7.25\times 10^{-12}$, dan kemonotonan $E_0(\Delta)$ terjaga di seluruh $N$ (`c3`); fit OLS $E_0/N = e_\infty + c_2/N^2$ ($N=10..24, \Delta=1$) memberi $e_\infty = -0.443112 \pm 0.000007$ dan $c_2 = -0.8420 \pm 0.0013$ (`c4`), sementara celah singlet–triplet meluruh dengan kemiringan log–log `-0.9576 ± 0.0012` pada $\Delta=1$ vs tercelah `0.6100` pada $\Delta=2, N=20$ (`c5`).
+  - **Entropi Keterikatan & Tolok Ukur**: dekomposisi Schmidt per blok $S^z_A$ pada $N=20, \Delta=1$ menghasilkan kemiringan Calabrese–Cardy `0.3533 ± 0.0030` (galat jejak $\sum\lambda_i - 1 \le 1.32\times 10^{-13}$, `c6`); kecepatan `871.69 ± 2.32` iter/s (`11.22M` state/detik di $N=16$, `c12`); estimasi puncak memori `1908.4 MiB` (`c13`).
+  - **Output**: 5 CSV di `out/` + 6 SVG tulis tangan `outputs/figures/day008j_*.svg` + `outputs/day008j/results.json` (identik 0-byte antar dua eksekusi `make run`, `csv_fnv1a = b21b281060c3f526`), dan [day008j_sim_heisenberg-ed-rust.md](project-explanations/day008j_sim_heisenberg-ed-rust.md).
+
 ## [Hari 008i] — 2026-11-26 · Tumpukan Pasir Abelian (Sandpile C11 ≤ 999 Baris): Grup Sandpile, Elemen Identitas Fraktal & SOC
 
 ### Ditambahkan (`day008i`)
