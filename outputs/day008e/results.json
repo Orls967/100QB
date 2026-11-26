@@ -1,5 +1,24 @@
 {
   "session": "day008e",
+  "date": "2026-11-26",
+  "run_completed_without_errors": true,
+  "environment": {
+    "arch": "arm64",
+    "cpu_cores": 10,
+    "python": "3.11.18",
+    "tsc_installed": false,
+    "ts_runner": "node v24.21.0 (--experimental-strip-types)",
+    "toolchains": {
+      "c": "Apple clang 16.0.0 (-std=c11)",
+      "cpp": "Apple clang 16.0.0 (-std=c++20)",
+      "rust": "rustc 1.93.1",
+      "go": "go 1.27.4",
+      "ruby": "ruby 4.0.9",
+      "py": "python 3.11.18",
+      "ts": "node v24.21.0 (--experimental-strip-types)",
+      "ipynb": "python3.14 + nbclient"
+    }
+  },
   "languages": [
     "c",
     "cpp",
@@ -13,18 +32,165 @@
   "s01_sha256": "e96e6acf6688584c73faad731808b446ba3f60c89d3cdf0ea0cb8fb75109774a",
   "s17_sha256": "0a49eae379bdc86865b250ef50c14c206f5049bcc2ff972096301d11c388d2e2",
   "criteria": {
-    "c1_parity_8lang": true,
-    "c2_eigen_anchor_le_1e-12": true,
-    "c3_res_le_1e-8_and_agree_le_1e-6": true,
-    "c4_order_in_1.9_2.1": true,
-    "c5_rho_n31_within_1pct": true,
-    "c6_scaling_exponents": false,
-    "c7_mg_factor_n63_le_0.2": true,
-    "c8_fmg_ratio_n63_le_3": true,
-    "c9_all_finished": true,
-    "c10_selftest_pass": true,
-    "c11_svgs_valid": true,
-    "c12_speed_and_lines_le_700": true
+    "c1_parity_8lang": {
+      "status": "tercapai",
+      "measured": {
+        "s01_match_8lang": true,
+        "s17_match_8lang": true,
+        "diff_bytes": 0
+      },
+      "threshold": "0 byte diff on s01_selftest.txt and s17_parity.csv across all 8 languages"
+    },
+    "c2_eigen_anchor_le_1e-12": {
+      "status": "tercapai",
+      "measured": 3.165e-13,
+      "threshold": "<= 1e-12"
+    },
+    "c3_res_le_1e-8_and_agree_le_1e-6": {
+      "status": "tercapai",
+      "measured": {
+        "max_rel_res": 9.9999750752e-09,
+        "sol_agree_63_inf": 2.5016362092955546e-08
+      },
+      "threshold": "rel_res <= 1e-8 and max_m ||u_m - u_mg||_inf <= 1e-6 at N=63"
+    },
+    "c4_order_in_1.9_2.1": {
+      "status": "tercapai",
+      "measured": 2.001445,
+      "threshold": "[1.9, 2.1]"
+    },
+    "c5_rho_n31_within_1pct": {
+      "status": "tercapai",
+      "measured": {
+        "jacobi_rel_diff": 1.2842148599133086e-10,
+        "gs_rel_diff": 3.8366990139661604e-08
+      },
+      "threshold": "<= 0.01 (1%) from cos(pi/32) and cos^2(pi/32)"
+    },
+    "c6_scaling_exponents": {
+      "status": "sebagian",
+      "measured": {
+        "jacobi": {
+          "slope": 1.950197,
+          "slope_se": 0.010009,
+          "in_range": true
+        },
+        "gs": {
+          "slope": 1.962493,
+          "slope_se": 0.091734,
+          "in_range": true
+        },
+        "rbgs": {
+          "slope": 1.949562,
+          "slope_se": 0.010229,
+          "in_range": true
+        },
+        "sor": {
+          "slope": 1.005201,
+          "slope_se": 0.005448,
+          "in_range": true
+        },
+        "cg": {
+          "slope": 0.995258,
+          "slope_se": 0.00499,
+          "in_range": true
+        },
+        "pcg_ssor": {
+          "slope": 0.889428,
+          "slope_se": 0.012022,
+          "in_range": false
+        },
+        "mg": {
+          "slope": 0.043434,
+          "slope_se": 0.014568,
+          "in_range": true
+        }
+      },
+      "threshold": {
+        "jacobi": [
+          1.8,
+          2.2
+        ],
+        "gs": [
+          1.8,
+          2.2
+        ],
+        "rbgs": [
+          1.8,
+          2.2
+        ],
+        "sor": [
+          0.8,
+          1.2
+        ],
+        "cg": [
+          0.8,
+          1.2
+        ],
+        "pcg_ssor": [
+          0.4,
+          0.7
+        ],
+        "mg": [
+          -0.1,
+          0.1
+        ]
+      }
+    },
+    "c7_mg_factor_n63_le_0.2": {
+      "status": "tercapai",
+      "measured": {
+        "N63": 0.07011662,
+        "N127": 0.07100588
+      },
+      "threshold": "<= 0.2 at N=63"
+    },
+    "c8_fmg_ratio_n63_le_3": {
+      "status": "tercapai",
+      "measured": 0.473908,
+      "threshold": "<= 3.0 at N=63"
+    },
+    "c9_all_finished": {
+      "status": "tercapai",
+      "measured": "8/8",
+      "threshold": "8/8 languages write s19_summary.json"
+    },
+    "c10_selftest_pass": {
+      "status": "tercapai",
+      "measured": "8/8 selftest ok=1",
+      "threshold": "all 8 languages ok=1"
+    },
+    "c11_svgs_valid": {
+      "status": "tercapai",
+      "measured": "24 per-language SVGs + 4 combined SVGs valid XML",
+      "threshold": "28/28 non-empty valid XML SVGs"
+    },
+    "c12_speed_and_lines_le_700": {
+      "status": "tercapai",
+      "measured": {
+        "line_counts": {
+          "c": 500,
+          "cpp": 446,
+          "rust": 386,
+          "go": 698,
+          "ruby": 324,
+          "py": 316,
+          "ts": 489,
+          "ipynb": 356
+        },
+        "rbgs_ns_med": {
+          "c": 0.9543,
+          "cpp": 0.8564,
+          "rust": 1.4121,
+          "go": 1.8484,
+          "ruby": 232.1492,
+          "py": 125.1029,
+          "ts": 5.7181,
+          "ipynb": 124.1547
+        }
+      },
+      "threshold": "source <= 700 lines (code cells for ipynb) and median+-MAD reported"
+    }
   },
   "metrics": {
     "max_eig_rel_err": 3.165e-13,

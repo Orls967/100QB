@@ -2,7 +2,9 @@ import csv
 import hashlib
 import json
 import math
+import os
 import pathlib
+import platform
 import xml.etree.ElementTree as ET
 import matplotlib
 matplotlib.use("Agg")
@@ -233,24 +235,94 @@ for sp in svg_paths:
         svg_valid = False
         break
 
+c6_ranges = {
+    "jacobi": [1.8, 2.2], "gs": [1.8, 2.2], "rbgs": [1.8, 2.2],
+    "sor": [0.8, 1.2], "cg": [0.8, 1.2], "pcg_ssor": [0.4, 0.7], "mg": [-0.1, 0.1],
+}
+c6_measured = {
+    m: {"slope": slopes[m]["slope"], "slope_se": slopes[m]["slope_se"], "in_range": c6_checks[m]}
+    for m in METHODS
+}
+
+def st(ok):
+    return "tercapai" if ok else "belum tercapai"
+
 results = {
     "session": "day008e",
+    "date": "2026-11-26",
+    "run_completed_without_errors": True,
+    "environment": {
+        "arch": platform.machine(),
+        "cpu_cores": os.cpu_count(),
+        "python": platform.python_version(),
+        "tsc_installed": False,
+        "ts_runner": summaries["ts"]["toolchain"],
+        "toolchains": {lg: summaries[lg]["toolchain"] for lg in LANGS},
+    },
     "languages": LANGS,
     "s01_sha256": hashlib.sha256(s01_ref.encode()).hexdigest(),
     "s17_sha256": hashlib.sha256(s17_ref.encode()).hexdigest(),
     "criteria": {
-        "c1_parity_8lang": s01_ok and s17_ok,
-        "c2_eigen_anchor_le_1e-12": c2_ok,
-        "c3_res_le_1e-8_and_agree_le_1e-6": c3_ok,
-        "c4_order_in_1.9_2.1": c4_ok,
-        "c5_rho_n31_within_1pct": c5_ok,
-        "c6_scaling_exponents": c6_ok,
-        "c7_mg_factor_n63_le_0.2": c7_ok,
-        "c8_fmg_ratio_n63_le_3": c8_ok,
-        "c9_all_finished": c9_ok,
-        "c10_selftest_pass": s01_all_pass,
-        "c11_svgs_valid": svg_valid,
-        "c12_speed_and_lines_le_700": c12_ok,
+        "c1_parity_8lang": {
+            "status": st(s01_ok and s17_ok),
+            "measured": {"s01_match_8lang": s01_ok, "s17_match_8lang": s17_ok, "diff_bytes": 0 if (s01_ok and s17_ok) else -1},
+            "threshold": "0 byte diff on s01_selftest.txt and s17_parity.csv across all 8 languages",
+        },
+        "c2_eigen_anchor_le_1e-12": {
+            "status": st(c2_ok),
+            "measured": max_eig_err,
+            "threshold": "<= 1e-12",
+        },
+        "c3_res_le_1e-8_and_agree_le_1e-6": {
+            "status": st(c3_ok),
+            "measured": {"max_rel_res": max_rel_res, "sol_agree_63_inf": sol_agree_63},
+            "threshold": "rel_res <= 1e-8 and max_m ||u_m - u_mg||_inf <= 1e-6 at N=63",
+        },
+        "c4_order_in_1.9_2.1": {
+            "status": st(c4_ok),
+            "measured": disc_slope,
+            "threshold": "[1.9, 2.1]",
+        },
+        "c5_rho_n31_within_1pct": {
+            "status": st(c5_ok),
+            "measured": {"jacobi_rel_diff": jac_rel_diff, "gs_rel_diff": gs_rel_diff},
+            "threshold": "<= 0.01 (1%) from cos(pi/32) and cos^2(pi/32)",
+        },
+        "c6_scaling_exponents": {
+            "status": "tercapai" if c6_ok else ("sebagian" if any(c6_checks.values()) else "belum tercapai"),
+            "measured": c6_measured,
+            "threshold": c6_ranges,
+        },
+        "c7_mg_factor_n63_le_0.2": {
+            "status": st(c7_ok),
+            "measured": {"N63": mg_fac_63, "N127": mg_fac_127},
+            "threshold": "<= 0.2 at N=63",
+        },
+        "c8_fmg_ratio_n63_le_3": {
+            "status": st(c8_ok),
+            "measured": fmg_ratio_63,
+            "threshold": "<= 3.0 at N=63",
+        },
+        "c9_all_finished": {
+            "status": st(c9_ok),
+            "measured": f"{len(summaries)}/8",
+            "threshold": "8/8 languages write s19_summary.json",
+        },
+        "c10_selftest_pass": {
+            "status": st(s01_all_pass),
+            "measured": "8/8 selftest ok=1" if s01_all_pass else "failed",
+            "threshold": "all 8 languages ok=1",
+        },
+        "c11_svgs_valid": {
+            "status": st(svg_valid),
+            "measured": "24 per-language SVGs + 4 combined SVGs valid XML" if svg_valid else "invalid",
+            "threshold": "28/28 non-empty valid XML SVGs",
+        },
+        "c12_speed_and_lines_le_700": {
+            "status": st(c12_ok),
+            "measured": {"line_counts": line_counts, "rbgs_ns_med": {lg: cost_data[lg]["rbgs"]["ns_med"] for lg in LANGS}},
+            "threshold": "source <= 700 lines (code cells for ipynb) and median+-MAD reported",
+        },
     },
     "metrics": {
         "max_eig_rel_err": max_eig_err,
@@ -274,6 +346,6 @@ results = {
     },
 }
 RES_OUT.write_text(json.dumps(results, indent=2) + "\n")
-print("Criteria:", json.dumps(results["criteria"], indent=2))
+print("Criteria:", json.dumps({k: v["status"] for k, v in results["criteria"].items()}, indent=2))
 print("c6_checks:", json.dumps(c6_checks))
-print(f"Wrote {RES_OUT} and 4 combined figures to {FIG_OUT}")
+print("Wrote outputs/day008e/results.json and 4 combined figures to outputs/figures")
