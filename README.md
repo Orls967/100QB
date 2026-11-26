@@ -154,7 +154,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [docs/ROADMAP.md](docs/ROADMAP.md) · Riwayat: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 60/100 topik (60%)** · quant: 45 · sim: 15
+**Progres: 62/100 topik (62%)** · quant: 45 · sim: 17
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -218,6 +218,8 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 8d | bonus | `sim` | `c+cpp+rust+go+ruby+py+ts` | Jalan Acak Kisi Pólya Lintas 8 Bahasa (12 Tahap Identik: C, C++, Rust, Go, Ruby, Python, TS, ipynb) | 2026-11-26 | [day008d_lattice_walks_octalingual](projects/c/day008d_lattice_walks_octalingual) |
 | 8e | 008 | `sim` | `python` | Poisson Solvers Octalingual | - | [day008e_sim_poisson-solvers-octalingual.ipynb](days/day008e_sim_poisson-solvers-octalingual.ipynb) |
 | 8e | bonus | `sim` | `c+cpp+rust+go+ruby+py+ts` | Solver Poisson 2D (Jacobi, GS, SOR, CG, PCG-SSOR, Multigrid) Lintas 8 Bahasa (19 Tahap) | 2026-11-26 | [day008e_poisson_solvers_octalingual](projects/c/day008e_poisson_solvers_octalingual) |
+| 8f | 008 | `sim` | `python` | Supply Chain Octalingual | - | [day008f_sim_supply-chain-octalingual.ipynb](days/day008f_sim_supply-chain-octalingual.ipynb) |
+| 8f | bonus | `sim` | `c+cpp+rust+go+ruby+py+ts` | Jaringan Rantai Pasok 3 Pabrik/4 Gudang/10 Toko Kebijakan (s,S) Lintas 8 Bahasa (40 Tahap) | 2026-11-26 | [day008f_supply_chain_octalingual](projects/c/day008f_supply_chain_octalingual) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi

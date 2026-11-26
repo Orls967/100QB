@@ -62,6 +62,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `8c` (`day008c`) | `bonus` | `sim` | `cpp` | [Model Vicsek (Aktif-Materi) di C++20 dengan Cell List O(N) vs Brute Force O(N^2)](day008c_sim_vicsek-cpp.md) |
 | `8d` (`day008d`) | `bonus` | `sim` | `c+cpp+rust+go+ruby+py+ts+ipynb` | [Jalan Acak Kisi Pólya Lintas 8 Bahasa (12 Tahap Identik)](day008d_sim_lattice-walks-octalingual.md) |
 | `8e` (`day008e`) | `bonus` | `sim` | `c+cpp+rust+go+ruby+py+ts+ipynb` | [Solver Poisson 2D Lintas 8 Bahasa (19 Tahap Identik: Jacobi hingga Multigrid)](day008e_sim_poisson-solvers-octalingual.md) |
+| `8f` (`day008f`) | `bonus` | `sim` | `c+cpp+rust+go+ruby+py+ts+ipynb` | [Jaringan Rantai Pasok 3 Pabrik/4 Gudang/10 Toko Lintas 8 Bahasa (40 Tahap)](day008f_sim_supply-chain-octalingual.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 

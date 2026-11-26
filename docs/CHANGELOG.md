@@ -3,6 +3,17 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 008f] — 2026-11-26 · Jaringan Rantai Pasok 3 Pabrik/4 Gudang/10 Toko Lintas 8 Bahasa (40 Tahap)
+
+### Diperbaiki (Bagian A — `day008e`)
+- Menyelaraskan `outputs/day008e/results.json` dengan konvensi `day008d` (`run_completed_without_errors` terpisah dari `criteria`, tiap kriteria `{status, measured, threshold}`, info lingkungan/toolchain lengkap) serta melacak `rust/Cargo.lock` pada `day008d` dan `day008e` (`d053c0f`).
+
+### Ditambahkan (Bagian C — `day008f`)
+- Proyek oktalingual `projects/c/day008f_supply_chain_octalingual/` dan notebook `days/day008f_sim_supply-chain-octalingual.ipynb` dengan **40 tahap (`s01`–`s40`)** dan **103 berkas keluaran identik per bahasa** (**14/16** `tercapai`, `1` `sebagian` cabang langka `c5`, `1` `belum tercapai` saturasi kurir `c10` pada `S=1200`):
+  - **Paritas Bit-Identik & Konservasi**: `0` selisih byte di 8 bahasa pada `S01`, `S04`, `S05`, `S06`, dan `S34`; `0` pelanggaran invarian (`S11`); *in-process replay* (`S33`) dan *ledger replay* (`S38`) cocok eksak (`0` selisih).
+  - **Kecepatan (`ns/event` median $\pm$ MAD)**: Rust `62,80`, C11 `98,50`, C++20 `104,94`, Go `128,96`, TS `1424,23`, ipynb `6596,50`, Python `6749,13`, Ruby `15048,00`.
+  - **Output**: `80` SVG per bahasa + `6` pasang grafik gabungan PNG+SVG `outputs/figures/day008f_*.{png,svg}`, `outputs/day008f/results.json`, dan [day008f_sim_supply-chain-octalingual.md](project-explanations/day008f_sim_supply-chain-octalingual.md).
+
 ## [Hari 008e] — 2026-11-26 · Solver Poisson 2D Lintas 8 Bahasa (19 Tahap Identik: C, C++, Rust, Go, Ruby, Python, TS, ipynb)
 
 ### Ditambahkan (`day008e`)
