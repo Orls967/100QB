@@ -1,0 +1,277 @@
+{
+  "session": "day008g",
+  "topic": "Agent-Based Layered SEIR Epidemic Simulation (39 stages, 8 languages)",
+  "run_completed_without_errors": true,
+  "machine": {
+    "system": "Darwin",
+    "machine": "arm64",
+    "python": "3.11.18"
+  },
+  "parity": {
+    "files": [
+      "s01_selftest.txt",
+      "s05_contact_script.csv",
+      "s06_progression_script.csv",
+      "s34_parity.csv"
+    ],
+    "languages": {
+      "c": true,
+      "cpp": true,
+      "rust": true,
+      "go": true,
+      "ruby": true,
+      "py": true,
+      "ts": true,
+      "ipynb": true
+    }
+  },
+  "invariants_ok": true,
+  "replay_ok": true,
+  "independent_replay_ok": true,
+  "vacuous_flags": [],
+  "reference_metrics_c": {
+    "r0_analytic": 1.7839,
+    "r0_empirical": 1.2398,
+    "r0_ratio": 0.695,
+    "z_analytic": 0.7263,
+    "attack_nointerv": 0.682,
+    "attack_interv": 0.0056,
+    "interv_effect_se": 453.52,
+    "k_disp": 4.0321,
+    "peak_h_no": 250,
+    "peak_h_main": 7,
+    "hosp_cap": 250,
+    "rej_no": 396,
+    "sweep_comp_se": 3.31,
+    "sweep_vax_se": 3.73,
+    "sweep_var_se": 0.17
+  },
+  "languages": {
+    "c": {
+      "N": 100000,
+      "days": 180,
+      "N_sw": 1000,
+      "toolchain": "Apple clang 16.0.0 (-std=c11)",
+      "total_sec": 0.34,
+      "loc": 1284,
+      "files": 72,
+      "pd_per_sec_med": 211640207.89,
+      "pd_per_sec_mad": 8594508.86,
+      "attack_nointerv": 0.682,
+      "attack_interv": 0.0056,
+      "r0_analytic": 1.7839,
+      "r0_empirical": 1.2398
+    },
+    "cpp": {
+      "N": 100000,
+      "days": 180,
+      "N_sw": 1000,
+      "toolchain": "Apple clang 16.0.0 (-std=c++20)",
+      "total_sec": 0.324,
+      "loc": 967,
+      "files": 72,
+      "pd_per_sec_med": 216998183.89,
+      "pd_per_sec_mad": 4608801.41,
+      "attack_nointerv": 0.682,
+      "attack_interv": 0.0056,
+      "r0_analytic": 1.7839,
+      "r0_empirical": 1.2398
+    },
+    "rust": {
+      "N": 100000,
+      "days": 180,
+      "N_sw": 1000,
+      "toolchain": "rustc 1.93.1",
+      "total_sec": 0.326,
+      "loc": 819,
+      "files": 72,
+      "pd_per_sec_med": 206792442.43,
+      "pd_per_sec_mad": 5013084.79,
+      "attack_nointerv": 0.682,
+      "attack_interv": 0.0056,
+      "r0_analytic": 1.7839,
+      "r0_empirical": 1.2398
+    },
+    "go": {
+      "N": 100000,
+      "days": 180,
+      "N_sw": 1000,
+      "toolchain": "go1.27.4",
+      "total_sec": 0.384,
+      "loc": 1732,
+      "files": 72,
+      "pd_per_sec_med": 163052782.9,
+      "pd_per_sec_mad": 3710467.48,
+      "attack_nointerv": 0.682,
+      "attack_interv": 0.0056,
+      "r0_analytic": 1.7839,
+      "r0_empirical": 1.2398
+    },
+    "ruby": {
+      "N": 3000,
+      "days": 180,
+      "N_sw": 500,
+      "toolchain": "ruby 4.0.9",
+      "total_sec": 4.987,
+      "loc": 1006,
+      "files": 72,
+      "pd_per_sec_med": 2025487.38,
+      "pd_per_sec_mad": 12132.13,
+      "attack_nointerv": 0.703,
+      "attack_interv": 0.158,
+      "r0_analytic": 1.7973,
+      "r0_empirical": 1.2596
+    },
+    "py": {
+      "N": 3000,
+      "days": 180,
+      "N_sw": 500,
+      "toolchain": "Python 3.11.18",
+      "total_sec": 3.039,
+      "loc": 1002,
+      "files": 72,
+      "pd_per_sec_med": 3204211.7,
+      "pd_per_sec_mad": 65030.87,
+      "attack_nointerv": 0.703,
+      "attack_interv": 0.158,
+      "r0_analytic": 1.7973,
+      "r0_empirical": 1.2596
+    },
+    "ts": {
+      "N": 20000,
+      "days": 180,
+      "N_sw": 1000,
+      "toolchain": "node v24.21.0",
+      "total_sec": 0.994,
+      "loc": 1014,
+      "files": 72,
+      "pd_per_sec_med": 23088578.52,
+      "pd_per_sec_mad": 313676.63,
+      "attack_nointerv": 0.6743,
+      "attack_interv": 0.0386,
+      "r0_analytic": 1.7841,
+      "r0_empirical": 1.2814
+    },
+    "ipynb": {
+      "N": 1500,
+      "days": 180,
+      "N_sw": 500,
+      "toolchain": "Jupyter/Python 3.11.18",
+      "total_sec": 3.093,
+      "loc": 754,
+      "files": 72,
+      "pd_per_sec_med": 3362875.25,
+      "pd_per_sec_mad": 25300.42,
+      "attack_nointerv": 0.6947,
+      "attack_interv": 0.2527,
+      "r0_analytic": 1.7938,
+      "r0_empirical": 1.0971
+    }
+  },
+  "criteria": {
+    "c1": {
+      "status": "tercapai",
+      "measured": "8/8 bahasa bit-identik (S01,S05,S06,S34)",
+      "threshold": "8/8 bahasa identik 0-byte"
+    },
+    "c2": {
+      "status": "tercapai",
+      "measured": "0 pelanggaran di 8/8 bahasa",
+      "threshold": "violations == 0"
+    },
+    "c3": {
+      "status": "tercapai",
+      "measured": "8/8 bahasa replay identik",
+      "threshold": "match == 1"
+    },
+    "c4": {
+      "status": "tercapai",
+      "measured": "8/8 bahasa max_diff == 0",
+      "threshold": "max_diff == 0"
+    },
+    "c5": {
+      "status": "tercapai",
+      "measured": "attack_nointerv=0.6820, R0_ana=1.7839",
+      "threshold": "attack in [0.20,0.80], R0 in [1.5,3.5]"
+    },
+    "c6": {
+      "status": "belum tercapai",
+      "measured": "R0_emp=1.2398, R0_ana=1.7839, ratio=0.6950",
+      "threshold": "ratio in [0.80, 1.25]"
+    },
+    "c7": {
+      "status": "tercapai",
+      "measured": "|0.6820 - 0.7263| = 0.0443",
+      "threshold": "|attack_nointerv - z_analytic| <= 0.10"
+    },
+    "c8": {
+      "status": "tercapai",
+      "measured": "no=0.6820 -> iv=0.0056 (z=453.5 SE), neg_ctrl=3/3 OK",
+      "threshold": "efek >= 3 SE & kontrol negatif 0"
+    },
+    "c9": {
+      "status": "belum tercapai",
+      "measured": "comp z=3.31 SE, vax z=3.73 SE, var z=0.17 SE",
+      "threshold": "semua arah >= 3 SE & tidak hampa"
+    },
+    "c10": {
+      "status": "tercapai",
+      "measured": "peak_h_main=7/250, peak_h_no=250/250 (rej_no=396)",
+      "threshold": "main <= cap & nointerv > cap"
+    },
+    "c11": {
+      "status": "belum tercapai",
+      "measured": "k_disp=4.0321 (mean=0.9998, var=1.2477)",
+      "threshold": "k_disp < 1.0 (heterogen kuat)"
+    },
+    "c12": {
+      "status": "sebagian",
+      "measured": "19/21 cabang di s_main; ['HOSP_REJ', 'ICU_REJ'] hanya terpicu di s_no (rej_no=396)",
+      "threshold": "21/21 cabang SPEC terpicu"
+    },
+    "c13": {
+      "status": "tercapai",
+      "measured": "72 berkas/bahasa di 8/8 bahasa, mismatch=0",
+      "threshold": ">= 70 berkas bernama sama"
+    },
+    "c14": {
+      "status": "tercapai",
+      "measured": "8/8 bahasa selesai tanpa galat",
+      "threshold": "all selesai"
+    },
+    "c15": {
+      "status": "tercapai",
+      "measured": "8/8 selftest ok=1",
+      "threshold": "selftest lulus"
+    },
+    "c16": {
+      "status": "tercapai",
+      "measured": "80 SVG per-bahasa + 6 SVG gabungan valid XML (galat=0)",
+      "threshold": ">= 10 SVG valid per bahasa"
+    },
+    "c17": {
+      "status": "tercapai",
+      "measured": "vacuous_flags=[]",
+      "threshold": "vacuous_flags == []"
+    },
+    "c18": {
+      "status": "tercapai",
+      "measured": "C=211640208 pd/s (1284 LOC), py=3204212 pd/s (1002 LOC)",
+      "threshold": "dilaporkan dengan MAD"
+    }
+  },
+  "outputs_rel": [
+    "outputs/figures/day008g_epi_curves.png",
+    "outputs/figures/day008g_epi_curves.svg",
+    "outputs/figures/day008g_r0_finalsize.png",
+    "outputs/figures/day008g_r0_finalsize.svg",
+    "outputs/figures/day008g_sweeps.png",
+    "outputs/figures/day008g_sweeps.svg",
+    "outputs/figures/day008g_hospital_ifr.png",
+    "outputs/figures/day008g_hospital_ifr.svg",
+    "outputs/figures/day008g_parity_perf.png",
+    "outputs/figures/day008g_parity_perf.svg",
+    "outputs/figures/day008g_branches.png",
+    "outputs/figures/day008g_branches.svg"
+  ]
+}
