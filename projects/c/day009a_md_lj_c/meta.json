@@ -1,0 +1,10 @@
+{
+  "day": 9,
+  "session": "a",
+  "topic_no": null,
+  "type": "sim",
+  "language": "c",
+  "topic": "Dinamika Molekuler Fluida Lennard-Jones (C11, 60 Tahap): Integrator Simplektik, Daftar Tetangga, Termostat, Termodinamika, Transport & Pelelehan",
+  "date": "2026-11-27",
+  "link": "projects/c/day009a_md_lj_c"
+}
