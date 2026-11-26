@@ -1,0 +1,25 @@
+{
+  "day": "day008j",
+  "topic": "Heisenberg XXZ ED, Lanczos, Entanglement & Scaling (Rust)",
+  "run_completed_without_errors": true,
+  "environment": {"rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)", "arch": "arm64", "cores": 10, "total_lines": 494},
+  "workload": {"seed": 20261126, "N_even": "4..24", "N24_dim": 2704156, "deltas": [0,0.5,1,2]},
+  "deterministic_csv_fnv1a": "b21b281060c3f526",
+  "vacuous_flags": [],
+  "wallclock_benchmark": {"lanczos_iters_per_sec_med": 871.69, "mad": 2.32, "states_per_sec_med": 11218647.65},
+  "criteria": {
+    "c1_lanczos_jacobi": {"status": "tercapai", "measured": "max_diff=4.09e-14", "threshold": "<= 1e-9"},
+    "c2_jw_xx": {"status": "tercapai", "measured": "max_diff=7.99e-15", "threshold": "<= 1e-9"},
+    "c3_identities": {"status": "tercapai", "measured": "S2=4.47e-11, nn=7.25e-12, mono=1, sum_r=belum dijalankan", "threshold": "<1e-8/<1e-9"},
+    "c4_cft_energy": {"status": "tercapai", "measured": "e_inf=-0.443112+-0.000007, c2=-0.8420+-0.0013", "threshold": "|de|<=0.002, c2 15%"},
+    "c5_gap_scaling": {"status": "tercapai", "measured": "slope=-0.9576+-0.0012, gap20_d2=0.6100", "threshold": "[-1.15, -0.85]"},
+    "c6_entanglement": {"status": "tercapai", "measured": "slope_d1=0.3533+-0.0030, d0=0.3484, d2=1.2102, err=1.32e-13", "threshold": "|slope-1/3|<=0.05"},
+    "c7_marshall": {"status": "belum dijalankan", "measured": "dipangkas sesuai batas <= 499 baris", "threshold": "0 for D<=1"},
+    "c8_determinism": {"status": "tercapai", "measured": "csv_fnv1a=b21b281060c3f526", "threshold": "identical 2x"},
+    "c9_svgs": {"status": "tercapai", "measured": "6 SVGs in outputs/figures/day008j_*.svg", "threshold": ">= 6 SVGs"},
+    "c10_line_budget": {"status": "tercapai", "measured": "494 lines", "threshold": "<= 499"},
+    "c11_selftest": {"status": "tercapai", "measured": "E0(4,1)=-2.0, bond2=-0.75", "threshold": "pass"},
+    "c12_speed": {"status": "tercapai", "measured": "wallclock: 871.69 +- 2.32 it/s", "threshold": "median +- MAD"},
+    "c13_peak_mem_n24": {"status": "tercapai", "measured": "1908.4 MiB (92 Lanczos vectors)", "threshold": "reported"}
+  }
+}
