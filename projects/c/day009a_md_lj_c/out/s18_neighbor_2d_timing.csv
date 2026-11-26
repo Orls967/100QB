@@ -1,0 +1,4 @@
+method,n_particles,time_us,speedup_vs_brute
+brute,1024,374.9999,1.0000
+cell,1024,61.8000,6.0680
+verlet,1024,47.3000,7.9281

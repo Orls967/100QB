@@ -1,0 +1,2 @@
+n_particles,n_steps,dt,final_p_norm,max_p_norm,e0,e_final,rebuilds
+108,100000,0.0020,4.983664e-13,6.353955e-13,-277.51573252,-277.51771805,6591

@@ -1,0 +1,5 @@
+ensemble,t_init,t_final,tau_half_est
+Langevin,2.5000,0.922878,0.0750
+NoseHoover,2.5000,1.287373,0.0750
+Berendsen,2.5000,1.032741,0.0750
+Andersen,2.5000,0.995012,0.0750
