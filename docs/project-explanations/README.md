@@ -64,6 +64,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `8e` (`day008e`) | `bonus` | `sim` | `c+cpp+rust+go+ruby+py+ts+ipynb` | [Solver Poisson 2D Lintas 8 Bahasa (19 Tahap Identik: Jacobi hingga Multigrid)](day008e_sim_poisson-solvers-octalingual.md) |
 | `8f` (`day008f`) | `bonus` | `sim` | `c+cpp+rust+go+ruby+py+ts+ipynb` | [Jaringan Rantai Pasok 3 Pabrik/4 Gudang/10 Toko Lintas 8 Bahasa (40 Tahap)](day008f_sim_supply-chain-octalingual.md) |
 | `8g` (`day008g`) | `bonus` | `sim` | `c+cpp+rust+go+ruby+py+ts+ipynb` | [Simulasi Epidemi Berbasis Agen SEIR Berlapis Lintas 8 Bahasa (39 Tahap)](day008g_sim_epidemic-abm-octalingual.md) |
+| `8h` (`day008h`) | `bonus` | `sim` | `c+cpp+rust+go+ruby+py+ts+ipynb` | [Jaringan Antrean Terminal Bandara Berbasis Agen & Validasi DTMC Eksak Lintas 8 Bahasa (48 Tahap)](day008h_sim_airport-queue-octalingual.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 

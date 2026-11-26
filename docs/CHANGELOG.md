@@ -3,6 +3,15 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 008h] — 2026-11-26 · Jaringan Antrean Terminal Bandara Berbasis Agen & Validasi DTMC Eksak Lintas 8 Bahasa (48 Tahap)
+
+### Ditambahkan (`day008h`)
+- Proyek oktalingual `projects/c/day008h_airport_queue_octalingual/` dan notebook `days/day008h_sim_airport-queue-octalingual.ipynb` dengan **48 tahap (`s01`–`s48`)** dan **101 berkas keluaran identik per bahasa** (**17/22** kriteria `tercapai`, `1` `sebagian` `c15`, `4` `belum tercapai` `c9`/`c11`/`c12`/`c13` sebagai temuan jujur, `vacuous_flags = []`):
+  - **Paritas Bit-Identik & Konservasi**: `0` selisih byte di 8 bahasa pada `S01`, `S05`, `S06`, dan `S40` (`3` hari = `25 920` slot); `0` pelanggaran invarian (`S15`, `little_diff = 0`); *independent queue replay* (`S41`) cocok eksak (`max_diff = 0`).
+  - **Validasi DTMC Eksak & Kalibrasi (`C`, `365d`)**: `S09` `rel_err_L = 1.74e-11`; `S10` `9/9` dalam 3 SE; `S11` `4/4` dalam 3 SE di 8/8 bahasa; stasiun terpadat `SECURITY` (`util = 0.6284`, `loss_frac = 0.1133`).
+  - **Kecepatan (`slot-pax/detik` median)**: C++20 `61.27M`, C11 `58.49M`, Rust `57.71M`, Go `50.61M`, TS (`node --experimental-strip-types`) `3.42M`, ipynb `566.9k`, Python `542.1k`, Ruby `331.2k`.
+  - **Output**: `96` SVG bahasa + `8` pasang grafik gabungan PNG+SVG `outputs/figures/day008h_*.{png,svg}`, `outputs/day008h/results.json`, dan [day008h_sim_airport-queue-octalingual.md](project-explanations/day008h_sim_airport-queue-octalingual.md).
+
 ## [Hari 008g] — 2026-11-26 · Simulasi Epidemi Berbasis Agen SEIR Berlapis Lintas 8 Bahasa (39 Tahap)
 
 ### Ditambahkan (`day008g`)

@@ -80,12 +80,12 @@ s38_vacuous_check.csv,3,39,5ec7ca6f62840613
 s39_replay.csv,2,118,9894acae25953c1f
 s40_parity.csv,2,130,eca898c6bd3dd426
 s41_replay_queue.csv,2,19,c5dbe732b5633cd1
-s42_bench.csv,2,77,53f3ed070ca357db
+s42_bench.csv,2,77,f6dbb85038e42a32
 s43_sizes.csv,2,59,c52907cebce33a93
 s44_compress.csv,2,54,1f48ab220a6eabb7
 s45_tornado.csv,4,132,584626910cf937de
 s47_report_tables.csv,7,234,d45b9a37bdff1a04
-s48_summary.json,1,112,ddd7b064565d8e56
+s48_summary.json,1,112,29f4428acac1e801
 server_status_series.csv,25921,299950,d48cfab26b6e76f8
 sojourn_hist.csv,7,54,5a3c418b7b22fe7a
 station_0.csv,2,63,ffa248271e78a2d2
