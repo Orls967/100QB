@@ -1,0 +1,24 @@
+{
+  "day": "day008i",
+  "topic": "Abelian Sandpile Group, Fractal Identity & SOC (Pure C11)",
+  "run_completed_without_errors": true,
+  "environment": {"cc": "Apple clang version 16.0.0 (clang-1600.0.26.6)", "arch": "arm64", "cores": 10, "total_lines": 903},
+  "workload": {"seed": 20261126, "abelian_configs": 600, "abelian_orders_per_cfg": 100, "soc_avalanches_per_L": 2000000, "radius_max_N": 1000000},
+  "deterministic_csv_fnv1a": "e862b922d1fc4fe0",
+  "vacuous_flags": [],
+  "wallclock_benchmark": {"topples_per_sec_med": 114308951.64, "topples_per_sec_mad": 573676.63, "topples_per_rep": 45189072},
+  "criteria": {
+    "c1_abelian": {"status": "tercapai", "measured": "mismatches=0 over 600x100 runs (digest=0c9111847f4bce87)", "threshold": "0 mismatches"},
+    "c2_group_order": {"status": "tercapai", "measured": "n=2:192(bf=192), n=3:100352(bf=100352), n=4:557568000, n=5:32565539635200, n=6:19872369301840986112, safe_i128_n=6 (n=7 overflows)", "threshold": "Bareiss==bf for n=2,3 and safe bound reported"},
+    "c3_identity": {"status": "tercapai", "measured": "rec=1, D4=1, e+e=1, e+r=200/200, ord_div=15/15", "threshold": "all exact"},
+    "c4_mass_conservation": {"status": "tercapai", "measured": "max_abs_diff=0", "threshold": "0"},
+    "c5_radius_scaling": {"status": "tercapai", "measured": "slope=0.493878 +- 0.000505", "threshold": "[0.45, 0.55]"},
+    "c6_soc_exponent": {"status": "tercapai", "measured": "tau_128=1.0840+-0.0045 (win:[1.0723,1.1017]), tau_64=1.0663+-0.0075, tail128=8.707e-02 vs tail64=1.232e-02", "threshold": "tau in [0.9, 1.6] & non-vacuous tail"},
+    "c7_stationary_heights": {"status": "tercapai", "measured": "mean=2.12441+-0.00017 (full=2.11380), P=[0.0737,0.1741,0.3064,0.4458], max_dP=0.00037", "threshold": "|d_mean|<=0.02, max|dP|<=0.01"},
+    "c8_determinism": {"status": "tercapai", "measured": "csv_fnv1a=e862b922d1fc4fe0", "threshold": "identical across runs"},
+    "c9_svgs": {"status": "tercapai", "measured": "6 SVGs in outputs/figures/day008i_*.svg", "threshold": ">= 6 valid SVGs"},
+    "c10_line_budget": {"status": "tercapai", "measured": "903 lines", "threshold": "<= 999 lines"},
+    "c11_selftest": {"status": "tercapai", "measured": "selftest_ok=1", "threshold": "pass"},
+    "c12_speed": {"status": "tercapai", "measured": "wallclock: 114308951.64 +- 573676.63 topples/s (5 reps)", "threshold": "reported median +- MAD"}
+  }
+}
