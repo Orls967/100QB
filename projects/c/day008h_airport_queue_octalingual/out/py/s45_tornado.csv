@@ -1,0 +1,4 @@
+param,low_wait,high_wait,swing
+arr_scale,3.7980,5.4039,1.6059
+security_mu,31.2703,14.0999,17.1704
+break_prob,18.0268,19.9989,1.9720
