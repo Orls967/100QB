@@ -1,0 +1,10 @@
+{
+  "day": 8,
+  "session": "j",
+  "topic_no": null,
+  "type": "sim",
+  "language": "rust",
+  "topic": "Diagonalisasi Eksak Rantai Spin-1/2 Heisenberg/XXZ (Rust <=499 Baris): Lanczos Sektor S^z, Entropi Keterikatan & Aturan Tanda Marshall",
+  "date": "2026-11-26",
+  "link": "projects/rust/day008j_heisenberg_ed_rust"
+}
