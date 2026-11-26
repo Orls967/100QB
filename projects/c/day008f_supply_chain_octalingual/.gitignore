@@ -1,0 +1,11 @@
+build/
+rust/target/
+node_modules/
+*.o
+*.out
+out/*/orders_log.csv
+out/*/sales_*.csv
+out/*/shipments_*.csv
+out/*/production.csv
+out/*/fees_ledger.csv
+out/*/inventory_snap_*.csv
