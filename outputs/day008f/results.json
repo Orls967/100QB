@@ -168,7 +168,7 @@
       "threshold": "fill rate at S=1200 >= S=400"
     },
     "c11_files_ge_80": {
-      "status": "belum tercapai",
+      "status": "tercapai",
       "measured": {
         "c": 103,
         "cpp": 103,

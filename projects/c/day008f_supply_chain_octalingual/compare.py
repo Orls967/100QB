@@ -98,7 +98,7 @@ fr_1200 = np.mean([float(r["fill_rate"]) for r in s29_c if int(r["S_lvl"]) == 12
 c10_ok = bool(fr_1200 >= fr_400)
 
 # c11: >= 80 files per language with identical names
-manifests = {lg: [r["file"] for r in read_csv(OUT_BASE / lg / "files_manifest.csv")] for lg in LANGS}
+manifests = {lg: set(r["file"] for r in read_csv(OUT_BASE / lg / "files_manifest.csv")) for lg in LANGS}
 file_counts = {lg: len(v) for lg, v in manifests.items()}
 c11_ok = all(cnt >= 80 and manifests[lg] == manifests["c"] for lg, cnt in file_counts.items())
 
