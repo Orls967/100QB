@@ -1,0 +1,7 @@
+key,value
+master_seed,20261126
+num_days,5
+parity_days,3
+parity_events_per_day,8000
+wh_cap,50000
+kit_fee,1500
