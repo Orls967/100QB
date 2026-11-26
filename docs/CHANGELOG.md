@@ -3,6 +3,15 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 009a] — 2026-11-27 · Dinamika Molekuler Fluida Lennard-Jones (C11, 60 Tahap)
+
+### Ditambahkan (`day009a`)
+- Proyek C11 murni `projects/c/day009a_md_lj_c/` (`-std=c11 -O2 -Wall -Wextra -Werror -ffp-contract=off -fno-fast-math`, hanya `libc` + `libm` + `pthread`, total **8.818 baris C** modular di 13 header `include/*.h` + 21 berkas `src/*.c`, **22/23** kriteria `tercapai`, **1** `belum tercapai` (`c8` sebagai temuan ilmiah jujur), `vacuous_flags = []`):
+  - **Fondasi, 5 Potensial & Daftar Tetangga (`S01`–`S18`)**: LJ-shift, LJ+tail, WCA, Morse, dan Yukawa cocok terhadap beda hingga $-dU/dr$ hingga `3.245e-10` (`c2`); kesetaraan gaya brute = cell = Verlet = SoA = threaded = cell-sorted hingga `1.869e-15` (`c1`); skala waktu $N \ge 500$ memberi slope brute `1.801 ± 0.019`, cell `0.973 ± 0.180`, Verlet `1.000 ± 0.011` (`c17`); tangga optimasi `V0`–`V5` (`[1142, 956, 264, 296, 165, 213] µs`, `c18`); `0` luapan daftar dan `0` bangun-ulang Verlet terlambat (`c23`).
+  - **Integrator Simplektik & Termostat (`S19`–`S34`)**: reversibilitas Velocity Verlet `6.072e-14` (`c4`), orde $\Delta t$ `1.8708 ± 0.0246` vs Euler `106.740x` lebih buruk (`c5`), kekekalan momentum `6.354e-13` setelah $10^5$ langkah NVE (`c3`); ekuipartisi `max z = 2.33` (`c6`), KS Maxwell `min p = 0.0941` (`c7`); `Var(K)` NVE (`40.9 SE`) dan Berendsen (`99.6 SE`) jauh di bawah kanonik sementara Nosé–Hoover rantai-1 terukur `0.590 ± 0.047` (`c8` `belum tercapai`, temuan non-ergodisitas $M=1$).
+  - **Termodinamika, Transport & Pelelehan (`S35`–`S60`)**: isoterm $T=1.5$ monoton naik (`min_step_z = 9.21 SE`) & $T=2.0$ tanpa loop vdW (`c15`); densitas rendah cocok dengan Mayer $B_2(T)\rho$ dalam `0.92 SE` (`c9`); jalur energi $g(r)$ cocok `0.043%` (`c10`); difusi Einstein vs Green–Kubo selisih `1.90%` dan $D(\rho)$ turun monoton (`min_step_z = 22.74 SE`, `c11`); $g(r)$ cair `|g(tail)-1| = 0.0165`, `g(r<0.8)=0` (`c12`); viskositas geser titik tripel $\eta = 3.2379 \pm 0.2997$ (`c13`); pelelehan fcc $Q_6$: `0.5086 → 0.0526` (`256.1 SE`) vs padat dingin `0.5301` (`c14`); determinisme 2× `make run` identik `c94cdec2512e7713` dan 1/2/4/8 thread identik bitwise `ea58c86a4fb8e20f` (`c16`); kompresi delta+RLE *lossless* hingga `7.60x`.
+  - **Output**: `117` CSV ringkas (`205 KB`) + `49` SVG tulis tangan valid XML `outputs/figures/day009a_*.svg` + `outputs/day009a/results.json` (`167` berkas total, `c19`), dan [day009a_sim_md-lj-c.md](project-explanations/day009a_sim_md-lj-c.md).
+
 ## [Hari 008j] — 2026-11-26 · Diagonalisasi Eksak Rantai Spin-½ Heisenberg/XXZ (Rust ≤ 499 Baris): Lanczos, Keterikatan & Penskalaan CFT
 
 ### Ditambahkan (`day008j`)
