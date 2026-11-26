@@ -1,0 +1,7 @@
+name,start_day,param_bp
+school_close,25,10000
+lockdown,30,5000
+mask,20,3500
+test,15,4500
+vax,45,200
+variant,60,15000
