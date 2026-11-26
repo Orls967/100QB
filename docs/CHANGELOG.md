@@ -5,6 +5,9 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
 ## [Hari 008f] — 2026-11-26 · Jaringan Rantai Pasok 3 Pabrik/4 Gudang/10 Toko Lintas 8 Bahasa (40 Tahap)
 
+### Diperbaiki (`day008f` — Bagian A Anti-Hampa)
+- Mengkalibrasi ulang `projects/c/day008f_supply_chain_octalingual/` di seluruh 8 bahasa (`fill_rate = 0,920166`, `bo_event_frac = 0,073244`, `carrier_util = 0,848972` di `s09_calibration.csv`; store *fill rate* `0,868–0,883` di `s22_service.csv`), mengganti seluruh statistik konstan di `s21`/`s25`/`s31` dengan hitungan nyata dari data, menambahkan detektor `vacuous_flags` dan uji `>= 3 SE` di `compare.py`, serta mengeksekusi ulang seluruh 8 bahasa (paritas bit-identik 0 selisih, `vacuous_flags = []`).
+
 ### Diperbaiki (Bagian A — `day008e`)
 - Menyelaraskan `outputs/day008e/results.json` dengan konvensi `day008d` (`run_completed_without_errors` terpisah dari `criteria`, tiap kriteria `{status, measured, threshold}`, info lingkungan/toolchain lengkap) serta melacak `rust/Cargo.lock` pada `day008d` dan `day008e` (`d053c0f`).
 

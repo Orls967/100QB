@@ -4,6 +4,7 @@
   "topic": "supply_chain_3f_4w_10s_backup",
   "duplication_note": "Exchange/order-book already present in day002h and day004g; executed official backup supply-chain topic.",
   "run_completed_without_errors": true,
+  "vacuous_flags": [],
   "environment": {
     "arch": "arm64",
     "cpu_cores": 10,
@@ -64,6 +65,15 @@
     }
   },
   "criteria": {
+    "c0_calibrated_baseline": {
+      "status": "tercapai",
+      "measured": {
+        "fill_rate": 0.920166,
+        "bo_event_frac": 0.073244,
+        "carrier_util": 0.848972
+      },
+      "threshold": "fill_rate in [0.85, 0.99], bo_event_frac < 0.20, carrier_util in [0.30, 0.90]"
+    },
     "c1_parity_8lang": {
       "status": "tercapai",
       "measured": {
@@ -120,64 +130,71 @@
     "c5_branch_coverage": {
       "status": "sebagian",
       "measured": {
-        "triggered": 14,
+        "triggered": 12,
         "total": 16,
         "zero_count_rare": [
           "DEMAND_LOST",
-          "WH_CAP_REJECT"
+          "WH_CAP_REJECT",
+          "CREDIT_HOLD",
+          "LIQUIDATE"
         ]
       },
       "threshold": "all 16 SPEC branches >= 1 (rare flagged)"
     },
     "c6_alloc_nonzero_ge_80pct": {
-      "status": "tercapai",
-      "measured": 93.33,
+      "status": "belum tercapai",
+      "measured": 60.42,
       "threshold": ">= 80% nonzero allocation cases"
     },
     "c7_stylized_facts": {
-      "status": "tercapai",
+      "status": "belum tercapai",
       "measured": {
-        "kurtosis_gt3_skus": 4,
-        "acf1_gt0_skus": 4
+        "kurtosis_gt3_skus": 3,
+        "acf1_gt0_skus": 2
       },
-      "threshold": "kurtosis > 3 and ACF(1) > 0 on >= 3/4 SKUs"
+      "threshold": "kurtosis > 3 and ACF(1) > 0 on >= 3/4 SKUs (computed from 100 bins)"
     },
     "c8_transship_reduces_imbalance": {
       "status": "tercapai",
       "measured": {
-        "no_transship": 0.0,
-        "with_transship": 0.0
+        "no_transship": 877.7687,
+        "with_transship": 333.9469,
+        "z_se": 37.81,
+        "n_transships_tot": 340
       },
-      "threshold": "mean kit imbalance with transship <= without"
+      "threshold": "mean kit imbalance reduction >= 3 SE and n_transships > 0"
     },
     "c9_shock_large_gt_small": {
       "status": "tercapai",
       "measured": {
-        "small": 10.0,
-        "medium": 20.0,
-        "large": 30.0
+        "small": 0.107141,
+        "medium": 0.26963,
+        "large": 0.319933,
+        "z_se": 5.04
       },
-      "threshold": "avg response large > small"
+      "threshold": "mean_rel_dev large > small by >= 3 SE"
     },
     "c10_safety_stock_improves_fill": {
-      "status": "belum tercapai",
+      "status": "tercapai",
       "measured": {
-        "S400": 0.9407903333333333,
-        "S1200": 0.813078
+        "S80": 0.917261,
+        "S220": 0.966769,
+        "S350": 0.958987,
+        "z_se": 4.6
       },
-      "threshold": "fill rate at S=1200 >= S=400"
+      "threshold": "fill rate at S=350 > S=80 by >= 3 SE"
     },
     "c11_files_ge_80": {
       "status": "tercapai",
       "measured": {
-        "c": 103,
-        "cpp": 103,
-        "rust": 103,
-        "go": 103,
-        "ruby": 103,
-        "py": 103,
-        "ts": 103,
-        "ipynb": 103
+        "c": 104,
+        "cpp": 104,
+        "rust": 104,
+        "go": 104,
+        "ruby": 104,
+        "py": 104,
+        "ts": 104,
+        "ipynb": 104
       },
       "threshold": ">= 80 identically named files per language"
     },
@@ -205,34 +222,34 @@
       "status": "tercapai",
       "measured": {
         "lines": {
-          "c": 1455,
-          "cpp": 941,
-          "rust": 705,
-          "go": 1474,
-          "ruby": 644,
-          "py": 587,
-          "ts": 637,
+          "c": 1552,
+          "cpp": 1033,
+          "rust": 797,
+          "go": 1633,
+          "ruby": 717,
+          "py": 656,
+          "ts": 711,
           "ipynb": 44
         },
         "ns_per_ev_med": {
-          "c": 98.5,
-          "cpp": 104.9375,
-          "rust": 62.8021,
-          "go": 128.9635,
-          "ruby": 15048.0,
-          "py": 6749.125,
-          "ts": 1424.2344,
-          "ipynb": 6596.5
+          "c": 99.375,
+          "cpp": 109.9688,
+          "rust": 78.9688,
+          "go": 137.802,
+          "ruby": 17131.5,
+          "py": 8338.2915,
+          "ts": 1573.724,
+          "ipynb": 8225.8125
         },
         "ns_per_ev_mad": {
-          "c": 3.5,
-          "cpp": 1.2135,
-          "rust": 1.0886,
-          "go": 1.0051,
-          "ruby": 187.0,
-          "py": 70.9375,
-          "ts": 22.7344,
-          "ipynb": 6.75
+          "c": 3.25,
+          "cpp": 2.776,
+          "rust": 4.8334,
+          "go": 2.2968,
+          "ruby": 116.0,
+          "py": 117.6455,
+          "ts": 12.1824,
+          "ipynb": 25.229
         }
       },
       "threshold": "all <= 3500 lines and median+-MAD reported"

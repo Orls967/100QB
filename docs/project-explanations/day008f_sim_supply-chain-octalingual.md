@@ -38,47 +38,49 @@ Setiap bahasa mengimplementasikan alur `s01`–`s40` secara independen dan menul
 
 | Bahasa | Baris Sumber | Beban Utama (Event) | Berkas `out/` | Latensi (`ns/event`, median $\pm$ MAD) |
 | :--- | :---: | :---: | :---: | :---: |
-| **Rust** | `705` | `2.000.000` | `103` | `62.8021 ± 1.0886` |
-| **C11** | `1455` | `2.000.000` | `103` | `98.5000 ± 3.5000` |
-| **C++20** | `941` | `2.000.000` | `103` | `104.9375 ± 1.2135` |
-| **Go** | `1474` | `2.000.000` | `103` | `128.9635 ± 1.0051` |
-| **TypeScript** | `637` | `400.000` | `103` | `1424.2344 ± 22.7344` |
-| **Notebook (`ipynb`)** | `44` (sel pembungkus `py/`) | `20.000` | `103` | `6596.5000 ± 6.7500` |
-| **Python** | `587` | `40.000` | `103` | `6749.1250 ± 70.9375` |
-| **Ruby** | `644` | `40.000` | `103` | `15048.0000 ± 187.0000` |
+| **Rust** | `797` | `2.000.000` | `104` | `67.3072 ± 0.8490` |
+| **C11** | `1552` | `2.000.000` | `104` | `99.7500 ± 1.6250` |
+| **C++20** | `1033` | `2.000.000` | `104` | `109.4271 ± 2.3229` |
+| **Go** | `1633` | `2.000.000` | `104` | `143.0365 ± 5.5000` |
+| **TypeScript** | `711` | `400.000` | `104` | `1505.2031 ± 7.0938` |
+| **Notebook (`ipynb`)** | `44` (sel pembungkus `py/`) | `20.000` | `104` | `8028.2080 ± 83.2915` |
+| **Python** | `656` | `40.000` | `104` | `8324.6670 ± 92.2705` |
+| **Ruby** | `717` | `40.000` | `104` | `17169.5000 ± 63.0000` |
 
 ## 6. Fakta Teramati vs Hipotesis
-- **FAKTA**: Kedelapan bahasa menghasilkan keluaran **100% bit-identik** (`0` selisih byte) pada `s01_selftest.txt`, `s04_policy_script.csv`, `s05_alloc_script.csv`, `s06_schedule_head.csv`, dan `s34_parity.csv` (`ev_hash = 6d6699a0915ae620`, `fin_hash = f397f145bc04e911`).
-- **FAKTA**: Seluruh 8 bahasa mencatat `0` pelanggaran invarian (`S11`), kecocokan penuh *in-process replay* (`S33`), kecocokan penuh *ledger replay* independen `max_cash_diff = 0, max_inv_diff = 0` (`S38`), dan kompresi delta+RLE bolak-balik `roundtrip_ok = 1` (`S37`).
-- **FAKTA**: Pada `S29`, menaikkan target stok `S` dari `400` ke `1200` justru menurunkan *fill rate* rata-rata dari `0,94079` ke `0,81308` (`c10_safety_stock_improves_fill = belum tercapai`).
-- **HIPOTESIS**: Penurunan *fill rate* pada `S = 1200` terjadi karena batas kapasitas kurir harian (`carrier_cap_daily = 800`) tersaturasi oleh pesanan awal bervolume besar saat `S = 1200`, sehingga pesanan pengisian ulang berikutnya ditolak oleh cabang `CARRIER_CAP_REJECT` dan menyebabkan *stockout* di toko lain; fenomena ini merupakan interaksi kapasitas nyata dan tidak diubah/disetel.
+- **FAKTA**: Kedelapan bahasa menghasilkan keluaran **100% bit-identik** (`0` selisih byte) pada `s01_selftest.txt`, `s04_policy_script.csv`, `s05_alloc_script.csv`, `s06_schedule_head.csv`, dan `s34_parity.csv`, dengan `vacuous_flags = []` (nol indikator hampa).
+- **FAKTA**: Seluruh 8 bahasa mencatat `0` pelanggaran invarian (`S11`), kecocokan penuh *in-process replay* (`S33`), kecocokan penuh *ledger replay* independen `max_cash_diff = 0, max_inv_diff = 0` (`S38`), kompresi delta+RLE `roundtrip_ok = 1` (`S37`), serta kalibrasi baseline `s09_calibration.csv` (`fill_rate = 0,920166`, `bo_event_frac = 0,073244`, `carrier_util = 0,848972`, `calibrated = 1`).
+- **FAKTA**: Pada sapuan anti-hampa, `S31` transshipment menurunkan ketidakseimbangan kit `877,77 -> 333,95` (`37,81 SE`, `340` transshipment), `S25` guncangan besar > kecil (`0,3199 vs 0,1071`, `5,04 SE`), dan `S29` safety stock menaikkan *fill rate* `0,9173 -> 0,9590` (`4,60 SE`).
+- **FAKTA**: `c7_stylized_facts` mencatat `belum tercapai` (`kurtosis > 3` pada `3/4` SKU, namun `ACF(1) > 0` hanya `2/4` SKU) dan `c6_alloc_nonzero_ge_80pct` mencatat `60,42%`.
+- **HIPOTESIS**: `ACF(1)` permintaan per *time bin* mendekati nol pada sebagian SKU karena pembangkit permintaan dasar bersifat i.i.d. antar-event (dengan sedikit klasterisasi dari `EV_SHOCK`), bukan proses AR(1) yang berkorelasi kuat antar-waktu.
 
-## 7. Ringkasan Hasil & Status Kriteria (`c1`–`c16`)
+## 7. Ringkasan Hasil & Status Kriteria (`c0`–`c16`)
 
 | Kriteria | Status | Bukti & Hasil Terukur (`outputs/day008f/results.json`) |
 | :--- | :---: | :--- |
+| `c0_calibrated_baseline` | `tercapai` | `fill_rate = 0.920166`, `bo_event_frac = 0.073244`, `carrier_util = 0.848972` (`s09_calibration.csv`) |
 | `c1_parity_8lang` | `tercapai` | `0` selisih byte pada `S01`, `S04`, `S05`, `S06`, `S34` di 8 bahasa |
 | `c2_invariants_zero` | `tercapai` | `0` pelanggaran invarian di 8 bahasa (`S11`) |
 | `c3_replay_identical` | `tercapai` | `S33` *in-process replay* `match = 1` di 8 bahasa |
 | `c4_ledger_replay_exact` | `tercapai` | `S38` *ledger replay* `max_cash_diff = 0, max_inv_diff = 0` di 8 bahasa |
-| `c5_branch_coverage` | `sebagian` | `14/16` cabang terpicu pada beban utama C; `2` cabang langka `0` (`DEMAND_LOST`, `WH_CAP_REJECT`) |
-| `c6_alloc_nonzero_ge_80pct` | `tercapai` | `93.33%` kasus alokasi terisi tak-nol (`>= 80%`) |
-| `c7_stylized_facts` | `tercapai` | Kurtosis `> 3` dan `ACF(1) > 0` pada `4/4` SKU |
-| `c8_transship_reduces_imbalance` | `tercapai` | Rata-rata ketidakseimbangan kit `with_transship = 0.0 <= no_transship = 0.0` |
-| `c9_shock_large_gt_small` | `tercapai` | Respons rata-rata guncangan `large = 30.0 > small = 10.0` |
-| `c10_safety_stock_improves_fill` | `belum tercapai` | *Fill rate* `S=1200` (`0.813078`) `< S=400` (`0.940790`) akibat saturasi kapasitas kurir |
-| `c11_files_ge_80` | `tercapai` | `103` berkas bernama identik per bahasa (`>= 80`) |
+| `c5_branch_coverage` | `sebagian` | `12/16` cabang terpicu pada beban utama C; `4` cabang langka `0` (`DEMAND_LOST`, `WH_CAP_REJECT`, `CREDIT_HOLD`, `LIQUIDATE`) |
+| `c6_alloc_nonzero_ge_80pct` | `belum tercapai` | `60.42%` kasus alokasi terisi tak-nol (`< 80%`) pada sistem tak jenuh |
+| `c7_stylized_facts` | `belum tercapai` | Dihitung nyata dari 100 bin: `kurtosis > 3` pada `3/4` SKU, `ACF(1) > 0` pada `2/4` SKU |
+| `c8_transship_reduces_imbalance` | `tercapai` | Ketidakseimbangan `877.7687 -> 333.9469` (`37.81 SE`, `340` transshipment) |
+| `c9_shock_large_gt_small` | `tercapai` | Deviasi relatif `large = 0.319933 > small = 0.107141` (`5.04 SE`) |
+| `c10_safety_stock_improves_fill` | `tercapai` | *Fill rate* `S=350` (`0.958987`) `> S=80` (`0.917261`, `4.60 SE`) |
+| `c11_files_ge_80` | `tercapai` | `104` berkas bernama identik per bahasa (`>= 80`) |
 | `c12_all_finished` | `tercapai` | `8/8` bahasa selesai bersih menulis `s40_summary.json` |
 | `c13_selftest_pass` | `tercapai` | `8/8` `selftest` (`s01`) lulus (`ok = 1`) |
 | `c14_svgs_valid` | `tercapai` | `80` SVG per bahasa + `6` SVG gabungan valid XML (`86/86`) |
 | `c15_compress_roundtrip` | `tercapai` | `S37` delta+RLE `roundtrip_ok = 1` di 8 bahasa |
-| `c16_speed_and_lines` | `tercapai` | Seluruh bahasa `<= 1474` baris (`<= 3500`), median $\pm$ MAD tercatat |
+| `c16_speed_and_lines` | `tercapai` | Seluruh bahasa `<= 1633` baris (`<= 3500`), median $\pm$ MAD tercatat |
 
 ## 8. Deviasi & Catatan Rekayasa
-1. **Pengalihan Topik Cadangan**: Karena `day002h` dan `day004g` sudah membahas order-book/market-making, `day008f` menjalankan topik cadangan rantai pasok 3 pabrik / 4 gudang / 10 toko.
-2. **Fallback `tsc`**: `tsc` tidak tersedia, sehingga `ts/*.ts` dijalankan lewat `node v24.21.0 --experimental-strip-types`.
-3. **Presisi `BigInt` di TypeScript**: Pada `s01_selftest.txt`, konversi `Number(BigInt.asIntN(64, hv))` sempat memangkas bit atas >53-bit sebelum diperbaiki menjadi `fnv1aI64(h: bigint, v: number | bigint)`.
-4. **Notebook Modular**: `days/day008f_sim_supply-chain-octalingual.ipynb` memanggil modul `py/` dari proyek agar tidak menduplikasi kode secara masif, dan dieksekusi bersih **dua kali** dengan SHA-256 identik (`8725d23697d15ec84822b554ae2f5189b335fe1c3a1820363bc585188a3c37a5f`).
+1. **Perbaikan Anti-Hampa (`day008g` Bagian A)**: Pada versi awal `day008f`, `c7–c9 sebelumnya hampa` (konstanta `3.25`/`0.42` di `s21`, konstanta `10/20/30` di `s25`, dan `0.0 vs 0.0` di `s31`), serta sistem tersaturasi (`fill_rate ~ 0.001` karena kapasitas kurir/kas tidak diskalakan terhadap `400k` event/hari). Kalibrasi ulang, penghitungan statistik nyata, dan detektor `vacuous_flags` telah diterapkan di seluruh 8 bahasa.
+2. **Pengalihan Topik Cadangan**: Karena `day002h` dan `day004g` sudah membahas order-book/market-making, `day008f` menjalankan topik cadangan rantai pasok 3 pabrik / 4 gudang / 10 toko.
+3. **Fallback `tsc`**: `tsc` tidak tersedia, sehingga `ts/*.ts` dijalankan lewat `node v24.21.0 --experimental-strip-types`.
+4. **Notebook Modular**: `days/day008f_sim_supply-chain-octalingual.ipynb` memanggil modul `py/` dari proyek dan dieksekusi bersih **dua kali** dengan SHA-256 identik (`468b5ee00297e3ebd88efa9fc1c743041db770f759d0c3d12c77d2ce9a2b4f2e`).
 
 ## 9. Landasan Teori (16 Poin)
 
