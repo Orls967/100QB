@@ -17,7 +17,7 @@ var (
 	skuWholesale  = [4]int64{8000, 8200, 7800, 26000}
 	skuProd       = [4]int64{6000, 6200, 5800, 0}
 	storeWh       = [10]int{10, 10, 10, 11, 11, 11, 12, 12, 12, 12}
-	carrierBaseLt = [3]int64{120, 200, 160}
+	carrierBaseLt = [3]int64{150, 250, 200}
 )
 
 func carrierRate(dayVol int64) int64 {

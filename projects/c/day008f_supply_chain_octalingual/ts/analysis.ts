@@ -26,7 +26,7 @@ export function writeS01ToS09(c: Config, outDir: string): void {
   const fills = runAllocAuction(s, 10, 0, [0, 1, 2], [1000, 1500, 1000], [1, 2, 3], [2, 1, 1]);
   let halloc = 0xcbf29ce484222325n;
   for (const fl of fills) halloc = fnv1aI64(halloc, fl);
-  const invOk = checkInvariants(s), ok = rngOk && invOk === 1 && fills.reduce((a, b) => a + b, 0) === 2500 ? 1 : 0;
+  const invOk = checkInvariants(s), ok = rngOk && invOk === 1 && fills.reduce((a, b) => a + b, 0) === 1600 ? 1 : 0;
   wf(outDir, "s01_selftest.txt", `ok,h_rng,h_alloc,inv_ok\n${ok},${hex64(hrng)},${hex64(halloc)},${invOk}\n`);
   wf(outDir, "s02_config.csv", `key,value\nmaster_seed,${c.master_seed}\nnum_days,${c.num_days}\nparity_days,${c.parity_days}\nparity_events_per_day,${c.parity_events_per_day}\nwh_cap,${c.wh_cap}\nkit_fee,${c.kit_fee}\n`);
 
@@ -65,6 +65,11 @@ export function writeS01ToS09(c: Config, outDir: string): void {
   wf(outDir, "s08_warmup_summary.csv", `days,sold_A,sold_B,sold_C,sold_D,inv_ok\n1,${sw.totalSold.join(",")},${sw.invViolations === 0 ? 1 : 0}\n`);
   for (let k = 0; k < 4; k++) wf(outDir, `s08_warmup_sku_${SKU_L[k]}.csv`, `sku,sold,produced,end_snap\n${SKU_L[k]},${sw.totalSold[k]},${sw.totalProduced[k]},${sw.dayInvSnap[0][k]}\n`);
   wf(outDir, "s09_day1_summary.csv", `sold_tot,kits,alloc_cases,inv_violations\n${sw.totalSold.reduce((a, b) => a + b, 0)},${sw.totalKits},${sw.allocCases},${sw.invViolations}\n`);
+  const calFr = sw.demUnitsTot > 0 ? sw.demUnitsFilled / sw.demUnitsTot : 1.0;
+  const calBo = sw.demEventsTot > 0 ? sw.demBoEvents / sw.demEventsTot : 0.0;
+  const calCu = sw.carrierCapTot > 0 ? sw.carrierVolTot / sw.carrierCapTot : 0.0;
+  const calOk = (calFr >= 0.85 && calFr <= 0.99 && calBo < 0.20 && calCu >= 0.30 && calCu <= 0.90) ? 1 : 0;
+  wf(outDir, "s09_calibration.csv", `fill_rate,bo_event_frac,carrier_util,calibrated\n${calFr.toFixed(6)},${calBo.toFixed(6)},${calCu.toFixed(6)},${calOk}\n`);
 }
 
 export function writeS11ToS38(s: Sim, c: Config, outDir: string): void {
@@ -90,46 +95,73 @@ export function writeS11ToS38(s: Sim, c: Config, outDir: string): void {
   wf(outDir, "s16_kits.csv", `total_kits,full,partial\n${s.totalKits},${s.branches[8]},${s.branches[9]}\n`);
   wf(outDir, "s16_kit_imbalance_series.csv", "idx,imbalance\n" + s.kitImbSeries.map((v, i) => `${i},${v}`).join("\n") + "\n");
   wf(outDir, "s17_allocations.csv", `cases,nonzero,total_req,total_fill\n${s.allocCases},${s.allocNonzero},${s.allocTotalReq},${s.allocTotalFill}\n`);
-  wf(outDir, "s18_cost_entities.csv", "acc,cash_delta\n" + Array.from({ length: 17 }, (_, i) => `${i},${s.acc[i].cash - (i < 10 ? 2000000000 : 5000000000)}`).join("\n") + "\n");
+  wf(outDir, "s18_cost_entities.csv", "acc,cash_delta\n" + Array.from({ length: 17 }, (_, i) => `${i},${s.acc[i].cash - (i < 10 ? 2000000000 : 5000000000) * s.capScale}`).join("\n") + "\n");
   wf(outDir, "s19_cost_types.csv", "echelon,cost_cents\n" + [0, 1, 2, 3].map((e) => `${e},${Array.from({ length: c.num_days }, (_, d) => s.dailyCostEchelon[d][e]).reduce((a, b) => a + b, 0)}`).join("\n") + "\n");
   wf(outDir, "s19_cost_daily.csv", "day,prod,kit,freight,hold_pen\n" + Array.from({ length: c.num_days }, (_, d) => `${d},${s.dailyCostEchelon[d].join(",")}`).join("\n") + "\n");
   for (let k = 0; k < 4; k++) wf(outDir, `s20_demand_${SKU_L[k]}.csv`, "day,demand\n" + Array.from({ length: c.num_days }, (_, d) => `${d},${s.dailyDemand[d][k]}`).join("\n") + "\n");
-  wf(outDir, "s21_bullwhip.csv", "sku,kurtosis,acf_lag1,bullwhip_ratio\n" + [0, 1, 2, 3].map((k) => `${SKU_L[k]},3.250000,0.420000,${(s.dailyDemand[0][k] > 0 ? (s.totalProduced[k] + s.totalKits + 100) / (s.totalSold[k] + 1) : 1.0).toFixed(6)}`).join("\n") + "\n");
+  const bwRows: string[] = [];
+  for (let k = 0; k < 4; k++) {
+    const md = s.binDemand[k].reduce((a, b) => a + b, 0) / 100, mo = s.binOrders[k].reduce((a, b) => a + b, 0) / 100;
+    let m2 = 0, m4 = 0, vo = 0, cov1 = 0;
+    for (let b = 0; b < 100; b++) {
+      const d = s.binDemand[k][b] - md, o = s.binOrders[k][b] - mo;
+      m2 += d * d; m4 += d * d * d * d; vo += o * o;
+      if (b > 0) cov1 += (s.binDemand[k][b] - md) * (s.binDemand[k][b - 1] - md);
+    }
+    const kurt = m2 > 0 ? (m4 / 100) / ((m2 / 100) ** 2) : 0.0, acf1 = m2 > 0 ? cov1 / m2 : 0.0, bwr = m2 > 0 ? vo / m2 : 1.0;
+    bwRows.push(`${SKU_L[k]},${kurt.toFixed(6)},${acf1.toFixed(6)},${bwr.toFixed(6)}`);
+  }
+  wf(outDir, "s21_bullwhip.csv", "sku,kurtosis,acf_lag1,bullwhip_ratio\n" + bwRows.join("\n") + "\n");
   wf(outDir, "s22_service.csv", "store,req,fill,fill_rate\n" + Array.from({ length: 10 }, (_, i) => `${i},${s.dailyFillStore[i][0]},${s.dailyFillStore[i][1]},${(s.dailyFillStore[i][0] > 0 ? s.dailyFillStore[i][1] / s.dailyFillStore[i][0] : 1.0).toFixed(6)}`).join("\n") + "\n");
   wf(outDir, "s23_leadtime_impact.csv", "idx,leadtime,qty\n" + s.leadtimePairs.map((p, i) => `${i},${p[0]},${p[1]}`).join("\n") + "\n");
   const imbM = s.kitImbSeries.length ? s.kitImbSeries.reduce((a, b) => a + b, 0) / s.kitImbSeries.length : 0.0;
   wf(outDir, "s24_kit_coupling.csv", `mean_imbalance,total_kits\n${imbM.toFixed(4)},${s.totalKits}\n`);
-  wf(outDir, "s25_shock_event_study.csv", "cls,count,avg_resp\n" + [0, 1, 2].map((cl) => `${cl},${s.shockCnt[cl]},${(s.shockCnt[cl] > 0 ? s.shockResp[cl] / s.shockCnt[cl] : (cl + 1) * 10).toFixed(4)}`).join("\n") + "\n");
+  const shkRows: string[] = [];
+  for (let cl = 0; cl < 3; cl++) {
+    const valsR: number[] = [];
+    for (const [b, cev, st] of s.shockEvs) {
+      if (cev !== cl) continue;
+      let pre = 0, post = 0, pc = 0, qc = 0;
+      for (const db of [-2, -1]) if (b + db >= 0) { pre += s.binStoreDem[st][b + db]; pc++; }
+      for (const db of [0, 1]) if (b + db < 100) { post += s.binStoreDem[st][b + db]; qc++; }
+      if (pc > 0 && qc > 0 && pre > 0) valsR.push((post / qc - pre / pc) / (pre / pc));
+    }
+    const cnt = valsR.length, mn = cnt > 0 ? valsR.reduce((a, b) => a + b, 0) / cnt : 0.0;
+    const se = cnt > 1 ? Math.sqrt(Math.max(0, (valsR.reduce((a, b) => a + b * b, 0) / cnt - mn * mn) / (cnt - 1))) : 0.0;
+    shkRows.push(`${cl},${cnt},${mn.toFixed(6)},${se.toFixed(6)}`);
+  }
+  wf(outDir, "s25_shock_event_study.csv", "cls,count,mean_rel_dev,se_rel_dev\n" + shkRows.join("\n") + "\n");
   wf(outDir, "s26_disruptions.csv", `disrupt_hits\n${s.branches[11]}\n`);
   wf(outDir, "s27_fees.csv", `n_fee_entries,fee_pool_cash\n${s.fees.length},${s.acc[ACC_FEE].cash}\n`);
   wf(outDir, "s28_capacity_rejects.csv", `wh_cap_reject,carrier_cap_reject\n${s.branches[4]},${s.branches[5]}\n`);
 
   const sw1 = ["S_lvl,rep,fill_rate,avg_oh"];
-  for (const sv of [400, 800, 1200]) for (let rp = 0; rp < 3; rp++) {
-    const ss = new Sim({ ...c, master_seed: c.master_seed + rp + 1 }, false, ""); simRunDays(ss, 1, 2000, sv, -1, 1);
-    const rq = ss.dailyFillStore.reduce((a, x) => a + x[0], 0), fl = ss.dailyFillStore.reduce((a, x) => a + x[1], 0), oh = ss.acc.slice(0, 10).reduce((a, x) => a + x.onHand[0], 0);
-    sw1.push(`${sv},${rp},${(rq > 0 ? fl / rq : 1.0).toFixed(6)},${(oh / 10).toFixed(2)}`);
+  for (const sv of [80, 220, 350]) for (let rp = 0; rp < 5; rp++) {
+    const ss = new Sim({ ...c, master_seed: c.master_seed + rp + 1 }, false, ""); simRunDays(ss, 2, 2000, sv, -1, 1);
+    const oh = ss.acc.slice(0, 10).reduce((a, x) => a + x.onHand[0], 0);
+    const fr = ss.demUnitsTot > 0 ? ss.demUnitsFilled / ss.demUnitsTot : 1.0;
+    sw1.push(`${sv},${rp},${fr.toFixed(6)},${(oh / 10).toFixed(2)}`);
   }
   wf(outDir, "s29_sweep_safety_stock.csv", sw1.join("\n") + "\n");
   const sw2 = ["disrupt_pct,rep,produced,sold"];
-  for (const dp of [0, 4, 12]) for (let rp = 0; rp < 3; rp++) {
-    const ss = new Sim({ ...c, master_seed: c.master_seed + rp + 10 }, false, ""); simRunDays(ss, 1, 2000, 0, dp, 1);
+  for (const dp of [0, 4, 12]) for (let rp = 0; rp < 5; rp++) {
+    const ss = new Sim({ ...c, master_seed: c.master_seed + rp + 10 }, false, ""); simRunDays(ss, 2, 2000, 0, dp, 1);
     sw2.push(`${dp},${rp},${ss.totalProduced.reduce((a, b) => a + b, 0)},${ss.totalSold.reduce((a, b) => a + b, 0)}`);
   }
   wf(outDir, "s30_sweep_shock_disrupt.csv", sw2.join("\n") + "\n");
-  const sw3 = ["transship_on,rep,mean_imbalance"];
-  for (const ts of [0, 1]) for (let rp = 0; rp < 3; rp++) {
-    const ss = new Sim({ ...c, master_seed: c.master_seed + rp + 20 }, false, ""); simRunDays(ss, 1, 2000, 0, -1, ts);
+  const sw3 = ["transship_on,rep,mean_imbalance,n_transships"];
+  for (const ts of [0, 1]) for (let rp = 0; rp < 5; rp++) {
+    const ss = new Sim({ ...c, master_seed: c.master_seed + rp + 20 }, false, ""); simRunDays(ss, 2, 2000, 0, -1, ts);
     const im = ss.kitImbSeries.length ? ss.kitImbSeries.reduce((a, b) => a + b, 0) / ss.kitImbSeries.length : 0.0;
-    sw3.push(`${ts},${rp},${im.toFixed(4)}`);
+    sw3.push(`${ts},${rp},${im.toFixed(4)},${ss.nTransships}`);
   }
   wf(outDir, "s31_sweep_transship.csv", sw3.join("\n") + "\n");
 
   const bn = ["DEMAND_FILL","DEMAND_BO","DEMAND_LOST","STORE_REPLEN","WH_CAP_REJECT","CARRIER_CAP_REJECT","ALLOC_FULL","ALLOC_PARTIAL","KIT_FULL","KIT_PARTIAL","TRANSSHIP","DISRUPT_HIT","SHOCK_HIT","CREDIT_HOLD","LIQUIDATE","CARRIER_DELAY"];
   wf(outDir, "s32_branches.csv", "branch,count\n" + bn.map((nm, i) => `${nm},${s.branches[i]}`).join("\n") + "\n");
 
-  const sp1 = new Sim(c, false, ""); simRunDays(sp1, c.parity_days, c.parity_events_per_day, 0, -1, 1);
-  const sp2 = new Sim(c, false, ""); simRunDays(sp2, c.parity_days, c.parity_events_per_day, 0, -1, 1);
+  const sp1 = new Sim(c, false, "", c.parity_events_per_day); simRunDays(sp1, c.parity_days, c.parity_events_per_day, 0, -1, 1);
+  const sp2 = new Sim(c, false, "", c.parity_events_per_day); simRunDays(sp2, c.parity_days, c.parity_events_per_day, 0, -1, 1);
   let h1 = 0xcbf29ce484222325n, h2 = 0xcbf29ce484222325n;
   for (let i = 0; i < NUM_ACCOUNTS; i++) {
     h1 = fnv1aI64(h1, sp1.acc[i].cash); h2 = fnv1aI64(h2, sp2.acc[i].cash);
@@ -150,7 +182,7 @@ export function writeS11ToS38(s: Sim, c: Config, outDir: string): void {
   for (let j = 0; j < rle.length; j += 2) for (let r = 0; r < rle[j + 1]; r++) dec.push(dec.length ? dec[dec.length - 1] + rle[j] : rle[j]);
   wf(outDir, "s37_compress.csv", `n_items,rle_ints,ratio,roundtrip_ok\n${nq},${rle.length},${(rle.length ? nq / rle.length : 1).toFixed(4)},${dec.length === nq && dec.every((v, i) => v === raw[i]) ? 1 : 0}\n`);
 
-  const si = new Sim(c, false, ""), lc = si.acc.map((a) => a.cash), loh = si.acc.map((a) => [...a.onHand]), lit = Array.from({ length: NUM_ACCOUNTS }, () => [0, 0, 0, 0]);
+  const si = new Sim(c, false, "", s.capScale * 2000), lc = si.acc.map((a) => a.cash), loh = si.acc.map((a) => [...a.onHand]), lit = Array.from({ length: NUM_ACCOUNTS }, () => [0, 0, 0, 0]);
   for (const r of s.sales) { lc[ACC_CUST] -= r[5]; lc[r[2]] += r[5]; loh[r[2]][r[3]] -= r[4]; }
   for (const r of s.ships) {
     if (r[9] === 1) { loh[r[2]][r[5]] -= r[6]; lit[r[3]][r[5]] += r[6]; lc[r[3]] -= r[7] + r[8]; lc[r[2]] += r[7]; lc[17 + r[4]] += r[8]; }

@@ -17,10 +17,19 @@ def write_s39_svgs(s, out_dir):
     write_bar_svg(out_dir, "cost_by_echelon.svg", "Python Cost by Echelon", [sum(s.daily_cost_echelon[d][e] for d in range(5)) for e in range(4)])
     lt = [p[0] for p in s.leadtime_pairs[:8]]
     write_bar_svg(out_dir, "leadtime_impact.svg", "Python Sample Carrier Lead Times", lt if lt else [1])
-    write_bar_svg(out_dir, "bullwhip_acf.svg", "Python Demand Kurtosis by SKU", [3.25, 3.25, 3.25, 3.25])
+    bw = []
+    for k in range(4):
+        md = sum(s.bin_demand[k]) / 100.0
+        m2 = sum((x - md)**2 for x in s.bin_demand[k])
+        m4 = sum((x - md)**4 for x in s.bin_demand[k])
+        bw.append((m4 / 100.0) / ((m2 / 100.0)**2) if m2 > 0 else 0.0)
+    write_bar_svg(out_dir, "bullwhip_acf.svg", "Python Demand Kurtosis by SKU", bw)
     ki = s.kit_imb_series[:12]
     write_bar_svg(out_dir, "kit_imbalance.svg", "Python Kit Component Imbalance", ki if ki else [0])
-    write_bar_svg(out_dir, "shock_study.svg", "Python Shock Event Study", [s.shock_resp[i]/s.shock_cnt[i] if s.shock_cnt[i]>0 else (i+1)*10.0 for i in range(3)])
+    write_bar_svg(out_dir, "shock_study.svg", "Python Shock Event Study", [s.shock_resp[i]/s.shock_cnt[i] if s.shock_cnt[i]>0 else 0.0 for i in range(3)])
     write_bar_svg(out_dir, "alloc_vs_cont.svg", "Python Allocation Fill vs Retail Sales", [s.alloc_total_fill, sum(s.total_sold)])
     write_bar_svg(out_dir, "carrier_tiers.svg", "Python Carrier Volume Tiers", s.carrier_tier_cnt)
-    write_bar_svg(out_dir, "sweep_safety.svg", "Python Safety Stock Sweep Fill Rate", [0.85, 0.94, 0.98])
+    fr_tot = s.dem_units_filled / s.dem_units_tot if s.dem_units_tot > 0 else 1.0
+    fr0 = s.daily_fill_store[0][1] / s.daily_fill_store[0][0] if s.daily_fill_store[0][0] > 0 else 1.0
+    fr9 = s.daily_fill_store[9][1] / s.daily_fill_store[9][0] if s.daily_fill_store[9][0] > 0 else 1.0
+    write_bar_svg(out_dir, "sweep_safety.svg", "Python Store Fill Rate Summary", [fr_tot, fr0, fr9])

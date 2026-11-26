@@ -11,7 +11,7 @@ SKU_RETAIL = (10000, 10200, 9800, 31500)
 SKU_WHOLESALE = (8000, 8200, 7800, 26000)
 SKU_PROD = (6000, 6200, 5800, 0)
 STORE_WH = (10, 10, 10, 11, 11, 11, 12, 12, 12, 12)
-CARRIER_BASE_LT = (120, 200, 160)
+CARRIER_BASE_LT = (150, 250, 200)
 
 def carrier_rate(v):
     return 200 if v < 500 else (160 if v < 2000 else 120)

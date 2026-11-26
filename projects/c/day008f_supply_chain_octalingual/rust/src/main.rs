@@ -34,7 +34,7 @@ fn main() {
     for st in 1..=9 { println!("[rust] tahap {}/40 (s{:02})", st, st); }
     let t0 = Instant::now(); analysis::write_s01_to_s09(&cfg, out_dir); tot += t0.elapsed().as_secs_f64();
     println!("[rust] tahap 10/40 (s10)");
-    let t0 = Instant::now(); let mut sim = entities::Sim::new(&cfg, true, Some(out_dir));
+    let t0 = Instant::now(); let mut sim = entities::Sim::new_scaled(&cfg, true, Some(out_dir), 400000);
     engine::sim_run_days(&mut sim, cfg.num_days, 400000, 0, -1, 1); tot += t0.elapsed().as_secs_f64();
     for st in 11..=38 { println!("[rust] tahap {}/40 (s{:02})", st, st); }
     let t0 = Instant::now(); analysis::write_s11_to_s38(&sim, &cfg, out_dir); tot += t0.elapsed().as_secs_f64();

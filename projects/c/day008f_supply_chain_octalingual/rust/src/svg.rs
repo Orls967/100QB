@@ -22,12 +22,19 @@ pub fn write_s39_svgs(s: &Sim, out_dir: &str) {
     write_bar_svg(out_dir, "cost_by_echelon.svg", "Rust Cost by Echelon", &ec);
     let lt: Vec<f64> = s.leadtime_pairs.iter().take(8).map(|p| p.0 as f64).collect();
     write_bar_svg(out_dir, "leadtime_impact.svg", "Rust Sample Carrier Lead Times", if lt.is_empty() { &[1.0] } else { &lt });
-    write_bar_svg(out_dir, "bullwhip_acf.svg", "Rust Demand Kurtosis by SKU", &[3.25, 3.25, 3.25, 3.25]);
+    let bw: Vec<f64> = (0..4).map(|k| {
+        let md = s.bin_demand[k].iter().sum::<i64>() as f64 / 100.0;
+        let mut m2 = 0.0; let mut m4 = 0.0;
+        for b in 0..100 { let d = s.bin_demand[k][b] as f64 - md; m2 += d * d; m4 += d * d * d * d; }
+        if m2 > 0.0 { (m4 / 100.0) / ((m2 / 100.0) * (m2 / 100.0)) } else { 0.0 }
+    }).collect();
+    write_bar_svg(out_dir, "bullwhip_acf.svg", "Rust Demand Kurtosis by SKU", &bw);
     let ki: Vec<f64> = s.kit_imb_series.iter().take(12).map(|&v| v as f64).collect();
     write_bar_svg(out_dir, "kit_imbalance.svg", "Rust Kit Component Imbalance", if ki.is_empty() { &[0.0] } else { &ki });
-    let sh: Vec<f64> = (0..3).map(|i| if s.shock_cnt[i] > 0 { s.shock_resp[i] as f64 / s.shock_cnt[i] as f64 } else { ((i + 1) * 10) as f64 }).collect();
+    let sh: Vec<f64> = (0..3).map(|i| if s.shock_cnt[i] > 0 { s.shock_resp[i] as f64 / s.shock_cnt[i] as f64 } else { 0.0 }).collect();
     write_bar_svg(out_dir, "shock_study.svg", "Rust Shock Event Study", &sh);
     write_bar_svg(out_dir, "alloc_vs_cont.svg", "Rust Allocation Fill vs Retail Sales", &[s.alloc_total_fill as f64, s.total_sold.iter().sum::<i64>() as f64]);
     write_bar_svg(out_dir, "carrier_tiers.svg", "Rust Carrier Volume Tiers", &s.carrier_tier_cnt.iter().map(|&v| v as f64).collect::<Vec<_>>());
-    write_bar_svg(out_dir, "sweep_safety.svg", "Rust Safety Stock Sweep Fill Rate", &[0.85, 0.94, 0.98]);
+    let fr_tot = if s.dem_units_tot > 0 { s.dem_units_filled as f64 / s.dem_units_tot as f64 } else { 1.0 };
+    write_bar_svg(out_dir, "sweep_safety.svg", "Rust Store Fill Rate Summary", &[fr_tot, fr[0] / 100.0, fr[9] / 100.0]);
 }

@@ -25,7 +25,7 @@ def write_s01_to_s09(c, out_dir):
     halloc = 0xCBF29CE484222325
     for fl in fills: halloc = fnv1a_i64(halloc, fl)
     inv_ok = check_invariants(s)
-    ok = 1 if (rng_ok and inv_ok == 1 and sum(fills) == 2500) else 0
+    ok = 1 if (rng_ok and inv_ok == 1 and sum(fills) == 1600) else 0
     wf(out_dir, "s01_selftest.txt", f"ok,h_rng,h_alloc,inv_ok\n{ok},{hrng:016x},{halloc:016x},{inv_ok}\n")
     wf(out_dir, "s02_config.csv", f"key,value\nmaster_seed,{c['master_seed']}\nnum_days,{c['num_days']}\nparity_days,{c['parity_days']}\nparity_events_per_day,{c['parity_events_per_day']}\nwh_cap,{c['wh_cap']}\nkit_fee,{c['kit_fee']}\n")
 
@@ -63,6 +63,11 @@ def write_s01_to_s09(c, out_dir):
     wf(out_dir, "s08_warmup_summary.csv", f"days,sold_A,sold_B,sold_C,sold_D,inv_ok\n1,{','.join(map(str,sw.total_sold))},{int(sw.inv_violations==0)}\n")
     for k in range(4): wf(out_dir, f"s08_warmup_sku_{SKU_L[k]}.csv", f"sku,sold,produced,end_snap\n{SKU_L[k]},{sw.total_sold[k]},{sw.total_produced[k]},{sw.day_inv_snap[0][k]}\n")
     wf(out_dir, "s09_day1_summary.csv", f"sold_tot,kits,alloc_cases,inv_violations\n{sum(sw.total_sold)},{sw.total_kits},{sw.alloc_cases},{sw.inv_violations}\n")
+    cal_fr = sw.dem_units_filled / sw.dem_units_tot if sw.dem_units_tot > 0 else 1.0
+    cal_bo = sw.dem_bo_events / sw.dem_events_tot if sw.dem_events_tot > 0 else 0.0
+    cal_cu = sw.carrier_vol_tot / sw.carrier_cap_tot if sw.carrier_cap_tot > 0 else 0.0
+    cal_ok = int(0.85 <= cal_fr <= 0.99 and cal_bo < 0.20 and 0.30 <= cal_cu <= 0.90)
+    wf(out_dir, "s09_calibration.csv", f"fill_rate,bo_event_frac,carrier_util,calibrated\n{cal_fr:.6f},{cal_bo:.6f},{cal_cu:.6f},{cal_ok}\n")
 
 def write_s11_to_s38(s, c, out_dir):
     for k in range(4):
@@ -86,46 +91,70 @@ def write_s11_to_s38(s, c, out_dir):
     wf(out_dir, "s16_kits.csv", f"total_kits,full,partial\n{s.total_kits},{s.branches[8]},{s.branches[9]}\n")
     wf(out_dir, "s16_kit_imbalance_series.csv", "idx,imbalance\n" + "\n".join(f"{i},{v}" for i, v in enumerate(s.kit_imb_series)) + "\n")
     wf(out_dir, "s17_allocations.csv", f"cases,nonzero,total_req,total_fill\n{s.alloc_cases},{s.alloc_nonzero},{s.alloc_total_req},{s.alloc_total_fill}\n")
-    wf(out_dir, "s18_cost_entities.csv", "acc,cash_delta\n" + "\n".join(f"{i},{s.acc[i]['cash']-(2_000_000_000 if i<10 else 5_000_000_000)}" for i in range(17)) + "\n")
+    wf(out_dir, "s18_cost_entities.csv", "acc,cash_delta\n" + "\n".join(f"{i},{s.acc[i]['cash']-(2_000_000_000 if i<10 else 5_000_000_000)*s.cap_scale}" for i in range(17)) + "\n")
     wf(out_dir, "s19_cost_types.csv", "echelon,cost_cents\n" + "\n".join(f"{e},{sum(s.daily_cost_echelon[d][e] for d in range(c['num_days']))}" for e in range(4)) + "\n")
     wf(out_dir, "s19_cost_daily.csv", "day,prod,kit,freight,hold_pen\n" + "\n".join(f"{d},{','.join(map(str,s.daily_cost_echelon[d]))}" for d in range(c["num_days"])) + "\n")
     for k in range(4): wf(out_dir, f"s20_demand_{SKU_L[k]}.csv", "day,demand\n" + "\n".join(f"{d},{s.daily_demand[d][k]}" for d in range(c["num_days"])) + "\n")
-    wf(out_dir, "s21_bullwhip.csv", "sku,kurtosis,acf_lag1,bullwhip_ratio\n" + "\n".join(f"{SKU_L[k]},3.250000,0.420000,{(s.total_produced[k]+s.total_kits+100)/(s.total_sold[k]+1) if s.daily_demand[0][k]>0 else 1.0:.6f}" for k in range(4)) + "\n")
+    bw_rows = []
+    for k in range(4):
+        md = sum(s.bin_demand[k]) / 100.0; mo = sum(s.bin_orders[k]) / 100.0
+        m2 = sum((x - md)**2 for x in s.bin_demand[k])
+        m4 = sum((x - md)**4 for x in s.bin_demand[k])
+        vo = sum((x - mo)**2 for x in s.bin_orders[k])
+        cov1 = sum((s.bin_demand[k][b] - md) * (s.bin_demand[k][b - 1] - md) for b in range(1, 100))
+        kurt = (m4 / 100.0) / ((m2 / 100.0)**2) if m2 > 0 else 0.0
+        acf1 = cov1 / m2 if m2 > 0 else 0.0
+        bwr = vo / m2 if m2 > 0 else 1.0
+        bw_rows.append(f"{SKU_L[k]},{kurt:.6f},{acf1:.6f},{bwr:.6f}")
+    wf(out_dir, "s21_bullwhip.csv", "sku,kurtosis,acf_lag1,bullwhip_ratio\n" + "\n".join(bw_rows) + "\n")
     wf(out_dir, "s22_service.csv", "store,req,fill,fill_rate\n" + "\n".join(f"{i},{s.daily_fill_store[i][0]},{s.daily_fill_store[i][1]},{s.daily_fill_store[i][1]/s.daily_fill_store[i][0] if s.daily_fill_store[i][0]>0 else 1.0:.6f}" for i in range(10)) + "\n")
     wf(out_dir, "s23_leadtime_impact.csv", "idx,leadtime,qty\n" + "\n".join(f"{i},{p[0]},{p[1]}" for i, p in enumerate(s.leadtime_pairs)) + "\n")
     imb_m = sum(s.kit_imb_series)/len(s.kit_imb_series) if s.kit_imb_series else 0.0
     wf(out_dir, "s24_kit_coupling.csv", f"mean_imbalance,total_kits\n{imb_m:.4f},{s.total_kits}\n")
-    wf(out_dir, "s25_shock_event_study.csv", "cls,count,avg_resp\n" + "\n".join(f"{cl},{s.shock_cnt[cl]},{s.shock_resp[cl]/s.shock_cnt[cl] if s.shock_cnt[cl]>0 else (cl+1)*10.0:.4f}" for cl in range(3)) + "\n")
+    shk_rows = []
+    for cl in range(3):
+        vals_r = []
+        for b, cev, st in s.shock_evs:
+            if cev != cl: continue
+            pre = [s.bin_store_dem[st][b + db] for db in (-2, -1) if b + db >= 0]
+            post = [s.bin_store_dem[st][b + db] for db in (0, 1) if b + db < 100]
+            if pre and post and sum(pre) > 0:
+                vals_r.append((sum(post)/len(post) - sum(pre)/len(pre)) / (sum(pre)/len(pre)))
+        cnt = len(vals_r); mn = sum(vals_r)/cnt if cnt > 0 else 0.0
+        se = (max(0.0, (sum(x*x for x in vals_r)/cnt - mn*mn)/(cnt - 1)))**0.5 if cnt > 1 else 0.0
+        shk_rows.append(f"{cl},{cnt},{mn:.6f},{se:.6f}")
+    wf(out_dir, "s25_shock_event_study.csv", "cls,count,mean_rel_dev,se_rel_dev\n" + "\n".join(shk_rows) + "\n")
     wf(out_dir, "s26_disruptions.csv", f"disrupt_hits\n{s.branches[11]}\n")
     wf(out_dir, "s27_fees.csv", f"n_fee_entries,fee_pool_cash\n{len(s.fees)},{s.acc[ACC_FEE]['cash']}\n")
     wf(out_dir, "s28_capacity_rejects.csv", f"wh_cap_reject,carrier_cap_reject\n{s.branches[4]},{s.branches[5]}\n")
 
     sw1 = ["S_lvl,rep,fill_rate,avg_oh"]
-    for sv in (400,800,1200):
-        for rp in range(3):
-            c2 = dict(c); c2["master_seed"] += rp + 1; ss = Sim(c2, False, None); sim_run_days(ss, 1, 1600, sv, -1, 1)
-            rq = sum(x[0] for x in ss.daily_fill_store); fl = sum(x[1] for x in ss.daily_fill_store); oh = sum(ss.acc[i]["on_hand"][0] for i in range(10))
-            sw1.append(f"{sv},{rp},{fl/rq if rq>0 else 1.0:.6f},{oh/10.0:.2f}")
+    for sv in (80, 220, 350):
+        for rp in range(5):
+            c2 = dict(c); c2["master_seed"] += rp + 1; ss = Sim(c2, False, None); sim_run_days(ss, 2, 1600, sv, -1, 1)
+            oh = sum(ss.acc[i]["on_hand"][0] for i in range(10))
+            fr = ss.dem_units_filled / ss.dem_units_tot if ss.dem_units_tot > 0 else 1.0
+            sw1.append(f"{sv},{rp},{fr:.6f},{oh/10.0:.2f}")
     wf(out_dir, "s29_sweep_safety_stock.csv", "\n".join(sw1) + "\n")
     sw2 = ["disrupt_pct,rep,produced,sold"]
     for dp in (0,4,12):
-        for rp in range(3):
-            c2 = dict(c); c2["master_seed"] += rp + 10; ss = Sim(c2, False, None); sim_run_days(ss, 1, 1600, 0, dp, 1)
+        for rp in range(5):
+            c2 = dict(c); c2["master_seed"] += rp + 10; ss = Sim(c2, False, None); sim_run_days(ss, 2, 1600, 0, dp, 1)
             sw2.append(f"{dp},{rp},{sum(ss.total_produced)},{sum(ss.total_sold)}")
     wf(out_dir, "s30_sweep_shock_disrupt.csv", "\n".join(sw2) + "\n")
-    sw3 = ["transship_on,rep,mean_imbalance"]
+    sw3 = ["transship_on,rep,mean_imbalance,n_transships"]
     for ts in (0,1):
-        for rp in range(3):
-            c2 = dict(c); c2["master_seed"] += rp + 20; ss = Sim(c2, False, None); sim_run_days(ss, 1, 1600, 0, -1, ts)
+        for rp in range(5):
+            c2 = dict(c); c2["master_seed"] += rp + 20; ss = Sim(c2, False, None); sim_run_days(ss, 2, 1600, 0, -1, ts)
             im = sum(ss.kit_imb_series)/len(ss.kit_imb_series) if ss.kit_imb_series else 0.0
-            sw3.append(f"{ts},{rp},{im:.4f}")
+            sw3.append(f"{ts},{rp},{im:.4f},{ss.n_transships}")
     wf(out_dir, "s31_sweep_transship.csv", "\n".join(sw3) + "\n")
 
     bn = ("DEMAND_FILL","DEMAND_BO","DEMAND_LOST","STORE_REPLEN","WH_CAP_REJECT","CARRIER_CAP_REJECT","ALLOC_FULL","ALLOC_PARTIAL","KIT_FULL","KIT_PARTIAL","TRANSSHIP","DISRUPT_HIT","SHOCK_HIT","CREDIT_HOLD","LIQUIDATE","CARRIER_DELAY")
     wf(out_dir, "s32_branches.csv", "branch,count\n" + "\n".join(f"{nm},{s.branches[i]}" for i, nm in enumerate(bn)) + "\n")
 
-    sp1 = Sim(c, False, None); sim_run_days(sp1, c["parity_days"], c["parity_events_per_day"], 0, -1, 1)
-    sp2 = Sim(c, False, None); sim_run_days(sp2, c["parity_days"], c["parity_events_per_day"], 0, -1, 1)
+    sp1 = Sim(c, False, None, c["parity_events_per_day"]); sim_run_days(sp1, c["parity_days"], c["parity_events_per_day"], 0, -1, 1)
+    sp2 = Sim(c, False, None, c["parity_events_per_day"]); sim_run_days(sp2, c["parity_days"], c["parity_events_per_day"], 0, -1, 1)
     h1 = h2 = 0xCBF29CE484222325
     for i in range(NUM_ACCOUNTS):
         h1 = fnv1a_i64(h1, sp1.acc[i]["cash"]); h2 = fnv1a_i64(h2, sp2.acc[i]["cash"])
@@ -149,7 +178,7 @@ def write_s11_to_s38(s, c, out_dir):
         for _ in range(rle[j+1]): dec.append(rle[j] if not dec else dec[-1] + rle[j])
     wf(out_dir, "s37_compress.csv", f"n_items,rle_ints,ratio,roundtrip_ok\n{nq},{len(rle)},{nq/len(rle) if rle else 1.0:.4f},{int(dec==raw)}\n")
 
-    si = Sim(c, False, None); lc = [a["cash"] for a in si.acc]; loh = [list(a["on_hand"]) for a in si.acc]; lit = [[0]*4 for _ in range(NUM_ACCOUNTS)]
+    si = Sim(c, False, None, s.cap_scale * 2000); lc = [a["cash"] for a in si.acc]; loh = [list(a["on_hand"]) for a in si.acc]; lit = [[0]*4 for _ in range(NUM_ACCOUNTS)]
     for r in s.sales: lc[ACC_CUST] -= r[5]; lc[r[2]] += r[5]; loh[r[2]][r[3]] -= r[4]
     for r in s.ships:
         if r[9] == 1: loh[r[2]][r[5]] -= r[6]; lit[r[3]][r[5]] += r[6]; lc[r[3]] -= r[7]+r[8]; lc[r[2]] += r[7]; lc[17+r[4]] += r[8]

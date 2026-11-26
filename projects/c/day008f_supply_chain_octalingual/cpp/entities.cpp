@@ -42,32 +42,38 @@ bool load_config(const char *path, Config &c) {
     return true;
 }
 
-void sim_init(Sim &s, const Config &c, int32_t log_en, const char *out_dir) {
+void sim_init_scaled(Sim &s, const Config &c, int32_t log_en, const char *out_dir, int64_t ev_per_day) {
     s = Sim{};
     s.cfg = c;
     s.log_enabled = log_en;
+    s.cap_scale = ev_per_day / 2000;
+    if (s.cap_scale < 1) s.cap_scale = 1;
+    int64_t cs = s.cap_scale;
     for (int i = 0; i < NUM_ACCOUNTS + 2; ++i) {
         uint64_t x = static_cast<uint64_t>(c.master_seed) ^ fnv1a_u32pair(static_cast<uint32_t>(i / 10), static_cast<uint32_t>(i));
         x256_seed(&s.rng[i], splitmix64(&x));
     }
     for (int i = 0; i < NUM_STORES; ++i) {
-        s.acc[i].cash = 2000000000LL; s.acc[i].credit_limit = 500000000LL;
-        for (int k = 0; k < 3; ++k) s.acc[i].on_hand[k] = 400;
-        s.acc[i].on_hand[3] = 120;
+        s.acc[i].cash = 2000000000LL * cs; s.acc[i].credit_limit = 500000000LL * cs;
+        for (int k = 0; k < 3; ++k) s.acc[i].on_hand[k] = 60 * cs;
+        s.acc[i].on_hand[3] = 40 * cs;
         for (int k = 0; k < NUM_SKUS; ++k) s.acc[i].ewma_milli[k] = 12000;
         s.acc[i].safety_mul = 100;
     }
-    for (int i = 10; i < 14; ++i) {
-        s.acc[i].cash = 5000000000LL; s.acc[i].credit_limit = 1000000000LL;
-        for (int k = 0; k < 3; ++k) s.acc[i].on_hand[k] = 2500;
-        s.acc[i].on_hand[3] = 800;
+    for (int i = 10; i < 13; ++i) {
+        s.acc[i].cash = 5000000000LL * cs; s.acc[i].credit_limit = 1000000000LL * cs;
+        s.acc[i].on_hand[0] = 1600 * cs; s.acc[i].on_hand[1] = 1400 * cs;
+        s.acc[i].on_hand[2] = 1200 * cs; s.acc[i].on_hand[3] = 600 * cs;
     }
+    s.acc[13].cash = 5000000000LL * cs; s.acc[13].credit_limit = 1000000000LL * cs;
+    s.acc[13].on_hand[0] = 1800 * cs; s.acc[13].on_hand[1] = 1300 * cs;
+    s.acc[13].on_hand[2] = 900 * cs;  s.acc[13].on_hand[3] = 500 * cs;
     for (int i = 14; i < 17; ++i) {
-        s.acc[i].cash = 5000000000LL; s.acc[i].credit_limit = 2000000000LL;
-        s.acc[i].on_hand[i - 14] = 4000;
+        s.acc[i].cash = 5000000000LL * cs; s.acc[i].credit_limit = 2000000000LL * cs;
+        s.acc[i].on_hand[i - 14] = 4000 * cs;
     }
-    for (int i = 17; i < 20; ++i) { s.acc[i].cash = 500000000LL; s.acc[i].credit_limit = 200000000LL; }
-    s.acc[ACC_CUST].cash = 50000000000LL; s.acc[ACC_SUPP].cash = 50000000000LL; s.acc[ACC_FEE].cash = 1000000000LL;
+    for (int i = 17; i < 20; ++i) { s.acc[i].cash = 500000000LL * cs; s.acc[i].credit_limit = 200000000LL * cs; }
+    s.acc[ACC_CUST].cash = 50000000000LL * cs; s.acc[ACC_SUPP].cash = 50000000000LL * cs; s.acc[ACC_FEE].cash = 1000000000LL * cs;
     for (int i = 0; i < NUM_ACCOUNTS; ++i) {
         s.init_cash += s.acc[i].cash;
         for (int k = 0; k < NUM_SKUS; ++k) s.init_stock[k] += s.acc[i].on_hand[k];
@@ -90,4 +96,8 @@ void sim_free(Sim &s) {
     if (s.f_disrupt) fclose(s.f_disrupt); if (s.f_credit) fclose(s.f_credit);
     if (s.f_risk) fclose(s.f_risk); if (s.f_trans) fclose(s.f_trans);
     if (s.f_shocks) fclose(s.f_shocks); if (s.f_acc_ser) fclose(s.f_acc_ser);
+}
+
+void sim_init(Sim &s, const Config &c, int32_t log_en, const char *out_dir) {
+    sim_init_scaled(s, c, log_en, out_dir, 2000);
 }

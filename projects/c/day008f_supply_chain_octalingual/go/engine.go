@@ -2,27 +2,29 @@ package main
 
 import "fmt"
 
-func doShip(s *Sim, src, dst, sku int, qty, day, tick, tAbs int64) {
+func doShip(s *Sim, src, dst, sku int, qty, day, tick, tAbs int64, bin int) {
 	if qty <= 0 || s.acc[src].onHand[sku] <= 0 {
 		return
 	}
 	if qty > s.acc[src].onHand[sku] {
 		qty = s.acc[src].onHand[sku]
 	}
+	whCap := int64(20000) * s.capScale
+	cCap := int64(12000) * s.capScale
 	if dst >= 10 && dst < 14 {
 		tot := int64(0)
 		for k := 0; k < 4; k++ {
 			tot += s.acc[dst].onHand[k]
 		}
-		if tot+qty > s.cfg.whCap {
+		if tot+qty > whCap {
 			s.branches[4]++
 			return
 		}
 	}
 	cid := (src + dst + sku) % numCarriers
-	if s.carrierDayVol[cid]+qty > s.cfg.carrierCapDaily {
+	if s.carrierDayVol[cid]+qty > cCap {
 		cid = (cid + 1) % numCarriers
-		if s.carrierDayVol[cid]+qty > s.cfg.carrierCapDaily {
+		if s.carrierDayVol[cid]+qty > cCap {
 			s.branches[5]++
 			return
 		}
@@ -36,6 +38,10 @@ func doShip(s *Sim, src, dst, sku int, qty, day, tick, tAbs int64) {
 	}
 	s.carrierTierCnt[tier]++
 	s.carrierDayVol[cid] += qty
+	s.carrierVolTot += qty
+	if bin >= 0 && bin < 100 {
+		s.binOrders[sku][bin] += qty
+	}
 	goods, freight := qty*skuWholesale[sku], qty*rate
 	s.acc[src].onHand[sku] -= qty
 	s.acc[dst].inTransit[sku] += qty
@@ -44,8 +50,8 @@ func doShip(s *Sim, src, dst, sku int, qty, day, tick, tAbs int64) {
 	if day < 6 {
 		s.dailyCostEchelon[day][2] += freight
 	}
-	delay := s.rng[17+cid].randInt(0, 80)
-	if delay > 50 {
+	delay := s.rng[17+cid].randInt(0, 25)
+	if delay > 18 {
 		s.branches[15]++
 	}
 	lt := carrierBaseLt[cid] + delay
@@ -67,9 +73,12 @@ func hashEv(s *Sim, ev *SimEvent) {
 	s.eventHash = fnv1aI64(s.eventHash, int64(ev.qty))
 }
 func simRunDays(s *Sim, days, evPerDay, safetyOvr, disruptOvr int64, transshipOn int) {
-	T, evProc := s.cfg.ticksPerDay, int64(0)
+	T, evProc, cs := s.cfg.ticksPerDay, int64(0), s.capScale
+	chkStep := max(evPerDay/8, 1)
+	shkStep := max(evPerDay/250, 1)
 	for d := int64(0); d < days; d++ {
 		dayBase := d * T
+		s.carrierCapTot += numCarriers * 12000 * cs
 		s.carrierDayVol = [3]int64{}
 		for f := 14; f < 17; f++ {
 			if s.acc[f].plantState == 1 {
@@ -81,40 +90,44 @@ func simRunDays(s *Sim, days, evPerDay, safetyOvr, disruptOvr int64, transshipOn
 				s.acc[f].plantState = 0
 			}
 		}
-		for wh := 10; wh < 13; wh++ {
-			for sku := 0; sku < 4; sku++ {
-				var sts []int
-				var reqs, seqs []int64
-				var prio []int32
-				sLvl := s.cfg.storeUpperS
-				if safetyOvr > 0 {
-					sLvl = safetyOvr
-				}
-				for st := 0; st < numStores; st++ {
-					if storeWh[st] != wh {
-						continue
+		if d > 0 {
+			for wh := 10; wh < 13; wh++ {
+				for sku := 0; sku < 4; sku++ {
+					var sts []int
+					var reqs, seqs []int64
+					var prio []int32
+					sLvl := int64(450)
+					if safetyOvr > 0 {
+						sLvl = safetyOvr
 					}
-					inv := s.acc[st].onHand[sku] + s.acc[st].inTransit[sku]
-					if inv < sLvl {
-						sts = append(sts, st)
-						reqs = append(reqs, sLvl-inv)
-						seqs = append(seqs, int64(s.nextSeq))
-						s.nextSeq++
-						p := int32(1)
-						if st%3 == 0 {
-							p = 2
+					sLvl *= cs
+					for st := 0; st < numStores; st++ {
+						if storeWh[st] != wh {
+							continue
 						}
-						prio = append(prio, p)
+						inv := s.acc[st].onHand[sku] + s.acc[st].inTransit[sku]
+						if inv < sLvl {
+							sts = append(sts, st)
+							reqs = append(reqs, sLvl-inv)
+							seqs = append(seqs, int64(s.nextSeq))
+							s.nextSeq++
+							p := int32(1)
+							if st%3 == 0 {
+								p = 2
+							}
+							prio = append(prio, p)
+						}
 					}
-				}
-				if len(sts) > 0 {
-					fills := runAllocAuction(s, wh, sku, sts, reqs, seqs, prio)
-					for i, st := range sts {
-						if s.fAlloc != nil {
-							fmt.Fprintf(s.fAlloc, "%d,%d,%d,%d,%d,%d\n", d, wh, sku, st, reqs[i], fills[i])
-						}
-						if fills[i] > 0 {
-							doShip(s, wh, st, sku, fills[i], d, 0, dayBase)
+					if len(sts) > 0 {
+						fills := runAllocAuction(s, wh, sku, sts, reqs, seqs, prio)
+						b0 := int((d * 100) / days)
+						for i, st := range sts {
+							if s.fAlloc != nil {
+								fmt.Fprintf(s.fAlloc, "%d,%d,%d,%d,%d,%d\n", d, wh, sku, st, reqs[i], fills[i])
+							}
+							if fills[i] > 0 {
+								doShip(s, wh, st, sku, fills[i], d, 0, dayBase, b0)
+							}
 						}
 					}
 				}
@@ -124,23 +137,30 @@ func simRunDays(s *Sim, days, evPerDay, safetyOvr, disruptOvr int64, transshipOn
 			tAbs := dayBase + (e*T)/evPerDay
 			st := int32(s.rng[numAccounts].randInt(0, 9))
 			sku := int32(s.rng[numAccounts].randInt(0, 3))
-			qty := int32(s.rng[numAccounts].randInt(1, 14))
+			var qty int32
+			if s.rng[numAccounts].randInt(0, 9) == 0 {
+				qty = int32(s.rng[numAccounts].randInt(12, 24))
+			} else {
+				qty = int32(s.rng[numAccounts].randInt(1, 5))
+			}
 			heapPush(&s.heap, SimEvent{tAbs, s.nextSeq, 0, accCust, st, sku, qty, 0})
 			s.nextSeq++
 			if e%20 == 0 {
 				f := int32((e / 20) % 3)
-				heapPush(&s.heap, SimEvent{tAbs + 1, s.nextSeq, 3, 14 + f, 10 + f, f, 80, 0})
+				heapPush(&s.heap, SimEvent{tAbs + 1, s.nextSeq, 3, 14 + f, 10 + f, f, 130, 0})
 				s.nextSeq++
 			}
 			if e%40 == 0 {
-				heapPush(&s.heap, SimEvent{tAbs + 2, s.nextSeq, 4, 13, 13, 3, 25, 0})
+				kq := int32(s.rng[13].randInt(15, 35))
+				heapPush(&s.heap, SimEvent{tAbs + 2, s.nextSeq, 4, 13, 13, 3, kq, 0})
 				s.nextSeq++
 			}
 			if e%60 == 0 && transshipOn != 0 {
-				heapPush(&s.heap, SimEvent{tAbs + 3, s.nextSeq, 5, 13, 10 + int32((e/60)%3), int32((e / 60) % 4), 40, 0})
+				tq := int32(s.rng[13].randInt(30, 50))
+				heapPush(&s.heap, SimEvent{tAbs + 3, s.nextSeq, 5, 10, 13, 0, tq, 0})
 				s.nextSeq++
 			}
-			if e%250 == 0 {
+			if e%chkStep == 0 {
 				dp := s.cfg.disruptProbPct
 				if disruptOvr >= 0 {
 					dp = disruptOvr
@@ -150,20 +170,28 @@ func simRunDays(s *Sim, days, evPerDay, safetyOvr, disruptOvr int64, transshipOn
 					heapPush(&s.heap, SimEvent{tAbs + 4, s.nextSeq, 7, 14 + f, 14 + f, f, 1, 0})
 					s.nextSeq++
 				}
+				heapPush(&s.heap, SimEvent{tAbs + 6, s.nextSeq, 8, 0, 0, 0, 0, 0})
+				s.nextSeq++
+			}
+			if e%shkStep == 0 {
 				if s.rng[numAccounts+1].randInt(1, 100) <= s.cfg.shockProbPct {
 					stS := int32(s.rng[numAccounts+1].randInt(0, 9))
 					cls := int32(s.rng[numAccounts+1].randInt(0, 2))
 					heapPush(&s.heap, SimEvent{tAbs + 5, s.nextSeq, 6, accCust, stS, 0, (cls + 1) * 10, cls})
 					s.nextSeq++
 				}
-				heapPush(&s.heap, SimEvent{tAbs + 6, s.nextSeq, 8, 0, 0, 0, 0, 0})
-				s.nextSeq++
 			}
 		}
 		dayEnd := (d + 1) * T
 		for len(s.heap) > 0 && s.heap[0].time < dayEnd {
 			ev := heapPop(&s.heap)
 			tick := ev.time - dayBase
+			bin := int(((d*T + tick) * 100) / (days * T))
+			if bin < 0 {
+				bin = 0
+			} else if bin > 99 {
+				bin = 99
+			}
 			hashEv(s, &ev)
 			evProc++
 			if evProc <= 5000 && s.fOrders != nil {
@@ -172,6 +200,10 @@ func simRunDays(s *Sim, days, evPerDay, safetyOvr, disruptOvr int64, transshipOn
 			switch ev.etype {
 			case 0:
 				st, sku, qty := int(ev.dst), int(ev.sku), int64(ev.qty)
+				s.demEventsTot++
+				s.demUnitsTot += qty
+				s.binDemand[sku][bin] += qty
+				s.binStoreDem[st][bin] += qty
 				if d < 6 {
 					s.dailyDemand[d][sku] += qty
 					s.dailyFillStore[st][0] += qty
@@ -182,6 +214,7 @@ func simRunDays(s *Sim, days, evPerDay, safetyOvr, disruptOvr int64, transshipOn
 				} else if s.acc[st].onHand[sku] >= qty {
 					s.acc[st].onHand[sku] -= qty
 					s.totalSold[sku] += qty
+					s.demUnitsFilled += qty
 					rev := qty * skuRetail[sku]
 					transferCash(s, accCust, st, rev, -1, d, tick)
 					if s.logEnabled {
@@ -196,6 +229,7 @@ func simRunDays(s *Sim, days, evPerDay, safetyOvr, disruptOvr int64, transshipOn
 					if part > 0 {
 						s.acc[st].onHand[sku] = 0
 						s.totalSold[sku] += part
+						s.demUnitsFilled += part
 						rev := part * skuRetail[sku]
 						transferCash(s, accCust, st, rev, -1, d, tick)
 						if s.logEnabled {
@@ -206,16 +240,23 @@ func simRunDays(s *Sim, days, evPerDay, safetyOvr, disruptOvr int64, transshipOn
 						}
 					}
 					s.acc[st].backorder[sku] += qty - part
+					s.demBoEvents++
 					s.branches[1]++
 				}
-				sLvl, capS := s.cfg.storeSBase, s.cfg.storeUpperS
+				capS := int64(450)
 				if safetyOvr > 0 {
-					sLvl, capS = (safetyOvr*s.cfg.storeSBase)/s.cfg.storeUpperS, safetyOvr
+					capS = safetyOvr
 				}
+				capS *= cs
+				sLvl := (capS * 40) / 100
 				invPos := s.acc[st].onHand[sku] + s.acc[st].inTransit[sku] - s.acc[st].backorder[sku]
 				if invPos < sLvl && s.acc[st].status == 0 {
 					s.branches[3]++
-					doShip(s, storeWh[st], st, sku, capS-invPos, d, tick, ev.time)
+					srcWh := 10 + sku
+					if sku == 3 || st == 9 {
+						srcWh = 13
+					}
+					doShip(s, srcWh, st, sku, capS-invPos, d, tick, ev.time, bin)
 				}
 			case 2:
 				dst, sku, qty := int(ev.dst), int(ev.sku), int64(ev.qty)
@@ -244,7 +285,7 @@ func simRunDays(s *Sim, days, evPerDay, safetyOvr, disruptOvr int64, transshipOn
 					if s.logEnabled {
 						s.prods = append(s.prods, ProdRec{d, tick, ev.src, ev.sku, int32(qty), cost})
 					}
-					doShip(s, fac, int(ev.dst), sku, qty, d, tick, ev.time)
+					doShip(s, fac, int(ev.dst), sku, qty, d, tick, ev.time, bin)
 				}
 			case 4:
 				m := min(s.acc[13].onHand[0], min(s.acc[13].onHand[1], s.acc[13].onHand[2]))
@@ -276,10 +317,23 @@ func simRunDays(s *Sim, days, evPerDay, safetyOvr, disruptOvr int64, transshipOn
 					}
 				}
 			case 5:
+				minK := 0
+				for k := 1; k < 3; k++ {
+					if s.acc[13].onHand[k] < s.acc[13].onHand[minK] {
+						minK = k
+					}
+				}
+				bestW := 10
+				for w := 11; w < 13; w++ {
+					if s.acc[w].onHand[minK] > s.acc[bestW].onHand[minK] {
+						bestW = w
+					}
+				}
 				s.branches[10]++
-				doShip(s, int(ev.src), int(ev.dst), int(ev.sku), int64(ev.qty), d, tick, ev.time)
+				s.nTransships++
+				doShip(s, bestW, 13, minK, int64(ev.qty), d, tick, ev.time, bin)
 				if s.fTrans != nil {
-					fmt.Fprintf(s.fTrans, "%d,%d,%d,%d,%d,%d\n", d, tick, ev.src, ev.dst, ev.sku, ev.qty)
+					fmt.Fprintf(s.fTrans, "%d,%d,%d,13,%d,%d\n", d, tick, bestW, minK, ev.qty)
 				}
 			case 7:
 				s.acc[ev.src].plantState, s.acc[ev.src].disruptRem = 1, 1
@@ -288,13 +342,18 @@ func simRunDays(s *Sim, days, evPerDay, safetyOvr, disruptOvr int64, transshipOn
 					fmt.Fprintf(s.fDisrupt, "%d,%d,%d,1,1\n", d, tick, ev.src)
 				}
 			case 6:
+				cls := int(ev.aux)
+				mag := int64(cls+1) * 15 * cs
 				s.branches[12]++
-				s.shockCnt[ev.aux]++
-				s.shockResp[ev.aux] += int64(ev.qty)
-				if s.fShocks != nil {
-					fmt.Fprintf(s.fShocks, "%d,%d,%d,%d,%d\n", d, tick, ev.aux, ev.dst, ev.qty)
+				s.shockCnt[cls]++
+				s.shockResp[cls] += mag
+				if len(s.shockEvs) < 128 {
+					s.shockEvs = append(s.shockEvs, [3]int{bin, cls, int(ev.dst)})
 				}
-				heapPush(&s.heap, SimEvent{ev.time + 1, s.nextSeq, 0, accCust, ev.dst, 0, ev.qty, 0})
+				if s.fShocks != nil {
+					fmt.Fprintf(s.fShocks, "%d,%d,%d,%d,%d\n", d, tick, cls, ev.dst, mag)
+				}
+				heapPush(&s.heap, SimEvent{ev.time + 1, s.nextSeq, 0, accCust, ev.dst, 0, int32(min(mag, 5000)), 0})
 				s.nextSeq++
 			case 8:
 				simRiskCheck(s, d, tick)

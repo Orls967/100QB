@@ -38,8 +38,15 @@
 - **4 SKU**: `0=A` (harga ritel `10000`, grosir `8000`, produksi `6000`), `1=B` (`10200`, `8200`, `6200`), `2=C` (`9800`, `7800`, `5800`), `3=D` (Kit `1A+1B+1C`, harga ritel `31500`, grosir `26000`, biaya rakit `1500`).
 - **3 Pabrik (`F0..F2`)**: `F_k` memproduksi SKU `k`. Memiliki mesin keadaan `OPEN (0) -> DISRUPTED (1) -> RECOVERY (2) -> OPEN (0)`, kapasitas normal `2400`, lembur `3200`.
 - **4 Gudang (`W0..W3`)**: `W0` melayani `S0..S2`, `W1` melayani `S3..S5`, `W2` melayani `S6..S9`, `W3` hub pusat (perakitan Kit `D` + *transshipment* antar gudang). Kapasitas simpan `50000` unit per gudang; penolakan jika penuh.
-- **10 Toko (`S0..S9`)**: Peramalan EWMA bilangan bulat (`alpha = 250/1000` milli-unit), kebijakan `(s, S)` dengan safety stock dinamis, *backorder* atau *lost sale* (jika permintaan melebihi batas atau toko `SUSPENDED`).
-- **3 Kurir (`C0..C2`)**: Biaya bertingkat volume harian (`<500`: `200`, `500..1999`: `160`, `>=2000`: `120` sen/unit), *lead time* stokastik + keterlambatan cuaca, batas kapasitas harian `800` unit/kurir.
+- **10 Toko (`S0..S9`)**: Peramalan EWMA bilangan bulat (`alpha = 250/1000` milli-unit), kebijakan `(s, S)` dengan safety stock dinamis (`S = 450 * cap_scale`, `s = 0.4 * S`, terkalibrasi non-jenuh), *backorder* atau *lost sale* (jika permintaan melebihi batas atau toko `SUSPENDED`).
+- **3 Kurir (`C0..C2`)**: Biaya bertingkat volume harian (`<500`: `200`, `500..1999`: `160`, `>=2000`: `120` sen/unit), *lead time* stokastik `{150, 250, 200} + rand(0,25)` tick, kapasitas harian kurir `12000 * cap_scale` unit/kurir.
+- **Definisi Tunggal Fill Rate & Kalibrasi A Priori**:
+  - `fill_rate = dem_units_filled / dem_units_tot` (dipakai seragam di `s09_calibration.csv`, `s22_service.csv`, dan `s29_sweep_safety_stock.csv`).
+  - Rentang kalibrasi baseline (`s09_calibration.csv`, 1 hari $\times$ 2 000 event): `fill_rate in [0.85, 0.99]`, `bo_event_frac < 0.20`, `carrier_util in [0.30, 0.90]`.
+- **Statistik Anti-Hampa (`S21`, `S25`, `S31`)**:
+  - `S21` (`s21_bullwhip.csv`): kurtosis sampel, ACF(1), dan *bullwhip ratio* dihitung langsung dari 100 *time bin* permintaan & pesanan per SKU.
+  - `S25` (`s25_shock_event_study.csv`): `mean_rel_dev` dan `se_rel_dev` dihitung dari jendela 2-bin pra/pasca-guncangan per kelas (`0, 1, 2`).
+  - `S31` (`s31_sweep_transship.csv`): 5 replika per kondisi (`0` vs `1`), mencatat `mean_imbalance` dan `n_transships`.
 - **Sesi Harian**: `PRE_DAY -> ALLOCATION_AUCTION -> CONTINUOUS_OPS -> END_OF_DAY_CLEARING -> CLOSED`.
   - **Lelang Alokasi Stok Langka (`ALLOCATION_AUCTION`)**: Ketika total permintaan toko atas `(gudang, sku)` melebihi stok tersedia `avail`, alokasi memaksimalkan total unit terisi; tie-break: (1) minimalkan kekurangan maksimum toko (proporsional/water-filling bulat), (2) prioritas tingkat toko lebih tinggi, (3) `seq` terkecil; sisa permintaan ditandai *backorder* atau ditolak sesuai tipe pesanan (`URGENT_DROP` vs `STANDARD_REPLENISH`).
 - **Invarian Eksak** (diperiksa di `S11`):
@@ -58,7 +65,7 @@ Setiap bahasa menulis berkas identik ke `out/<lang>/`:
 - `s06`: `s06_schedule_head.csv`, `s06_sessions.csv`
 - `s07`: `s07_shock_schedule.csv`
 - `s08`: `s08_warmup_summary.csv`, `s08_warmup_sku_{A,B,C,D}.csv`
-- `s09`: `s09_day1_summary.csv`
+- `s09`: `s09_day1_summary.csv`, `s09_calibration.csv`
 - `s10`: `orders_log.csv`, `sales_{A,B,C,D}.csv`, `shipments_{A,B,C,D}.csv`, `inventory_snap_{A,B,C,D}.csv`, `store_daily_{0..9}.csv`, `warehouse_daily_{0..3}.csv`, `factory_daily_{0..2}.csv`, `allocations.csv`, `disruptions.csv`, `credit_calls.csv`, `risk_actions.csv`, `production.csv`, `kit_assembly.csv`, `transshipments.csv`, `entities_final.csv`, `accounts_series.csv`, `shocks_log.csv`, `fees_ledger.csv` (41 berkas)
 - `s11`: `s11_invariants.csv`
 - `s12`: `s12_clearing.csv`, `s12_credit.csv`
@@ -71,4 +78,4 @@ Setiap bahasa menulis berkas identik ke `out/<lang>/`:
 ## 5. Beban Kerja
 - **Beban Paritas (`S33`/`S34`)**: `3` hari $\times$ `8 000` event kontinu (`24 000` event, identik 8 bahasa).
 - **Beban Utama (`S10`)**: C/C++/Rust/Go = `5` hari $\times$ `400 000` event; TypeScript = `5` hari $\times$ `80 000`; Ruby/Python = `5` hari $\times$ `8 000`; Notebook = `5` hari $\times$ `4 000`.
-- **Beban Sapuan (`S29`–`S31`)**: `~1/5` beban utama per run (3 replika per titik).
+- **Beban Sapuan (`S29`–`S31`)**: `2` hari $\times$ `2 000` event per replika (`5` replika per titik; `S_lvl in {80, 220, 350}`).

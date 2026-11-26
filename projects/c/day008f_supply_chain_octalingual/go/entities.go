@@ -63,6 +63,12 @@ type Sim struct {
 	shockCnt, shockResp                                                 [3]int64
 	kitImbSeries                                                        []int64
 	leadtimePairs                                                       [][2]int64
+	binDemand                                                           [4][100]int64
+	binOrders                                                           [4][100]int64
+	binStoreDem                                                         [10][100]int64
+	shockEvs                                                            [][3]int
+	nTransships, demEventsTot, demBoEvents, demUnitsTot, demUnitsFilled int64
+	carrierCapTot, carrierVolTot, capScale                              int64
 	sales                                                               []SaleRec
 	ships                                                               []ShipRec
 	prods                                                               []ProdRec
@@ -133,28 +139,37 @@ func openBW(s *Sim, dir, name, hdr string) *bufio.Writer {
 	return bw
 }
 func newSim(c Config, logEn bool, outDir string) *Sim {
-	s := &Sim{cfg: c, nextSeq: 1, logEnabled: logEn, eventHash: 0xCBF29CE484222325}
+	return newSimScaled(c, logEn, outDir, 2000)
+}
+func newSimScaled(c Config, logEn bool, outDir string, evPerDay int64) *Sim {
+	cs := evPerDay / 2000
+	if cs < 1 {
+		cs = 1
+	}
+	s := &Sim{cfg: c, nextSeq: 1, logEnabled: logEn, eventHash: 0xCBF29CE484222325, capScale: cs}
 	for i := 0; i < numAccounts+2; i++ {
 		x := uint64(c.masterSeed) ^ fnv1aU32Pair(uint32(i/10), uint32(i))
 		s.rng[i] = x256Seed(splitmix64(&x))
 	}
 	for i := 0; i < numStores; i++ {
-		s.acc[i].cash, s.acc[i].creditLimit = 2000000000, 500000000
-		s.acc[i].onHand = [4]int64{400, 400, 400, 120}
+		s.acc[i].cash, s.acc[i].creditLimit = 2000000000*cs, 500000000*cs
+		s.acc[i].onHand = [4]int64{60 * cs, 60 * cs, 60 * cs, 40 * cs}
 		s.acc[i].ewmaMilli = [4]int32{12000, 12000, 12000, 12000}
 	}
-	for i := 10; i < 14; i++ {
-		s.acc[i].cash, s.acc[i].creditLimit = 5000000000, 1000000000
-		s.acc[i].onHand = [4]int64{2500, 2500, 2500, 800}
+	for i := 10; i < 13; i++ {
+		s.acc[i].cash, s.acc[i].creditLimit = 5000000000*cs, 1000000000*cs
+		s.acc[i].onHand = [4]int64{1600 * cs, 1400 * cs, 1200 * cs, 600 * cs}
 	}
+	s.acc[13].cash, s.acc[13].creditLimit = 5000000000*cs, 1000000000*cs
+	s.acc[13].onHand = [4]int64{1800 * cs, 1300 * cs, 900 * cs, 500 * cs}
 	for i := 14; i < 17; i++ {
-		s.acc[i].cash, s.acc[i].creditLimit = 5000000000, 2000000000
-		s.acc[i].onHand[i-14] = 4000
+		s.acc[i].cash, s.acc[i].creditLimit = 5000000000*cs, 2000000000*cs
+		s.acc[i].onHand[i-14] = 4000 * cs
 	}
 	for i := 17; i < 20; i++ {
-		s.acc[i].cash, s.acc[i].creditLimit = 500000000, 200000000
+		s.acc[i].cash, s.acc[i].creditLimit = 500000000*cs, 200000000*cs
 	}
-	s.acc[accCust].cash, s.acc[accSupp].cash, s.acc[accFee].cash = 50000000000, 50000000000, 1000000000
+	s.acc[accCust].cash, s.acc[accSupp].cash, s.acc[accFee].cash = 50000000000*cs, 50000000000*cs, 1000000000*cs
 	for i := 0; i < numAccounts; i++ {
 		s.initCash += s.acc[i].cash
 		for k := 0; k < 4; k++ {

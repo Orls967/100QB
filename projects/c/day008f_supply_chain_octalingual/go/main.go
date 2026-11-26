@@ -49,7 +49,7 @@ func main() {
 	tot += time.Since(t0).Seconds()
 	fmt.Println("[go] tahap 10/40 (s10)")
 	t0 = time.Now()
-	sim := newSim(cfg, true, outDir)
+	sim := newSimScaled(cfg, true, outDir, 400000)
 	simRunDays(sim, cfg.numDays, 400000, 0, -1, 1)
 	sim.closeLogs()
 	tot += time.Since(t0).Seconds()

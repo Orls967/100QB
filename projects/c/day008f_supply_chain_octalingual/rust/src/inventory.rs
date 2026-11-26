@@ -14,7 +14,7 @@ pub const SKU_RETAIL: [i64; 4] = [10000, 10200, 9800, 31500];
 pub const SKU_WHOLESALE: [i64; 4] = [8000, 8200, 7800, 26000];
 pub const SKU_PROD: [i64; 4] = [6000, 6200, 5800, 0];
 pub const STORE_WH: [usize; 10] = [10, 10, 10, 11, 11, 11, 12, 12, 12, 12];
-pub const CARRIER_BASE_LT: [i64; 3] = [120, 200, 160];
+pub const CARRIER_BASE_LT: [i64; 3] = [150, 250, 200];
 
 pub fn carrier_rate(day_vol: i64) -> i64 { if day_vol < 500 { 200 } else if day_vol < 2000 { 160 } else { 120 } }
 

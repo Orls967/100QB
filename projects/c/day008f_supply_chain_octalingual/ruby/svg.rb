@@ -14,11 +14,20 @@ def write_s39_svgs(s, out_dir)
   write_bar_svg(out_dir, 'cost_by_echelon.svg', 'Ruby Cost by Echelon', (0..3).map { |e| (0..4).sum { |d| s.daily_cost_echelon[d][e] } })
   lt = s.leadtime_pairs.first(8).map { |p| p[0] }
   write_bar_svg(out_dir, 'leadtime_impact.svg', 'Ruby Sample Carrier Lead Times', lt.empty? ? [1] : lt)
-  write_bar_svg(out_dir, 'bullwhip_acf.svg', 'Ruby Demand Kurtosis by SKU', [3.25, 3.25, 3.25, 3.25])
+  bw = (0..3).map do |k|
+    md = s.bin_demand[k].sum / 100.0
+    m2 = s.bin_demand[k].sum { |x| (x - md)**2 }
+    m4 = s.bin_demand[k].sum { |x| (x - md)**4 }
+    m2 > 0 ? (m4 / 100.0) / ((m2 / 100.0)**2) : 0.0
+  end
+  write_bar_svg(out_dir, 'bullwhip_acf.svg', 'Ruby Demand Kurtosis by SKU', bw)
   ki = s.kit_imb_series.first(12)
   write_bar_svg(out_dir, 'kit_imbalance.svg', 'Ruby Kit Component Imbalance', ki.empty? ? [0] : ki)
-  write_bar_svg(out_dir, 'shock_study.svg', 'Ruby Shock Event Study', (0..2).map { |i| s.shock_cnt[i] > 0 ? s.shock_resp[i].to_f / s.shock_cnt[i] : (i + 1) * 10.0 })
+  write_bar_svg(out_dir, 'shock_study.svg', 'Ruby Shock Event Study', (0..2).map { |i| s.shock_cnt[i] > 0 ? s.shock_resp[i].to_f / s.shock_cnt[i] : 0.0 })
   write_bar_svg(out_dir, 'alloc_vs_cont.svg', 'Ruby Allocation Fill vs Retail Sales', [s.alloc_total_fill, s.total_sold.sum])
   write_bar_svg(out_dir, 'carrier_tiers.svg', 'Ruby Carrier Volume Tiers', s.carrier_tier_cnt)
-  write_bar_svg(out_dir, 'sweep_safety.svg', 'Ruby Safety Stock Sweep Fill Rate', [0.85, 0.94, 0.98])
+  fr_tot = s.dem_units_tot > 0 ? s.dem_units_filled.to_f / s.dem_units_tot : 1.0
+  fr0 = s.daily_fill_store[0][0] > 0 ? s.daily_fill_store[0][1].to_f / s.daily_fill_store[0][0] : 1.0
+  fr9 = s.daily_fill_store[9][0] > 0 ? s.daily_fill_store[9][1].to_f / s.daily_fill_store[9][0] : 1.0
+  write_bar_svg(out_dir, 'sweep_safety.svg', 'Ruby Store Fill Rate Summary', [fr_tot, fr0, fr9])
 end

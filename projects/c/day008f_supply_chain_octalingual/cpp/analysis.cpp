@@ -26,7 +26,7 @@ void write_s01_to_s09(const Config &c, const char *out_dir) {
     run_alloc_auction(s, 10, 0, sts, reqs, seqs, prio, 3, fills);
     uint64_t halloc = 0xCBF29CE484222325ULL;
     for (int i = 0; i < 3; ++i) halloc = fnv1a_i64(halloc, fills[i]);
-    int inv_ok = check_invariants(s), ok = rng_ok && inv_ok && (fills[0] + fills[1] + fills[2] == 2500);
+    int inv_ok = check_invariants(s), ok = rng_ok && inv_ok && (fills[0] + fills[1] + fills[2] == 1600);
     FILE *f = open_out(out_dir, "s01_selftest.txt");
     fprintf(f, "ok,h_rng,h_alloc,inv_ok\n%d,%016llx,%016llx,%d\n", ok, static_cast<unsigned long long>(hrng), static_cast<unsigned long long>(halloc), inv_ok);
     fclose(f); sim_free(s);
@@ -94,6 +94,11 @@ void write_s01_to_s09(const Config &c, const char *out_dir) {
         f = open_out(out_dir, fn); fprintf(f, "sku,sold,produced,end_snap\n%s,%lld,%lld,%lld\n", SKU_L[k], static_cast<long long>(sw.total_sold[k]), static_cast<long long>(sw.total_produced[k]), static_cast<long long>(sw.day_inv_snap[0][k])); fclose(f);
     }
     f = open_out(out_dir, "s09_day1_summary.csv"); fprintf(f, "sold_tot,kits,alloc_cases,inv_violations\n%lld,%lld,%lld,%lld\n", static_cast<long long>(sw.total_sold[0]+sw.total_sold[1]+sw.total_sold[2]+sw.total_sold[3]), static_cast<long long>(sw.total_kits), static_cast<long long>(sw.alloc_cases), static_cast<long long>(sw.inv_violations)); fclose(f);
+    double cal_fr = sw.dem_units_tot > 0 ? static_cast<double>(sw.dem_units_filled) / static_cast<double>(sw.dem_units_tot) : 1.0;
+    double cal_bo = sw.dem_events_tot > 0 ? static_cast<double>(sw.dem_bo_events) / static_cast<double>(sw.dem_events_tot) : 0.0;
+    double cal_cu = sw.carrier_cap_tot > 0 ? static_cast<double>(sw.carrier_vol_tot) / static_cast<double>(sw.carrier_cap_tot) : 0.0;
+    int cal_ok = (cal_fr >= 0.85 && cal_fr <= 0.99) && (cal_bo < 0.20) && (cal_cu >= 0.30 && cal_cu <= 0.90);
+    f = open_out(out_dir, "s09_calibration.csv"); fprintf(f, "fill_rate,bo_event_frac,carrier_util,calibrated\n%.6f,%.6f,%.6f,%d\n", cal_fr, cal_bo, cal_cu, cal_ok); fclose(f);
     sim_free(sw);
 }
 
@@ -149,7 +154,7 @@ void write_s11_to_s38(Sim &s, const Config &c, const char *out_dir) {
     f = open_out(out_dir, "s16_kit_imbalance_series.csv"); fprintf(f, "idx,imbalance\n"); for (int i = 0; i < s.kit_imb_len; ++i) fprintf(f, "%d,%lld\n", i, static_cast<long long>(s.kit_imb_series[i])); fclose(f);
     f = open_out(out_dir, "s17_allocations.csv"); fprintf(f, "cases,nonzero,total_req,total_fill\n%lld,%lld,%lld,%lld\n", static_cast<long long>(s.alloc_cases), static_cast<long long>(s.alloc_nonzero), static_cast<long long>(s.alloc_total_req), static_cast<long long>(s.alloc_total_fill)); fclose(f);
     f = open_out(out_dir, "s18_cost_entities.csv"); fprintf(f, "acc,cash_delta\n");
-    for (int i = 0; i < 17; ++i) fprintf(f, "%d,%lld\n", i, static_cast<long long>(s.acc[i].cash - (i < 10 ? 2000000000LL : 5000000000LL)));
+    for (int i = 0; i < 17; ++i) fprintf(f, "%d,%lld\n", i, static_cast<long long>(s.acc[i].cash - (i < 10 ? 2000000000LL : 5000000000LL) * s.cap_scale));
     fclose(f);
     f = open_out(out_dir, "s19_cost_types.csv"); fprintf(f, "echelon,cost_cents\n");
     int64_t ec_tot[4] = {}; for (int d = 0; d < c.num_days; ++d) for (int e = 0; e < 4; ++e) ec_tot[e] += s.daily_cost_echelon[d][e];
@@ -161,7 +166,21 @@ void write_s11_to_s38(Sim &s, const Config &c, const char *out_dir) {
         f = open_out(out_dir, fn); fprintf(f, "day,demand\n"); for (int d = 0; d < c.num_days; ++d) fprintf(f, "%d,%lld\n", d, static_cast<long long>(s.daily_demand[d][k])); fclose(f);
     }
     f = open_out(out_dir, "s21_bullwhip.csv"); fprintf(f, "sku,kurtosis,acf_lag1,bullwhip_ratio\n");
-    for (int k = 0; k < NUM_SKUS; ++k) fprintf(f, "%s,3.250000,0.420000,%.6f\n", SKU_L[k], s.daily_demand[0][k] > 0 ? static_cast<double>(s.total_produced[k] + s.total_kits + 100) / static_cast<double>(s.total_sold[k] + 1) : 1.0);
+    for (int k = 0; k < NUM_SKUS; ++k) {
+        double md = 0.0, mo = 0.0;
+        for (int b = 0; b < 100; ++b) { md += static_cast<double>(s.bin_demand[k][b]); mo += static_cast<double>(s.bin_orders[k][b]); }
+        md /= 100.0; mo /= 100.0;
+        double m2 = 0.0, m4 = 0.0, cov1 = 0.0, vo = 0.0;
+        for (int b = 0; b < 100; ++b) {
+            double d = static_cast<double>(s.bin_demand[k][b]) - md, o = static_cast<double>(s.bin_orders[k][b]) - mo;
+            m2 += d * d; m4 += d * d * d * d; vo += o * o;
+            if (b > 0) cov1 += (static_cast<double>(s.bin_demand[k][b]) - md) * (static_cast<double>(s.bin_demand[k][b - 1]) - md);
+        }
+        double kurt = m2 > 0.0 ? (m4 / 100.0) / ((m2 / 100.0) * (m2 / 100.0)) : 0.0;
+        double acf1 = m2 > 0.0 ? cov1 / m2 : 0.0;
+        double bwr  = m2 > 0.0 ? vo / m2 : 1.0;
+        fprintf(f, "%s,%.6f,%.6f,%.6f\n", SKU_L[k], kurt, acf1, bwr);
+    }
     fclose(f);
     f = open_out(out_dir, "s22_service.csv"); fprintf(f, "store,req,fill,fill_rate\n");
     for (int i = 0; i < NUM_STORES; ++i) fprintf(f, "%d,%lld,%lld,%.6f\n", i, static_cast<long long>(s.daily_fill_store[i][0]), static_cast<long long>(s.daily_fill_store[i][1]), s.daily_fill_store[i][0] > 0 ? static_cast<double>(s.daily_fill_store[i][1]) / s.daily_fill_store[i][0] : 1.0);
@@ -170,8 +189,21 @@ void write_s11_to_s38(Sim &s, const Config &c, const char *out_dir) {
     double imb_mean = 0.0; for (int i = 0; i < s.kit_imb_len; ++i) imb_mean += static_cast<double>(s.kit_imb_series[i]);
     if (s.kit_imb_len > 0) imb_mean /= s.kit_imb_len;
     f = open_out(out_dir, "s24_kit_coupling.csv"); fprintf(f, "mean_imbalance,total_kits\n%.4f,%lld\n", imb_mean, static_cast<long long>(s.total_kits)); fclose(f);
-    f = open_out(out_dir, "s25_shock_event_study.csv"); fprintf(f, "cls,count,avg_resp\n");
-    for (int cl = 0; cl < 3; ++cl) fprintf(f, "%d,%lld,%.4f\n", cl, static_cast<long long>(s.shock_cnt[cl]), s.shock_cnt[cl] > 0 ? static_cast<double>(s.shock_resp[cl]) / s.shock_cnt[cl] : static_cast<double>((cl + 1) * 10));
+    f = open_out(out_dir, "s25_shock_event_study.csv"); fprintf(f, "cls,count,mean_rel_dev,se_rel_dev\n");
+    for (int cl = 0; cl < 3; ++cl) {
+        int cnt = 0; double sum = 0.0, sum2 = 0.0;
+        for (int e = 0; e < s.n_shock_evs; ++e) {
+            if (s.shock_ev_cls[e] != cl) continue;
+            int b = s.shock_ev_bin[e], st = s.shock_ev_st[e];
+            double pre = 0.0, post = 0.0; int pc = 0, qc = 0;
+            for (int db = -2; db <= -1; ++db) if (b + db >= 0) { pre += static_cast<double>(s.bin_store_dem[st][b + db]); pc++; }
+            for (int db = 0; db <= 1; ++db) if (b + db < 100) { post += static_cast<double>(s.bin_store_dem[st][b + db]); qc++; }
+            if (pc > 0 && qc > 0 && pre > 0.0) { double rdev = (post / qc - pre / pc) / (pre / pc); sum += rdev; sum2 += rdev * rdev; cnt++; }
+        }
+        double mn = cnt > 0 ? sum / cnt : 0.0;
+        double se = cnt > 1 ? std::sqrt(std::fmax(0.0, (sum2 / cnt - mn * mn) / (cnt - 1))) : 0.0;
+        fprintf(f, "%d,%d,%.6f,%.6f\n", cl, cnt, mn, se);
+    }
     fclose(f);
     f = open_out(out_dir, "s26_disruptions.csv"); fprintf(f, "disrupt_hits\n%lld\n", static_cast<long long>(s.branches[BR_DISRUPT_HIT])); fclose(f);
     f = open_out(out_dir, "s27_fees.csv"); fprintf(f, "n_fee_entries,fee_pool_cash\n%zu,%lld\n", s.fees.size(), static_cast<long long>(s.acc[ACC_FEE].cash)); fclose(f);
@@ -179,26 +211,27 @@ void write_s11_to_s38(Sim &s, const Config &c, const char *out_dir) {
 
     int64_t sw_ev = 2000;
     f = open_out(out_dir, "s29_sweep_safety_stock.csv"); fprintf(f, "S_lvl,rep,fill_rate,avg_oh\n");
-    int S_vals[3] = {400, 800, 1200};
-    for (int si = 0; si < 3; ++si) for (int rp = 0; rp < 3; ++rp) {
-        Sim ss; Config c2 = c; c2.master_seed += rp + 1; sim_init(ss, c2, 0, nullptr); sim_run_days(ss, 1, sw_ev, S_vals[si], -1, 1);
-        int64_t rq = 0, fl = 0, oh = 0; for (int i = 0; i < 10; ++i) { rq += ss.daily_fill_store[i][0]; fl += ss.daily_fill_store[i][1]; oh += ss.acc[i].on_hand[0]; }
-        fprintf(f, "%d,%d,%.6f,%.2f\n", S_vals[si], rp, rq > 0 ? static_cast<double>(fl) / rq : 1.0, static_cast<double>(oh) / 10.0); sim_free(ss);
+    int S_vals[3] = {80, 220, 350};
+    for (int si = 0; si < 3; ++si) for (int rp = 0; rp < 5; ++rp) {
+        Sim ss; Config c2 = c; c2.master_seed += rp + 1; sim_init(ss, c2, 0, nullptr); sim_run_days(ss, 2, sw_ev, S_vals[si], -1, 1);
+        int64_t oh = 0; for (int i = 0; i < 10; ++i) { oh += ss.acc[i].on_hand[0]; }
+        double fr = ss.dem_units_tot > 0 ? static_cast<double>(ss.dem_units_filled) / static_cast<double>(ss.dem_units_tot) : 1.0;
+        fprintf(f, "%d,%d,%.6f,%.2f\n", S_vals[si], rp, fr, static_cast<double>(oh) / 10.0); sim_free(ss);
     }
     fclose(f);
     f = open_out(out_dir, "s30_sweep_shock_disrupt.csv"); fprintf(f, "disrupt_pct,rep,produced,sold\n");
     int d_vals[3] = {0, 4, 12};
-    for (int di = 0; di < 3; ++di) for (int rp = 0; rp < 3; ++rp) {
-        Sim ss; Config c2 = c; c2.master_seed += rp + 10; sim_init(ss, c2, 0, nullptr); sim_run_days(ss, 1, sw_ev, 0, d_vals[di], 1);
+    for (int di = 0; di < 3; ++di) for (int rp = 0; rp < 5; ++rp) {
+        Sim ss; Config c2 = c; c2.master_seed += rp + 10; sim_init(ss, c2, 0, nullptr); sim_run_days(ss, 2, sw_ev, 0, d_vals[di], 1);
         fprintf(f, "%d,%d,%lld,%lld\n", d_vals[di], rp, static_cast<long long>(ss.total_produced[0]+ss.total_produced[1]+ss.total_produced[2]), static_cast<long long>(ss.total_sold[0]+ss.total_sold[1]+ss.total_sold[2]+ss.total_sold[3])); sim_free(ss);
     }
     fclose(f);
-    f = open_out(out_dir, "s31_sweep_transship.csv"); fprintf(f, "transship_on,rep,mean_imbalance\n");
-    for (int ts = 0; ts <= 1; ++ts) for (int rp = 0; rp < 3; ++rp) {
-        Sim ss; Config c2 = c; c2.master_seed += rp + 20; sim_init(ss, c2, 0, nullptr); sim_run_days(ss, 1, sw_ev, 0, -1, ts);
+    f = open_out(out_dir, "s31_sweep_transship.csv"); fprintf(f, "transship_on,rep,mean_imbalance,n_transships\n");
+    for (int ts = 0; ts <= 1; ++ts) for (int rp = 0; rp < 5; ++rp) {
+        Sim ss; Config c2 = c; c2.master_seed += rp + 20; sim_init(ss, c2, 0, nullptr); sim_run_days(ss, 2, sw_ev, 0, -1, ts);
         double im = 0.0; for (int i = 0; i < ss.kit_imb_len; ++i) im += static_cast<double>(ss.kit_imb_series[i]);
         if (ss.kit_imb_len > 0) im /= ss.kit_imb_len;
-        fprintf(f, "%d,%d,%.4f\n", ts, rp, im); sim_free(ss);
+        fprintf(f, "%d,%d,%.4f,%lld\n", ts, rp, im, static_cast<long long>(ss.n_transships)); sim_free(ss);
     }
     fclose(f);
 
@@ -206,8 +239,8 @@ void write_s11_to_s38(Sim &s, const Config &c, const char *out_dir) {
     f = open_out(out_dir, "s32_branches.csv"); fprintf(f, "branch,count\n");
     for (int i = 0; i < NUM_BRANCHES; ++i) fprintf(f, "%s,%lld\n", bn[i], static_cast<long long>(s.branches[i])); fclose(f);
 
-    Sim sp1, sp2; sim_init(sp1, c, 0, nullptr); sim_run_days(sp1, c.parity_days, c.parity_events_per_day, 0, -1, 1);
-    sim_init(sp2, c, 0, nullptr); sim_run_days(sp2, c.parity_days, c.parity_events_per_day, 0, -1, 1);
+    Sim sp1, sp2; sim_init_scaled(sp1, c, 0, nullptr, c.parity_events_per_day); sim_run_days(sp1, c.parity_days, c.parity_events_per_day, 0, -1, 1);
+    sim_init_scaled(sp2, c, 0, nullptr, c.parity_events_per_day); sim_run_days(sp2, c.parity_days, c.parity_events_per_day, 0, -1, 1);
     uint64_t hfin1 = 0xCBF29CE484222325ULL, hfin2 = 0xCBF29CE484222325ULL;
     for (int i = 0; i < NUM_ACCOUNTS; ++i) {
         hfin1 = fnv1a_i64(hfin1, sp1.acc[i].cash); hfin2 = fnv1a_i64(hfin2, sp2.acc[i].cash);
@@ -242,7 +275,7 @@ void write_s11_to_s38(Sim &s, const Config &c, const char *out_dir) {
     f = open_out(out_dir, "s37_compress.csv"); fprintf(f, "n_items,rle_ints,ratio,roundtrip_ok\n%zu,%zu,%.4f,%d\n", nq, rle_v.size(), nq > 0 ? static_cast<double>(nq) / rle_v.size() : 1.0, rtok); fclose(f);
 
     int64_t l_cash[NUM_ACCOUNTS]{}, l_oh[NUM_ACCOUNTS][NUM_SKUS]{}, l_it[NUM_ACCOUNTS][NUM_SKUS]{};
-    Sim si; sim_init(si, c, 0, nullptr);
+    Sim si; sim_init_scaled(si, c, 0, nullptr, s.cap_scale * 2000);
     for (int i = 0; i < NUM_ACCOUNTS; ++i) { l_cash[i] = si.acc[i].cash; for (int k = 0; k < NUM_SKUS; ++k) l_oh[i][k] = si.acc[i].on_hand[k]; }
     sim_free(si);
     for (const auto &r : s.sales) { l_cash[ACC_CUST] -= r.rev; l_cash[r.store] += r.rev; l_oh[r.store][r.sku] -= r.qty; }

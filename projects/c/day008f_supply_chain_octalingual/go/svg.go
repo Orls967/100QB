@@ -46,7 +46,24 @@ func writeS39SVGs(s *Sim, outDir string) {
 		lt = []float64{1}
 	}
 	writeBarSVG(outDir, "leadtime_impact.svg", "Go Sample Carrier Lead Times", lt)
-	writeBarSVG(outDir, "bullwhip_acf.svg", "Go Demand Kurtosis by SKU", []float64{3.25, 3.25, 3.25, 3.25})
+	bw := make([]float64, 4)
+	for k := 0; k < 4; k++ {
+		md := 0.0
+		for b := 0; b < 100; b++ {
+			md += float64(s.binDemand[k][b])
+		}
+		md /= 100.0
+		m2, m4 := 0.0, 0.0
+		for b := 0; b < 100; b++ {
+			d := float64(s.binDemand[k][b]) - md
+			m2 += d * d
+			m4 += d * d * d * d
+		}
+		if m2 > 0 {
+			bw[k] = (m4 / 100.0) / ((m2 / 100.0) * (m2 / 100.0))
+		}
+	}
+	writeBarSVG(outDir, "bullwhip_acf.svg", "Go Demand Kurtosis by SKU", bw)
 	var ki []float64
 	for i := 0; i < min(len(s.kitImbSeries), 12); i++ {
 		ki = append(ki, float64(s.kitImbSeries[i]))
@@ -57,7 +74,6 @@ func writeS39SVGs(s *Sim, outDir string) {
 	writeBarSVG(outDir, "kit_imbalance.svg", "Go Kit Component Imbalance", ki)
 	sh := make([]float64, 3)
 	for i := 0; i < 3; i++ {
-		sh[i] = float64((i + 1) * 10)
 		if s.shockCnt[i] > 0 {
 			sh[i] = float64(s.shockResp[i]) / float64(s.shockCnt[i])
 		}
@@ -65,5 +81,9 @@ func writeS39SVGs(s *Sim, outDir string) {
 	writeBarSVG(outDir, "shock_study.svg", "Go Shock Event Study", sh)
 	writeBarSVG(outDir, "alloc_vs_cont.svg", "Go Allocation Fill vs Retail Sales", []float64{float64(s.allocTotalFill), float64(s.totalSold[0] + s.totalSold[1] + s.totalSold[2] + s.totalSold[3])})
 	writeBarSVG(outDir, "carrier_tiers.svg", "Go Carrier Volume Tiers", []float64{float64(s.carrierTierCnt[0]), float64(s.carrierTierCnt[1]), float64(s.carrierTierCnt[2])})
-	writeBarSVG(outDir, "sweep_safety.svg", "Go Safety Stock Sweep Fill Rate", []float64{0.85, 0.94, 0.98})
+	frTot := 1.0
+	if s.demUnitsTot > 0 {
+		frTot = float64(s.demUnitsFilled) / float64(s.demUnitsTot)
+	}
+	writeBarSVG(outDir, "sweep_safety.svg", "Go Store Fill Rate Summary", []float64{frTot, fr[0] / 100.0, fr[9] / 100.0})
 }

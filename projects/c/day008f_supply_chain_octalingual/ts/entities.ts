@@ -26,11 +26,19 @@ export class Sim {
   shockCnt = [0, 0, 0]; shockResp = [0, 0, 0];
   dayInvSnap = Array.from({ length: 6 }, () => [0, 0, 0, 0]);
   kitImbSeries: number[] = []; leadtimePairs: [number, number][] = [];
+  binDemand: number[][] = Array.from({ length: 4 }, () => new Array(100).fill(0));
+  binOrders: number[][] = Array.from({ length: 4 }, () => new Array(100).fill(0));
+  binStoreDem: number[][] = Array.from({ length: 10 }, () => new Array(100).fill(0));
+  shockEvs: number[][] = []; nTransships = 0;
+  demEventsTot = 0; demBoEvents = 0; demUnitsTot = 0; demUnitsFilled = 0;
+  carrierCapTot = 0; carrierVolTot = 0; capScale = 1;
   sales: number[][] = []; ships: number[][] = []; prods: number[][] = []; kits: number[][] = []; fees: number[][] = [];
   fds: Record<string, number> = {};
 
-  constructor(c: Config, logEn: boolean, outDir: string) {
+  constructor(c: Config, logEn: boolean, outDir: string, evPerDay = 2000) {
     this.cfg = c; this.logEnabled = logEn;
+    this.capScale = Math.max(Math.floor(evPerDay / 2000), 1);
+    const cs = this.capScale;
     for (let i = 0; i < NUM_ACCOUNTS + 2; i++) {
       const x = BigInt(c.master_seed) ^ fnv1aU32Pair(Math.floor(i / 10), i);
       const [sd] = splitmix64(x);
@@ -38,11 +46,12 @@ export class Sim {
     }
     for (let i = 0; i < NUM_ACCOUNTS; i++)
       this.acc.push({ cash: 0, onHand: [0,0,0,0], inTransit: [0,0,0,0], backorder: [0,0,0,0], creditLimit: 0, status: 0, ewmaMilli: [0,0,0,0], plantState: 0, disruptRem: 0 });
-    for (let i = 0; i < NUM_STORES; i++) { this.acc[i].cash = 2000000000; this.acc[i].creditLimit = 500000000; this.acc[i].onHand = [400,400,400,120]; this.acc[i].ewmaMilli = [12000,12000,12000,12000]; }
-    for (let i = 10; i < 14; i++) { this.acc[i].cash = 5000000000; this.acc[i].creditLimit = 1000000000; this.acc[i].onHand = [2500,2500,2500,800]; }
-    for (let i = 14; i < 17; i++) { this.acc[i].cash = 5000000000; this.acc[i].creditLimit = 2000000000; this.acc[i].onHand[i - 14] = 4000; }
-    for (let i = 17; i < 20; i++) { this.acc[i].cash = 500000000; this.acc[i].creditLimit = 200000000; }
-    this.acc[ACC_CUST].cash = 50000000000; this.acc[ACC_SUPP].cash = 50000000000; this.acc[ACC_FEE].cash = 1000000000;
+    for (let i = 0; i < NUM_STORES; i++) { this.acc[i].cash = 2000000000 * cs; this.acc[i].creditLimit = 500000000 * cs; this.acc[i].onHand = [60*cs,60*cs,60*cs,40*cs]; this.acc[i].ewmaMilli = [12000,12000,12000,12000]; }
+    for (let i = 10; i < 13; i++) { this.acc[i].cash = 5000000000 * cs; this.acc[i].creditLimit = 1000000000 * cs; this.acc[i].onHand = [1600*cs,1400*cs,1200*cs,600*cs]; }
+    this.acc[13].cash = 5000000000 * cs; this.acc[13].creditLimit = 1000000000 * cs; this.acc[13].onHand = [1800*cs,1300*cs,900*cs,500*cs];
+    for (let i = 14; i < 17; i++) { this.acc[i].cash = 5000000000 * cs; this.acc[i].creditLimit = 2000000000 * cs; this.acc[i].onHand[i - 14] = 4000 * cs; }
+    for (let i = 17; i < 20; i++) { this.acc[i].cash = 500000000 * cs; this.acc[i].creditLimit = 200000000 * cs; }
+    this.acc[ACC_CUST].cash = 50000000000 * cs; this.acc[ACC_SUPP].cash = 50000000000 * cs; this.acc[ACC_FEE].cash = 1000000000 * cs;
     for (const a of this.acc) { this.initCash += a.cash; for (let k = 0; k < 4; k++) this.initStock[k] += a.onHand[k]; }
     if (logEn && outDir) {
       const hdrs: Record<string, string> = {

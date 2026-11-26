@@ -28,7 +28,7 @@ let tot = 0.0;
 for (let st = 1; st <= 9; st++) console.log(`[ts] tahap ${st}/40 (s${String(st).padStart(2, "0")})`);
 let t0 = performance.now(); writeS01ToS09(cfg, outDir); tot += (performance.now() - t0) / 1000;
 console.log("[ts] tahap 10/40 (s10)");
-t0 = performance.now(); const sim = new Sim(cfg, true, outDir);
+t0 = performance.now(); const sim = new Sim(cfg, true, outDir, 80000);
 simRunDays(sim, cfg.num_days, 80000, 0, -1, 1); sim.closeLogs(); tot += (performance.now() - t0) / 1000;
 for (let st = 11; st <= 38; st++) console.log(`[ts] tahap ${st}/40 (s${String(st).padStart(2, "0")})`);
 t0 = performance.now(); writeS11ToS38(sim, cfg, outDir); tot += (performance.now() - t0) / 1000;

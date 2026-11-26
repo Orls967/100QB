@@ -14,7 +14,7 @@ tot = 0.0
 for st in range(1, 10): print(f"[py] tahap {st}/40 (s{st:02d})")
 t0 = time.perf_counter(); analysis.write_s01_to_s09(cfg, out_dir); tot += time.perf_counter() - t0
 print("[py] tahap 10/40 (s10)")
-t0 = time.perf_counter(); sim = entities.Sim(cfg, True, out_dir)
+t0 = time.perf_counter(); sim = entities.Sim(cfg, True, out_dir, 8000)
 engine.sim_run_days(sim, cfg["num_days"], 8000, 0, -1, 1); sim.close_logs(); tot += time.perf_counter() - t0
 for st in range(11, 39): print(f"[py] tahap {st}/40 (s{st:02d})")
 t0 = time.perf_counter(); analysis.write_s11_to_s38(sim, cfg, out_dir); tot += time.perf_counter() - t0

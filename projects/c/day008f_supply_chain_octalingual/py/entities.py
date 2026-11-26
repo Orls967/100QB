@@ -11,8 +11,10 @@ def load_config(path):
     return c
 
 class Sim:
-    def __init__(self, c, log_en, out_dir):
+    def __init__(self, c, log_en, out_dir, ev_per_day=2000):
         self.cfg = c; self.log_enabled = log_en; self.next_seq = 1; self.event_hash = 0xCBF29CE484222325
+        self.cap_scale = max(ev_per_day // 2000, 1)
+        cs = self.cap_scale
         self.heap = MinHeap()
         self.rng = []
         for i in range(NUM_ACCOUNTS + 2):
@@ -23,17 +25,19 @@ class Sim:
                      "credit_limit": 0, "status": 0, "ewma_milli": [0,0,0,0], "plant_state": 0, "disrupt_rem": 0}
                     for _ in range(NUM_ACCOUNTS)]
         for i in range(NUM_STORES):
-            self.acc[i]["cash"] = 2_000_000_000; self.acc[i]["credit_limit"] = 500_000_000
-            self.acc[i]["on_hand"] = [400,400,400,120]; self.acc[i]["ewma_milli"] = [12000]*4
-        for i in range(10, 14):
-            self.acc[i]["cash"] = 5_000_000_000; self.acc[i]["credit_limit"] = 1_000_000_000
-            self.acc[i]["on_hand"] = [2500,2500,2500,800]
+            self.acc[i]["cash"] = 2_000_000_000 * cs; self.acc[i]["credit_limit"] = 500_000_000 * cs
+            self.acc[i]["on_hand"] = [60*cs,60*cs,60*cs,40*cs]; self.acc[i]["ewma_milli"] = [12000]*4
+        for i in range(10, 13):
+            self.acc[i]["cash"] = 5_000_000_000 * cs; self.acc[i]["credit_limit"] = 1_000_000_000 * cs
+            self.acc[i]["on_hand"] = [1600*cs,1400*cs,1200*cs,600*cs]
+        self.acc[13]["cash"] = 5_000_000_000 * cs; self.acc[13]["credit_limit"] = 1_000_000_000 * cs
+        self.acc[13]["on_hand"] = [1800*cs,1300*cs,900*cs,500*cs]
         for i in range(14, 17):
-            self.acc[i]["cash"] = 5_000_000_000; self.acc[i]["credit_limit"] = 2_000_000_000
-            self.acc[i]["on_hand"][i - 14] = 4000
+            self.acc[i]["cash"] = 5_000_000_000 * cs; self.acc[i]["credit_limit"] = 2_000_000_000 * cs
+            self.acc[i]["on_hand"][i - 14] = 4000 * cs
         for i in range(17, 20):
-            self.acc[i]["cash"] = 500_000_000; self.acc[i]["credit_limit"] = 200_000_000
-        self.acc[ACC_CUST]["cash"] = 50_000_000_000; self.acc[ACC_SUPP]["cash"] = 50_000_000_000; self.acc[ACC_FEE]["cash"] = 1_000_000_000
+            self.acc[i]["cash"] = 500_000_000 * cs; self.acc[i]["credit_limit"] = 200_000_000 * cs
+        self.acc[ACC_CUST]["cash"] = 50_000_000_000 * cs; self.acc[ACC_SUPP]["cash"] = 50_000_000_000 * cs; self.acc[ACC_FEE]["cash"] = 1_000_000_000 * cs
         self.init_cash = sum(a["cash"] for a in self.acc)
         self.init_stock = [sum(a["on_hand"][k] for a in self.acc) for k in range(4)]
         self.total_produced = [0,0,0,0]; self.total_sold = [0,0,0,0]; self.total_kits = 0; self.branches = [0]*16
@@ -42,6 +46,10 @@ class Sim:
         self.daily_demand = [[0]*4 for _ in range(6)]; self.daily_cost_echelon = [[0]*4 for _ in range(6)]
         self.daily_fill_store = [[0,0] for _ in range(10)]; self.shock_cnt = [0,0,0]; self.shock_resp = [0,0,0]
         self.day_inv_snap = [[0]*4 for _ in range(6)]; self.kit_imb_series = []; self.leadtime_pairs = []
+        self.bin_demand = [[0]*100 for _ in range(4)]; self.bin_orders = [[0]*100 for _ in range(4)]; self.bin_store_dem = [[0]*100 for _ in range(10)]
+        self.shock_evs = []; self.n_transships = 0
+        self.dem_events_tot = self.dem_bo_events = self.dem_units_tot = self.dem_units_filled = 0
+        self.carrier_cap_tot = self.carrier_vol_tot = 0
         self.sales = []; self.ships = []; self.prods = []; self.kits = []; self.fees = []
         self.files = {}
         if log_en and out_dir:

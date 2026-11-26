@@ -89,6 +89,18 @@ struct Sim {
     int kit_imb_len = 0;
     int64_t leadtime_pairs[256][2]{};
     int lt_len = 0;
+    int64_t bin_demand[NUM_SKUS][100]{};
+    int64_t bin_orders[NUM_SKUS][100]{};
+    int64_t bin_store_dem[NUM_STORES][100]{};
+    int32_t shock_ev_bin[128]{};
+    int32_t shock_ev_cls[128]{};
+    int32_t shock_ev_st[128]{};
+    int n_shock_evs = 0;
+    int64_t n_transships = 0;
+    int64_t dem_events_tot = 0, dem_bo_events = 0;
+    int64_t dem_units_tot = 0, dem_units_filled = 0;
+    int64_t carrier_cap_tot = 0, carrier_vol_tot = 0;
+    int64_t cap_scale = 1;
     std::vector<SaleRec> sales;
     std::vector<ShipRec> ships;
     std::vector<ProdRec> prods;
@@ -117,6 +129,7 @@ SimEvent heap_pop(std::vector<SimEvent> &h);
 
 bool load_config(const char *path, Config &c);
 void sim_init(Sim &s, const Config &c, int32_t log_en, const char *out_dir);
+void sim_init_scaled(Sim &s, const Config &c, int32_t log_en, const char *out_dir, int64_t ev_per_day);
 void sim_free(Sim &s);
 int check_invariants(Sim &s);
 void transfer_cash(Sim &s, int32_t from_id, int32_t to_id, int64_t amt, int32_t kind, int64_t day, int64_t tick);

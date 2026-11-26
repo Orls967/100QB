@@ -43,7 +43,7 @@ func writeS01ToS09(c Config, outDir string) {
 	}
 	invOk := checkInvariants(s)
 	ok := 0
-	if rngOk && invOk == 1 && fills[0]+fills[1]+fills[2] == 2500 {
+	if rngOk && invOk == 1 && fills[0]+fills[1]+fills[2] == 1600 {
 		ok = 1
 	}
 	writeFile(outDir, "s01_selftest.txt", fmt.Sprintf("ok,h_rng,h_alloc,inv_ok\n%d,%016x,%016x,%d\n", ok, hrng, halloc, invOk))
@@ -141,6 +141,21 @@ func writeS01ToS09(c Config, outDir string) {
 		writeFile(outDir, fmt.Sprintf("s08_warmup_sku_%s.csv", skuL[k]), fmt.Sprintf("sku,sold,produced,end_snap\n%s,%d,%d,%d\n", skuL[k], sw.totalSold[k], sw.totalProduced[k], sw.dayInvSnap[0][k]))
 	}
 	writeFile(outDir, "s09_day1_summary.csv", fmt.Sprintf("sold_tot,kits,alloc_cases,inv_violations\n%d,%d,%d,%d\n", sw.totalSold[0]+sw.totalSold[1]+sw.totalSold[2]+sw.totalSold[3], sw.totalKits, sw.allocCases, sw.invViolations))
+	calFr, calBo, calCu := 1.0, 0.0, 0.0
+	if sw.demUnitsTot > 0 {
+		calFr = float64(sw.demUnitsFilled) / float64(sw.demUnitsTot)
+	}
+	if sw.demEventsTot > 0 {
+		calBo = float64(sw.demBoEvents) / float64(sw.demEventsTot)
+	}
+	if sw.carrierCapTot > 0 {
+		calCu = float64(sw.carrierVolTot) / float64(sw.carrierCapTot)
+	}
+	calOk := 0
+	if calFr >= 0.85 && calFr <= 0.99 && calBo < 0.20 && calCu >= 0.30 && calCu <= 0.90 {
+		calOk = 1
+	}
+	writeFile(outDir, "s09_calibration.csv", fmt.Sprintf("fill_rate,bo_event_frac,carrier_util,calibrated\n%.6f,%.6f,%.6f,%d\n", calFr, calBo, calCu, calOk))
 }
 func writeS11ToS38(s *Sim, c Config, outDir string) {
 	for k := 0; k < 4; k++ {
@@ -228,9 +243,9 @@ func writeS11ToS38(s *Sim, c Config, outDir string) {
 	writeFile(outDir, "s17_allocations.csv", fmt.Sprintf("cases,nonzero,total_req,total_fill\n%d,%d,%d,%d\n", s.allocCases, s.allocNonzero, s.allocTotalReq, s.allocTotalFill))
 	sb = "acc,cash_delta\n"
 	for i := 0; i < 17; i++ {
-		initC := int64(5000000000)
+		initC := int64(5000000000) * s.capScale
 		if i < 10 {
-			initC = 2000000000
+			initC = int64(2000000000) * s.capScale
 		}
 		sb += fmt.Sprintf("%d,%d\n", i, s.acc[i].cash-initC)
 	}
@@ -258,11 +273,31 @@ func writeS11ToS38(s *Sim, c Config, outDir string) {
 	}
 	sb = "sku,kurtosis,acf_lag1,bullwhip_ratio\n"
 	for k := 0; k < 4; k++ {
-		r := 1.0
-		if s.dailyDemand[0][k] > 0 {
-			r = float64(s.totalProduced[k]+s.totalKits+100) / float64(s.totalSold[k]+1)
+		md, mo := 0.0, 0.0
+		for b := 0; b < 100; b++ {
+			md += float64(s.binDemand[k][b])
+			mo += float64(s.binOrders[k][b])
 		}
-		sb += fmt.Sprintf("%s,3.250000,0.420000,%.6f\n", skuL[k], r)
+		md /= 100.0
+		mo /= 100.0
+		m2, m4, cov1, vo := 0.0, 0.0, 0.0, 0.0
+		for b := 0; b < 100; b++ {
+			d := float64(s.binDemand[k][b]) - md
+			o := float64(s.binOrders[k][b]) - mo
+			m2 += d * d
+			m4 += d * d * d * d
+			vo += o * o
+			if b > 0 {
+				cov1 += (float64(s.binDemand[k][b]) - md) * (float64(s.binDemand[k][b-1]) - md)
+			}
+		}
+		kurt, acf1, bwr := 0.0, 0.0, 1.0
+		if m2 > 0 {
+			kurt = (m4 / 100.0) / ((m2 / 100.0) * (m2 / 100.0))
+			acf1 = cov1 / m2
+			bwr = vo / m2
+		}
+		sb += fmt.Sprintf("%s,%.6f,%.6f,%.6f\n", skuL[k], kurt, acf1, bwr)
 	}
 	writeFile(outDir, "s21_bullwhip.csv", sb)
 	sb = "store,req,fill,fill_rate\n"
@@ -287,13 +322,45 @@ func writeS11ToS38(s *Sim, c Config, outDir string) {
 		imbM /= float64(len(s.kitImbSeries))
 	}
 	writeFile(outDir, "s24_kit_coupling.csv", fmt.Sprintf("mean_imbalance,total_kits\n%.4f,%d\n", imbM, s.totalKits))
-	sb = "cls,count,avg_resp\n"
+	sb = "cls,count,mean_rel_dev,se_rel_dev\n"
 	for cl := 0; cl < 3; cl++ {
-		avg := float64((cl + 1) * 10)
-		if s.shockCnt[cl] > 0 {
-			avg = float64(s.shockResp[cl]) / float64(s.shockCnt[cl])
+		cnt, sum, sum2 := 0, 0.0, 0.0
+		for _, sev := range s.shockEvs {
+			if sev[1] != cl {
+				continue
+			}
+			b, st := sev[0], sev[2]
+			pre, post, pc, qc := 0.0, 0.0, 0, 0
+			for db := -2; db <= -1; db++ {
+				if b+db >= 0 {
+					pre += float64(s.binStoreDem[st][b+db])
+					pc++
+				}
+			}
+			for db := 0; db <= 1; db++ {
+				if b+db < 100 {
+					post += float64(s.binStoreDem[st][b+db])
+					qc++
+				}
+			}
+			if pc > 0 && qc > 0 && pre > 0 {
+				rdev := (post/float64(qc) - pre/float64(pc)) / (pre / float64(pc))
+				sum += rdev
+				sum2 += rdev * rdev
+				cnt++
+			}
 		}
-		sb += fmt.Sprintf("%d,%d,%.4f\n", cl, s.shockCnt[cl], avg)
+		mn, se := 0.0, 0.0
+		if cnt > 0 {
+			mn = sum / float64(cnt)
+		}
+		if cnt > 1 {
+			v := (sum2/float64(cnt) - mn*mn) / float64(cnt-1)
+			if v > 0 {
+				se = math.Sqrt(v)
+			}
+		}
+		sb += fmt.Sprintf("%d,%d,%.6f,%.6f\n", cl, cnt, mn, se)
 	}
 	writeFile(outDir, "s25_shock_event_study.csv", sb)
 	writeFile(outDir, "s26_disruptions.csv", fmt.Sprintf("disrupt_hits\n%d\n", s.branches[11]))
@@ -301,21 +368,19 @@ func writeS11ToS38(s *Sim, c Config, outDir string) {
 	writeFile(outDir, "s28_capacity_rejects.csv", fmt.Sprintf("wh_cap_reject,carrier_cap_reject\n%d,%d\n", s.branches[4], s.branches[5]))
 
 	sb = "S_lvl,rep,fill_rate,avg_oh\n"
-	for _, sv := range []int64{400, 800, 1200} {
-		for rp := int64(0); rp < 3; rp++ {
+	for _, sv := range []int64{80, 220, 350} {
+		for rp := int64(0); rp < 5; rp++ {
 			c2 := c
 			c2.masterSeed += rp + 1
 			ss := newSim(c2, false, "")
-			simRunDays(ss, 1, 2000, sv, -1, 1)
-			rq, fl, oh := int64(0), int64(0), int64(0)
+			simRunDays(ss, 2, 2000, sv, -1, 1)
+			oh := int64(0)
 			for i := 0; i < 10; i++ {
-				rq += ss.dailyFillStore[i][0]
-				fl += ss.dailyFillStore[i][1]
 				oh += ss.acc[i].onHand[0]
 			}
 			fr := 1.0
-			if rq > 0 {
-				fr = float64(fl) / float64(rq)
+			if ss.demUnitsTot > 0 {
+				fr = float64(ss.demUnitsFilled) / float64(ss.demUnitsTot)
 			}
 			sb += fmt.Sprintf("%d,%d,%.6f,%.2f\n", sv, rp, fr, float64(oh)/10.0)
 		}
@@ -323,22 +388,22 @@ func writeS11ToS38(s *Sim, c Config, outDir string) {
 	writeFile(outDir, "s29_sweep_safety_stock.csv", sb)
 	sb = "disrupt_pct,rep,produced,sold\n"
 	for _, dp := range []int64{0, 4, 12} {
-		for rp := int64(0); rp < 3; rp++ {
+		for rp := int64(0); rp < 5; rp++ {
 			c2 := c
 			c2.masterSeed += rp + 10
 			ss := newSim(c2, false, "")
-			simRunDays(ss, 1, 2000, 0, dp, 1)
+			simRunDays(ss, 2, 2000, 0, dp, 1)
 			sb += fmt.Sprintf("%d,%d,%d,%d\n", dp, rp, ss.totalProduced[0]+ss.totalProduced[1]+ss.totalProduced[2], ss.totalSold[0]+ss.totalSold[1]+ss.totalSold[2]+ss.totalSold[3])
 		}
 	}
 	writeFile(outDir, "s30_sweep_shock_disrupt.csv", sb)
-	sb = "transship_on,rep,mean_imbalance\n"
+	sb = "transship_on,rep,mean_imbalance,n_transships\n"
 	for ts := 0; ts <= 1; ts++ {
-		for rp := int64(0); rp < 3; rp++ {
+		for rp := int64(0); rp < 5; rp++ {
 			c2 := c
 			c2.masterSeed += rp + 20
 			ss := newSim(c2, false, "")
-			simRunDays(ss, 1, 2000, 0, -1, ts)
+			simRunDays(ss, 2, 2000, 0, -1, ts)
 			im := 0.0
 			for _, v := range ss.kitImbSeries {
 				im += float64(v)
@@ -346,7 +411,7 @@ func writeS11ToS38(s *Sim, c Config, outDir string) {
 			if len(ss.kitImbSeries) > 0 {
 				im /= float64(len(ss.kitImbSeries))
 			}
-			sb += fmt.Sprintf("%d,%d,%.4f\n", ts, rp, im)
+			sb += fmt.Sprintf("%d,%d,%.4f,%d\n", ts, rp, im, ss.nTransships)
 		}
 	}
 	writeFile(outDir, "s31_sweep_transship.csv", sb)
@@ -358,7 +423,7 @@ func writeS11ToS38(s *Sim, c Config, outDir string) {
 	}
 	writeFile(outDir, "s32_branches.csv", sb)
 
-	sp1, sp2 := newSim(c, false, ""), newSim(c, false, "")
+	sp1, sp2 := newSimScaled(c, false, "", c.parityEventsPerDay), newSimScaled(c, false, "", c.parityEventsPerDay)
 	simRunDays(sp1, c.parityDays, c.parityEventsPerDay, 0, -1, 1)
 	simRunDays(sp2, c.parityDays, c.parityEventsPerDay, 0, -1, 1)
 	h1, h2 := uint64(0xCBF29CE484222325), uint64(0xCBF29CE484222325)
@@ -438,7 +503,7 @@ func writeS11ToS38(s *Sim, c Config, outDir string) {
 	}
 	writeFile(outDir, "s37_compress.csv", fmt.Sprintf("n_items,rle_ints,ratio,roundtrip_ok\n%d,%d,%.4f,%d\n", nq, len(rle), ratio, rtok))
 
-	si := newSim(c, false, "")
+	si := newSimScaled(c, false, "", s.capScale*2000)
 	var lCash [numAccounts]int64
 	var lOh, lIt [numAccounts][4]int64
 	for i := 0; i < numAccounts; i++ {

@@ -18,7 +18,7 @@ tot += Process.clock_gettime(Process::CLOCK_MONOTONIC) - t0
 
 puts '[ruby] tahap 10/40 (s10)'
 t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-sim = Sim.new(cfg, true, out_dir)
+sim = Sim.new(cfg, true, out_dir, 8000)
 sim_run_days(sim, cfg['num_days'], 8000, 0, -1, 1)
 sim.close_logs
 tot += Process.clock_gettime(Process::CLOCK_MONOTONIC) - t0

@@ -13,7 +13,7 @@ export const SKU_RETAIL = [10000, 10200, 9800, 31500];
 export const SKU_WHOLESALE = [8000, 8200, 7800, 26000];
 export const SKU_PROD = [6000, 6200, 5800, 0];
 export const STORE_WH = [10, 10, 10, 11, 11, 11, 12, 12, 12, 12];
-export const CARRIER_BASE_LT = [120, 200, 160];
+export const CARRIER_BASE_LT = [150, 250, 200];
 
 export const carrierRate = (v: number): number => v < 500 ? 200 : (v < 2000 ? 160 : 120);
 

@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
     for (int st = 1; st <= 9; ++st) printf("[cpp] tahap %d/40 (s%02d)\n", st, st);
     write_s01_to_s09(cfg, out_dir); stage_s[0] = now_s() - t0;
     printf("[cpp] tahap 10/40 (s10)\n"); t0 = now_s();
-    Sim sim; sim_init(sim, cfg, 1, out_dir); int64_t ev_pd = 400000;
+    Sim sim; int64_t ev_pd = 400000; sim_init_scaled(sim, cfg, 1, out_dir, ev_pd);
     sim_run_days(sim, cfg.num_days, ev_pd, 0, -1, 1); stage_s[9] = now_s() - t0;
     for (int st = 11; st <= 38; ++st) printf("[cpp] tahap %d/40 (s%02d)\n", st, st);
     t0 = now_s(); write_s11_to_s38(sim, cfg, out_dir); stage_s[10] = now_s() - t0;

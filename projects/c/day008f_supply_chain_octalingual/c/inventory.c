@@ -6,7 +6,7 @@ const int64_t SKU_RETAIL[NUM_SKUS]    = {10000, 10200, 9800, 31500};
 const int64_t SKU_WHOLESALE[NUM_SKUS] = {8000, 8200, 7800, 26000};
 const int64_t SKU_PROD[NUM_SKUS]      = {6000, 6200, 5800, 0};
 const int32_t STORE_WH[NUM_STORES]    = {10, 10, 10, 11, 11, 11, 12, 12, 12, 12};
-const int32_t CARRIER_BASE_LT[NUM_CARRIERS] = {120, 200, 160};
+const int32_t CARRIER_BASE_LT[NUM_CARRIERS] = {150, 250, 200};
 
 int64_t carrier_rate(int64_t day_vol) {
     if (day_vol < 500) return 200;
