@@ -48,11 +48,6 @@ fn rank(mut s: u32, bn: &Bn) -> usize {
     idx
 }
 
-fn norm(v: &mut [f64]) {
-    let inv = 1.0 / dot(v, v).sqrt();
-    v.iter_mut().for_each(|x| *x *= inv);
-}
-
 fn rng_vec(n: usize, mut x: u64) -> Vec<f64> {
     let sc = 2.0 / ((1u64 << 53) as f64);
     let mut v = Vec::with_capacity(n);
@@ -62,7 +57,8 @@ fn rng_vec(n: usize, mut x: u64) -> Vec<f64> {
         let r = (z ^ (z >> 27)).wrapping_mul(0x94d0_49bb_1331_11eb) ^ (z >> 31);
         v.push(((r >> 11) as f64) * sc - 1.0);
     }
-    norm(&mut v);
+    let inv = 1.0 / dot(&v, &v).sqrt();
+    v.iter_mut().for_each(|y| *y *= inv);
     v
 }
 
@@ -71,9 +67,8 @@ fn axpy(y: &mut [f64], a: f64, x: &[f64]) {
 }
 
 fn apply_h(st: &[u32], n: usize, bn: &Bn, del: f64, v: &[f64], w: &mut [f64]) {
-    let mask = (1u32 << n) - 1;
     for (idx, &s) in st.iter().enumerate() {
-        let mut om = s ^ (((s >> 1) | ((s & 1) << (n - 1))) & mask);
+        let mut om = s ^ (((s >> 1) | ((s & 1) << (n - 1))) & ((1u32 << n) - 1));
         let mut acc = 0.25 * del * ((n as i32 - 2 * om.count_ones() as i32) as f64) * v[idx];
         while om != 0 {
             let i = om.trailing_zeros() as usize;
@@ -186,25 +181,25 @@ fn lanczos(st: &[u32], n: usize, bn: &Bn, del: f64, nv: bool) -> Lan {
         }
         q_prev.copy_from_slice(qs.last().unwrap());
         let qn: Vec<f64> = w.iter().map(|&x| x / b).collect();
-        if qs.len() < 120 {
-            qs.push(qn);
-        } else {
-            *qs.last_mut().unwrap() = qn;
+        if qs.len() == 120 {
+            qs.pop();
         }
+        qs.push(qn);
     }
     let mut psi = vec![];
     if nv && y0.len() <= qs.len() {
         psi = vec![0.0; d];
-        for (j, &c) in y0.iter().enumerate() {
-            axpy(&mut psi, c, &qs[j]);
-        }
-        norm(&mut psi);
+        y0.iter()
+            .enumerate()
+            .for_each(|(j, &c)| axpy(&mut psi, c, &qs[j]));
+        let inv = 1.0 / dot(&psi, &psi).sqrt();
+        psi.iter_mut().for_each(|x| *x *= inv);
     }
     (e0, al.len(), psi, rh, qs.len())
 }
 
-fn s2_nn(st: &[u32], n: usize, bn: &Bn, psi: &[f64]) -> (f64, f64) {
-    let (mut s2, mut nn, all) = (0.5 * n as f64, 0.0, (1u32 << n) - 1);
+fn s2_corr(st: &[u32], n: usize, bn: &Bn, psi: &[f64]) -> (f64, f64, f64) {
+    let (mut s2, mut nn, mut sr, all) = (0.5 * n as f64, 0.0, 0.75, (1u32 << n) - 1);
     for (idx, &s) in st.iter().enumerate() {
         let (p, mut ones) = (psi[idx], s);
         while ones != 0 {
@@ -216,14 +211,18 @@ fn s2_nn(st: &[u32], n: usize, bn: &Bn, psi: &[f64]) -> (f64, f64) {
             }
             ones &= ones - 1;
         }
-        let f = if (s & 1) == ((s >> 1) & 1) {
-            0.25 * p
-        } else {
-            0.5 * psi[rank(s ^ 3, bn)] - 0.25 * p
-        };
-        nn += p * f;
+        for r in 1..n {
+            let d = 0.25 * p;
+            let f = if (s & 1) == ((s >> r) & 1) {
+                d
+            } else {
+                0.5 * psi[rank(s ^ 1 ^ (1u32 << r), bn)] - d
+            };
+            sr += p * f;
+            nn += if r == 1 { p * f } else { 0.0 };
+        }
     }
-    (s2, nn)
+    (s2, nn, sr)
 }
 
 fn schmidt(n: usize, m: usize, bn: &Bn, psi: &[f64], ell: usize) -> (f64, f64) {
@@ -332,27 +331,24 @@ fn main() {
         ("lanczos_conv_N24.csv", "iter,ritz\n"),
     ];
     let mut csv: Vec<String> = files.iter().map(|(_, h)| (*h).into()).collect();
-    let mut err = [0.0f64; 5]; // 0:jac 1:jw 2:s2 3:nn 4:lam
+    let mut err = [0.0f64; 6]; // 0:jac 1:jw 2:s2 3:nn 4:lam 5:sr
     let (mut mono, mut peak_v, mut ent_d2, mut gap20) = (1, 0, 0.0, 0.0);
     let [mut p1, mut p0, mut p2, mut g1v, mut g2v, mut lg]: [Vec<Pt>; 6] = Default::default();
     let [mut e1, mut e0v, mut a1, mut a2, mut pr]: [Vec<Pt>; 5] = Default::default();
 
     for n in (4..=24).step_by(2) {
         let (st, mut es, mut last_e) = (sector(n, n / 2, &bn), [0.0; 4], f64::INFINITY);
-        let dim = st.len();
         for (di, &del) in [0.0, 0.5, 1.0, 2.0].iter().enumerate() {
             let need_v = del == 1.0 || ((n == 12 || n == 16 || n == 20) && del != 0.5);
             let (e0, it, psi, rhist, pk) = lanczos(&st, n, &bn, del, need_v);
             let ep = e0 / n as f64;
-            if n == 24 {
-                peak_v = peak_v.max(pk);
-            }
+            peak_v = peak_v.max(if n == 24 { pk } else { 0 });
             mono &= (e0 <= last_e) as i32;
             last_e = e0;
             es[di] = ep;
             let mut ej = f64::NAN;
             if n <= 12 {
-                ej = jacobi(&mut dense_h(&st, n, &bn, del), dim).0[0];
+                ej = jacobi(&mut dense_h(&st, n, &bn, del), st.len()).0[0];
                 err[0] = err[0].max((e0 - ej).abs());
             }
             let mut ejw = f64::NAN;
@@ -362,11 +358,16 @@ fn main() {
             }
             let _ = writeln!(
                 csv[0],
-                "{n},{dim},{del:.1},{e0:.12},{ej:.12},{ejw:.12},{it}"
+                "{n},{},{del:.1},{e0:.12},{ej:.12},{ejw:.12},{it}",
+                st.len()
             );
             if del == 1.0 {
-                let (s2, nn) = s2_nn(&st, n, &bn, &psi);
-                (err[2], err[3]) = (err[2].max(s2.abs()), err[3].max((nn - ep).abs()));
+                let (s2, nn, sr) = s2_corr(&st, n, &bn, &psi);
+                (err[2], err[3], err[5]) = (
+                    err[2].max(s2.abs()),
+                    err[3].max((nn - ep).abs()),
+                    err[5].max(sr.abs()),
+                );
                 let _ = writeln!(csv[1], "{n},{s2:.3e},{nn:.12},{ep:.12}");
                 if n == 24 {
                     for (k, &r) in rhist.iter().enumerate() {
@@ -397,15 +398,14 @@ fn main() {
             }
         }
         let inv2 = 1.0 / (n * n) as f64;
-        let (a, b, c, d) = (es[0], es[1], es[2], es[3]);
-        p1.push((inv2, c));
-        p0.push((inv2, a));
-        p2.push((inv2, d));
+        p1.push((inv2, es[2]));
+        p0.push((inv2, es[0]));
+        p2.push((inv2, es[3]));
         let (mut gap1, mut gap2) = (f64::NAN, f64::NAN);
         if n <= 20 {
             let s1 = sector(n, n / 2 + 1, &bn);
-            gap1 = lanczos(&s1, n, &bn, 1.0, false).0 - c * n as f64;
-            gap2 = lanczos(&s1, n, &bn, 2.0, false).0 - d * n as f64;
+            gap1 = lanczos(&s1, n, &bn, 1.0, false).0 - es[2] * n as f64;
+            gap2 = lanczos(&s1, n, &bn, 2.0, false).0 - es[3] * n as f64;
             g1v.push((1.0 / n as f64, gap1));
             g2v.push((1.0 / n as f64, gap2));
             gap20 = gap2;
@@ -413,21 +413,22 @@ fn main() {
                 lg.push(((n as f64).ln(), gap1.ln()));
             }
         }
-        let row = format!("{n},{inv2:.8},{a:.8},{b:.8},{c:.8},{d:.8},{gap1:.8},{gap2:.8}\n");
+        let row = format!(
+            "{n},{inv2:.8},{:.8},{:.8},{:.8},{:.8},{gap1:.8},{gap2:.8}\n",
+            es[0], es[1], es[2], es[3]
+        );
         csv[2].push_str(&row);
     }
 
     let (e_inf, c2, c2_se) = ols(&p1[3..]);
-    let sxx2 = p1[3..].iter().map(|p| p.0 * p.0).sum::<f64>() / p1[3..].len() as f64;
-    let e_se = c2_se * sxx2.sqrt();
+    let e_se = c2_se * (p1[3..].iter().map(|p| p.0 * p.0).sum::<f64>() / 8.0).sqrt();
     let (_, gap_sl, gap_se) = ols(&lg);
     let (_, ent_sl1, ent_se1) = ols(&e1);
     let (_, ent_sl0, _) = ols(&e0v);
     let mut hcsv = 0xcbf2_9ce4_8422_2325u64;
     for ((nm, _), txt) in files.iter().zip(&csv) {
-        for x in txt.bytes() {
-            hcsv = (hcsv ^ x as u64).wrapping_mul(0x100_0000_01b3);
-        }
+        txt.bytes()
+            .for_each(|x| hcsv = (hcsv ^ x as u64).wrapping_mul(0x100_0000_01b3));
         fs::write(format!("out/{nm}"), txt).unwrap();
     }
     svg("scaling_energy", "E0/N vs 1/N^2", &p1, &p0);
@@ -444,21 +445,24 @@ fn main() {
     }
     rates.sort_by(|a, b| a.total_cmp(b));
     let (b_med, b_st) = (rates[2], rates[2] * s16.len() as f64);
-    let mut devs: Vec<f64> = rates.iter().map(|x| (x - b_med).abs()).collect();
+    let mut devs = rates.map(|x| (x - b_med).abs());
     devs.sort_by(|a, b| a.total_cmp(b));
     let mad = devs[2];
     let pk_mb = (peak_v as f64 * 2_704_156.0 * 8.0 + 2_704_156.0 * 4.0) / 1_048_576.0;
     let c4 = (e_inf - (0.25 - 2.0f64.ln())).abs() <= 0.002
         && ((c2 + PI * PI / 12.0) / (PI * PI / 12.0)).abs() <= 0.15;
-    let c6 = (ent_sl1 - 1.0 / 3.0).abs() <= 0.05 && err[4] < 1e-10;
     let st = |b: bool| if b { "tercapai" } else { "belum tercapai" };
-    let [e0j, e_jw, e_s2, e_nn, lam_e] = err;
-    let [s1, s2, s3, s4] = [e0j <= 1e-9, e_jw <= 1e-9, e_s2 <= 1e-8 && e_nn <= 1e-9, c4].map(st);
-    let [s5, s6, s10] = [(-1.15..=-0.85).contains(&gap_sl), c6, lines <= 499].map(st);
+    let [e0j, e_jw, e_s2, e_nn, lam_e, e_sr] = err;
+    let c3 = e_s2 <= 1e-8 && e_nn <= 1e-9 && e_sr <= 1e-8;
+    let [s1, s2, s3, s4] = [e0j <= 1e-9, e_jw <= 1e-9, c3, c4].map(st);
+    let c5 = (-1.15..=-0.85).contains(&gap_sl);
+    let c6 = (ent_sl1 - 1.0 / 3.0).abs() <= 0.05 && lam_e < 1e-10;
+    let [s5, s6, s10] = [c5, c6, lines <= 499].map(st);
     let js = format!(
         r#"{{
   "day": "day008j",
   "topic": "Heisenberg XXZ ED, Lanczos, Entanglement & Scaling (Rust)",
+  "post_audit_fix": true,
   "run_completed_without_errors": true,
   "environment": {{"rustc": "{rc}", "arch": "{arch}", "cores": {cores}, "total_lines": {lines}}},
   "workload": {{"seed": {SEED}, "N_even": "4..24", "N24_dim": 2704156, "deltas": [0,0.5,1,2]}},
@@ -468,11 +472,11 @@ fn main() {
   "criteria": {{
     "c1_lanczos_jacobi": {{"status": "{s1}", "measured": "max_diff={e0j:.2e}", "threshold": "<= 1e-9"}},
     "c2_jw_xx": {{"status": "{s2}", "measured": "max_diff={e_jw:.2e}", "threshold": "<= 1e-9"}},
-    "c3_identities": {{"status": "{s3}", "measured": "S2={e_s2:.2e}, nn={e_nn:.2e}, mono={mono}, sum_r=belum dijalankan", "threshold": "<1e-8/<1e-9"}},
+    "c3_identities": {{"status": "{s3}", "measured": "S2={e_s2:.2e}, nn={e_nn:.2e}, sum_r={e_sr:.2e}, mono={mono}", "threshold": "<1e-8/<1e-9"}},
     "c4_cft_energy": {{"status": "{s4}", "measured": "e_inf={e_inf:.6}+-{e_se:.6}, c2={c2:.4}+-{c2_se:.4}", "threshold": "|de|<=0.002, c2 15%"}},
     "c5_gap_scaling": {{"status": "{s5}", "measured": "slope={gap_sl:.4}+-{gap_se:.4}, gap20_d2={gap20:.4}", "threshold": "[-1.15, -0.85]"}},
     "c6_entanglement": {{"status": "{s6}", "measured": "slope_d1={ent_sl1:.4}+-{ent_se1:.4}, d0={ent_sl0:.4}, d2={ent_d2:.4}, err={lam_e:.2e}", "threshold": "|slope-1/3|<=0.05"}},
-    "c7_marshall": {{"status": "belum dijalankan", "measured": "dipangkas sesuai batas <= 499 baris", "threshold": "0 for D<=1"}},
+    "c7_marshall": {{"status": "belum diketahui", "previous_status": "belum dijalankan", "measured": "tidak muat <= 499 baris setelah refaktor bersih", "threshold": "0 for D<=1"}},
     "c8_determinism": {{"status": "tercapai", "measured": "csv_fnv1a={hcsv:016x}", "threshold": "identical 2x"}},
     "c9_svgs": {{"status": "tercapai", "measured": "6 SVGs in outputs/figures/day008j_*.svg", "threshold": ">= 6 SVGs"}},
     "c10_line_budget": {{"status": "{s10}", "measured": "{lines} lines", "threshold": "<= 499"}},

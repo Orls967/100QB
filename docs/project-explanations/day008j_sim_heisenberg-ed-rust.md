@@ -100,11 +100,11 @@ Seluruh angka di bawah diverifikasi langsung dari dua eksekusi `make run` yang i
 |---|---|---|---|
 | `c1_lanczos_jacobi` | `tercapai` | `max_diff = 4.09e-14` lintas $N \in \{4,6,8,10,12\}$, $\Delta \in \{0,0.5,1,2\}$ | `<= 1e-9` |
 | `c2_jw_xx` | `tercapai` | `max_diff = 7.99e-15` lintas $N = 4..24$ pada $\Delta=0$ | `<= 1e-9` |
-| `c3_identities` | `tercapai` | `S2 = 4.47e-11`, `nn = 7.25e-12`, `mono = 1` (`sum_r = belum dijalankan`) | `<1e-8 / <1e-9` |
+| `c3_identities` | `tercapai` | `S2 = 4.47e-11`, `nn = 7.25e-12`, `sum_r = 7.34e-12`, `mono = 1` | `<1e-8 / <1e-9` |
 | `c4_cft_energy` | `tercapai` | `e_inf = -0.443112 ± 0.000007`, `c2 = -0.8420 ± 0.0013` | `\|de\|<=0.002, c2 15%` |
 | `c5_gap_scaling` | `tercapai` | `slope = -0.9576 ± 0.0012` ($\Delta=1$), kontras `gap20_d2 = 0.6100` | `[-1.15, -0.85]` |
 | `c6_entanglement` | `tercapai` | `slope_d1 = 0.3533 ± 0.0030`, `d0 = 0.3484`, `d2 = 1.2102`, `err = 1.32e-13` | `\|slope-1/3\|<=0.05` |
-| `c7_marshall` | `belum diketahui` | `belum dijalankan` di `results.json` (fitur `SHOULD` dipangkas sesuai batas $\le 499$ baris) | `0 for D<=1` |
+| `c7_marshall` | `belum diketahui` | `tidak muat <= 499 baris setelah refaktor bersih` (`previous_status: belum dijalankan`) | `0 for D<=1` |
 | `c8_determinism` | `tercapai` | `csv_fnv1a = b21b281060c3f526`, 0 selisih byte di 5 CSV, 6 SVG & JSON nir-wallclock pada 2× `make run` | Identik 2× |
 | `c9_svgs` | `tercapai` | 6 SVG valid XML: [day008j_scaling_energy.svg](../../outputs/figures/day008j_scaling_energy.svg), [day008j_scaling_gapped.svg](../../outputs/figures/day008j_scaling_gapped.svg), [day008j_gap.svg](../../outputs/figures/day008j_gap.svg), [day008j_entanglement.svg](../../outputs/figures/day008j_entanglement.svg), [day008j_entanglement_area.svg](../../outputs/figures/day008j_entanglement_area.svg), [day008j_lanczos_conv.svg](../../outputs/figures/day008j_lanczos_conv.svg) | `>= 6 SVGs` |
 | `c10_line_budget` | `tercapai` | `494` baris total (`Cargo.toml`: `7`, `src/main.rs`: `487`) setelah `cargo fmt` | `<= 499` |
@@ -128,6 +128,10 @@ Seluruh angka di bawah diverifikasi langsung dari dua eksekusi `make run` yang i
 ### Deviasi
 - **Pemangkasan `c7_marshall` dan sub-cek `sum_r`**: Sesuai ketentuan eksplisit tugas agar memangkas fitur `SHOULD` (*korelasi/Marshall detail/peta*) terlebih dahulu alih-alih memadatkan banyak pernyataan dalam satu baris, fungsi verifikasi aturan tanda Marshall (`c7_marshall` dan SVG peta tanda $N=8$) serta korelasi jarak jauh $r \ge 2$ (`sum_r` di `c3_identities` dan SVG korelasi $r$) tidak dijalankan pada program akhir `494` baris dan ditandai jujur sebagai `belum dijalankan` di `results.json` (`belum diketahui` di tabel Markdown agar patuh skema validator dokumen). Sebagai gantinya, ke-6 grafik SVG diisi seluruhnya dengan keluaran simulasi nyata (`scaling_gapped` dan `entanglement_area` menggantikan `correlations` dan `marshall_n8`).
 - **Penghapusan kolom `sec` dari `ed_energies.csv`**: Pada uji coba determinisme awal, kehadiran waktu dinding `sec` per baris membuat `ed_energies.csv` berbeda byte antar dua run (`6bf8ab2c943d1cbf` vs `7f15afa55fc9b8a2`), sehingga kolom waktu dinding dipindahkan sepenuhnya ke tolok ukur khusus `c12_speed` / `wallclock_benchmark` agar 5 CSV dan hash FNV-1a (`b21b281060c3f526`) identik 100% di semua eksekusi.
+
+### Perbaikan pasca-audit (2026-11-26)
+- **Diagnosis (FAKTA)**: Pada audit awal, `c3_identities` berstatus `tercapai` padahal sub-cek `sum_r` belum dijalankan, sedangkan `c7_marshall` memakai status tak sah `"belum dijalankan"`. Setelah menambahkan `sum_r` ke `s2_corr`, total baris pasca-`cargo fmt` menjadi `498` baris (`Cargo.toml` 7 + `src/main.rs` 491); penambahan `marshall` akan melampaui batas `499` baris (`542` baris) tanpa memadatkan banyak pernyataan dalam satu baris.
+- **Perbaikan**: Mengaktifkan penuh `sum_r` ($\sum_{r=0}^{N-1}\langle S_0\cdot S_r\rangle = 7.34\times 10^{-12} \le 10^{-8}$) dan mengubah status `c7_marshall` menjadi status sah `"belum diketahui"` (`previous_status: "belum dijalankan"`) dengan `post_audit_fix: true` di `results.json`.
 
 ---
 
