@@ -1,0 +1,5 @@
+quant_step,n_frames,raw_bytes,comp_bytes,compression_ratio,exact_roundtrip,max_err_q
+1.0e-02,100,614400,82219,7.4727,1,0
+1.0e-03,100,614400,80841,7.6001,1,0
+1.0e-04,100,614400,112631,5.4550,1,0
+1.0e-05,100,614400,149805,4.1013,1,0

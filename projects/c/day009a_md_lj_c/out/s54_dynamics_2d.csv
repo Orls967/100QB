@@ -1,0 +1,2 @@
+dim,n_particles,rho_2d,target_t,u_per_n,p_2d,d_einstein_2d,d_gk_2d
+2,1024,0.60,1.50,-1.382070,1.849855,0.245666,0.254114

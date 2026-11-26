@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="460" viewBox="0 0 760 460">
+  <rect x="0" y="0" width="760" height="460" fill="#fafbfc"/>
+  <rect x="1" y="1" width="758" height="458" fill="none" stroke="#d8dee9" stroke-width="1"/>
+  <text x="380" y="28" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="15" font-weight="bold" fill="#1f2937">S09: FCC Neighbor Shell Multiplicities (N=500, rho=1.0)</text>
+  <text x="380" y="46" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11" fill="#4b5563">Exact coordination numbers (12, 6, 24, 12, 24, 8) verified in periodic box</text>
+  <rect x="80" y="62" width="650" height="324" fill="#ffffff" stroke="#9ca3af" stroke-width="1"/>
+  <line x1="80" y1="386.0" x2="730" y2="386.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="72" y="389.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0</text>
+  <line x1="80" y1="321.2" x2="730" y2="321.2" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="72" y="324.7" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">5.38</text>
+  <line x1="80" y1="256.4" x2="730" y2="256.4" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="72" y="259.9" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">10.8</text>
+  <line x1="80" y1="191.6" x2="730" y2="191.6" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="72" y="195.1" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">16.1</text>
+  <line x1="80" y1="126.8" x2="730" y2="126.8" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="72" y="130.3" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">21.5</text>
+  <line x1="80" y1="62.0" x2="730" y2="62.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="72" y="65.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">26.9</text>
+  <rect x="102.8" y="241.4" width="62.8" height="144.6" fill="#2563eb" fill-opacity="0.85" stroke="#1f2937" stroke-width="0.8"/>
+  <text x="134.2" y="236.4" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="9.5" fill="#111827">12</text>
+  <text x="134.2" y="404" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">S1 (12)</text>
+  <rect x="211.1" y="313.7" width="62.8" height="72.3" fill="#2563eb" fill-opacity="0.85" stroke="#1f2937" stroke-width="0.8"/>
+  <text x="242.5" y="308.7" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="9.5" fill="#111827">6</text>
+  <text x="242.5" y="404" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">S2 (6)</text>
+  <rect x="319.4" y="96.7" width="62.8" height="289.3" fill="#2563eb" fill-opacity="0.85" stroke="#1f2937" stroke-width="0.8"/>
+  <text x="350.8" y="91.7" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="9.5" fill="#111827">24</text>
+  <text x="350.8" y="404" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">S3 (24)</text>
+  <rect x="427.7" y="241.4" width="62.8" height="144.6" fill="#2563eb" fill-opacity="0.85" stroke="#1f2937" stroke-width="0.8"/>
+  <text x="459.2" y="236.4" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="9.5" fill="#111827">12</text>
+  <text x="459.2" y="404" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">S4 (12)</text>
+  <rect x="536.1" y="96.7" width="62.8" height="289.3" fill="#2563eb" fill-opacity="0.85" stroke="#1f2937" stroke-width="0.8"/>
+  <text x="567.5" y="91.7" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="9.5" fill="#111827">24</text>
+  <text x="567.5" y="404" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">S5 (24)</text>
+  <rect x="644.4" y="289.6" width="62.8" height="96.4" fill="#2563eb" fill-opacity="0.85" stroke="#1f2937" stroke-width="0.8"/>
+  <text x="675.8" y="284.6" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="9.5" fill="#111827">8</text>
+  <text x="675.8" y="404" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">S6 (8)</text>
+  <text x="18" y="224" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111827" transform="rotate(-90 18 224)">Neighbors in shell</text>
+</svg>

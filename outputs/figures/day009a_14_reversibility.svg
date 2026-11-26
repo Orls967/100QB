@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="460" viewBox="0 0 760 460">
+  <rect x="0" y="0" width="760" height="460" fill="#fafbfc"/>
+  <rect x="1" y="1" width="758" height="458" fill="none" stroke="#d8dee9" stroke-width="1"/>
+  <text x="380" y="28" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="15" font-weight="bold" fill="#1f2937">S19: Time Reversibility (N=108, 500 Fwd + 500 Bwd, dt=0.002)</text>
+  <text x="380" y="46" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11" fill="#4b5563">Max position return error along reverse leg (c4 threshold 1e-9)</text>
+  <rect x="76" y="62" width="652" height="338" fill="#ffffff" stroke="#9ca3af" stroke-width="1"/>
+  <line x1="76.0" y1="62" x2="76.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="76.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">-14.8</text>
+  <line x1="76" y1="400.0" x2="728" y2="400.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="68" y="403.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">5.71e-19</text>
+  <line x1="206.4" y1="62" x2="206.4" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="206.4" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">92.1</text>
+  <line x1="76" y1="332.4" x2="728" y2="332.4" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="68" y="335.9" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">1.85e-11</text>
+  <line x1="336.8" y1="62" x2="336.8" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="336.8" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">199</text>
+  <line x1="76" y1="264.8" x2="728" y2="264.8" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="68" y="268.3" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.000597</text>
+  <line x1="467.2" y1="62" x2="467.2" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="467.2" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">306</text>
+  <line x1="76" y1="197.2" x2="728" y2="197.2" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="68" y="200.7" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">1.93e+04</text>
+  <line x1="597.6" y1="62" x2="597.6" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="597.6" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">413</text>
+  <line x1="76" y1="129.6" x2="728" y2="129.6" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="68" y="133.1" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">6.24e+11</text>
+  <line x1="728.0" y1="62" x2="728.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="728.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">520</text>
+  <line x1="76" y1="62.0" x2="728" y2="62.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="68" y="65.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">2.02e+19</text>
+  <text x="402" y="446" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111827">Backward step</text>
+  <text x="18" y="231" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111827" transform="rotate(-90 18 231)">Max position error</text>
+  <line x1="76" y1="316.8" x2="728" y2="316.8" stroke="#6b7280" stroke-width="1.2" stroke-dasharray="5,4"/>
+  <text x="722" y="312.8" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#4b5563">c4 limit (1e-9)</text>
+  <polyline fill="none" stroke="#2563eb" stroke-width="2" points="100.1,376.7 106.2,371.3 112.3,371.3 118.4,371.3 124.5,371.2 130.6,370.8 136.7,370.8 142.8,370.8 148.9,370.8 155.0,370.8 161.1,370.8 167.2,370.7 173.3,369.9 179.4,369.9 185.5,369.9 191.6,369.5 197.7,369.5 203.8,369.3 209.9,369.2 216.0,369.0 222.1,368.7 228.2,368.4 234.3,368.5 240.4,368.1 246.5,367.8 252.6,367.4 258.7,367.2 264.8,366.8 270.9,366.6 277.0,366.5 283.1,366.4 289.2,366.4 295.3,366.1 301.4,366.4 307.5,365.7 313.6,365.4 319.7,365.3 325.8,365.4 331.9,365.1 338.0,364.9 344.1,364.7 350.2,364.6 356.3,364.5 362.4,364.4 368.5,364.1 374.6,364.0 380.7,363.6 386.8,363.0 392.9,362.6 399.0,362.6 405.0,362.2 411.1,361.8 417.2,361.7 423.3,361.6 429.4,361.2 435.5,361.1 441.6,360.8 447.7,360.6 453.8,360.5 459.9,360.4 466.0,360.2 472.1,360.1 478.2,360.0 484.3,359.8 490.4,359.7 496.5,359.6 502.6,359.5 508.7,359.3 514.8,359.2 520.9,359.2 527.0,358.8 533.1,358.5 539.2,358.1 545.3,358.0 551.4,357.8 557.5,357.7 563.6,357.4 569.7,357.2 575.8,357.1 581.9,357.0 588.0,357.1 594.1,357.0 600.2,356.9 606.3,356.9 612.4,356.8 618.5,356.6 624.6,356.4 630.7,356.2 636.8,356.1 642.9,356.0 649.0,355.7 655.1,355.5 661.2,355.3 667.3,355.1 673.4,355.0 679.5,354.9 685.6,354.9 691.7,354.9 697.8,354.8 703.9,354.8 "/>
+  <polyline fill="none" stroke="#dc2626" stroke-width="2" points="100.1,258.7 106.2,253.2 112.3,253.6 118.4,252.6 124.5,248.4 130.6,246.4 136.7,245.1 142.8,244.3 148.9,244.1 155.0,243.8 161.1,243.0 167.2,241.8 173.3,240.9 179.4,240.3 185.5,239.9 191.6,239.9 197.7,240.1 203.8,239.7 209.9,239.4 216.0,239.0 222.1,238.6 228.2,238.2 234.3,237.8 240.4,237.5 246.5,237.2 252.6,237.0 258.7,236.8 264.8,236.7 270.9,236.7 277.0,236.6 283.1,236.3 289.2,236.1 295.3,235.9 301.4,235.7 307.5,235.5 313.6,235.4 319.7,235.3 325.8,235.2 331.9,235.1 338.0,235.1 344.1,235.0 350.2,234.8 356.3,234.6 362.4,234.5 368.5,234.3 374.6,234.2 380.7,234.1 386.8,233.9 392.9,233.8 399.0,233.8 405.0,233.7 411.1,233.6 417.2,233.5 423.3,233.4 429.4,233.2 435.5,233.1 441.6,233.0 447.7,232.9 453.8,232.8 459.9,232.7 466.0,232.6 472.1,232.5 478.2,232.3 484.3,232.2 490.4,232.1 496.5,231.9 502.6,230.2 508.7,191.1 514.8,163.7 520.9,127.7 527.0,119.4 533.1,112.4 539.2,110.0 545.3,108.5 551.4,100.3 557.5,93.3 563.6,90.9 569.7,89.4 575.8,88.4 581.9,87.5 588.0,86.9 594.1,86.3 600.2,85.8 606.3,85.3 612.4,99.8 618.5,98.7 624.6,97.7 630.7,97.0 636.8,96.4 642.9,95.8 649.0,95.4 655.1,94.9 661.2,94.6 667.3,94.2 673.4,93.9 679.5,93.6 685.6,93.3 691.7,91.9 697.8,90.9 703.9,90.1 "/>
+  <rect x="533" y="72" width="188" height="42" rx="4" fill="#ffffff" fill-opacity="0.9" stroke="#d1d5db"/>
+  <line x1="541" y1="84" x2="559" y2="84" stroke="#2563eb" stroke-width="2.2"/>
+  <text x="565" y="87" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#1f2937">Velocity Verlet (reversible)</text>
+  <line x1="541" y1="100" x2="559" y2="100" stroke="#dc2626" stroke-width="2.2"/>
+  <text x="565" y="103" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#1f2937">Explicit Euler (neg control)</text>
+</svg>

@@ -1,0 +1,2 @@
+target_t,rho,n_steps,q6_mean,q6_min,lindemann_mean,stayed_crystalline
+0.40,1.00,8000,0.530088,0.518389,0.080639,1

@@ -1,0 +1,4 @@
+method,rho,target_t,cv_per_n,ideal_ref
+nvt_fluct,0.70,1.50,2.058631,1.5000
+nve_lebowitz,0.70,1.50,2.013548,1.5000
+finite_diff,0.70,1.50,2.071615,1.5000

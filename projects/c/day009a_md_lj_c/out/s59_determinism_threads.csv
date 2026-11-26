@@ -1,0 +1,5 @@
+threads,n_steps,state_hash,bit_exact_vs_1t
+1,120,ea58c86a4fb8e20f,1
+2,120,ea58c86a4fb8e20f,1
+4,120,ea58c86a4fb8e20f,1
+8,120,ea58c86a4fb8e20f,1
