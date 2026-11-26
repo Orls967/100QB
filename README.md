@@ -154,7 +154,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [docs/ROADMAP.md](docs/ROADMAP.md) · Riwayat: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 62/100 topik (62%)** · quant: 45 · sim: 17
+**Progres: 64/100 topik (64%)** · quant: 45 · sim: 19
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -220,6 +220,8 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 8e | bonus | `sim` | `c+cpp+rust+go+ruby+py+ts` | Solver Poisson 2D (Jacobi, GS, SOR, CG, PCG-SSOR, Multigrid) Lintas 8 Bahasa (19 Tahap) | 2026-11-26 | [day008e_poisson_solvers_octalingual](projects/c/day008e_poisson_solvers_octalingual) |
 | 8f | 008 | `sim` | `python` | Supply Chain Octalingual | - | [day008f_sim_supply-chain-octalingual.ipynb](days/day008f_sim_supply-chain-octalingual.ipynb) |
 | 8f | bonus | `sim` | `c+cpp+rust+go+ruby+py+ts` | Jaringan Rantai Pasok 3 Pabrik/4 Gudang/10 Toko Kebijakan (s,S) Lintas 8 Bahasa (40 Tahap) | 2026-11-26 | [day008f_supply_chain_octalingual](projects/c/day008f_supply_chain_octalingual) |
+| 8g | 008 | `sim` | `python` | Epidemic Abm Octalingual | - | [day008g_sim_epidemic-abm-octalingual.ipynb](days/day008g_sim_epidemic-abm-octalingual.ipynb) |
+| 8g | bonus | `sim` | `c+cpp+rust+go+ruby+py+ts` | Simulasi Epidemi Berbasis Agen SEIR Berlapis Lintas 8 Bahasa (39 Tahap) | 2026-11-26 | [day008g_epidemic_abm_octalingual](projects/c/day008g_epidemic_abm_octalingual) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi

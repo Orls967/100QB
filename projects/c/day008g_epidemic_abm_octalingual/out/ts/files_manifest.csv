@@ -62,10 +62,10 @@ s31_branches.csv,22,268,8c4dd639b6e90aa0
 s32_vacuous_check.csv,3,39,5ec7ca6f62840613
 s33_replay.csv,2,118,8d65677822e45285
 s34_parity.csv,2,122,820e6d2cc260be9a
-s35_bench.csv,2,71,8febcddfc47bb487
+s35_bench.csv,2,71,27297089d3f21f06
 s36_sizes.csv,2,42,294b96da756f5e08
 s37_replay_counts.csv,2,19,c5dbe732b5633cd1
-s39_summary.json,1,93,fed9778148773520
+s39_summary.json,1,93,633f1c78639d3a10
 tests.csv,181,1378,e6fd18915d4a0b21
 transmissions_log.csv,773,15245,6a6cfe078c6e960b
 transmissions_log_nointerv.csv,13487,268154,713fbf3b4d76ae8f

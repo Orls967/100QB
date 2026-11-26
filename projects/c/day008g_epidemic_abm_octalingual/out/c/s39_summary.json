@@ -1,1 +1,1 @@
-{"lang":"c","N":100000,"days":180,"N_sw":1000,"toolchain":"Apple clang 16.0.0 (-std=c11)","total_sec":0.339}
+{"lang":"c","N":100000,"days":180,"N_sw":1000,"toolchain":"Apple clang 16.0.0 (-std=c11)","total_sec":0.340}

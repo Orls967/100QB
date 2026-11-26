@@ -3,6 +3,15 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 008g] — 2026-11-26 · Simulasi Epidemi Berbasis Agen SEIR Berlapis Lintas 8 Bahasa (39 Tahap)
+
+### Ditambahkan (`day008g`)
+- Proyek oktalingual `projects/c/day008g_epidemic_abm_octalingual/` dan notebook `days/day008g_sim_epidemic-abm-octalingual.ipynb` dengan **39 tahap (`s01`–`s39`)** dan **72 berkas keluaran identik per bahasa** (**14/18** kriteria `tercapai`, `1` `sebagian` `c12`, `3` `belum tercapai` `c6`/`c9`/`c11` sebagai temuan jujur, `vacuous_flags = []`):
+  - **Paritas Bit-Identik & Konservasi**: `0` selisih byte di 8 bahasa pada `S01`, `S05`, `S06`, dan `S34` (`N=2000, 60d`); `0` pelanggaran invarian (`S12`); *in-process replay* (`S33`) dan *independent count replay* (`S37`) cocok eksak (`max_diff = 0`).
+  - **Baseline & Efek Intervensi (`N=100000, 180d`)**: $R_{0,\text{ana}} = 1.7839$, serangan akhir tanpa intervensi `0.6820` vs dengan intervensi `0.0056` ($z = 453.5\text{ SE}$); puncak RS turun dari `250/250` (`396` penolakan) menjadi `7/250` (`0` penolakan).
+  - **Kecepatan (`person-days/detik` median)**: C++20 `217.0M`, C11 `211.6M`, Rust `206.8M`, Go `163.1M`, TS (`node --experimental-strip-types`) `23.1M`, ipynb `3.36M`, Python `3.20M`, Ruby `2.03M`.
+  - **Output**: `80` SVG per bahasa + `6` pasang grafik gabungan PNG+SVG `outputs/figures/day008g_*.{png,svg}`, `outputs/day008g/results.json`, dan [day008g_sim_epidemic-abm-octalingual.md](project-explanations/day008g_sim_epidemic-abm-octalingual.md).
+
 ## [Hari 008f] — 2026-11-26 · Jaringan Rantai Pasok 3 Pabrik/4 Gudang/10 Toko Lintas 8 Bahasa (40 Tahap)
 
 ### Diperbaiki (`day008f` — Bagian A Anti-Hampa)

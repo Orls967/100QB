@@ -1,9 +1,12 @@
 {
-  "session": "day008g",
+  "day": 8,
+  "session": "g",
+  "topic_no": null,
+  "type": "sim",
+  "language": "c+cpp+rust+go+ruby+py+ts",
+  "topic": "Simulasi Epidemi Berbasis Agen SEIR Berlapis Lintas 8 Bahasa (39 Tahap)",
   "date": "2026-11-26",
-  "topic": "Simulasi Epidemi Berbasis Agen SEIR Berlapis (39 Tahap, 8 Bahasa)",
-  "parent_lang": "c",
-  "languages": ["c", "cpp", "rust", "go", "ruby", "py", "ts", "ipynb"],
+  "link": "projects/c/day008g_epidemic_abm_octalingual",
   "stages": 39,
   "master_seed": 20261126
 }
