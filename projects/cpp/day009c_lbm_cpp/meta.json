@@ -1,0 +1,10 @@
+{
+  "day": 9,
+  "session": "c",
+  "topic_no": null,
+  "type": "sim",
+  "language": "cpp",
+  "topic": "Metode Lattice Boltzmann (D2Q9/D3Q19) di C++20 Murni: Operator Kolisi, Batas Lengkung, Benchmark Fluida, Skema In-Place AA-Pattern & Tangga Optimasi Roofline",
+  "date": "2026-11-27",
+  "link": "projects/cpp/day009c_lbm_cpp"
+}

@@ -1,0 +1,6 @@
+build/
+out/large_*.csv
+out/large_*.json
+tmp/
+.DS_Store
+*.o
