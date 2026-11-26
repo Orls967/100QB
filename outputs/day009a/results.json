@@ -1,0 +1,221 @@
+{
+  "session": "day009a",
+  "project_path": "projects/c/day009a_md_lj_c",
+  "scale": "full",
+  "master_seed": 20261127,
+  "run_completed_without_errors": true,
+  "machine": {
+    "arch": "arm64",
+    "cores": 10,
+    "cc_version": "Apple clang version 16.0.0 (clang-1600.0.26.6)"
+  },
+  "code_metrics": {
+    "c_lines": 8818,
+    "stages_completed": 60,
+    "total_output_files": 167,
+    "csv_files": 117,
+    "svg_files": 49,
+    "csv_total_bytes": 204971,
+    "svg_total_bytes": 425382,
+    "total_elapsed_sec": 134.8243
+  },
+  "determinism": {
+    "combined_deterministic_csv_fnv1a": "c94cdec2512e7713",
+    "thread_hash_1t": "ea58c86a4fb8e20f",
+    "thread_hash_2t": "ea58c86a4fb8e20f",
+    "thread_hash_4t": "ea58c86a4fb8e20f",
+    "thread_hash_8t": "ea58c86a4fb8e20f",
+    "threads_bitwise_identical": true,
+    "two_runs_identical": true
+  },
+  "invariants": {
+    "total_neighbor_overflows": 0,
+    "total_late_verlet_rebuilds": 0
+  },
+  "criteria_summary": {
+    "total": 23,
+    "tercapai": 22,
+    "sebagian": 0,
+    "lainnya": 1
+  },
+  "criteria": {
+    "c1": {
+      "status": "tercapai",
+      "measured": "max_rel_err=1.869e-15 (N=500,864; rho=0.2,0.5,0.85)",
+      "threshold": "max_rel_err <= 1e-12"
+    },
+    "c2": {
+      "status": "tercapai",
+      "measured": "max_rel_err=3.245e-10 across 5 potentials",
+      "threshold": "max_rel_err <= 1e-6"
+    },
+    "c3": {
+      "status": "tercapai",
+      "measured": "max_|P_tot|=6.354e-13 after 1e5 steps NVE",
+      "threshold": "|P_tot| <= 1e-10 after 1e5 steps"
+    },
+    "c4": {
+      "status": "tercapai",
+      "measured": "max_pos_err=6.072e-14 (N=108, 500 fwd+bwd, dt=0.002)",
+      "threshold": "max_pos_err <= 1e-9"
+    },
+    "c5": {
+      "status": "tercapai",
+      "measured": "vv_slope=1.8708 +- 0.0246; euler_drift_ratio=106739.9x",
+      "threshold": "vv_slope in [1.8, 2.2] & euler >= 100x"
+    },
+    "c6": {
+      "status": "tercapai",
+      "measured": "max_|<K>-K_eq|/SE=2.33 across NVE+4 thermostats",
+      "threshold": "all ensembles within 3 SE"
+    },
+    "c7": {
+      "status": "tercapai",
+      "measured": "min_ks_p=0.0941 (Langevin/NH/Andersen at T=1.0)",
+      "threshold": "KS p > 0.01 for Langevin, NH, Andersen"
+    },
+    "c8": {
+      "status": "belum tercapai",
+      "measured": "canon_max_rel=41.03%; z_below_canon: NVE=40.9, Berendsen=99.6",
+      "threshold": "canon within 10% & NVE/Berendsen < canon by >=3 SE"
+    },
+    "c9": {
+      "status": "tercapai",
+      "measured": "max_|(Z-1)-B2*rho|/SE=0.92 for rho in [0.01,0.05]",
+      "threshold": "all rho <= 0.05 within 3 SE"
+    },
+    "c10": {
+      "status": "tercapai",
+      "measured": "max_rel_err=0.043% (z=0.33)",
+      "threshold": "rel_err <= 1% or <= 3 SE (looser chosen a priori)"
+    },
+    "c11": {
+      "status": "tercapai",
+      "measured": "D_E vs D_GK rel_diff=1.90%; D(rho) min_step_z=22.74",
+      "threshold": "Einstein vs GK <= 15% & D(rho) mono dec >= 3 SE"
+    },
+    "c12": {
+      "status": "tercapai",
+      "measured": "|g(tail)-1|=0.0165; max g(r<0.8)=0.00e+00",
+      "threshold": "|g(L/2)-1| <= 0.02 & g(r<0.8) < 1e-3"
+    },
+    "c13": {
+      "status": "tercapai",
+      "measured": "eta=3.2379 +- 0.2997 (rho=0.8442, T=0.722, t_c=2.0)",
+      "threshold": "eta in [2.0, 4.5] (lit memory ~3.2; fail=finding)"
+    },
+    "c14": {
+      "status": "tercapai",
+      "measured": "Q6_solid=0.5086 -> Q6_liq=0.0526 (drop=256.1 SE); cold_Q6=0.5301",
+      "threshold": "Q6 drop >= 3 SE & cold solid Q6 > 0.4"
+    },
+    "c15": {
+      "status": "tercapai",
+      "measured": "T=1.5 min_step_z=9.21 (rho>=0.3); T=2.0 monotone=true",
+      "threshold": "T=1.5 mono >= 3 SE (rho>=0.3) & T=2.0 no vdW loop"
+    },
+    "c16": {
+      "status": "tercapai",
+      "measured": "threads_1/2/4/8=exact (ea58c86a4fb8e20f); runs=exact",
+      "threshold": "2x all identical & 1/2/4/8 threads bitwise identical"
+    },
+    "c17": {
+      "status": "tercapai",
+      "measured": "brute=1.801+-0.019; cell=0.973+-0.180; verlet=1.000+-0.011",
+      "threshold": "brute in [1.8,2.2]; cell & verlet in [0.9,1.25]"
+    },
+    "c18": {
+      "status": "tercapai",
+      "measured": "V0..V5 med_us=[1142, 956, 264, 296, 165, 213] (mono=partial_honest)",
+      "threshold": "median +- MAD >=5 repeats, monotone or honest report"
+    },
+    "c19": {
+      "status": "tercapai",
+      "measured": "total_files=167, valid_svg=49",
+      "threshold": ">= 150 files & >= 40 valid XML SVGs"
+    },
+    "c20": {
+      "status": "tercapai",
+      "measured": "selftest_exit=0",
+      "threshold": "selftest exits 0"
+    },
+    "c21": {
+      "status": "tercapai",
+      "measured": "vacuous_flags_count=0",
+      "threshold": "vacuous_flags empty or explained"
+    },
+    "c22": {
+      "status": "tercapai",
+      "measured": "c_lines=8818, stages=60, elapsed=134.82s",
+      "threshold": "c_lines in [6000, 9000] & per-stage timings reported"
+    },
+    "c23": {
+      "status": "tercapai",
+      "measured": "overflows=0, late_rebuilds=0",
+      "threshold": "overflow_count == 0 & late_rebuild_count == 0"
+    }
+  },
+  "vacuous_flags": [],
+  "stages": [
+    {"id": "S01", "name": "rng_selftest", "elapsed_sec": 0.0047, "files": 3},
+    {"id": "S02", "name": "lattice_gen", "elapsed_sec": 0.0024, "files": 3},
+    {"id": "S03", "name": "zero_momentum", "elapsed_sec": 0.0006, "files": 3},
+    {"id": "S04", "name": "pbc_mic", "elapsed_sec": 0.0002, "files": 2},
+    {"id": "S05", "name": "force_fd", "elapsed_sec": 0.0007, "files": 4},
+    {"id": "S06", "name": "newton3", "elapsed_sec": 0.0008, "files": 2},
+    {"id": "S07", "name": "pot_tables", "elapsed_sec": 0.0025, "files": 3},
+    {"id": "S08", "name": "small_fixtures", "elapsed_sec": 0.0001, "files": 2},
+    {"id": "S09", "name": "fcc_shells", "elapsed_sec": 0.0012, "files": 3},
+    {"id": "S10", "name": "pot_tail_corr", "elapsed_sec": 0.0097, "files": 3},
+    {"id": "S11", "name": "nbr_equivalence", "elapsed_sec": 0.0225, "files": 2},
+    {"id": "S12", "name": "verlet_trigger", "elapsed_sec": 0.1400, "files": 3},
+    {"id": "S13", "name": "verlet_skin_sweep", "elapsed_sec": 0.7977, "files": 3},
+    {"id": "S14", "name": "scaling_brute", "elapsed_sec": 0.1026, "files": 2},
+    {"id": "S15", "name": "scaling_cell_verlet", "elapsed_sec": 0.3131, "files": 3},
+    {"id": "S16", "name": "opt_ladder_raw", "elapsed_sec": 0.2680, "files": 3},
+    {"id": "S17", "name": "thread_scaling", "elapsed_sec": 0.1729, "files": 3},
+    {"id": "S18", "name": "neighbor_2d", "elapsed_sec": 0.0021, "files": 2},
+    {"id": "S19", "name": "time_reversibility", "elapsed_sec": 0.1184, "files": 3},
+    {"id": "S20", "name": "energy_dt_vv", "elapsed_sec": 0.1075, "files": 2},
+    {"id": "S21", "name": "energy_dt_leapfrog", "elapsed_sec": 0.2071, "files": 2},
+    {"id": "S22", "name": "energy_dt_euler", "elapsed_sec": 0.1212, "files": 4},
+    {"id": "S23", "name": "momentum_nve", "elapsed_sec": 2.1134, "files": 3},
+    {"id": "S24", "name": "long_energy_drift", "elapsed_sec": 3.1923, "files": 3},
+    {"id": "S25", "name": "lyapunov_rough", "elapsed_sec": 0.1939, "files": 3},
+    {"id": "S26", "name": "respa_twoscale", "elapsed_sec": 0.0735, "files": 3},
+    {"id": "S27", "name": "nve_equipart", "elapsed_sec": 5.1497, "files": 2},
+    {"id": "S28", "name": "therm_langevin", "elapsed_sec": 5.4630, "files": 2},
+    {"id": "S29", "name": "therm_nosehoover", "elapsed_sec": 5.1297, "files": 2},
+    {"id": "S30", "name": "therm_berendsen", "elapsed_sec": 7.5652, "files": 2},
+    {"id": "S31", "name": "therm_andersen", "elapsed_sec": 5.0091, "files": 2},
+    {"id": "S32", "name": "therm_var_k_compare", "elapsed_sec": 0.0003, "files": 2},
+    {"id": "S33", "name": "therm_ks_maxwell", "elapsed_sec": 0.0004, "files": 3},
+    {"id": "S34", "name": "therm_relaxation", "elapsed_sec": 0.3585, "files": 3},
+    {"id": "S35", "name": "isotherm_t15", "elapsed_sec": 8.7437, "files": 2},
+    {"id": "S36", "name": "isotherm_t20", "elapsed_sec": 6.2393, "files": 4},
+    {"id": "S37", "name": "virial_b2_mayer", "elapsed_sec": 1.1716, "files": 4},
+    {"id": "S38", "name": "internal_energy", "elapsed_sec": 3.2653, "files": 2},
+    {"id": "S39", "name": "heat_capacity_cv", "elapsed_sec": 3.5619, "files": 2},
+    {"id": "S40", "name": "compressibility", "elapsed_sec": 5.8962, "files": 3},
+    {"id": "S41", "name": "energy_route_gr", "elapsed_sec": 2.5176, "files": 3},
+    {"id": "S42", "name": "pressure_route_wca", "elapsed_sec": 0.5469, "files": 3},
+    {"id": "S43", "name": "npt_barostat", "elapsed_sec": 11.0247, "files": 3},
+    {"id": "S44", "name": "multi_pot_eos", "elapsed_sec": 1.5815, "files": 3},
+    {"id": "S45", "name": "gr_phases", "elapsed_sec": 4.8605, "files": 3},
+    {"id": "S46", "name": "sk_phases", "elapsed_sec": 0.0003, "files": 3},
+    {"id": "S47", "name": "coord_number", "elapsed_sec": 0.2247, "files": 3},
+    {"id": "S48", "name": "msd_einstein", "elapsed_sec": 2.4184, "files": 3},
+    {"id": "S49", "name": "vacf_gk", "elapsed_sec": 1.5601, "files": 3},
+    {"id": "S50", "name": "diff_consistency", "elapsed_sec": 0.0002, "files": 2},
+    {"id": "S51", "name": "diff_rho_t_scan", "elapsed_sec": 12.1916, "files": 4},
+    {"id": "S52", "name": "viscosity_gk", "elapsed_sec": 6.8974, "files": 3},
+    {"id": "S53", "name": "diff_finitesize", "elapsed_sec": 13.3661, "files": 3},
+    {"id": "S54", "name": "dynamics_2d", "elapsed_sec": 0.2999, "files": 2},
+    {"id": "S55", "name": "melt_heating", "elapsed_sec": 5.1325, "files": 3},
+    {"id": "S56", "name": "melt_cooling_hyst", "elapsed_sec": 5.7788, "files": 3},
+    {"id": "S57", "name": "melt_negctrl_cold", "elapsed_sec": 0.6345, "files": 2},
+    {"id": "S58", "name": "melt_q6_dist", "elapsed_sec": 0.0003, "files": 2},
+    {"id": "S59", "name": "determinism_threads", "elapsed_sec": 0.2228, "files": 2},
+    {"id": "S60", "name": "traj_compress_summary", "elapsed_sec": 0.0326, "files": 6}
+  ]
+}
