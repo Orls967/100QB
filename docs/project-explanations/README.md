@@ -61,6 +61,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `8b` (`day008b`) | `bonus` | `sim` | `cpp` | [Simulasi Wa-Tor (Ikan vs Hiu) di C++20, Fit Lotka–Volterra RK4 & Efek Ukuran Hingga](day008b_sim_wator-cpp.md) |
 | `8c` (`day008c`) | `bonus` | `sim` | `cpp` | [Model Vicsek (Aktif-Materi) di C++20 dengan Cell List O(N) vs Brute Force O(N^2)](day008c_sim_vicsek-cpp.md) |
 | `8d` (`day008d`) | `bonus` | `sim` | `c+cpp+rust+go+ruby+py+ts+ipynb` | [Jalan Acak Kisi Pólya Lintas 8 Bahasa (12 Tahap Identik)](day008d_sim_lattice-walks-octalingual.md) |
+| `8e` (`day008e`) | `bonus` | `sim` | `c+cpp+rust+go+ruby+py+ts+ipynb` | [Solver Poisson 2D Lintas 8 Bahasa (19 Tahap Identik: Jacobi hingga Multigrid)](day008e_sim_poisson-solvers-octalingual.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 

@@ -3,6 +3,14 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 008e] — 2026-11-26 · Solver Poisson 2D Lintas 8 Bahasa (19 Tahap Identik: C, C++, Rust, Go, Ruby, Python, TS, ipynb)
+
+### Ditambahkan (`day008e`)
+- Proyek oktalingual `projects/c/day008e_poisson_solvers_octalingual/` dan notebook `days/day008e_sim_poisson-solvers-octalingual.ipynb` dengan 19 tahap (`s01`–`s19`) yang identik di **8 bahasa** (**11/12** kriteria `c1`–`c12` `tercapai`, `c6` `sebagian` pada `pcg_ssor` $\omega=1$):
+  - **Paritas Bit-Identik & Anchor Analitik**: `0` selisih pada `s01` dan `s17` di seluruh 8 bahasa (`8/8`); galat nilai eigen maks `3,165e-13`; orde diskritisasi `2,001445`; $\rho_{\text{emp}}$ Jacobi (`0,9951847`) dan GS (`0,9903927`) pada $N=31$ cocok hingga `< 4e-8` relatif; faktor kontraksi MG V(2,1) `0,07011662` ($N=63$) dan rasio FMG `0,473908`.
+  - **Kecepatan (`ns/unknown-iter` median, `rbgs` / `mg` pada `N=63`)**: C++ `0,856 / 5,156`, C `0,954 / 5,493`, Rust `1,412 / 8,723`, Go `1,848 / 13,464`, TS (`node --experimental-strip-types`) `5,718 / 31,756`, ipynb `124,15 / 807,52`, Python `125,10 / 811,68`, Ruby `232,15 / 1299,91`.
+  - **Output**: `24` SVG per bahasa + `4` pasang grafik gabungan PNG+SVG `outputs/figures/day008e_*.{png,svg}`, `outputs/day008e/results.json`, dan [day008e_sim_poisson-solvers-octalingual.md](project-explanations/day008e_sim_poisson-solvers-octalingual.md).
+
 ## [Hari 008d] — 2026-11-26 · Jalan Acak Kisi Pólya Lintas 8 Bahasa (12 Tahap Identik: C, C++, Rust, Go, Ruby, Python, TS, ipynb)
 
 ### Ditambahkan (`day008d`)
