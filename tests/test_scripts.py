@@ -55,7 +55,7 @@ def test_update_readme_collect_and_render(tmp_path, monkeypatch):
     rows = update_readme.collect_days(tmp_path)
     assert rows[0]["day"] == 1 and rows[0]["type"] == "sim"
     table = update_readme.render_table(rows)
-    assert "1/100" in table and "Pi \\| MC" in table
+    assert "1/100 sesi" in table and "Pi \\| MC" in table and "bonus" not in table
 
 
 def test_update_readme_replace_block():
@@ -128,7 +128,7 @@ def test_update_readme_collect_and_render_sessions(tmp_path, monkeypatch):
     assert "| 1b | 002 | `sim` | `python` |" in table
 
 
-def test_update_readme_bonus_topic_no(tmp_path, monkeypatch):
+def test_update_readme_legacy_bonus_topic_no_gets_sequential_session(tmp_path, monkeypatch):
     nb = new_day.build_notebook(
         1, "quant", "Opsi Asia", "2026-11-19", "opsi-asia", session="c", bonus=True
     )
@@ -138,7 +138,8 @@ def test_update_readme_bonus_topic_no(tmp_path, monkeypatch):
     rows = update_readme.collect_days(tmp_path)
     assert rows[0]["topic_no"] is None
     table = update_readme.render_table(rows)
-    assert "| 1c | bonus | `quant` | `python` |" in table
+    assert "| 1c | 001 | `quant` | `python` |" in table
+    assert "bonus" not in table
 
 
 def test_update_readme_collects_multi_language_meta(tmp_path, monkeypatch):
@@ -158,7 +159,7 @@ def test_update_readme_collects_multi_language_meta(tmp_path, monkeypatch):
         encoding="utf-8",
     )
     (go_dir / "meta.json").write_text(
-        '{"day": 1, "session": "e", "topic_no": null, "type": "quant", "language": "go", '
+        '{"day": 1, "session": "e", "topic_no": "bonus", "type": "quant", "language": "go", '
         '"topic": "Opsi Asia (Go)", "date": "2026-11-19", "link": "projects/go/day001e_asian"}',
         encoding="utf-8",
     )
@@ -180,10 +181,10 @@ def test_update_readme_collects_multi_language_meta(tmp_path, monkeypatch):
     assert len(rows) == 4
     assert [r["language"] for r in rows] == ["rust", "go", "typescript", "ruby"]
     table = update_readme.render_table(rows)
-    assert "| 1d | bonus | `quant` | `rust` | Opsi Asia (Rust) | 2026-11-19 | [day001d_asian](projects/rust/day001d_asian) |" in table
-    assert "| 1e | bonus | `quant` | `go` | Opsi Asia (Go) | 2026-11-19 | [day001e_asian](projects/go/day001e_asian) |" in table
-    assert "| 1f | bonus | `quant` | `typescript` | Opsi Asia (TypeScript) | 2026-11-19 | [day001f_asian](projects/typescript/day001f_asian) |" in table
-    assert "| 1i | bonus | `quant` | `ruby` | Opsi Asia (Ruby) | 2026-11-19 | [day001i_asian](projects/ruby/day001i_asian) |" in table
+    assert "| 1d | 001 | `quant` | `rust` | Opsi Asia (Rust) | 2026-11-19 | [day001d_asian](projects/rust/day001d_asian) |" in table
+    assert "| 1e | 002 | `quant` | `go` | Opsi Asia (Go) | 2026-11-19 | [day001e_asian](projects/go/day001e_asian) |" in table
+    assert "| 1f | 003 | `quant` | `typescript` | Opsi Asia (TypeScript) | 2026-11-19 | [day001f_asian](projects/typescript/day001f_asian) |" in table
+    assert "| 1i | 004 | `quant` | `ruby` | Opsi Asia (Ruby) | 2026-11-19 | [day001i_asian](projects/ruby/day001i_asian) |" in table
 
 
 def test_first_session_of_day_is_a_and_legacy_metadata_is_read_as_a(tmp_path, monkeypatch):

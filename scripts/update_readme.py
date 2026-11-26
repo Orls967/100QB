@@ -17,6 +17,7 @@ import argparse
 import json
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 import nbformat
@@ -25,7 +26,8 @@ ROOT = Path(__file__).resolve().parents[1]
 DAYS_DIR = ROOT / "days"
 LANG_DIRS = tuple(f"projects/{name}" for name in ("rust", "go", "typescript", "ts", "cpp", "c", "ruby"))
 README = ROOT / "README.md"
-TOTAL_DAYS = 100
+BASELINE_TOTAL = 100  # baseline sementara, ubah di sini bila target berubah (mis. 200)
+TOTAL_DAYS = BASELINE_TOTAL
 
 START = "<!-- PROGRESS:START -->"
 END = "<!-- PROGRESS:END -->"
@@ -110,31 +112,30 @@ def collect_days(
                 }
             )
 
-    return sorted(rows, key=lambda r: (r["day"], _session_rank(r["session"])))
+    return sorted(rows, key=lambda r: (r["day"], _session_rank(r["session"]), r["file"]))
 
 
-def render_table(rows: list[dict], total: int = TOTAL_DAYS) -> str:
+def render_table(rows: list[dict], total: int = BASELINE_TOTAL) -> str:
     """Render ringkasan + tabel markdown progres (string kosong bila belum ada notebook)."""
     if not rows:
         return ""
-    n_quant = sum(r["type"] == "quant" for r in rows)
-    n_sim = sum(r["type"] == "sim" for r in rows)
+    type_counts = Counter(str(r.get("type") or "unknown") for r in rows)
+    counts_summary = " · ".join(f"{kind}: {type_counts[kind]}" for kind in sorted(type_counts))
     done = len(rows)
     pct = round(100 * done / total) if total else 0
     lines = [
-        f"**Progres: {done}/{total} topik ({pct}%)** · quant: {n_quant} · sim: {n_sim}",
+        f"**Progres: {done}/{total} sesi ({pct}%)** · {counts_summary}",
         "",
-        "| Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |",
+        "| Hari | No. Sesi | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |",
         "|:----:|:--------:|:-----:|:------:|-------|---------|-----------------|",
     ]
-    for r in rows:
+    for idx, r in enumerate(rows, start=1):
         topic = str(r["topic"]).replace("|", "\\|")
         day_label = f"{r['day']}{r.get('session', '')}"
-        raw_tno = r.get("topic_no") if "topic_no" in r else r["day"]
-        topic_no = "bonus" if raw_tno is None else f"{int(raw_tno):03d}"
+        sess_no = f"{idx:03d}"
         lang = r.get("language") or "python"
         lines.append(
-            f"| {day_label} | {topic_no} | `{r['type']}` | `{lang}` | {topic} | {r['date']} | "
+            f"| {day_label} | {sess_no} | `{r['type']}` | `{lang}` | {topic} | {r['date']} | "
             f"[{Path(r['file']).name}]({r['file']}) |"
         )
     return "\n".join(lines)

@@ -4,71 +4,71 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 
 ## Daftar Proyek (Urut Hari & Sesi)
 
-| Hari / Sesi | Topik No | Jenis | Bahasa | Dokumen Penjelasan |
+| Hari / Sesi | Asal | Jenis | Bahasa | Dokumen Penjelasan |
 |:---:|:---:|:---:|:---:|---|
-| `1a` (`day001a`) | `001` | `quant` | `python` | [Return harian & kumulatif](day001a_quant_return-harian-kumulatif.md) |
-| `1b` (`day001b`) | `002` | `sim` | `python` | [Estimasi π dengan Monte Carlo](day001b_sim_estimasi-dengan-monte-carlo.md) |
-| `1c` (`day001c`) | `bonus` | `quant` | `python` | [Opsi Asia: Monte Carlo, variance reduction & Greeks (Python)](day001c_quant_opsi-asia-monte-carlo-variance.md) |
-| `1d` (`day001d`) | `bonus` | `quant` | `rust` | [Opsi Asia (Rust): Monte Carlo, variance reduction & Greeks](day001d_quant_asian-options.md) |
-| `1e` (`day001e`) | `bonus` | `quant` | `go` | [Opsi Asia (Go): Monte Carlo, variance reduction & Greeks](day001e_quant_asian-options.md) |
-| `1f` (`day001f`) | `bonus` | `quant` | `typescript` | [Opsi Asia (TypeScript): Monte Carlo, variance reduction & Greeks](day001f_quant_asian-options.md) |
-| `1g` (`day001g`) | `bonus` | `quant` | `cpp` | [Opsi Asia (C++): Monte Carlo, variance reduction & Greeks](day001g_quant_asian-options.md) |
-| `1h` (`day001h`) | `bonus` | `quant` | `c` | [Opsi Asia (C): Monte Carlo, variance reduction & Greeks](day001h_quant_asian-options.md) |
-| `1i` (`day001i`) | `bonus` | `quant` | `ruby` | [Opsi Asia (Ruby): Monte Carlo, variance reduction & Greeks](day001i_quant_asian-options.md) |
-| `2b` (`day002b`) | `bonus` | `quant` | `python` | [Estimasi kovarians & portofolio varians minimum: Wishart, Marchenko–Pastur, Ledoit–Wolf](day002b_quant_estimasi-kovarians-portofolio-varians.md) |
-| `2c` (`day002c`) | `bonus` | `quant` | `python` | [HMM dua rezim: forward-backward, Baum–Welch & Viterbi](day002c_quant_hmm-dua-rezim-forward-backward-baum.md) |
-| `2d` (`day002d`) | `bonus` | `quant` | `python` | [Risiko kredit Vasicek: distribusi kerugian eksak, LHP & importance sampling](day002d_quant_risiko-kredit-vasicek-distribusi.md) |
-| `2e` (`day002e`) | `bonus` | `quant` | `python` | [Model Heston: pricing Fourier, kalibrasi & Monte Carlo QE](day002e_quant_model-heston-pricing-fourier-kalibrasi.md) |
-| `2f` (`day002f`) | `bonus` | `quant` | `rust` | [Inferensi Bayesian state-space: Kalman, particle filter & PMMH](day002f_quant_state-space-pmmh.md) |
-| `2g` (`day002g`) | `bonus` | `quant` | `cpp` | [AAD untuk Greeks Monte Carlo: tape mode-balik, pathwise & keranjang 10 aset](day002g_quant_aad-greeks.md) |
-| `2h` (`day002h`) | `bonus` | `quant` | `cpp` | [Hawkes + limit order book: simulasi eksak, MLE, mesin pencocokan & fakta stilistik](day002h_quant_hawkes-orderbook.md) |
-| `2i` (`day002i`) | `bonus` | `quant` | `cpp` | [Hull–White: pohon trinomial, Jamshidian, kalibrasi & Bermudan](day002i_quant_hull-white.md) |
-| `2j` (`day002j`) | `bonus` | `quant` | `ruby` | [Longevity risk: Lee–Carter, anuitas stokastik & modal solvabilitas](day002j_quant_longevity-risk.md) |
-| `2k` (`day002k`) | `bonus` | `quant` | `ruby` | [Opsi Put Amerika (Ruby): CRR Binomial, LSM Monte Carlo & PSOR PDE](day002k_quant_american-put.md) |
-| `3a` (`day003a`) | `bonus` | `quant` | `python` | [Volatilitas lokal Dupire dari permukaan SSVI](day003a_quant_volatilitas-lokal-dupire-ssvi.md) |
-| `3b` (`day003b`) | `bonus` | `quant` | `rust` | [Eksekusi optimal: Almgren–Chriss, dampak transien, likuiditas stokastik](day003b_quant_optimal-execution.md) |
-| `3c` (`day003c`) | `bonus` | `quant` | `go` | [Risiko sistemik jaringan: kliring Eisenberg–Noe, kaskade Watts & biaya kebangkrutan](day003c_quant_systemic-risk.md) |
-| `3d` (`day003d`) | `bonus` | `quant` | `typescript` | [Risiko ekor: GARCH–EVT, VaR/ES & backtesting](day003d_quant_tail-risk.md) |
-| `3e` (`day003e`) | `bonus` | `quant` | `go` | [CVA swap suku bunga: Hull–White, intensitas CIR dan wrong-way risk](day003e_quant_cva-wrong-way.md) |
-| `3f` (`day003f`) | `bonus` | `quant` | `go` | [Teori ruin Cramér–Lundberg dan simulasi kejadian langka](day003f_quant_ruin-theory.md) |
-| `4a` (`day004a`) | `bonus` | `quant` | `go` | [Struktur suku bunga: Nelson–Siegel, AFNS dan filter Kalman](day004a_quant_term-structure.md) |
-| `4b` (`day004b`) | `bonus` | `quant` | `go` | [AFNS: bias sampel terbatas, rentang kalender (long-span), dan frekuensi observasi (infill)](day004b_quant_afns-inference.md) |
-| `4c` (`day004c`) | `bonus` | `quant` | `go` | [AFNS: koreksi bias mean-reversion dan inferensi sampel terbatas (jackknife & bootstrap)](day004c_quant_afns-bias-correction.md) |
-| `4d` (`day004d`) | `bonus` | `quant` | `go` | [AFNS: kalibrasi interval bootstrap yang peka bias dan batas parameter](day004d_quant_afns-interval-calibration.md) |
-| `4e` (`day004e`) | `bonus` | `quant` | `go` | [Harga listrik negatif dan arbitrase baterai (DP stokastik)](day004e_quant_power-storage.md) |
-| `4f` (`day004f`) | `bonus` | `quant` | `rust` | [Port lengkap AFNS term structure, kalibrasi interval, harga listrik & valuasi baterai (Rust)](day004f_rust-afns-energy-storage.md) |
-| `4g` (`day004g`) | `bonus` | `quant` | `rust` | [Market making optimal: Guéant–Lehalle–Tapia, HJB dan salah spesifikasi (Rust)](day004g_quant_market-making.md) |
-| `4h` (`day004h`) | `bonus` | `quant` | `rust` | [Volatilitas kasar: rough Bergomi, skema hybrid, skew ATM & identifiabilitas Hurst (Rust)](day004h_quant_rough-bergomi.md) |
-| `4i` (`day004i`) | `bonus` | `quant` | `rust` | [Cointegration & trading OU optimal: Dickey–Fuller, Engle–Granger, Johansen & ambang Bertram (Rust)](day004i_quant_pairs-trading.md) |
-| `4j` (`day004j`) | `bonus` | `quant` | `rust` | [Deep hedging dari nol: jaringan saraf, risiko entropik, biaya transaksi & pasar tak lengkap (Rust)](day004j_quant_deep-hedging.md) |
-| `4k` (`day004k`) | `bonus` | `quant` | `rust` | [AMM: impermanent loss, LVR, biaya & likuiditas terkonsentrasi (Rust)](day004k_quant_amm-lvr.md) |
-| `5a` (`day005a`) | `bonus` | `quant` | `rust` | [Model SABR: CEV eksak, ekspansi Hagan, kepadatan negatif, kalibrasi & delta Bartlett (Rust)](day005a_quant_sabr.md) |
-| `5b` (`day005b`) | `bonus` | `quant` | `rust` | [Harga opsi Eropa Black–Scholes & put-call parity (Rust)](day005b_quant_black-scholes.md) |
-| `5c` (`day005c`) | `bonus` | `quant` | `rust` | [Kriteria Kelly dan risiko drawdown: peluang sentuh eksak, Kelly fraksional, galat estimasi & ekor berat (Rust)](day005c_quant_kelly-drawdown.md) |
-| `5d` (`day005d`) | `bonus` | `quant` | `rust` | [Jump-diffusion Merton: seri eksak, PIDE Crank–Nicolson, kalibrasi smile & risiko ekor (Rust)](day005d_quant_merton-jump-diffusion.md) |
-| `5e` (`day005e`) | `bonus` | `quant` | `ruby` | [Kopula, ketergantungan ekor dan alokasi modal Euler (Ruby)](day005e_quant_copula-tail-dependence.md) |
-| `5f` (`day005f`) | `bonus` | `quant` | `ruby` | [Valuasi tranche CDO: LHP Vasicek, rekursi ASB, base correlation & exponential twisting (Ruby)](day005f_quant_cdo-tranche.md) |
-| `5g` (`day005g`) | `bonus` | `quant` | `ruby` | [Multilevel Monte Carlo (Giles) untuk CIR dan Heston: laju kuat, kompleksitas & antithetic (Ruby)](day005g_quant_mlmc-heston.md) |
-| `5h` (`day005h`) | `bonus` | `quant` | `ruby` | [Backtest dan overfitting: Sharpe, bias seleksi, pengujian ganda dan PBO (Ruby)](day005h_quant_backtest-overfitting.md) |
-| `5i` (`day005i`) | `bonus` | `quant` | `ruby` | [Keluarga GARCH, QMLE Sandwich, Student-t MLE, VaR/ES, DCC, HAR-RV dan salah spesifikasi (Ruby)](day005i_quant_garch-family.md) |
-| `5j` (`day005j`) | `bonus` | `quant` | `ruby` | [Model Faktor, PCA BBP, GRS, Fama-MacBeth Shanken, Risk Parity, Black-Litterman, Markowitz QP & Backtest Portofolio (Ruby)](day005j_quant_factor-portfolio-lab.md) |
-| `6b` (`day006b`) | `bonus` | `sim` | `python+rust+go` | [Self-Avoiding Walk (SAW) Poliglot: Enumerasi Eksak, Pivot Monte Carlo & Eksponen Kritis](day006b_sim_saw-polyglot.md) |
-| `6c` (`day006c`) | `bonus` | `sim` | `python+rust+go` | [Perkolasi Bond Kisi Persegi Poliglot: Newman–Ziff, Dualitas-Diri Eksak & Eksponen Kritis](day006c_sim_percolation-polyglot.md) |
-| `6d` (`day006d`) | `bonus` | `sim` | `cpp` | [Solver PDE Heston 2D ADI Craig–Sneyd: Tangga Optimasi Terukur & Roofline (C++20)](day006d_sim_heston-adi-cpp.md) |
-| `6e` (`day006e`) | `bonus` | `sim` | `python` | [HMC/NUTS dari Nol untuk Volatilitas Stokastik Bayesian & Kalibrasi SBC (Notebook)](day006e_sim_bayesian-sv-nuts.md) |
-| `7a` (`day007a`) | `bonus` | `sim` | `cpp` | [Kekacauan Deterministik: Eksponen Lyapunov Peta Logistik & Lorenz, Konstanta Feigenbaum & Dimensi Kaplan–Yorke (C++20)](day007a_sim_chaos-lyapunov-cpp.md) |
-| `8a` (`day008a`) | `bonus` | `sim` | `c+cpp+python` | [Model Ising 2D Lintas Tiga Bahasa: Metropolis, Wolff, Swendsen–Wang, FSS & Paritas Bit-Identik](day008a_sim_ising-trilingual.md) |
-| `8b` (`day008b`) | `bonus` | `sim` | `cpp` | [Simulasi Wa-Tor (Ikan vs Hiu) di C++20, Fit Lotka–Volterra RK4 & Efek Ukuran Hingga](day008b_sim_wator-cpp.md) |
-| `8c` (`day008c`) | `bonus` | `sim` | `cpp` | [Model Vicsek (Aktif-Materi) di C++20 dengan Cell List O(N) vs Brute Force O(N^2)](day008c_sim_vicsek-cpp.md) |
-| `8d` (`day008d`) | `bonus` | `sim` | `c+cpp+rust+go+ruby+py+ts+ipynb` | [Jalan Acak Kisi Pólya Lintas 8 Bahasa (12 Tahap Identik)](day008d_sim_lattice-walks-octalingual.md) |
-| `8e` (`day008e`) | `bonus` | `sim` | `c+cpp+rust+go+ruby+py+ts+ipynb` | [Solver Poisson 2D Lintas 8 Bahasa (19 Tahap Identik: Jacobi hingga Multigrid)](day008e_sim_poisson-solvers-octalingual.md) |
-| `8f` (`day008f`) | `bonus` | `sim` | `c+cpp+rust+go+ruby+py+ts+ipynb` | [Jaringan Rantai Pasok 3 Pabrik/4 Gudang/10 Toko Lintas 8 Bahasa (40 Tahap)](day008f_sim_supply-chain-octalingual.md) |
-| `8g` (`day008g`) | `bonus` | `sim` | `c+cpp+rust+go+ruby+py+ts+ipynb` | [Simulasi Epidemi Berbasis Agen SEIR Berlapis Lintas 8 Bahasa (39 Tahap)](day008g_sim_epidemic-abm-octalingual.md) |
-| `8h` (`day008h`) | `bonus` | `sim` | `c+cpp+rust+go+ruby+py+ts+ipynb` | [Jaringan Antrean Terminal Bandara Berbasis Agen & Validasi DTMC Eksak Lintas 8 Bahasa (48 Tahap)](day008h_sim_airport-queue-octalingual.md) |
-| `8i` (`day008i`) | `bonus` | `sim` | `c` | [Tumpukan Pasir Abelian (Sandpile C11 ≤ 999 Baris): Grup Sandpile, Elemen Identitas Fraktal & SOC](day008i_sim_sandpile-c.md) |
-| `8j` (`day008j`) | `bonus` | `sim` | `rust` | [Diagonalisasi Eksak Rantai Spin-½ Heisenberg/XXZ (Rust ≤ 499 Baris): Lanczos, Keterikatan & Penskalaan CFT](day008j_sim_heisenberg-ed-rust.md) |
-| `9a` (`day009a`) | `bonus` | `sim` | `c` | [Dinamika Molekuler Fluida Lennard-Jones (C11, 60 Tahap): Integrator Simplektik, Daftar Tetangga, Termostat, Termodinamika, Transport & Pelelehan](day009a_sim_md-lj-c.md) |
-| `9b` (`day009b`) | `bonus` | `sim` | `ruby` | [Genetika Populasi (Ruby Murni, 65 Tahap): Wright–Fisher, Moran, Rantai Markov Rational, Koalesen Kingman, Pulau, Sapuan Selektif & ARG-Lite](day009b_sim_popgen-ruby.md) |
+| `1a` (`day001a`) | `ROADMAP 001` | `quant` | `python` | [Return harian & kumulatif](day001a_quant_return-harian-kumulatif.md) |
+| `1b` (`day001b`) | `ROADMAP 002` | `sim` | `python` | [Estimasi π dengan Monte Carlo](day001b_sim_estimasi-dengan-monte-carlo.md) |
+| `1c` (`day001c`) | `sesi bebas` | `quant` | `python` | [Opsi Asia: Monte Carlo, variance reduction & Greeks (Python)](day001c_quant_opsi-asia-monte-carlo-variance.md) |
+| `1d` (`day001d`) | `sesi bebas` | `quant` | `rust` | [Opsi Asia (Rust): Monte Carlo, variance reduction & Greeks](day001d_quant_asian-options.md) |
+| `1e` (`day001e`) | `sesi bebas` | `quant` | `go` | [Opsi Asia (Go): Monte Carlo, variance reduction & Greeks](day001e_quant_asian-options.md) |
+| `1f` (`day001f`) | `sesi bebas` | `quant` | `typescript` | [Opsi Asia (TypeScript): Monte Carlo, variance reduction & Greeks](day001f_quant_asian-options.md) |
+| `1g` (`day001g`) | `sesi bebas` | `quant` | `cpp` | [Opsi Asia (C++): Monte Carlo, variance reduction & Greeks](day001g_quant_asian-options.md) |
+| `1h` (`day001h`) | `sesi bebas` | `quant` | `c` | [Opsi Asia (C): Monte Carlo, variance reduction & Greeks](day001h_quant_asian-options.md) |
+| `1i` (`day001i`) | `sesi bebas` | `quant` | `ruby` | [Opsi Asia (Ruby): Monte Carlo, variance reduction & Greeks](day001i_quant_asian-options.md) |
+| `2b` (`day002b`) | `sesi bebas` | `quant` | `python` | [Estimasi kovarians & portofolio varians minimum: Wishart, Marchenko–Pastur, Ledoit–Wolf](day002b_quant_estimasi-kovarians-portofolio-varians.md) |
+| `2c` (`day002c`) | `sesi bebas` | `quant` | `python` | [HMM dua rezim: forward-backward, Baum–Welch & Viterbi](day002c_quant_hmm-dua-rezim-forward-backward-baum.md) |
+| `2d` (`day002d`) | `sesi bebas` | `quant` | `python` | [Risiko kredit Vasicek: distribusi kerugian eksak, LHP & importance sampling](day002d_quant_risiko-kredit-vasicek-distribusi.md) |
+| `2e` (`day002e`) | `sesi bebas` | `quant` | `python` | [Model Heston: pricing Fourier, kalibrasi & Monte Carlo QE](day002e_quant_model-heston-pricing-fourier-kalibrasi.md) |
+| `2f` (`day002f`) | `sesi bebas` | `quant` | `rust` | [Inferensi Bayesian state-space: Kalman, particle filter & PMMH](day002f_quant_state-space-pmmh.md) |
+| `2g` (`day002g`) | `sesi bebas` | `quant` | `cpp` | [AAD untuk Greeks Monte Carlo: tape mode-balik, pathwise & keranjang 10 aset](day002g_quant_aad-greeks.md) |
+| `2h` (`day002h`) | `sesi bebas` | `quant` | `cpp` | [Hawkes + limit order book: simulasi eksak, MLE, mesin pencocokan & fakta stilistik](day002h_quant_hawkes-orderbook.md) |
+| `2i` (`day002i`) | `sesi bebas` | `quant` | `cpp` | [Hull–White: pohon trinomial, Jamshidian, kalibrasi & Bermudan](day002i_quant_hull-white.md) |
+| `2j` (`day002j`) | `sesi bebas` | `quant` | `ruby` | [Longevity risk: Lee–Carter, anuitas stokastik & modal solvabilitas](day002j_quant_longevity-risk.md) |
+| `2k` (`day002k`) | `sesi bebas` | `quant` | `ruby` | [Opsi Put Amerika (Ruby): CRR Binomial, LSM Monte Carlo & PSOR PDE](day002k_quant_american-put.md) |
+| `3a` (`day003a`) | `sesi bebas` | `quant` | `python` | [Volatilitas lokal Dupire dari permukaan SSVI](day003a_quant_volatilitas-lokal-dupire-ssvi.md) |
+| `3b` (`day003b`) | `sesi bebas` | `quant` | `rust` | [Eksekusi optimal: Almgren–Chriss, dampak transien, likuiditas stokastik](day003b_quant_optimal-execution.md) |
+| `3c` (`day003c`) | `sesi bebas` | `quant` | `go` | [Risiko sistemik jaringan: kliring Eisenberg–Noe, kaskade Watts & biaya kebangkrutan](day003c_quant_systemic-risk.md) |
+| `3d` (`day003d`) | `sesi bebas` | `quant` | `typescript` | [Risiko ekor: GARCH–EVT, VaR/ES & backtesting](day003d_quant_tail-risk.md) |
+| `3e` (`day003e`) | `sesi bebas` | `quant` | `go` | [CVA swap suku bunga: Hull–White, intensitas CIR dan wrong-way risk](day003e_quant_cva-wrong-way.md) |
+| `3f` (`day003f`) | `sesi bebas` | `quant` | `go` | [Teori ruin Cramér–Lundberg dan simulasi kejadian langka](day003f_quant_ruin-theory.md) |
+| `4a` (`day004a`) | `sesi bebas` | `quant` | `go` | [Struktur suku bunga: Nelson–Siegel, AFNS dan filter Kalman](day004a_quant_term-structure.md) |
+| `4b` (`day004b`) | `sesi bebas` | `quant` | `go` | [AFNS: bias sampel terbatas, rentang kalender (long-span), dan frekuensi observasi (infill)](day004b_quant_afns-inference.md) |
+| `4c` (`day004c`) | `sesi bebas` | `quant` | `go` | [AFNS: koreksi bias mean-reversion dan inferensi sampel terbatas (jackknife & bootstrap)](day004c_quant_afns-bias-correction.md) |
+| `4d` (`day004d`) | `sesi bebas` | `quant` | `go` | [AFNS: kalibrasi interval bootstrap yang peka bias dan batas parameter](day004d_quant_afns-interval-calibration.md) |
+| `4e` (`day004e`) | `sesi bebas` | `quant` | `go` | [Harga listrik negatif dan arbitrase baterai (DP stokastik)](day004e_quant_power-storage.md) |
+| `4f` (`day004f`) | `sesi bebas` | `quant` | `rust` | [Port lengkap AFNS term structure, kalibrasi interval, harga listrik & valuasi baterai (Rust)](day004f_rust-afns-energy-storage.md) |
+| `4g` (`day004g`) | `sesi bebas` | `quant` | `rust` | [Market making optimal: Guéant–Lehalle–Tapia, HJB dan salah spesifikasi (Rust)](day004g_quant_market-making.md) |
+| `4h` (`day004h`) | `sesi bebas` | `quant` | `rust` | [Volatilitas kasar: rough Bergomi, skema hybrid, skew ATM & identifiabilitas Hurst (Rust)](day004h_quant_rough-bergomi.md) |
+| `4i` (`day004i`) | `sesi bebas` | `quant` | `rust` | [Cointegration & trading OU optimal: Dickey–Fuller, Engle–Granger, Johansen & ambang Bertram (Rust)](day004i_quant_pairs-trading.md) |
+| `4j` (`day004j`) | `sesi bebas` | `quant` | `rust` | [Deep hedging dari nol: jaringan saraf, risiko entropik, biaya transaksi & pasar tak lengkap (Rust)](day004j_quant_deep-hedging.md) |
+| `4k` (`day004k`) | `sesi bebas` | `quant` | `rust` | [AMM: impermanent loss, LVR, biaya & likuiditas terkonsentrasi (Rust)](day004k_quant_amm-lvr.md) |
+| `5a` (`day005a`) | `sesi bebas` | `quant` | `rust` | [Model SABR: CEV eksak, ekspansi Hagan, kepadatan negatif, kalibrasi & delta Bartlett (Rust)](day005a_quant_sabr.md) |
+| `5b` (`day005b`) | `sesi bebas` | `quant` | `rust` | [Harga opsi Eropa Black–Scholes & put-call parity (Rust)](day005b_quant_black-scholes.md) |
+| `5c` (`day005c`) | `sesi bebas` | `quant` | `rust` | [Kriteria Kelly dan risiko drawdown: peluang sentuh eksak, Kelly fraksional, galat estimasi & ekor berat (Rust)](day005c_quant_kelly-drawdown.md) |
+| `5d` (`day005d`) | `sesi bebas` | `quant` | `rust` | [Jump-diffusion Merton: seri eksak, PIDE Crank–Nicolson, kalibrasi smile & risiko ekor (Rust)](day005d_quant_merton-jump-diffusion.md) |
+| `5e` (`day005e`) | `sesi bebas` | `quant` | `ruby` | [Kopula, ketergantungan ekor dan alokasi modal Euler (Ruby)](day005e_quant_copula-tail-dependence.md) |
+| `5f` (`day005f`) | `sesi bebas` | `quant` | `ruby` | [Valuasi tranche CDO: LHP Vasicek, rekursi ASB, base correlation & exponential twisting (Ruby)](day005f_quant_cdo-tranche.md) |
+| `5g` (`day005g`) | `sesi bebas` | `quant` | `ruby` | [Multilevel Monte Carlo (Giles) untuk CIR dan Heston: laju kuat, kompleksitas & antithetic (Ruby)](day005g_quant_mlmc-heston.md) |
+| `5h` (`day005h`) | `sesi bebas` | `quant` | `ruby` | [Backtest dan overfitting: Sharpe, bias seleksi, pengujian ganda dan PBO (Ruby)](day005h_quant_backtest-overfitting.md) |
+| `5i` (`day005i`) | `sesi bebas` | `quant` | `ruby` | [Keluarga GARCH, QMLE Sandwich, Student-t MLE, VaR/ES, DCC, HAR-RV dan salah spesifikasi (Ruby)](day005i_quant_garch-family.md) |
+| `5j` (`day005j`) | `sesi bebas` | `quant` | `ruby` | [Model Faktor, PCA BBP, GRS, Fama-MacBeth Shanken, Risk Parity, Black-Litterman, Markowitz QP & Backtest Portofolio (Ruby)](day005j_quant_factor-portfolio-lab.md) |
+| `6b` (`day006b`) | `sesi bebas` | `sim` | `python+rust+go` | [Self-Avoiding Walk (SAW) Poliglot: Enumerasi Eksak, Pivot Monte Carlo & Eksponen Kritis](day006b_sim_saw-polyglot.md) |
+| `6c` (`day006c`) | `sesi bebas` | `sim` | `python+rust+go` | [Perkolasi Bond Kisi Persegi Poliglot: Newman–Ziff, Dualitas-Diri Eksak & Eksponen Kritis](day006c_sim_percolation-polyglot.md) |
+| `6d` (`day006d`) | `sesi bebas` | `sim` | `cpp` | [Solver PDE Heston 2D ADI Craig–Sneyd: Tangga Optimasi Terukur & Roofline (C++20)](day006d_sim_heston-adi-cpp.md) |
+| `6e` (`day006e`) | `sesi bebas` | `sim` | `python` | [HMC/NUTS dari Nol untuk Volatilitas Stokastik Bayesian & Kalibrasi SBC (Notebook)](day006e_sim_bayesian-sv-nuts.md) |
+| `7a` (`day007a`) | `sesi bebas` | `sim` | `cpp` | [Kekacauan Deterministik: Eksponen Lyapunov Peta Logistik & Lorenz, Konstanta Feigenbaum & Dimensi Kaplan–Yorke (C++20)](day007a_sim_chaos-lyapunov-cpp.md) |
+| `8a` (`day008a`) | `sesi bebas` | `sim` | `c+cpp+python` | [Model Ising 2D Lintas Tiga Bahasa: Metropolis, Wolff, Swendsen–Wang, FSS & Paritas Bit-Identik](day008a_sim_ising-trilingual.md) |
+| `8b` (`day008b`) | `sesi bebas` | `sim` | `cpp` | [Simulasi Wa-Tor (Ikan vs Hiu) di C++20, Fit Lotka–Volterra RK4 & Efek Ukuran Hingga](day008b_sim_wator-cpp.md) |
+| `8c` (`day008c`) | `sesi bebas` | `sim` | `cpp` | [Model Vicsek (Aktif-Materi) di C++20 dengan Cell List O(N) vs Brute Force O(N^2)](day008c_sim_vicsek-cpp.md) |
+| `8d` (`day008d`) | `sesi bebas` | `sim` | `c+cpp+rust+go+ruby+py+ts+ipynb` | [Jalan Acak Kisi Pólya Lintas 8 Bahasa (12 Tahap Identik)](day008d_sim_lattice-walks-octalingual.md) |
+| `8e` (`day008e`) | `sesi bebas` | `sim` | `c+cpp+rust+go+ruby+py+ts+ipynb` | [Solver Poisson 2D Lintas 8 Bahasa (19 Tahap Identik: Jacobi hingga Multigrid)](day008e_sim_poisson-solvers-octalingual.md) |
+| `8f` (`day008f`) | `sesi bebas` | `sim` | `c+cpp+rust+go+ruby+py+ts+ipynb` | [Jaringan Rantai Pasok 3 Pabrik/4 Gudang/10 Toko Lintas 8 Bahasa (40 Tahap)](day008f_sim_supply-chain-octalingual.md) |
+| `8g` (`day008g`) | `sesi bebas` | `sim` | `c+cpp+rust+go+ruby+py+ts+ipynb` | [Simulasi Epidemi Berbasis Agen SEIR Berlapis Lintas 8 Bahasa (39 Tahap)](day008g_sim_epidemic-abm-octalingual.md) |
+| `8h` (`day008h`) | `sesi bebas` | `sim` | `c+cpp+rust+go+ruby+py+ts+ipynb` | [Jaringan Antrean Terminal Bandara Berbasis Agen & Validasi DTMC Eksak Lintas 8 Bahasa (48 Tahap)](day008h_sim_airport-queue-octalingual.md) |
+| `8i` (`day008i`) | `sesi bebas` | `sim` | `c` | [Tumpukan Pasir Abelian (Sandpile C11 ≤ 999 Baris): Grup Sandpile, Elemen Identitas Fraktal & SOC](day008i_sim_sandpile-c.md) |
+| `8j` (`day008j`) | `sesi bebas` | `sim` | `rust` | [Diagonalisasi Eksak Rantai Spin-½ Heisenberg/XXZ (Rust ≤ 499 Baris): Lanczos, Keterikatan & Penskalaan CFT](day008j_sim_heisenberg-ed-rust.md) |
+| `9a` (`day009a`) | `sesi bebas` | `sim` | `c` | [Dinamika Molekuler Fluida Lennard-Jones (C11, 60 Tahap): Integrator Simplektik, Daftar Tetangga, Termostat, Termodinamika, Transport & Pelelehan](day009a_sim_md-lj-c.md) |
+| `9b` (`day009b`) | `sesi bebas` | `sim` | `ruby` | [Genetika Populasi (Ruby Murni, 65 Tahap): Wright–Fisher, Moran, Rantai Markov Rational, Koalesen Kingman, Pulau, Sapuan Selektif & ARG-Lite](day009b_sim_popgen-ruby.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 

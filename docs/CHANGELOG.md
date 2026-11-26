@@ -3,6 +3,11 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [README & Skrip] — 2026-11-27 · Nomor Sesi Berurutan & Baseline Fleksibel
+
+### Diubah
+- **`scripts/update_readme.py` & `README.md`**: mengganti kolom `Topik No` menjadi `No. Sesi` berurutan (`001`, `002`, ...) dengan `BASELINE_TOTAL = 100` yang fleksibel serta penghitungan jenis otomatis via `collections.Counter`; menghapus label `bonus` dari keluaran tabel sambil tetap menerima nilai lama pada `meta.json`; menambahkan bagian **"🎯 Tentang nama 100QB dan target"** serta memperbarui kalimat pembuka dan lencana `baseline-100 sesi`.
+
 ## [Hari 009b] — 2026-11-27 · Genetika Populasi (Ruby Murni, 65 Tahap)
 
 ### Ditambahkan (`day009b`)
