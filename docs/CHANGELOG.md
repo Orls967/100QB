@@ -3,6 +3,14 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 008i] — 2026-11-26 · Tumpukan Pasir Abelian (Sandpile C11 ≤ 999 Baris): Grup Sandpile, Elemen Identitas Fraktal & SOC
+
+### Ditambahkan (`day008i`)
+- Proyek C11 murni `projects/c/day008i_sandpile_c/` dengan total **903 baris** (`Makefile + src/*.c + src/*.h ≤ 999` baris, tanpa pustaka luar selain `libc` + `libm`, **12/12** kriteria `c1`–`c12` `tercapai`, `vacuous_flags = []`):
+  - **Sifat Abelian & Aljabar Grup Sandpile**: `0` selisih hash FNV-1a atas tinggi, odometer, dan *sink* pada `600 × 100` urutan runtuh acak + gelombang sinkron (`c1`); determinan Bareiss `__int128` cocok persis dengan enumerasi pembakaran Dhar pada $n=2$ (`192`) dan $n=3$ (`100 352`), menghitung eksak $|G_4| = 557\,568\,000$, $|G_5| = 32\,565\,539\,635\,200$, $|G_6| = 19\,872\,369\,301\,840\,986\,112$, serta mendeteksi batas aman `__int128` di `n=6` (`n=7` luapan, `c2`); elemen identitas fraktal $e = s(2c_{\max} - s(2c_{\max}))$ lolos tes rekuren, simetri $D_4$, $s(e+e)=e$, $s(e+r)=r$ (`200/200` pada $n=24$ dan `100 352/100 352` pada $n=3$), dan orde elemen membagi $|G|$ (`15/15`, `c3`).
+  - **Geometri Fraktal, SOC & Distribusi Tinggi**: kemiringan jari-jari tumpukan pusat $R(N)$ untuk $N=10^3..10^6$ sebesar `0.493878 ± 0.000505` (`c5`, kekekalan massa `max_abs_diff = 0`, `c4`); eksponen longsoran $2\cdot 10^6$ kejadian $\tau_s(128) = 1.0840 \pm 0.0045$ (`L=64`: `1.0663 ± 0.0075`, rasio ekor $s\ge 4096$ sebesar `7.07x`, `c6`); tinggi rata-rata kuartal-tengah `2.124406 ± 0.000167` vs `2.125` dan `P(0..3)` cocok dengan literatur Priezzhev dalam `max|dP| = 0.000368` (`c7`); kecepatan `114.31M ± 0.57M` runtuhan/detik (`c12`).
+  - **Output**: `8` CSV ringkas (`64 KB`), `6` SVG tulis tangan `outputs/figures/day008i_*.svg`, `outputs/day008i/results.json` (identik 0-byte antar dua run, `c8`), dan [day008i_sim_sandpile-c.md](project-explanations/day008i_sim_sandpile-c.md).
+
 ## [Hari 008h] — 2026-11-26 · Jaringan Antrean Terminal Bandara Berbasis Agen & Validasi DTMC Eksak Lintas 8 Bahasa (48 Tahap)
 
 ### Ditambahkan (`day008h`)

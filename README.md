@@ -154,7 +154,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [docs/ROADMAP.md](docs/ROADMAP.md) · Riwayat: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 66/100 topik (66%)** · quant: 45 · sim: 21
+**Progres: 67/100 topik (67%)** · quant: 45 · sim: 22
 
 | Hari | Topik No | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -224,6 +224,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 8g | bonus | `sim` | `c+cpp+rust+go+ruby+py+ts` | Simulasi Epidemi Berbasis Agen SEIR Berlapis Lintas 8 Bahasa (39 Tahap) | 2026-11-26 | [day008g_epidemic_abm_octalingual](projects/c/day008g_epidemic_abm_octalingual) |
 | 8h | 008 | `sim` | `python` | Airport Queue Octalingual | - | [day008h_sim_airport-queue-octalingual.ipynb](days/day008h_sim_airport-queue-octalingual.ipynb) |
 | 8h | bonus | `sim` | `c+cpp+rust+go+ruby+py+ts` | Jaringan Antrean Terminal Bandara Berbasis Agen dengan Validasi DTMC Eksak (48 Tahap, 8 Bahasa) | 2026-11-26 | [day008h_airport_queue_octalingual](projects/c/day008h_airport_queue_octalingual) |
+| 8i | bonus | `sim` | `c` | Tumpukan Pasir Abelian (Sandpile C11 <1000 Baris): Grup Sandpile, Elemen Identitas Fraktal & Kritikalitas Terorganisir-Sendiri | 2026-11-26 | [day008i_sandpile_c](projects/c/day008i_sandpile_c) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi
