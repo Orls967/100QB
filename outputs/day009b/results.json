@@ -1,0 +1,547 @@
+{
+  "session": "day009b",
+  "project_path": "projects/ruby/day009b_popgen_ruby",
+  "scale": "full",
+  "master_seed": 20261127,
+  "workers": 4,
+  "run_completed_without_errors": true,
+  "machine": {
+    "arch": "arm64",
+    "cores": 10,
+    "ruby_version": "ruby 4.0.9 (2026-10-23 revision 3e93b23afc) +PRISM [arm64-darwin27]"
+  },
+  "code_metrics": {
+    "ruby_lines": 5156,
+    "stages_completed": 65,
+    "total_output_files": 155,
+    "csv_files": 109,
+    "svg_files": 45,
+    "csv_total_bytes": 67242,
+    "svg_total_bytes": 290834,
+    "total_elapsed_sec": 15.1632
+  },
+  "determinism": {
+    "combined_deterministic_csv_fnv1a": "711328ecfbfdb734",
+    "workers_1_2_4_identical": true,
+    "two_runs_identical": true,
+    "worker_hash_1p": "8e12879dfcfa8dc0",
+    "worker_hash_2p": "8e12879dfcfa8dc0",
+    "worker_hash_4p": "8e12879dfcfa8dc0"
+  },
+  "criteria_summary": {
+    "total": 23,
+    "tercapai": 20,
+    "sebagian": 0,
+    "lainnya": 3
+  },
+  "criteria": {
+    "c1": {
+      "status": "tercapai",
+      "measured": "max_abs_diff=1.776e-13 (N=4..12)",
+      "threshold": "max_diff <= 1e-12"
+    },
+    "c2": {
+      "status": "tercapai",
+      "measured": "max_|p_sim-p0|/SE=1.19 (p0 in {0.1,0.5})",
+      "threshold": "within 3 SE (>=20k reps)"
+    },
+    "c3": {
+      "status": "tercapai",
+      "measured": "chain_err=1.11e-15, sim_max_z=2.05, z_up=35.4, z_dn=36.4, r=1_diff=0.0025+-0.0043",
+      "threshold": "closed<=1e-12, sim<=3 SE, r>1/r<1 >=3 SE, r=1 ctrl"
+    },
+    "c4": {
+      "status": "tercapai",
+      "measured": "max_z=1.55 across 5 time points for N in {50, 200}",
+      "threshold": "within 3 SE at all 5 t"
+    },
+    "c5": {
+      "status": "tercapai",
+      "measured": "max_z_vs_chain=1.38, max_rel_vs_diffusion=8.87%",
+      "threshold": "chain <= 3 SE & diffusion <= 10%"
+    },
+    "c6": {
+      "status": "tercapai",
+      "measured": "max_z=1.95 across T_MRCA, L, S, Var(S) for n={5,20,100}",
+      "threshold": "all within 3 SE"
+    },
+    "c7": {
+      "status": "tercapai",
+      "measured": "max_class_z=1.97, agg_chi2_p=0.2875 (n=20)",
+      "threshold": "per-class <= 3 SE & chi2 p > 0.01"
+    },
+    "c8": {
+      "status": "belum tercapai",
+      "measured": "mean_D=-0.1064+-0.0100 (z=10.68), Var(D)=0.7949 (vs Tajima ~1.0)",
+      "threshold": "mean 0 within 3 SE & Var within 10%"
+    },
+    "c9": {
+      "status": "belum tercapai",
+      "measured": "Kn_max_z=2.11, n=6_chi2_p=0.8164, H_max_rel=42.87%",
+      "threshold": "E[K_n]<=3 SE, chi2 p>0.01, E[H]<=5%"
+    },
+    "c10": {
+      "status": "tercapai",
+      "measured": "times_max_z=1.53, F_ST_min_step=12.4 SE, negctrl_M50=-0.0001",
+      "threshold": "times<=3 SE, F_ST dec>=3 SE, M_large<0.02"
+    },
+    "c11": {
+      "status": "tercapai",
+      "measured": "max_z=2.74 across t in [0,100] (N=2000, p0=0.1, s=0.1)",
+      "threshold": "within 3 SE across t"
+    },
+    "c12": {
+      "status": "tercapai",
+      "measured": "drop_z=43.9, min_recovery_z=7.9, large_r_z=0.91",
+      "threshold": "drop>=3 SE, mono recovery>=3 SE, large r ctrl"
+    },
+    "c13": {
+      "status": "tercapai",
+      "measured": "decay_max_z=1.73, eq_r2_max_rel=20.11%",
+      "threshold": "decay<=3 SE & E[r^2] within 25%"
+    },
+    "c14": {
+      "status": "belum tercapai",
+      "measured": "marg_pair_max_z=1.49, corr_min_step_z=2.7, rho0_corr=1.0000",
+      "threshold": "marginal diff<=3 SE, corr dec>=3 SE, rho0=1"
+    },
+    "c15": {
+      "status": "tercapai",
+      "measured": "HWE_min_p=0.2014, selfing_F=0.6654+-0.0028 vs F*=0.6667 (z=0.45)",
+      "threshold": "HWE p>0.01 & F->s/(2-s) within 3 SE"
+    },
+    "c16": {
+      "status": "tercapai",
+      "measured": "TV=0.01426 <= threshold=0.02932 (N=20 mut+sel)",
+      "threshold": "TV <= max(0.015, 3*SE_TV)"
+    },
+    "c17": {
+      "status": "tercapai",
+      "measured": "1/2/4p=8e12879dfcfa8dc0 (identical=true), 2x_runs=true",
+      "threshold": "2x all identical & 1/2/4 fork identical"
+    },
+    "c18": {
+      "status": "tercapai",
+      "measured": "min_chi2_p=0.0803 across 12 (n,p) pairs",
+      "threshold": "all 12 pairs p > 0.001 (Bonferroni)"
+    },
+    "c19": {
+      "status": "tercapai",
+      "measured": "total_files=155, valid_svg=45",
+      "threshold": ">=150 files & >=40 valid XML SVGs"
+    },
+    "c20": {
+      "status": "tercapai",
+      "measured": "selftest_exit=0",
+      "threshold": "selftest exits 0"
+    },
+    "c21": {
+      "status": "tercapai",
+      "measured": "vacuous_flags_count=0",
+      "threshold": "vacuous_flags empty or explained"
+    },
+    "c22": {
+      "status": "tercapai",
+      "measured": "ruby_lines=5156, stages=65, elapsed=15.16s",
+      "threshold": "ruby_lines in [5000,8000] & stage timings"
+    },
+    "c23": {
+      "status": "tercapai",
+      "measured": "V0..V4 med_ms=[1.50, 0.05, 0.87, 2.09, 0.87, 2.07, 2.50]",
+      "threshold": "median +- MAD >=5 repeats reported honestly"
+    }
+  },
+  "vacuous_flags": [],
+  "stages": [
+    {
+      "id": "S01",
+      "name": "rng_streams",
+      "elapsed_sec": 0.0272,
+      "files": 3
+    },
+    {
+      "id": "S02",
+      "name": "binomial_12_pairs",
+      "elapsed_sec": 0.1843,
+      "files": 4
+    },
+    {
+      "id": "S03",
+      "name": "binomial_branch_match",
+      "elapsed_sec": 0.0834,
+      "files": 1
+    },
+    {
+      "id": "S04",
+      "name": "multinomial_sampler",
+      "elapsed_sec": 0.0438,
+      "files": 2
+    },
+    {
+      "id": "S05",
+      "name": "poisson_sampler",
+      "elapsed_sec": 0.028,
+      "files": 2
+    },
+    {
+      "id": "S06",
+      "name": "exponential_geom",
+      "elapsed_sec": 0.0184,
+      "files": 1
+    },
+    {
+      "id": "S07",
+      "name": "allele_fixtures",
+      "elapsed_sec": 0.0002,
+      "files": 1
+    },
+    {
+      "id": "S08",
+      "name": "freq_sum_invariants",
+      "elapsed_sec": 0.0011,
+      "files": 1
+    },
+    {
+      "id": "S09",
+      "name": "markov_rational_vs_float",
+      "elapsed_sec": 0.0145,
+      "files": 2
+    },
+    {
+      "id": "S10",
+      "name": "markov_absorption_checks",
+      "elapsed_sec": 0.0038,
+      "files": 2
+    },
+    {
+      "id": "S11",
+      "name": "het_decay_haploid_n50",
+      "elapsed_sec": 0.0478,
+      "files": 2
+    },
+    {
+      "id": "S12",
+      "name": "het_decay_diploid_n200",
+      "elapsed_sec": 0.1245,
+      "files": 2
+    },
+    {
+      "id": "S13",
+      "name": "neutral_fixation_prob",
+      "elapsed_sec": 0.3323,
+      "files": 2
+    },
+    {
+      "id": "S14",
+      "name": "fixation_chain_sweep",
+      "elapsed_sec": 0.0012,
+      "files": 2
+    },
+    {
+      "id": "S15",
+      "name": "fixation_time_vs_markov",
+      "elapsed_sec": 0.3034,
+      "files": 2
+    },
+    {
+      "id": "S16",
+      "name": "fixation_time_diffusion",
+      "elapsed_sec": 0.0016,
+      "files": 2
+    },
+    {
+      "id": "S17",
+      "name": "fixation_time_dist",
+      "elapsed_sec": 0.1672,
+      "files": 2
+    },
+    {
+      "id": "S18",
+      "name": "moran_vs_wf_timescale",
+      "elapsed_sec": 0.0009,
+      "files": 1
+    },
+    {
+      "id": "S19",
+      "name": "moran_het_decay",
+      "elapsed_sec": 0.1836,
+      "files": 2
+    },
+    {
+      "id": "S20",
+      "name": "large_n_negctrl",
+      "elapsed_sec": 0.02,
+      "files": 2
+    },
+    {
+      "id": "S21",
+      "name": "moran_fixation_sel",
+      "elapsed_sec": 0.232,
+      "files": 2
+    },
+    {
+      "id": "S22",
+      "name": "moran_selection_plot",
+      "elapsed_sec": 0.0014,
+      "files": 2
+    },
+    {
+      "id": "S23",
+      "name": "wf_selection_traj",
+      "elapsed_sec": 0.0294,
+      "files": 2
+    },
+    {
+      "id": "S24",
+      "name": "wf_selection_sweep",
+      "elapsed_sec": 0.002,
+      "files": 2
+    },
+    {
+      "id": "S25",
+      "name": "infinite_alleles_drift",
+      "elapsed_sec": 0.3801,
+      "files": 2
+    },
+    {
+      "id": "S26",
+      "name": "infinite_alleles_plot",
+      "elapsed_sec": 0.0012,
+      "files": 2
+    },
+    {
+      "id": "S27",
+      "name": "stationary_mut_sel",
+      "elapsed_sec": 0.1069,
+      "files": 2
+    },
+    {
+      "id": "S28",
+      "name": "stationary_dist_plot",
+      "elapsed_sec": 0.0015,
+      "files": 2
+    },
+    {
+      "id": "S29",
+      "name": "mut_sel_balance",
+      "elapsed_sec": 0.0028,
+      "files": 2
+    },
+    {
+      "id": "S30",
+      "name": "dominance_overdominance",
+      "elapsed_sec": 0.0015,
+      "files": 2
+    },
+    {
+      "id": "S31",
+      "name": "kingman_tmrca_len",
+      "elapsed_sec": 2.656,
+      "files": 2
+    },
+    {
+      "id": "S32",
+      "name": "kingman_tmrca_plot",
+      "elapsed_sec": 0.001,
+      "files": 2
+    },
+    {
+      "id": "S33",
+      "name": "kingman_length_s",
+      "elapsed_sec": 0.0016,
+      "files": 2
+    },
+    {
+      "id": "S34",
+      "name": "kingman_var_s",
+      "elapsed_sec": 0.0011,
+      "files": 2
+    },
+    {
+      "id": "S35",
+      "name": "sfs_unfolded_folded",
+      "elapsed_sec": 0.0109,
+      "files": 4
+    },
+    {
+      "id": "S36",
+      "name": "tajima_d_moments",
+      "elapsed_sec": 1.436,
+      "files": 2
+    },
+    {
+      "id": "S37",
+      "name": "tajima_d_hist",
+      "elapsed_sec": 0.9686,
+      "files": 2
+    },
+    {
+      "id": "S38",
+      "name": "s_poisson_mixture",
+      "elapsed_sec": 0.2386,
+      "files": 2
+    },
+    {
+      "id": "S39",
+      "name": "ewens_n6_partitions",
+      "elapsed_sec": 0.0485,
+      "files": 2
+    },
+    {
+      "id": "S40",
+      "name": "ewens_expected_kn",
+      "elapsed_sec": 0.4136,
+      "files": 2
+    },
+    {
+      "id": "S41",
+      "name": "coalescent_vs_wf",
+      "elapsed_sec": 1.2303,
+      "files": 2
+    },
+    {
+      "id": "S42",
+      "name": "exp_growth_coalescent",
+      "elapsed_sec": 1.6584,
+      "files": 2
+    },
+    {
+      "id": "S43",
+      "name": "island_exact_times",
+      "elapsed_sec": 0.0586,
+      "files": 2
+    },
+    {
+      "id": "S44",
+      "name": "island_d_scaling",
+      "elapsed_sec": 0.0012,
+      "files": 2
+    },
+    {
+      "id": "S45",
+      "name": "fst_vs_migration",
+      "elapsed_sec": 1.9765,
+      "files": 1
+    },
+    {
+      "id": "S46",
+      "name": "fst_migration_plot",
+      "elapsed_sec": 0.0013,
+      "files": 2
+    },
+    {
+      "id": "S47",
+      "name": "stepping_stone_ibd",
+      "elapsed_sec": 0.2645,
+      "files": 2
+    },
+    {
+      "id": "S48",
+      "name": "stepping_stone_plot",
+      "elapsed_sec": 0.0008,
+      "files": 2
+    },
+    {
+      "id": "S49",
+      "name": "hudson_vs_nei_fst",
+      "elapsed_sec": 0.4922,
+      "files": 2
+    },
+    {
+      "id": "S50",
+      "name": "hudson_vs_nei_plot",
+      "elapsed_sec": 0.001,
+      "files": 2
+    },
+    {
+      "id": "S51",
+      "name": "sweep_hitchhiking",
+      "elapsed_sec": 0.5539,
+      "files": 3
+    },
+    {
+      "id": "S52",
+      "name": "sweep_recovery_plot",
+      "elapsed_sec": 0.0015,
+      "files": 2
+    },
+    {
+      "id": "S53",
+      "name": "sweep_large_r_ctrl",
+      "elapsed_sec": 0.001,
+      "files": 2
+    },
+    {
+      "id": "S54",
+      "name": "ld_decay_det_vs_wf",
+      "elapsed_sec": 0.0463,
+      "files": 2
+    },
+    {
+      "id": "S55",
+      "name": "ld_equilibrium_r2",
+      "elapsed_sec": 0.2358,
+      "files": 2
+    },
+    {
+      "id": "S56",
+      "name": "ld_plots",
+      "elapsed_sec": 0.0028,
+      "files": 3
+    },
+    {
+      "id": "S57",
+      "name": "arg_marginal_invariance",
+      "elapsed_sec": 0.3056,
+      "files": 2
+    },
+    {
+      "id": "S58",
+      "name": "arg_corr_decay",
+      "elapsed_sec": 0.0037,
+      "files": 3
+    },
+    {
+      "id": "S59",
+      "name": "arg_joint_recomb",
+      "elapsed_sec": 0.0024,
+      "files": 2
+    },
+    {
+      "id": "S60",
+      "name": "hardy_weinberg",
+      "elapsed_sec": 0.001,
+      "files": 2
+    },
+    {
+      "id": "S61",
+      "name": "inbreeding_selfing",
+      "elapsed_sec": 0.0635,
+      "files": 2
+    },
+    {
+      "id": "S62",
+      "name": "determinism_fork",
+      "elapsed_sec": 0.0197,
+      "files": 1
+    },
+    {
+      "id": "S63",
+      "name": "optimization_ladder",
+      "elapsed_sec": 0.074,
+      "files": 4
+    },
+    {
+      "id": "S64",
+      "name": "trajectory_compression",
+      "elapsed_sec": 0.0088,
+      "files": 2
+    },
+    {
+      "id": "S65",
+      "name": "summary_and_manifest",
+      "elapsed_sec": 0.0263,
+      "files": 9
+    }
+  ]
+}

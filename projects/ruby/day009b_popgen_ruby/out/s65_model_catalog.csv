@@ -1,0 +1,10 @@
+module,category,status
+binomial,exact_sampler,active
+multinomial,exact_sampler,active
+markov,rational_float,active
+wf_moran,forward_drift_sel,active
+coalescent,kingman_ewens,active
+structured,island_stepping_stone,active
+ld_sweep,hitchhiking_ohta_kimura,active
+arg_lite,two_locus_recomb,active
+inbreeding,hwe_partial_selfing,active

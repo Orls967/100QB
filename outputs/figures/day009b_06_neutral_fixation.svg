@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="460" viewBox="0 0 760 460">
+  <rect x="0" y="0" width="760" height="460" fill="#fafbfc"/>
+  <rect x="1" y="1" width="758" height="458" fill="none" stroke="#d8dee9" stroke-width="1"/>
+  <text x="380" y="28" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="15" font-weight="bold" fill="#1f2937">S13-S14: Neutral Fixation Probability vs Initial Frequency p0</text>
+  <text x="380" y="46" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11" fill="#4b5563">N=20, R=20000 replications per p0 (P_fix = p0)</text>
+  <rect x="78" y="62" width="650" height="338" fill="#ffffff" stroke="#9ca3af" stroke-width="1"/>
+  <line x1="78.0" y1="62" x2="78.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="78.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.076</text>
+  <line x1="78" y1="400.0" x2="728" y2="400.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="403.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.047</text>
+  <line x1="208.0" y1="62" x2="208.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="208.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.206</text>
+  <line x1="78" y1="332.4" x2="728" y2="332.4" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="335.9" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.187</text>
+  <line x1="338.0" y1="62" x2="338.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="338.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.335</text>
+  <line x1="78" y1="264.8" x2="728" y2="264.8" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="268.3" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.328</text>
+  <line x1="468.0" y1="62" x2="468.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="468.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.465</text>
+  <line x1="78" y1="197.2" x2="728" y2="197.2" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="200.7" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.468</text>
+  <line x1="598.0" y1="62" x2="598.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="598.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.594</text>
+  <line x1="78" y1="129.6" x2="728" y2="129.6" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="133.1" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.608</text>
+  <line x1="728.0" y1="62" x2="728.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="728.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.724</text>
+  <line x1="78" y1="62.0" x2="728" y2="62.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="65.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.748</text>
+  <text x="403" y="446" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111827">Initial frequency p0</text>
+  <text x="18" y="231" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111827" transform="rotate(-90 18 231)">Fixation probability</text>
+  <line x1="102.1" y1="376.7" x2="102.1" y2="374.7" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="99.1" y1="376.7" x2="105.1" y2="376.7" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="99.1" y1="374.7" x2="105.1" y2="374.7" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="302.7" y1="282.6" x2="302.7" y2="279.5" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="299.7" y1="282.6" x2="305.7" y2="282.6" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="299.7" y1="279.5" x2="305.7" y2="279.5" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="503.3" y1="183.4" x2="503.3" y2="179.9" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="500.3" y1="183.4" x2="506.3" y2="183.4" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="500.3" y1="179.9" x2="506.3" y2="179.9" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="703.9" y1="89.0" x2="703.9" y2="85.9" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="700.9" y1="89.0" x2="706.9" y2="89.0" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="700.9" y1="85.9" x2="706.9" y2="85.9" stroke="#2563eb" stroke-width="1.2"/>
+  <circle cx="102.1" cy="375.7" r="3.2" fill="#2563eb" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="302.7" cy="281.0" r="3.2" fill="#2563eb" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="503.3" cy="181.7" r="3.2" fill="#2563eb" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="703.9" cy="87.5" r="3.2" fill="#2563eb" stroke="#ffffff" stroke-width="0.8"/>
+  <polyline fill="none" stroke="#dc2626" stroke-width="2" stroke-dasharray="6,4" points="102.1,374.5 302.7,278.1 503.3,181.7 703.9,85.3"/>
+  <rect x="522" y="72" width="198" height="42" rx="4" fill="#ffffff" fill-opacity="0.9" stroke="#d1d5db"/>
+  <line x1="530" y1="84" x2="548" y2="84" stroke="#2563eb" stroke-width="2.2"/>
+  <text x="554" y="87" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#1f2937">WF simulation (+-SE)</text>
+  <line x1="530" y1="100" x2="548" y2="100" stroke="#dc2626" stroke-width="2.2" stroke-dasharray="4,3"/>
+  <text x="554" y="103" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#1f2937">Exact Markov u_i = p0</text>
+</svg>

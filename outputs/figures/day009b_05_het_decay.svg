@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="460" viewBox="0 0 760 460">
+  <rect x="0" y="0" width="760" height="460" fill="#fafbfc"/>
+  <rect x="1" y="1" width="758" height="458" fill="none" stroke="#d8dee9" stroke-width="1"/>
+  <text x="380" y="28" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="15" font-weight="bold" fill="#1f2937">S11-S12: Heterozygosity Decay Under Neutral Drift</text>
+  <text x="380" y="46" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11" fill="#4b5563">Haploid N=50 vs Diploid 2N=200 (R=2000 reps, max z=1.55)</text>
+  <rect x="78" y="62" width="650" height="338" fill="#ffffff" stroke="#9ca3af" stroke-width="1"/>
+  <line x1="78.0" y1="62" x2="78.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="78.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">-8</text>
+  <line x1="78" y1="400.0" x2="728" y2="400.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="403.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.0227</text>
+  <line x1="208.0" y1="62" x2="208.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="208.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">35.2</text>
+  <line x1="78" y1="332.4" x2="728" y2="332.4" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="335.9" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.125</text>
+  <line x1="338.0" y1="62" x2="338.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="338.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">78.4</text>
+  <line x1="78" y1="264.8" x2="728" y2="264.8" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="268.3" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.228</text>
+  <line x1="468.0" y1="62" x2="468.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="468.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">122</text>
+  <line x1="78" y1="197.2" x2="728" y2="197.2" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="200.7" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.33</text>
+  <line x1="598.0" y1="62" x2="598.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="598.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">165</text>
+  <line x1="78" y1="129.6" x2="728" y2="129.6" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="133.1" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.433</text>
+  <line x1="728.0" y1="62" x2="728.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="728.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">208</text>
+  <line x1="78" y1="62.0" x2="728" y2="62.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="65.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.535</text>
+  <text x="403" y="446" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111827">Generation t</text>
+  <text x="18" y="231" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111827" transform="rotate(-90 18 231)">Mean heterozygosity H_t</text>
+  <line x1="132.2" y1="145.3" x2="132.2" y2="142.2" stroke="#dc2626" stroke-width="1.2"/>
+  <line x1="129.2" y1="145.3" x2="135.2" y2="145.3" stroke="#dc2626" stroke-width="1.2"/>
+  <line x1="129.2" y1="142.2" x2="135.2" y2="142.2" stroke="#dc2626" stroke-width="1.2"/>
+  <line x1="177.3" y1="217.5" x2="177.3" y2="212.2" stroke="#dc2626" stroke-width="1.2"/>
+  <line x1="174.3" y1="217.5" x2="180.3" y2="217.5" stroke="#dc2626" stroke-width="1.2"/>
+  <line x1="174.3" y1="212.2" x2="180.3" y2="212.2" stroke="#dc2626" stroke-width="1.2"/>
+  <line x1="252.5" y1="299.3" x2="252.5" y2="293.4" stroke="#dc2626" stroke-width="1.2"/>
+  <line x1="249.5" y1="299.3" x2="255.5" y2="299.3" stroke="#dc2626" stroke-width="1.2"/>
+  <line x1="249.5" y1="293.4" x2="255.5" y2="293.4" stroke="#dc2626" stroke-width="1.2"/>
+  <line x1="327.8" y1="347.1" x2="327.8" y2="341.9" stroke="#dc2626" stroke-width="1.2"/>
+  <line x1="324.8" y1="347.1" x2="330.8" y2="347.1" stroke="#dc2626" stroke-width="1.2"/>
+  <line x1="324.8" y1="341.9" x2="330.8" y2="341.9" stroke="#dc2626" stroke-width="1.2"/>
+  <line x1="403.0" y1="376.7" x2="403.0" y2="372.4" stroke="#dc2626" stroke-width="1.2"/>
+  <line x1="400.0" y1="376.7" x2="406.0" y2="376.7" stroke="#dc2626" stroke-width="1.2"/>
+  <line x1="400.0" y1="372.4" x2="406.0" y2="372.4" stroke="#dc2626" stroke-width="1.2"/>
+  <circle cx="102.1" cy="85.3" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="132.2" cy="143.7" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="177.3" cy="214.9" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="252.5" cy="296.3" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="327.8" cy="344.5" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="403.0" cy="374.6" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <polyline fill="none" stroke="#dc2626" stroke-width="2" stroke-dasharray="6,4" points="102.1,85.3 132.2,145.6 177.3,216.0 252.5,294.9 327.8,342.5 403.0,371.3"/>
+  <line x1="162.3" y1="118.7" x2="162.3" y2="116.9" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="159.3" y1="118.7" x2="165.3" y2="118.7" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="159.3" y1="116.9" x2="165.3" y2="116.9" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="252.5" y1="161.5" x2="252.5" y2="157.8" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="249.5" y1="161.5" x2="255.5" y2="161.5" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="249.5" y1="157.8" x2="255.5" y2="157.8" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="403.0" y1="220.0" x2="403.0" y2="214.7" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="400.0" y1="220.0" x2="406.0" y2="220.0" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="400.0" y1="214.7" x2="406.0" y2="214.7" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="553.5" y1="266.5" x2="553.5" y2="260.6" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="550.5" y1="266.5" x2="556.5" y2="266.5" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="550.5" y1="260.6" x2="556.5" y2="260.6" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="703.9" y1="299.4" x2="703.9" y2="293.5" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="700.9" y1="299.4" x2="706.9" y2="299.4" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="700.9" y1="293.5" x2="706.9" y2="293.5" stroke="#2563eb" stroke-width="1.2"/>
+  <circle cx="102.1" cy="85.3" r="3.2" fill="#2563eb" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="162.3" cy="117.8" r="3.2" fill="#2563eb" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="252.5" cy="159.6" r="3.2" fill="#2563eb" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="403.0" cy="217.3" r="3.2" fill="#2563eb" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="553.5" cy="263.5" r="3.2" fill="#2563eb" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="703.9" cy="296.5" r="3.2" fill="#2563eb" stroke="#ffffff" stroke-width="0.8"/>
+  <polyline fill="none" stroke="#2563eb" stroke-width="2" stroke-dasharray="6,4" points="102.1,85.3 162.3,116.8 252.5,158.4 403.0,215.3 553.5,259.6 703.9,294.0"/>
+  <rect x="522" y="72" width="198" height="74" rx="4" fill="#ffffff" fill-opacity="0.9" stroke="#d1d5db"/>
+  <line x1="530" y1="84" x2="548" y2="84" stroke="#dc2626" stroke-width="2.2"/>
+  <text x="554" y="87" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#1f2937">N=50 sim</text>
+  <line x1="530" y1="100" x2="548" y2="100" stroke="#dc2626" stroke-width="2.2" stroke-dasharray="4,3"/>
+  <text x="554" y="103" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#1f2937">N=50 theory</text>
+  <line x1="530" y1="116" x2="548" y2="116" stroke="#2563eb" stroke-width="2.2"/>
+  <text x="554" y="119" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#1f2937">2N=200 sim</text>
+  <line x1="530" y1="132" x2="548" y2="132" stroke="#2563eb" stroke-width="2.2" stroke-dasharray="4,3"/>
+  <text x="554" y="135" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#1f2937">2N=200 theory</text>
+</svg>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="460" viewBox="0 0 760 460">
+  <rect x="0" y="0" width="760" height="460" fill="#fafbfc"/>
+  <rect x="1" y="1" width="758" height="458" fill="none" stroke="#d8dee9" stroke-width="1"/>
+  <text x="380" y="28" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="15" font-weight="bold" fill="#1f2937">S65: Exact WF Fixation Probability Under Additive Selection (N=20)</text>
+  <text x="380" y="46" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11" fill="#4b5563">Beneficial (s=+0.1), Neutral (s=0), Deleterious (s=-0.1)</text>
+  <rect x="78" y="62" width="650" height="338" fill="#ffffff" stroke="#9ca3af" stroke-width="1"/>
+  <line x1="78.0" y1="62" x2="78.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="78.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.014</text>
+  <line x1="78" y1="400.0" x2="728" y2="400.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="403.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">-0.0618</text>
+  <line x1="208.0" y1="62" x2="208.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="208.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.208</text>
+  <line x1="78" y1="332.4" x2="728" y2="332.4" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="335.9" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.163</text>
+  <line x1="338.0" y1="62" x2="338.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="338.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.403</text>
+  <line x1="78" y1="264.8" x2="728" y2="264.8" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="268.3" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.387</text>
+  <line x1="468.0" y1="62" x2="468.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="468.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.597</text>
+  <line x1="78" y1="197.2" x2="728" y2="197.2" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="200.7" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.611</text>
+  <line x1="598.0" y1="62" x2="598.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="598.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.792</text>
+  <line x1="78" y1="129.6" x2="728" y2="129.6" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="133.1" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.835</text>
+  <line x1="728.0" y1="62" x2="728.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="728.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.986</text>
+  <line x1="78" y1="62.0" x2="728" y2="62.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="65.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">1.06</text>
+  <text x="403" y="446" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111827">Initial frequency p0</text>
+  <text x="18" y="231" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111827" transform="rotate(-90 18 231)">Fixation probability u(p0)</text>
+  <polyline fill="none" stroke="#16a34a" stroke-width="2" points="102.1,348.9 135.5,319.5 168.9,292.9 202.4,268.7 235.8,246.7 269.3,226.8 302.7,208.7 336.1,192.3 369.6,177.3 403.0,163.8 436.4,151.4 469.9,140.2 503.3,130.0 536.7,120.7 570.2,112.2 603.6,104.5 637.1,97.5 670.5,91.1 703.9,85.3"/>
+  <circle cx="102.1" cy="348.9" r="3.2" fill="#16a34a" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="135.5" cy="319.5" r="3.2" fill="#16a34a" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="168.9" cy="292.9" r="3.2" fill="#16a34a" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="202.4" cy="268.7" r="3.2" fill="#16a34a" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="235.8" cy="246.7" r="3.2" fill="#16a34a" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="269.3" cy="226.8" r="3.2" fill="#16a34a" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="302.7" cy="208.7" r="3.2" fill="#16a34a" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="336.1" cy="192.3" r="3.2" fill="#16a34a" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="369.6" cy="177.3" r="3.2" fill="#16a34a" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="403.0" cy="163.8" r="3.2" fill="#16a34a" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="436.4" cy="151.4" r="3.2" fill="#16a34a" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="469.9" cy="140.2" r="3.2" fill="#16a34a" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="503.3" cy="130.0" r="3.2" fill="#16a34a" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="536.7" cy="120.7" r="3.2" fill="#16a34a" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="570.2" cy="112.2" r="3.2" fill="#16a34a" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="603.6" cy="104.5" r="3.2" fill="#16a34a" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="637.1" cy="97.5" r="3.2" fill="#16a34a" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="670.5" cy="91.1" r="3.2" fill="#16a34a" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="703.9" cy="85.3" r="3.2" fill="#16a34a" stroke="#ffffff" stroke-width="0.8"/>
+  <polyline fill="none" stroke="#6b7280" stroke-width="2" stroke-dasharray="6,4" points="102.1,366.3 135.5,351.2 168.9,336.2 202.4,321.1 235.8,306.0 269.3,291.0 302.7,275.9 336.1,260.8 369.6,245.8 403.0,230.7 436.4,215.6 469.9,200.6 503.3,185.5 536.7,170.4 570.2,155.3 603.6,140.3 637.1,125.2 670.5,110.1 703.9,95.1"/>
+  <circle cx="102.1" cy="366.3" r="3.2" fill="#6b7280" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="135.5" cy="351.2" r="3.2" fill="#6b7280" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="168.9" cy="336.2" r="3.2" fill="#6b7280" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="202.4" cy="321.1" r="3.2" fill="#6b7280" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="235.8" cy="306.0" r="3.2" fill="#6b7280" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="269.3" cy="291.0" r="3.2" fill="#6b7280" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="302.7" cy="275.9" r="3.2" fill="#6b7280" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="336.1" cy="260.8" r="3.2" fill="#6b7280" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="369.6" cy="245.8" r="3.2" fill="#6b7280" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="403.0" cy="230.7" r="3.2" fill="#6b7280" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="436.4" cy="215.6" r="3.2" fill="#6b7280" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="469.9" cy="200.6" r="3.2" fill="#6b7280" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="503.3" cy="185.5" r="3.2" fill="#6b7280" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="536.7" cy="170.4" r="3.2" fill="#6b7280" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="570.2" cy="155.3" r="3.2" fill="#6b7280" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="603.6" cy="140.3" r="3.2" fill="#6b7280" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="637.1" cy="125.2" r="3.2" fill="#6b7280" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="670.5" cy="110.1" r="3.2" fill="#6b7280" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="703.9" cy="95.1" r="3.2" fill="#6b7280" stroke="#ffffff" stroke-width="0.8"/>
+  <polyline fill="none" stroke="#dc2626" stroke-width="2" points="102.1,376.7 135.5,371.5 168.9,365.8 202.4,359.4 235.8,352.3 269.3,344.5 302.7,335.8 336.1,326.2 369.6,315.5 403.0,303.6 436.4,290.4 469.9,275.7 503.3,259.4 536.7,241.3 570.2,221.1 603.6,198.6 637.1,173.6 670.5,145.7 703.9,114.6"/>
+  <circle cx="102.1" cy="376.7" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="135.5" cy="371.5" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="168.9" cy="365.8" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="202.4" cy="359.4" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="235.8" cy="352.3" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="269.3" cy="344.5" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="302.7" cy="335.8" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="336.1" cy="326.2" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="369.6" cy="315.5" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="403.0" cy="303.6" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="436.4" cy="290.4" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="469.9" cy="275.7" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="503.3" cy="259.4" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="536.7" cy="241.3" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="570.2" cy="221.1" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="603.6" cy="198.6" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="637.1" cy="173.6" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="670.5" cy="145.7" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <circle cx="703.9" cy="114.6" r="3.2" fill="#dc2626" stroke="#ffffff" stroke-width="0.8"/>
+  <rect x="522" y="72" width="198" height="58" rx="4" fill="#ffffff" fill-opacity="0.9" stroke="#d1d5db"/>
+  <line x1="530" y1="84" x2="548" y2="84" stroke="#16a34a" stroke-width="2.2"/>
+  <text x="554" y="87" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#1f2937">s = +0.1</text>
+  <line x1="530" y1="100" x2="548" y2="100" stroke="#6b7280" stroke-width="2.2" stroke-dasharray="4,3"/>
+  <text x="554" y="103" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#1f2937">s = 0.0</text>
+  <line x1="530" y1="116" x2="548" y2="116" stroke="#dc2626" stroke-width="2.2"/>
+  <text x="554" y="119" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#1f2937">s = -0.1</text>
+</svg>

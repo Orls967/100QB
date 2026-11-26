@@ -1,0 +1,4 @@
+workers,result_fnv1a,bit_exact_vs_1p
+1,8e12879dfcfa8dc0,1
+2,8e12879dfcfa8dc0,1
+4,8e12879dfcfa8dc0,1
