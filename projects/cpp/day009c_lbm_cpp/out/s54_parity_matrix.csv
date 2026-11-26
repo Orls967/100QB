@@ -1,0 +1,5 @@
+check,bit_exact
+2D_scheme_push_pull_aa,1
+3D_scheme_push_pull_aa,1
+2D_layout_aos_soa_tile,1
+threads_1_2_4_8,1

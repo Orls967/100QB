@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="440" viewBox="0 0 760 440">
+  <rect x="0" y="0" width="760" height="440" fill="#fafbfc"/>
+  <rect x="1" y="1" width="758" height="438" fill="none" stroke="#d8dee9" stroke-width="1"/>
+  <text x="380" y="28" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="15" font-weight="bold" fill="#1f2937">Blocked Tile Layout Performance vs Tile Size (128x128)</text>
+  <text x="380" y="46" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11" fill="#4b5563">Identical field hashes across all tile sizes</text>
+  <rect x="78" y="62" width="654" height="300" fill="#ffffff" stroke="#9ca3af" stroke-width="1"/>
+  <line x1="78" y1="362.0" x2="732" y2="362.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="365.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0</text>
+  <line x1="78" y1="302.0" x2="732" y2="302.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="305.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">8.29</text>
+  <line x1="78" y1="242.0" x2="732" y2="242.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="245.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">16.6</text>
+  <line x1="78" y1="182.0" x2="732" y2="182.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="185.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">24.9</text>
+  <line x1="78" y1="122.0" x2="732" y2="122.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="125.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">33.1</text>
+  <line x1="78" y1="62.0" x2="732" y2="62.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="65.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">41.4</text>
+  <rect x="109.1" y="102.2" width="101.4" height="259.8" fill="#2563eb" rx="2"/>
+  <text x="159.8" y="378" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">Tile 4x4</text>
+  <rect x="272.6" y="166.0" width="101.4" height="196.0" fill="#2563eb" rx="2"/>
+  <text x="323.2" y="378" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">Tile 8x8</text>
+  <rect x="436.1" y="101.1" width="101.4" height="260.9" fill="#2563eb" rx="2"/>
+  <text x="486.8" y="378" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">Tile 16x16</text>
+  <rect x="599.6" y="140.1" width="101.4" height="221.9" fill="#2563eb" rx="2"/>
+  <text x="650.2" y="378" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">Tile 32x32</text>
+  <text x="20" y="212" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111827" transform="rotate(-90 20 212)">Throughput (MLUPS)</text>
+</svg>

@@ -1,0 +1,4 @@
+layout,steps,fnv1a,identical_to_aos
+AoS,1000,99cad8d8dfc4edc0,1
+SoA,1000,99cad8d8dfc4edc0,1
+Tile16x16,1000,99cad8d8dfc4edc0,1

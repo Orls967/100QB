@@ -1,0 +1,4 @@
+scheme,steps,fnv1a,max_diff
+two_grid_push_3d,1000,8fb1cbd20d9caebf,0.000000e+00
+two_grid_pull_3d,1000,8fb1cbd20d9caebf,0.000000e+00
+aa_pattern_3d,1000,8fb1cbd20d9caebf,0.000000e+00
