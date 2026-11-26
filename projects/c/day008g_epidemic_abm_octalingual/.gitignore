@@ -1,0 +1,11 @@
+build/
+rust/target/
+node_modules/
+*.o
+*.pyc
+__pycache__/
+.DS_Store
+out/*/transmissions_log*.csv
+out/*/agents_final.csv
+out/*/progression_log.csv
+out/*/generation_interval.csv

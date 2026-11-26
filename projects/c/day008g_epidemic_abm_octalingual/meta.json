@@ -1,0 +1,9 @@
+{
+  "session": "day008g",
+  "date": "2026-11-26",
+  "topic": "Simulasi Epidemi Berbasis Agen SEIR Berlapis (39 Tahap, 8 Bahasa)",
+  "parent_lang": "c",
+  "languages": ["c", "cpp", "rust", "go", "ruby", "py", "ts", "ipynb"],
+  "stages": 39,
+  "master_seed": 20261126
+}
