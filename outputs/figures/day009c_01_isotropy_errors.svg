@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="440" viewBox="0 0 760 440">
+  <rect x="0" y="0" width="760" height="440" fill="#fafbfc"/>
+  <rect x="1" y="1" width="758" height="438" fill="none" stroke="#d8dee9" stroke-width="1"/>
+  <text x="380" y="28" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="15" font-weight="bold" fill="#1f2937">Lattice Tensor Isotropy Verification (Orders 2 and 4)</text>
+  <text x="380" y="46" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11" fill="#4b5563">Exact D2Q9 / D3Q19 / D3Q27 moment tensor checks</text>
+  <rect x="78" y="62" width="654" height="300" fill="#ffffff" stroke="#9ca3af" stroke-width="1"/>
+  <line x1="78" y1="362.0" x2="732" y2="362.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="365.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0</text>
+  <line x1="78" y1="302.0" x2="732" y2="302.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="305.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">2.3e-13</text>
+  <line x1="78" y1="242.0" x2="732" y2="242.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="245.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">4.6e-13</text>
+  <line x1="78" y1="182.0" x2="732" y2="182.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="185.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">6.9e-13</text>
+  <line x1="78" y1="122.0" x2="732" y2="122.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="125.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">9.2e-13</text>
+  <line x1="78" y1="62.0" x2="732" y2="62.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="65.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">1.15e-12</text>
+  <rect x="98.7" y="362.0" width="67.6" height="0.0" fill="#2563eb" rx="2"/>
+  <text x="132.5" y="378" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">D2Q9-O2</text>
+  <rect x="207.7" y="362.0" width="67.6" height="0.0" fill="#1d4ed8" rx="2"/>
+  <text x="241.5" y="378" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">D2Q9-O4</text>
+  <rect x="316.7" y="362.0" width="67.6" height="0.0" fill="#059669" rx="2"/>
+  <text x="350.5" y="378" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">D3Q19-O2</text>
+  <rect x="425.7" y="362.0" width="67.6" height="0.0" fill="#047857" rx="2"/>
+  <text x="459.5" y="378" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">D3Q19-O4</text>
+  <rect x="534.7" y="362.0" width="67.6" height="0.0" fill="#d97706" rx="2"/>
+  <text x="568.5" y="378" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">D3Q27-O2</text>
+  <rect x="643.7" y="362.0" width="67.6" height="0.0" fill="#b45309" rx="2"/>
+  <text x="677.5" y="378" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">D3Q27-O4</text>
+  <text x="20" y="212" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111827" transform="rotate(-90 20 212)">Max absolute error (+1e-17 floor)</text>
+</svg>

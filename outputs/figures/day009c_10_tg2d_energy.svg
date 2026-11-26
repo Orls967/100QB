@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="460" viewBox="0 0 760 460">
+  <rect x="0" y="0" width="760" height="460" fill="#fafbfc"/>
+  <rect x="1" y="1" width="758" height="458" fill="none" stroke="#d8dee9" stroke-width="1"/>
+  <text x="380" y="28" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="15" font-weight="bold" fill="#1f2937">Taylor-Green 2D (N=128) Kinetic Energy Decay vs Analytical</text>
+  <text x="380" y="46" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11" fill="#4b5563">Monotonicity violations = 0</text>
+  <rect x="78" y="62" width="650" height="338" fill="#ffffff" stroke="#9ca3af" stroke-width="1"/>
+  <line x1="78.0" y1="62" x2="78.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="78.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">2.24</text>
+  <line x1="78" y1="400.0" x2="728" y2="400.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="403.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.0183</text>
+  <line x1="208.0" y1="62" x2="208.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="208.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">347</text>
+  <line x1="78" y1="332.4" x2="728" y2="332.4" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="335.9" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.0261</text>
+  <line x1="338.0" y1="62" x2="338.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="338.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">691</text>
+  <line x1="78" y1="264.8" x2="728" y2="264.8" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="268.3" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.0373</text>
+  <line x1="468.0" y1="62" x2="468.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="468.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">1.04e+03</text>
+  <line x1="78" y1="197.2" x2="728" y2="197.2" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="200.7" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.0533</text>
+  <line x1="598.0" y1="62" x2="598.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="598.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">1.38e+03</text>
+  <line x1="78" y1="129.6" x2="728" y2="129.6" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="133.1" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.0761</text>
+  <line x1="728.0" y1="62" x2="728.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="728.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">1.72e+03</text>
+  <line x1="78" y1="62.0" x2="728" y2="62.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="65.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.109</text>
+  <polyline fill="none" stroke="#2563eb" stroke-width="2" points="102.1,85.3 127.0,97.4 151.9,109.4 176.8,121.5 201.8,133.6 226.7,145.6 251.6,157.7 276.5,169.8 301.4,181.8 326.4,193.9 351.3,206.0 376.2,218.0 401.1,230.1 426.0,242.2 451.0,254.2 475.9,266.3 500.8,278.3 525.7,290.4 550.6,302.5 575.6,314.5 600.5,326.6 625.4,338.7 650.3,350.7 675.2,362.8 700.2,374.9 703.9,376.7"/>
+  <circle cx="102.1" cy="85.3" r="3.2" fill="#2563eb"/>
+  <circle cx="127.0" cy="97.4" r="3.2" fill="#2563eb"/>
+  <circle cx="151.9" cy="109.4" r="3.2" fill="#2563eb"/>
+  <circle cx="176.8" cy="121.5" r="3.2" fill="#2563eb"/>
+  <circle cx="201.8" cy="133.6" r="3.2" fill="#2563eb"/>
+  <circle cx="226.7" cy="145.6" r="3.2" fill="#2563eb"/>
+  <circle cx="251.6" cy="157.7" r="3.2" fill="#2563eb"/>
+  <circle cx="276.5" cy="169.8" r="3.2" fill="#2563eb"/>
+  <circle cx="301.4" cy="181.8" r="3.2" fill="#2563eb"/>
+  <circle cx="326.4" cy="193.9" r="3.2" fill="#2563eb"/>
+  <circle cx="351.3" cy="206.0" r="3.2" fill="#2563eb"/>
+  <circle cx="376.2" cy="218.0" r="3.2" fill="#2563eb"/>
+  <circle cx="401.1" cy="230.1" r="3.2" fill="#2563eb"/>
+  <circle cx="426.0" cy="242.2" r="3.2" fill="#2563eb"/>
+  <circle cx="451.0" cy="254.2" r="3.2" fill="#2563eb"/>
+  <circle cx="475.9" cy="266.3" r="3.2" fill="#2563eb"/>
+  <circle cx="500.8" cy="278.3" r="3.2" fill="#2563eb"/>
+  <circle cx="525.7" cy="290.4" r="3.2" fill="#2563eb"/>
+  <circle cx="550.6" cy="302.5" r="3.2" fill="#2563eb"/>
+  <circle cx="575.6" cy="314.5" r="3.2" fill="#2563eb"/>
+  <circle cx="600.5" cy="326.6" r="3.2" fill="#2563eb"/>
+  <circle cx="625.4" cy="338.7" r="3.2" fill="#2563eb"/>
+  <circle cx="650.3" cy="350.7" r="3.2" fill="#2563eb"/>
+  <circle cx="675.2" cy="362.8" r="3.2" fill="#2563eb"/>
+  <circle cx="700.2" cy="374.9" r="3.2" fill="#2563eb"/>
+  <circle cx="703.9" cy="376.7" r="3.2" fill="#2563eb"/>
+  <polyline fill="none" stroke="#dc2626" stroke-width="2" stroke-dasharray="6,4" points="102.1,85.3 127.0,97.4 151.9,109.4 176.8,121.5 201.8,133.6 226.7,145.6 251.6,157.7 276.5,169.8 301.4,181.8 326.4,193.9 351.3,205.9 376.2,218.0 401.1,230.1 426.0,242.1 451.0,254.2 475.9,266.3 500.8,278.3 525.7,290.4 550.6,302.5 575.6,314.5 600.5,326.6 625.4,338.7 650.3,350.7 675.2,362.8 700.2,374.8 703.9,376.7"/>
+  <line x1="538" y1="76" x2="556" y2="76" stroke="#2563eb" stroke-width="2.2"/>
+  <text x="562" y="80" font-family="Helvetica,Arial,sans-serif" font-size="10.5" fill="#1f2937">LBM</text>
+  <line x1="538" y1="92" x2="556" y2="92" stroke="#dc2626" stroke-width="2.2"/>
+  <text x="562" y="96" font-family="Helvetica,Arial,sans-serif" font-size="10.5" fill="#1f2937">Exact</text>
+  <text x="403" y="444" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111827">Step t</text>
+  <text x="20" y="231" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111827" transform="rotate(-90 20 231)">Total kinetic energy E_k</text>
+</svg>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="460" viewBox="0 0 760 460">
+  <rect x="0" y="0" width="760" height="460" fill="#fafbfc"/>
+  <rect x="1" y="1" width="758" height="458" fill="none" stroke="#d8dee9" stroke-width="1"/>
+  <text x="380" y="28" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="15" font-weight="bold" fill="#1f2937">Periodic Mass and Momentum Conservation Over 10,000 Steps</text>
+  <text x="380" y="46" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11" fill="#4b5563">D2Q9 floating-point relative drift (zero force)</text>
+  <rect x="78" y="62" width="650" height="338" fill="#ffffff" stroke="#9ca3af" stroke-width="1"/>
+  <line x1="78.0" y1="62" x2="78.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="78.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">-192</text>
+  <line x1="78" y1="400.0" x2="728" y2="400.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="403.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">1.1e-17</text>
+  <line x1="208.0" y1="62" x2="208.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="208.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">1.92e+03</text>
+  <line x1="78" y1="332.4" x2="728" y2="332.4" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="335.9" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">1.27e-16</text>
+  <line x1="338.0" y1="62" x2="338.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="338.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">4.04e+03</text>
+  <line x1="78" y1="264.8" x2="728" y2="264.8" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="268.3" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">1.48e-15</text>
+  <line x1="468.0" y1="62" x2="468.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="468.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">6.16e+03</text>
+  <line x1="78" y1="197.2" x2="728" y2="197.2" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="200.7" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">1.72e-14</text>
+  <line x1="598.0" y1="62" x2="598.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="598.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">8.28e+03</text>
+  <line x1="78" y1="129.6" x2="728" y2="129.6" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="133.1" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">2e-13</text>
+  <line x1="728.0" y1="62" x2="728.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="728.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">1.04e+04</text>
+  <line x1="78" y1="62.0" x2="728" y2="62.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="65.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">2.33e-12</text>
+  <line x1="78" y1="85.3" x2="728" y2="85.3" stroke="#6b7280" stroke-width="1.4" stroke-dasharray="5,4"/>
+  <text x="722" y="80.3" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">Threshold 1e-12</text>
+  <polyline fill="none" stroke="#2563eb" stroke-width="2" points="102.1,216.1 114.4,188.9 126.6,177.2 138.9,166.7 151.2,160.5 163.5,155.7 175.8,152.6 188.1,147.8 200.3,144.6 212.6,141.9 224.9,139.2 237.2,136.7 249.5,134.2 261.7,132.6 274.0,130.0 286.3,128.8 298.6,126.7 310.9,125.1 323.2,123.4 335.4,122.5 347.7,121.0 360.0,119.8 372.3,118.5 384.6,117.5 396.9,116.2 409.1,115.1 421.4,114.3 433.7,113.1 446.0,112.1 458.3,111.1 470.6,110.4 482.8,109.2 495.1,108.5 507.4,107.7 519.7,106.9 532.0,106.2 544.3,105.4 556.5,104.7 568.8,103.8 581.1,103.1 593.4,102.4 605.7,101.9 617.9,101.3 630.2,100.6 642.5,99.8 654.8,99.4 667.1,98.8 679.4,98.2 691.6,97.7 703.9,97.0"/>
+  <polyline fill="none" stroke="#dc2626" stroke-width="2" stroke-dasharray="6,4" points="102.1,376.7 114.4,371.6 126.6,366.2 138.9,362.9 151.2,359.5 163.5,356.6 175.8,357.6 188.1,353.1 200.3,353.3 212.6,349.4 224.9,349.0 237.2,347.8 249.5,347.8 261.7,346.5 274.0,347.9 286.3,349.0 298.6,345.7 310.9,344.4 323.2,345.4 335.4,345.8 347.7,346.0 360.0,345.1 372.3,343.6 384.6,342.0 396.9,338.9 409.1,338.8 421.4,338.5 433.7,338.0 446.0,336.0 458.3,334.3 470.6,333.7 482.8,333.3 495.1,332.3 507.4,331.5 519.7,329.1 532.0,327.8 544.3,325.8 556.5,324.9 568.8,324.4 581.1,324.6 593.4,324.0 605.7,321.5 617.9,320.6 630.2,321.5 642.5,321.9 654.8,321.3 667.1,321.1 679.4,321.4 691.6,321.8 703.9,322.0"/>
+  <line x1="538" y1="76" x2="556" y2="76" stroke="#2563eb" stroke-width="2.2"/>
+  <text x="562" y="80" font-family="Helvetica,Arial,sans-serif" font-size="10.5" fill="#1f2937">Mass drift</text>
+  <line x1="538" y1="92" x2="556" y2="92" stroke="#dc2626" stroke-width="2.2"/>
+  <text x="562" y="96" font-family="Helvetica,Arial,sans-serif" font-size="10.5" fill="#1f2937">Momentum drift</text>
+  <text x="403" y="444" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111827">Time step t</text>
+  <text x="20" y="231" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111827" transform="rotate(-90 20 231)">Relative drift (+1e-17 floor)</text>
+</svg>

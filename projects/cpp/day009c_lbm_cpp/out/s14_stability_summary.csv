@@ -1,0 +1,4 @@
+op,survived,total_pts,survival_rate
+BGK,22,25,0.88000000
+TRT,15,25,0.60000000
+MRT,25,25,1.00000000

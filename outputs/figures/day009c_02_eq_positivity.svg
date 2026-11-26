@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="460" viewBox="0 0 760 460">
+  <rect x="0" y="0" width="760" height="460" fill="#fafbfc"/>
+  <rect x="1" y="1" width="758" height="458" fill="none" stroke="#d8dee9" stroke-width="1"/>
+  <text x="380" y="28" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="15" font-weight="bold" fill="#1f2937">D2Q9 Expanded Equilibrium Minimum Population vs Mach Number</text>
+  <text x="380" y="46" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11" fill="#4b5563">Negativity threshold highlights subsonic breakdown region (Ma ~ 0.72)</text>
+  <rect x="78" y="62" width="650" height="338" fill="#ffffff" stroke="#9ca3af" stroke-width="1"/>
+  <line x1="78.0" y1="62" x2="78.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="78.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">-0.0346</text>
+  <line x1="78" y1="400.0" x2="728" y2="400.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="403.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">-0.00222</text>
+  <line x1="208.0" y1="62" x2="208.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="208.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.152</text>
+  <line x1="78" y1="332.4" x2="728" y2="332.4" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="335.9" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.00422</text>
+  <line x1="338.0" y1="62" x2="338.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="338.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.339</text>
+  <line x1="78" y1="264.8" x2="728" y2="264.8" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="268.3" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.0107</text>
+  <line x1="468.0" y1="62" x2="468.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="468.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.527</text>
+  <line x1="78" y1="197.2" x2="728" y2="197.2" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="200.7" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.0171</text>
+  <line x1="598.0" y1="62" x2="598.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="598.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.714</text>
+  <line x1="78" y1="129.6" x2="728" y2="129.6" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="133.1" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.0236</text>
+  <line x1="728.0" y1="62" x2="728.0" y2="400" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="728.0" y="416" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.901</text>
+  <line x1="78" y1="62.0" x2="728" y2="62.0" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="70" y="65.5" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">0.03</text>
+  <line x1="78" y1="376.7" x2="728" y2="376.7" stroke="#6b7280" stroke-width="1.4" stroke-dasharray="5,4"/>
+  <text x="722" y="371.7" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">Positivity boundary f_min = 0</text>
+  <polyline fill="none" stroke="#dc2626" stroke-width="2" points="102.1,85.3 132.2,106.6 162.3,126.8 192.4,146.0 222.4,164.0 252.5,180.9 282.6,196.8 312.7,211.5 342.8,225.2 372.9,237.7 403.0,249.2 433.1,259.6 463.2,268.9 493.3,277.1 523.4,284.2 553.5,290.2 583.6,295.1 613.6,298.9 643.7,301.7 673.8,303.3 703.9,303.8"/>
+  <circle cx="102.1" cy="85.3" r="3.2" fill="#dc2626"/>
+  <circle cx="132.2" cy="106.6" r="3.2" fill="#dc2626"/>
+  <circle cx="162.3" cy="126.8" r="3.2" fill="#dc2626"/>
+  <circle cx="192.4" cy="146.0" r="3.2" fill="#dc2626"/>
+  <circle cx="222.4" cy="164.0" r="3.2" fill="#dc2626"/>
+  <circle cx="252.5" cy="180.9" r="3.2" fill="#dc2626"/>
+  <circle cx="282.6" cy="196.8" r="3.2" fill="#dc2626"/>
+  <circle cx="312.7" cy="211.5" r="3.2" fill="#dc2626"/>
+  <circle cx="342.8" cy="225.2" r="3.2" fill="#dc2626"/>
+  <circle cx="372.9" cy="237.7" r="3.2" fill="#dc2626"/>
+  <circle cx="403.0" cy="249.2" r="3.2" fill="#dc2626"/>
+  <circle cx="433.1" cy="259.6" r="3.2" fill="#dc2626"/>
+  <circle cx="463.2" cy="268.9" r="3.2" fill="#dc2626"/>
+  <circle cx="493.3" cy="277.1" r="3.2" fill="#dc2626"/>
+  <circle cx="523.4" cy="284.2" r="3.2" fill="#dc2626"/>
+  <circle cx="553.5" cy="290.2" r="3.2" fill="#dc2626"/>
+  <circle cx="583.6" cy="295.1" r="3.2" fill="#dc2626"/>
+  <circle cx="613.6" cy="298.9" r="3.2" fill="#dc2626"/>
+  <circle cx="643.7" cy="301.7" r="3.2" fill="#dc2626"/>
+  <circle cx="673.8" cy="303.3" r="3.2" fill="#dc2626"/>
+  <circle cx="703.9" cy="303.8" r="3.2" fill="#dc2626"/>
+  <line x1="538" y1="76" x2="556" y2="76" stroke="#dc2626" stroke-width="2.2"/>
+  <text x="562" y="80" font-family="Helvetica,Arial,sans-serif" font-size="10.5" fill="#1f2937">min f_i^eq</text>
+  <text x="403" y="444" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111827">Mach number (Ma = u * sqrt(3))</text>
+  <text x="20" y="231" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111827" transform="rotate(-90 20 231)">min_i f_i^eq</text>
+</svg>

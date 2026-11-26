@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="560" viewBox="0 0 720 560">
+  <rect x="0" y="0" width="720" height="560" fill="#fafbfc"/>
+  <rect x="1" y="1" width="718" height="558" fill="none" stroke="#d8dee9" stroke-width="1"/>
+  <text x="360" y="28" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="15" font-weight="bold" fill="#1f2937">Double Shear Layer Stability Map (TRT/MRT Score)</text>
+  <text x="360" y="46" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11" fill="#4b5563">0=Blowup, 1=TRT survives, 2=TRT+MRT survive</text>
+  <rect x="78" y="62" width="562" height="438" fill="#ffffff" stroke="#9ca3af" stroke-width="1"/>
+  <rect x="78.0" y="412.4" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="190.4" y="412.4" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="302.8" y="412.4" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="415.2" y="412.4" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="527.6" y="412.4" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="78.0" y="324.8" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="190.4" y="324.8" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="302.8" y="324.8" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="415.2" y="324.8" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="527.6" y="324.8" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="78.0" y="237.2" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="190.4" y="237.2" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="302.8" y="237.2" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="415.2" y="237.2" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="527.6" y="237.2" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="78.0" y="149.6" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="190.4" y="149.6" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="302.8" y="149.6" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="415.2" y="149.6" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="527.6" y="149.6" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="78.0" y="62.0" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="190.4" y="62.0" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="302.8" y="62.0" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="415.2" y="62.0" width="113.0" height="88.2" fill="#92cb82"/>
+  <rect x="527.6" y="62.0" width="113.0" height="88.2" fill="#92cb82"/>
+  <text x="652" y="72" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#111827">2</text>
+  <text x="652" y="500" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#111827">2</text>
+  <text x="652" y="281" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#374151">Survival</text>
+  <text x="359" y="544" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111827">Mach number index</text>
+  <text x="20" y="281" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111827" transform="rotate(-90 20 281)">tau index</text>
+</svg>
