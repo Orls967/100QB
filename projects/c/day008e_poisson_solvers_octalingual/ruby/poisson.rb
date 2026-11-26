@@ -9,7 +9,7 @@ SIN_C = [1.0, -1.0/6.0, 1.0/120.0, -1.0/5040.0, 1.0/362880.0, -1.0/39916800.0, 1
 def sin_spec(x)
   sgn = 1.0
   if x < 0.0; x = -x; sgn = -sgn; end
-  if x > PI_VAL; x -= PI_VAL; sgn = -sgn; end
+  while x > PI_VAL; x -= PI_VAL; sgn = -sgn; end
   x = PI_VAL - x if x > 0.5 * PI_VAL
   x2 = x * x; p = SIN_C[9]
   8.downto(0) { |k| p = p * x2 + SIN_C[k] }

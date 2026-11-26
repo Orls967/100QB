@@ -9,7 +9,7 @@ const MNAMES: [&str; 7] = ["jacobi", "gs", "rbgs", "sor", "cg", "pcg_ssor", "mg"
 fn sin_spec(mut x: f64) -> f64 {
     let mut sgn = 1.0;
     if x < 0.0 { x = -x; sgn = -sgn; }
-    if x > PI_VAL { x -= PI_VAL; sgn = -sgn; }
+    while x > PI_VAL { x -= PI_VAL; sgn = -sgn; }
     if x > 0.5 * PI_VAL { x = PI_VAL - x; }
     let x2 = x * x;
     let c = [

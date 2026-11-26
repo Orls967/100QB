@@ -15,7 +15,7 @@ static constexpr double PI_VAL = 3.14159265358979323846;
 static double sin_spec(double x) {
     double sgn = 1.0;
     if (x < 0.0) { x = -x; sgn = -sgn; }
-    if (x > PI_VAL) { x = x - PI_VAL; sgn = -sgn; }
+    while (x > PI_VAL) { x = x - PI_VAL; sgn = -sgn; }
     if (x > 0.5 * PI_VAL) x = PI_VAL - x;
     double x2 = x * x;
     static constexpr double c[10] = {

@@ -22,7 +22,7 @@ func sinSpec(x float64) float64 {
 		x = -x
 		sgn = -sgn
 	}
-	if x > piVal {
+	for x > piVal {
 		x = x - piVal
 		sgn = -sgn
 	}

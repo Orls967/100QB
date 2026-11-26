@@ -10,7 +10,7 @@ SIN_C = [1.0, -1.0/6.0, 1.0/120.0, -1.0/5040.0, 1.0/362880.0, -1.0/39916800.0, 1
 def sin_spec(x: float) -> float:
     sgn = 1.0
     if x < 0.0: x = -x; sgn = -sgn
-    if x > PI_VAL: x -= PI_VAL; sgn = -sgn
+    while x > PI_VAL: x -= PI_VAL; sgn = -sgn
     if x > 0.5 * PI_VAL: x = PI_VAL - x
     x2 = x * x; p = SIN_C[9]
     for k in range(8, -1, -1): p = p * x2 + SIN_C[k]

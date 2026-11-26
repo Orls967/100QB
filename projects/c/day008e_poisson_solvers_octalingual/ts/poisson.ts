@@ -15,7 +15,7 @@ const C_SIN = [
 function sinSpec(x: number): number {
   let sgn = 1.0;
   if (x < 0) { x = -x; sgn = -sgn; }
-  if (x > PI_VAL) { x = x - PI_VAL; sgn = -sgn; }
+  while (x > PI_VAL) { x = x - PI_VAL; sgn = -sgn; }
   if (x > 0.5 * PI_VAL) x = PI_VAL - x;
   const x2 = x * x;
   let p = C_SIN[9];
