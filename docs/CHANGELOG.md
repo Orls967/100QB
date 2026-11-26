@@ -3,6 +3,14 @@
 Semua perubahan penting pada project **100QB** dicatat di sini, per hari.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/).
 
+## [Hari 009c] — 2026-11-27 · Metode Lattice Boltzmann (D2Q9/D3Q19) di C++20 Murni
+
+### Ditambahkan (`day009c`)
+- Proyek C++20 murni `projects/cpp/day009c_lbm_cpp/` (`-std=c++20 -O2 -ffp-contract=off -Wall -Wextra -Werror`, hanya STL + `std::thread`, total **6.367 baris C++** di 12 header + 16 berkas `.cpp`, **18/22** kriteria `tercapai`, **4** `belum tercapai` jujur (`c9`, `c10`, `c11`, `c18`), `vacuous_flags = []`):
+  - **Fondasi, Kolisi & Konservasi (`S01`–`S16`)**: `D2Q9`/`D3Q19`/`D3Q27` isotropi orde-4 (`max_err = 2.22e-16`), ortogonalitas MRT $9\times 9$ & $19\times 19$, konservasi periodik $10^4$ langkah (`dm = 6.54e-13, dp = 3.47e-15`, `c1`); viskositas gelombang geser keempat operator cocok hingga `0.347%` (`<= 0.5%`, `c2`); peta stabilitas 25 titik (`BGK=22, TRT=15, MRT=25`, `c12`); invariansi Galileo teramati merosot bersama angin (`BGK = 6.69%`, `TRT = 6.78%`, `ratio = 0.986`, `c9` `belum tercapai`).
+  - **Validasi Analitik & Benchmark 2D/3D (`S17`–`S46`)**: Taylor–Green 2D orde difusif `2.0107 ± 0.1022` & $0$ pelanggaran kemonotonan (`c3`), skala kompresibilitas `Ma^p` dengan `p = 1.8004 ± 0.0221` (`c8`), Poiseuille TRT $\Lambda=3/16$ (`L2 = 1.91e-11`, `BGK_var = 1.54e8x`, `c4`), Couette (`1.32e-13`, `c5`), saluran Zou–He (`1.15%`, `c6`), laju bunyi $c_s$ (`0.020%`, `c7`); *cavity* `Re=100` pusat `(0.6165, 0.7367)` berjarak `0.0024` dari Ghia namun residu berhenti di `2.04e-6` (`c10` `belum tercapai`); silinder `Re=100` `St = 0.1938` sementara `Re=20` *blockage* `10%` memberi `Cd = 2.671` & `Lr/D = 1.349` (`c11` `belum tercapai`); 3D `D3Q19` gelombang geser (`0.293%`) & saluran persegi vs deret Fourier (`0.0209%`, `c13`).
+  - **Skema `AA-Pattern`, Paralelisme, Optimasi & Keluaran (`S47`–`S65`)**: Paritas bit-identik `Push = Pull = AA` (2D & 3D), `AoS = SoA = Tile` (`c14`), serta `threads 1/2/4/8` (`c31b194e69b752bb`, `c15`); tangga optimasi `V0`–`V6` (`[34.89, 33.86, 82.24, 14.82, 105.77, 210.34, 277.42]` MLUPS, `copy_bw = 134.02 GB/s`, `c17`); skala sel $N \ge 256^2$ `slope = 0.815 ± 0.237` akibat konflik *stride* $N=512$ (`c18` `belum tercapai`); kompresi *delta+RLE lossless* hingga `80.91×`; 2× eksekusi penuh identik `5562910a5be3645a` (`c16`); total `107` CSV (`76.4 KB`) + `48` SVG valid XML `outputs/figures/day009c_*.svg` + `outputs/day009c/results.json` (`156` berkas, `c19`), dan [day009c_sim_lattice-boltzmann-cpp.md](project-explanations/day009c_sim_lattice-boltzmann-cpp.md).
+
 ## [README & Skrip] — 2026-11-27 · Nomor Sesi Berurutan & Baseline Fleksibel
 
 ### Diubah

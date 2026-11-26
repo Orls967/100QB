@@ -157,7 +157,7 @@ Setiap notebook (dibuat dari `templates/day_template.ipynb`) wajib memiliki:
 Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana lengkap: [docs/ROADMAP.md](docs/ROADMAP.md) · Riwayat: [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 <!-- PROGRESS:START -->
-**Progres: 70/100 sesi (70%)** · quant: 45 · sim: 25
+**Progres: 71/100 sesi (71%)** · quant: 45 · sim: 26
 
 | Hari | No. Sesi | Jenis | Bahasa | Topik | Tanggal | Notebook / Kode |
 |:----:|:--------:|:-----:|:------:|-------|---------|-----------------|
@@ -231,6 +231,7 @@ Tabel di bawah dibuat otomatis oleh `python scripts/update_readme.py`. Rencana l
 | 8j | 068 | `sim` | `rust` | Diagonalisasi Eksak Rantai Spin-1/2 Heisenberg/XXZ (Rust <=499 Baris): Lanczos Sektor S^z, Entropi Keterikatan & Aturan Tanda Marshall | 2026-11-26 | [day008j_heisenberg_ed_rust](projects/rust/day008j_heisenberg_ed_rust) |
 | 9a | 069 | `sim` | `c` | Dinamika Molekuler Fluida Lennard-Jones (C11, 60 Tahap): Integrator Simplektik, Daftar Tetangga, Termostat, Termodinamika, Transport & Pelelehan | 2026-11-27 | [day009a_md_lj_c](projects/c/day009a_md_lj_c) |
 | 9b | 070 | `sim` | `ruby` | Genetika Populasi (Ruby Stdlib, 60 Tahap): Wright-Fisher, Moran, Rantai Markov Rational, Koalesen Kingman, Pulau, Sapuan Selektif & ARG-Lite | 2026-11-27 | [day009b_popgen_ruby](projects/ruby/day009b_popgen_ruby) |
+| 9c | 071 | `sim` | `cpp` | Metode Lattice Boltzmann (D2Q9/D3Q19) di C++20 Murni: Operator Kolisi, Batas Lengkung, Benchmark Fluida, Skema In-Place AA-Pattern & Tangga Optimasi Roofline | 2026-11-27 | [day009c_lbm_cpp](projects/cpp/day009c_lbm_cpp) |
 <!-- PROGRESS:END -->
 
 ## 📄 Lisensi

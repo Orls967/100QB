@@ -69,6 +69,7 @@ Folder ini menyimpan dokumen penjelasan teknis berbahasa Indonesia untuk setiap 
 | `8j` (`day008j`) | `sesi bebas` | `sim` | `rust` | [Diagonalisasi Eksak Rantai Spin-½ Heisenberg/XXZ (Rust ≤ 499 Baris): Lanczos, Keterikatan & Penskalaan CFT](day008j_sim_heisenberg-ed-rust.md) |
 | `9a` (`day009a`) | `sesi bebas` | `sim` | `c` | [Dinamika Molekuler Fluida Lennard-Jones (C11, 60 Tahap): Integrator Simplektik, Daftar Tetangga, Termostat, Termodinamika, Transport & Pelelehan](day009a_sim_md-lj-c.md) |
 | `9b` (`day009b`) | `sesi bebas` | `sim` | `ruby` | [Genetika Populasi (Ruby Murni, 65 Tahap): Wright–Fisher, Moran, Rantai Markov Rational, Koalesen Kingman, Pulau, Sapuan Selektif & ARG-Lite](day009b_sim_popgen-ruby.md) |
+| `9c` (`day009c`) | `sesi bebas` | `sim` | `cpp` | [Metode Lattice Boltzmann (D2Q9/D3Q19) di C++20 Murni: Kolisi BGK/TRT/MRT/Regularized, Batas Bouzidi, Skema AA-Pattern & Tangga Optimasi](day009c_sim_lattice-boltzmann-cpp.md) |
 
 ## Sesi yang Tidak Ada di Repositori
 
