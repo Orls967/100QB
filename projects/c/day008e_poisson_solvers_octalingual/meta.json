@@ -1,0 +1,10 @@
+{
+  "day": 8,
+  "session": "e",
+  "topic_no": null,
+  "type": "sim",
+  "language": "c+cpp+rust+go+ruby+py+ts",
+  "topic": "Solver Poisson 2D (Jacobi, GS, SOR, CG, PCG-SSOR, Multigrid) Lintas 8 Bahasa (19 Tahap)",
+  "date": "2026-11-26",
+  "link": "projects/c/day008e_poisson_solvers_octalingual"
+}
