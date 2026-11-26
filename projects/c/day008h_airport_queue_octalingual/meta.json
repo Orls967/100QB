@@ -1,0 +1,12 @@
+{
+  "day": 8,
+  "session": "h",
+  "topic_no": null,
+  "type": "sim",
+  "language": "c+cpp+rust+go+ruby+py+ts",
+  "topic": "Jaringan Antrean Terminal Bandara Berbasis Agen dengan Validasi DTMC Eksak (48 Tahap, 8 Bahasa)",
+  "date": "2026-11-26",
+  "link": "projects/c/day008h_airport_queue_octalingual",
+  "stages": 48,
+  "master_seed": 20261126
+}

@@ -1,0 +1,13 @@
+build/
+rust/target/
+node_modules/
+*.o
+*.pyc
+__pycache__/
+.DS_Store
+out/*/passengers_log.csv
+out/*/bags_log.csv
+out/*/station_events_*.csv
+out/*/queue_series.csv
+out/*/server_status_series.csv
+out/*/agents_final.csv
