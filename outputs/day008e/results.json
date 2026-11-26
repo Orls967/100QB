@@ -1,0 +1,394 @@
+{
+  "session": "day008e",
+  "languages": [
+    "c",
+    "cpp",
+    "rust",
+    "go",
+    "ruby",
+    "py",
+    "ts",
+    "ipynb"
+  ],
+  "s01_sha256": "e96e6acf6688584c73faad731808b446ba3f60c89d3cdf0ea0cb8fb75109774a",
+  "s17_sha256": "0a49eae379bdc86865b250ef50c14c206f5049bcc2ff972096301d11c388d2e2",
+  "criteria": {
+    "c1_parity_8lang": true,
+    "c2_eigen_anchor_le_1e-12": true,
+    "c3_res_le_1e-8_and_agree_le_1e-6": true,
+    "c4_order_in_1.9_2.1": true,
+    "c5_rho_n31_within_1pct": true,
+    "c6_scaling_exponents": false,
+    "c7_mg_factor_n63_le_0.2": true,
+    "c8_fmg_ratio_n63_le_3": true,
+    "c9_all_finished": true,
+    "c10_selftest_pass": true,
+    "c11_svgs_valid": true,
+    "c12_speed_and_lines_le_700": true
+  },
+  "metrics": {
+    "max_eig_rel_err": 3.165e-13,
+    "max_rel_res": 9.9999750752e-09,
+    "sol_agree_63_inf": 2.5016362092955546e-08,
+    "disc_order_slope": 2.001445,
+    "jacobi_rho_n31_emp": 0.9951847268,
+    "jacobi_rho_n31_theo": 0.9951847266721969,
+    "jacobi_rho_rel_diff": 1.2842148599133086e-10,
+    "gs_rho_n31_emp": 0.9903926782,
+    "gs_rho_n31_theo": 0.9903926402016153,
+    "gs_rho_rel_diff": 3.8366990139661604e-08,
+    "scaling_slopes": {
+      "jacobi": {
+        "slope": 1.950197,
+        "slope_se": 0.010009
+      },
+      "gs": {
+        "slope": 1.962493,
+        "slope_se": 0.091734
+      },
+      "rbgs": {
+        "slope": 1.949562,
+        "slope_se": 0.010229
+      },
+      "sor": {
+        "slope": 1.005201,
+        "slope_se": 0.005448
+      },
+      "cg": {
+        "slope": 0.995258,
+        "slope_se": 0.00499
+      },
+      "pcg_ssor": {
+        "slope": 0.889428,
+        "slope_se": 0.012022
+      },
+      "mg": {
+        "slope": 0.043434,
+        "slope_se": 0.014568
+      }
+    },
+    "c6_checks": {
+      "jacobi": true,
+      "gs": true,
+      "rbgs": true,
+      "sor": true,
+      "cg": true,
+      "pcg_ssor": false,
+      "mg": true
+    },
+    "mg_factor_63": 0.07011662,
+    "mg_factor_127": 0.07100588,
+    "fmg_ratio_63": 0.473908,
+    "line_counts": {
+      "c": 500,
+      "cpp": 446,
+      "rust": 386,
+      "go": 698,
+      "ruby": 324,
+      "py": 316,
+      "ts": 489,
+      "ipynb": 356
+    },
+    "summaries": {
+      "c": {
+        "lang": "c",
+        "N_max": 511,
+        "N_stat_max": 127,
+        "toolchain": "Apple clang 16.0.0 (-std=c11)",
+        "total_sec": 12.107
+      },
+      "cpp": {
+        "lang": "cpp",
+        "N_max": 511,
+        "N_stat_max": 127,
+        "toolchain": "Apple clang 16.0.0 (-std=c++20)",
+        "total_sec": 8.223
+      },
+      "rust": {
+        "lang": "rust",
+        "N_max": 511,
+        "N_stat_max": 127,
+        "toolchain": "rustc 1.93.1",
+        "total_sec": 10.812
+      },
+      "go": {
+        "lang": "go",
+        "N_max": 511,
+        "N_stat_max": 127,
+        "toolchain": "go 1.27.4",
+        "total_sec": 16.006
+      },
+      "ruby": {
+        "lang": "ruby",
+        "N_max": 127,
+        "N_stat_max": 63,
+        "toolchain": "ruby 4.0.9",
+        "total_sec": 45.447
+      },
+      "py": {
+        "lang": "py",
+        "N_max": 127,
+        "N_stat_max": 63,
+        "toolchain": "python 3.11.18",
+        "total_sec": 28.548
+      },
+      "ts": {
+        "lang": "ts",
+        "N_max": 255,
+        "N_stat_max": 63,
+        "toolchain": "node v24.21.0 (--experimental-strip-types)",
+        "total_sec": 2.464
+      },
+      "ipynb": {
+        "lang": "ipynb",
+        "N_max": 63,
+        "N_stat_max": 63,
+        "toolchain": "python3.14 + nbclient",
+        "total_sec": 25.188,
+        "sol_agree_63": 2.5016362092955546e-08
+      }
+    },
+    "cost_n63": {
+      "c": {
+        "jacobi": {
+          "ns_med": 0.6708,
+          "ns_mad": 0.0031
+        },
+        "gs": {
+          "ns_med": 0.6645,
+          "ns_mad": 0.0157
+        },
+        "rbgs": {
+          "ns_med": 0.9543,
+          "ns_mad": 0.0378
+        },
+        "sor": {
+          "ns_med": 0.6047,
+          "ns_mad": 0.0126
+        },
+        "cg": {
+          "ns_med": 0.6141,
+          "ns_mad": 0.022
+        },
+        "pcg_ssor": {
+          "ns_med": 0.6519,
+          "ns_mad": 0.0315
+        },
+        "mg": {
+          "ns_med": 5.4926,
+          "ns_mad": 0.1008
+        }
+      },
+      "cpp": {
+        "jacobi": {
+          "ns_med": 0.8423,
+          "ns_mad": 0.0084
+        },
+        "gs": {
+          "ns_med": 0.888,
+          "ns_mad": 0.0159
+        },
+        "rbgs": {
+          "ns_med": 0.8564,
+          "ns_mad": 0.0094
+        },
+        "sor": {
+          "ns_med": 0.8263,
+          "ns_mad": 0.0209
+        },
+        "cg": {
+          "ns_med": 0.8485,
+          "ns_mad": 0.0139
+        },
+        "pcg_ssor": {
+          "ns_med": 0.8793,
+          "ns_mad": 0.0364
+        },
+        "mg": {
+          "ns_med": 5.1556,
+          "ns_mad": 0.0766
+        }
+      },
+      "rust": {
+        "jacobi": {
+          "ns_med": 1.131,
+          "ns_mad": 0.0097
+        },
+        "gs": {
+          "ns_med": 1.1424,
+          "ns_mad": 0.0142
+        },
+        "rbgs": {
+          "ns_med": 1.4121,
+          "ns_mad": 0.0273
+        },
+        "sor": {
+          "ns_med": 1.1068,
+          "ns_mad": 0.0133
+        },
+        "cg": {
+          "ns_med": 1.1427,
+          "ns_mad": 0.0066
+        },
+        "pcg_ssor": {
+          "ns_med": 1.1237,
+          "ns_mad": 0.0171
+        },
+        "mg": {
+          "ns_med": 8.7228,
+          "ns_mad": 0.1911
+        }
+      },
+      "go": {
+        "jacobi": {
+          "ns_med": 1.7784,
+          "ns_mad": 0.0046
+        },
+        "gs": {
+          "ns_med": 1.76,
+          "ns_mad": 0.0076
+        },
+        "rbgs": {
+          "ns_med": 1.8484,
+          "ns_mad": 0.0034
+        },
+        "sor": {
+          "ns_med": 1.7614,
+          "ns_mad": 0.0007
+        },
+        "cg": {
+          "ns_med": 1.7537,
+          "ns_mad": 0.0003
+        },
+        "pcg_ssor": {
+          "ns_med": 1.7589,
+          "ns_mad": 0.001
+        },
+        "mg": {
+          "ns_med": 13.4637,
+          "ns_mad": 0.3517
+        }
+      },
+      "ruby": {
+        "jacobi": {
+          "ns_med": 190.8541,
+          "ns_mad": 1.8644
+        },
+        "gs": {
+          "ns_med": 247.871,
+          "ns_mad": 54.447
+        },
+        "rbgs": {
+          "ns_med": 232.1492,
+          "ns_mad": 8.0373
+        },
+        "sor": {
+          "ns_med": 190.8289,
+          "ns_mad": 1.0078
+        },
+        "cg": {
+          "ns_med": 190.0479,
+          "ns_mad": 0.252
+        },
+        "pcg_ssor": {
+          "ns_med": 190.4762,
+          "ns_mad": 0.8818
+        },
+        "mg": {
+          "ns_med": 1299.9076,
+          "ns_mad": 4.1992
+        }
+      },
+      "py": {
+        "jacobi": {
+          "ns_med": 125.4336,
+          "ns_mad": 1.0687
+        },
+        "gs": {
+          "ns_med": 125.1018,
+          "ns_mad": 2.1374
+        },
+        "rbgs": {
+          "ns_med": 125.1029,
+          "ns_mad": 0.6593
+        },
+        "sor": {
+          "ns_med": 124.6116,
+          "ns_mad": 0.8325
+        },
+        "cg": {
+          "ns_med": 124.9423,
+          "ns_mad": 2.0418
+        },
+        "pcg_ssor": {
+          "ns_med": 124.9234,
+          "ns_mad": 0.6256
+        },
+        "mg": {
+          "ns_med": 811.6794,
+          "ns_mad": 3.5589
+        }
+      },
+      "ts": {
+        "jacobi": {
+          "ns_med": 4.8014,
+          "ns_mad": 1.351
+        },
+        "gs": {
+          "ns_med": 5.957,
+          "ns_mad": 0.3291
+        },
+        "rbgs": {
+          "ns_med": 5.7181,
+          "ns_mad": 0.0556
+        },
+        "sor": {
+          "ns_med": 6.076,
+          "ns_mad": 0.2912
+        },
+        "cg": {
+          "ns_med": 3.0872,
+          "ns_mad": 0.0391
+        },
+        "pcg_ssor": {
+          "ns_med": 3.0806,
+          "ns_mad": 0.0273
+        },
+        "mg": {
+          "ns_med": 31.7555,
+          "ns_mad": 0.3895
+        }
+      },
+      "ipynb": {
+        "jacobi": {
+          "ns_med": 140.0533,
+          "ns_mad": 1.3916
+        },
+        "gs": {
+          "ns_med": 136.9858,
+          "ns_mad": 0.59
+        },
+        "rbgs": {
+          "ns_med": 124.1547,
+          "ns_mad": 0.1541
+        },
+        "sor": {
+          "ns_med": 140.9209,
+          "ns_mad": 0.5631
+        },
+        "cg": {
+          "ns_med": 141.4559,
+          "ns_mad": 0.2931
+        },
+        "pcg_ssor": {
+          "ns_med": 141.1535,
+          "ns_mad": 1.0141
+        },
+        "mg": {
+          "ns_med": 807.5166,
+          "ns_mad": 2.0429
+        }
+      }
+    }
+  }
+}
